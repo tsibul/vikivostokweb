@@ -1,6 +1,7 @@
 import {toggleActive} from "./toggleActive.js";
-import {createDictionaryFrame} from "./createDictionaryFrame.js";
-import {createDictionaryContent} from "./createDictionaryContent.js";
+import {createDictionaryFrame} from "./showDictionary/createDictionaryFrame.js";
+import {createDictionaryContent} from "./showDictionary/createDictionaryContent.js";
+
 
 export async function toggleDictionary(divElement, divElementClass, details, childList) {
     divElement.classList.toggle('text-active');

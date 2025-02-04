@@ -1,6 +1,7 @@
 'use strict';
 
-import {deletedFilter} from "./deletedFilter.js";
+
+import {deletedFilter} from "../deletedFilter.js";
 
 export function createDictionaryFrame(dictionaryClass, dictionaryName) {
     const outputFrame = document.createElement('section');

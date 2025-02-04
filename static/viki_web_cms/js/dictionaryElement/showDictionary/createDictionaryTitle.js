@@ -1,15 +1,11 @@
 'use strict'
 
-import {jsonUrl} from "../main.js";
-import {fetchJsonData} from "../fetchJsonData.js";
-import {gridDictionaryStyle} from "./gridDictonaryStyle.js";
+import {createHEXSquare} from "./createHEXSquare.js";
 
-export async function createDictionaryTitle(dictionaryClass) {
+export async function createDictionaryTitle(titleObject) {
     const dictionaryTitle = document.createElement('div');
     dictionaryTitle.classList.add('dictionary-content__title');
-    const url = jsonUrl + 'field_names/' + dictionaryClass;
-    const titleObject = await fetchJsonData(url);
-    gridDictionaryStyle(dictionaryTitle, titleObject);
+    dictionaryTitle.appendChild(createHEXSquare());
     titleObject.forEach(title => {
         let titleItem = document.createElement("div");
         titleItem.classList.add('dictionary-content__title_item');
