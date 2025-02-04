@@ -1,7 +1,7 @@
 'use strict'
 
 export function gridDictionaryStyle(fields) {
-    let elementStile = '14px';
+    let elementStile = '14px ';
     fields.forEach(field => {
         field.type === 'boolean' || field.type === 'number'
             ? elementStile = elementStile + '1fr '

@@ -8,7 +8,7 @@ import {createBooleanField} from "../createInput/createBooleanField.js";
 import {createNumberField} from "../createInput/createNumberField.js";
 import {createForeignField} from "../createInput/createForeignField.js";
 import {createImageField} from "../createInput/createImageField.js";
-import {jsonUrl} from "../../main";
+import {jsonUrl} from "../../main.js";
 import {fetchJsonData} from "../../fetchJsonData.js";
 
 const fieldCreation = {
