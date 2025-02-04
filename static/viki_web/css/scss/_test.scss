@@ -1,0 +1,107 @@
+@import "vars";
+@import "mixins";
+
+.test {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  //gap: 4px;
+
+  &__block {
+    //@include brd-standard;
+    height: 60px;
+    width: 130px;
+    background-color: rgba($r, $g, $b, 1);
+  }
+}
+
+.c1 {
+  background-color: rgba($r, $g, $b, 1);
+}
+
+.c2 {
+  background-color: rgba($r +$r * $shift, $g, $b, 1);
+}
+
+.c3 {
+  background-color: rgba($r, $g +$g * $shift, $b, 1);
+}
+
+.c4 {
+  background-color: rgba($r, $g, $b +$b * $shift, 1);
+}
+
+.c5 {
+  background-color: rgba($r +$r * $shift, $g +$g * $shift, $b, 1);
+}
+.c6 {
+  background-color: rgba($r, $g +$g * $shift, $b +$b * $shift, 1);
+}
+.c7 {
+  background-color: rgba($r +$r * $shift, $g, $b +$b * $shift, 1);
+}
+.c8 {
+  background-color: rgba($r +$r * $shift, $g +$g * $shift, $b +$b * $shift, 1);
+}
+.c9 {
+  background-color: rgba($r -$r * $shift, $g, $b, 1);
+}
+
+.c10 {
+  background-color: rgba($r, $g -$g * $shift, $b, 1);
+}
+
+.c11 {
+  background-color: rgba($r, $g, $b -$b * $shift, 1);
+}
+
+.c12 {
+  background-color: rgba($r -$r * $shift, $g -$g * $shift, $b, 1);
+}
+.c13 {
+  background-color: rgba($r, $g -$g * $shift, $b -$b * $shift, 1);
+}
+.c14 {
+  background-color: rgba($r -$r * $shift, $g, $b -$b * $shift, 1);
+}
+.c15 {
+  background-color: rgba($r -$r * $shift, $g -$g * $shift, $b -$b * $shift, 1);
+}
+
+.c16 {
+  background-color: rgba($r +$r * $shift, $g -$g * $shift, $b, 1);
+}
+.c17 {
+  background-color: rgba($r -$r * $shift, $g +$g * $shift, $b, 1);
+}
+.c18 {
+  background-color: rgba($r, $g +$g * $shift, $b -$b * $shift, 1);
+}
+.c19 {
+  background-color: rgba($r, $g -$g * $shift, $b +$b * $shift, 1);
+}
+.c20 {
+  background-color: rgba($r +$r * $shift, $g, $b -$b * $shift, 1);
+}
+.c21 {
+  background-color: rgba($r -$r * $shift, $g, $b +$b * $shift, 1);
+}
+
+.c22 {
+  background-color: rgba($r +$r * $shift, $g -$g * $shift, $b -$b * $shift, 1);
+}
+.c23 {
+  background-color: rgba($r -$r * $shift, $g +$g * $shift, $b -$b * $shift, 1);
+}
+.c24 {
+  background-color: rgba($r -$r * $shift, $g -$g * $shift, $b +$b * $shift, 1);
+}
+.c25 {
+  background-color: rgba($r +$r * $shift, $g +$g * $shift, $b -$b * $shift, 1);
+}
+.c26 {
+  background-color: rgba($r +$r * $shift, $g -$g * $shift, $b +$b * $shift, 1);
+}
+.c27 {
+  background-color: rgba($r -$r * $shift, $g +$g * $shift, $b +$b * $shift, 1);
+}

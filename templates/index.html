@@ -1,0 +1,156 @@
+{% extends 'header.html' %}
+{% load static %}
+{#{% block title %}Главная{% endblock %}#}
+{% block content %}
+    {#    <script src="{% static 'production/js/dist/index.bundle.js' %}" defer type="module"></script>#}
+    <script src="{% static 'viki_web/js/index.js' %}" defer type="module"></script>
+
+    <main>
+        <div class="container">
+            <h2>Продукция</h2>
+            <section class="category">
+                {% for category in categories %}
+                <div class="news__item">
+                    <img src="{{ category.cover_url }}" alt="{{ category.cover }}"
+                         class="news__img">
+                    <div class="news__label">
+                        <h4 class="news__title">{{ category.name }}</h4>
+                        <h4 class="news__price">{{ category.second_name }}</h4>
+                    </div>
+                </div>
+                {% endfor %}
+{#                <div class="news__item">#}
+{#                    <img src="{% static 'viki_web/images/pens_cover.JPG' %}" alt="ручки"#}
+{#                         class="news__img">#}
+{#                    <div class="news__label">#}
+{#                        <h4 class="news__title">Ручки&nbsp;с&nbsp;логотипом</h4>#}
+{#                        <h4 class="news__price">Пластиковые&nbsp;ручки</h4>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="news__item">#}
+{#                    <img src="{% static 'viki_web/images/proecopen_cover.jpg' %}" alt="ProEcoPen"#}
+{#                         class="news__img">#}
+{#                    <div class="news__label">#}
+{#                        <h4 class="news__title">Экоручки&nbsp;с&nbsp;логотипом</h4>#}
+{#                        <h4 class="news__price">Ручки&nbsp;ProEcoPen</h4>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="news__item">#}
+{#                    <img src="{% static 'viki_web/images/arena_cover.JPG' %}" alt="монетницы"#}
+{#                         class="news__img">#}
+{#                    <div class="news__label">#}
+{#                        <h4 class="news__title">POS&nbsp;материалы</h4>#}
+{#                        <h4 class="news__price">Монетницы&nbsp;пластиковые</h4>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="news__item">#}
+{#                    <img src="{% static 'viki_web/images/mugs_cover.JPG' %}" alt="кружки"#}
+{#                         class="news__img">#}
+{#                    <div class="news__label">#}
+{#                        <h4 class="news__title">Кружки&nbsp;пластиковые</h4>#}
+{#                        <h4 class="news__price">Стаканы&nbsp;пластиковые</h4>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="news__item">#}
+{#                    <img src="{% static 'viki_web/images/notes_cover.jpg' %}" alt="ежедневники"#}
+{#                         class="news__img">#}
+{#                    <div class="news__label">#}
+{#                        <h4 class="news__title">Блокноты&nbsp;Эко</h4>#}
+{#                        <h4 class="news__price">Ежедневники&nbsp;Эко</h4>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="news__item">#}
+{#                    <img src="{% static 'viki_web/images/chess_cover.jpg' %}" alt="шахматы"#}
+{#                         class="news__img">#}
+{#                    <div class="news__label">#}
+{#                        <h4 class="news__title">Шахматы&nbsp;Эко</h4>#}
+{#                        <h4 class="news__price">Настольные&nbsp;игры</h4>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="news__item">#}
+{#                    <img src="{% static 'viki_web/images/funnel_cover.png' %}" alt="воронки"#}
+{#                         class="news__img">#}
+{#                    <div class="news__label">#}
+{#                        <h4 class="news__title">Воронки</h4>#}
+{#                        <h4 class="news__price">Воронки&nbsp;Эко</h4>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="news__item">#}
+{#                    <img src="{% static 'viki_web/images/horeca_cover.jpg' %}" alt="horeca"#}
+{#                         class="news__img">#}
+{#                    <div class="news__label">#}
+{#                        <h4 class="news__title">Horeca</h4>#}
+{#                        <h4 class="news__price">Для&nbsp;отелей</h4>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="news__item">#}
+{#                    <img src="{% static 'viki_web/images/pen_stand_cover.jpg' %}" alt="ручка на подставке"#}
+{#                         class="news__img">#}
+{#                    <div class="news__label">#}
+{#                        <h4 class="news__title">Ручки&nbsp;на&nbsp;подставке</h4>#}
+{#                        <h4 class="news__price">Экоручки&nbsp;на&nbsp;подставке</h4>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="news__item">#}
+{#                    <img src="{% static 'viki_web/images/tag_cover.jpg' %}" alt="бирки"#}
+{#                         class="news__img">#}
+{#                    <div class="news__label">#}
+{#                        <h4 class="news__title">Брелки</h4>#}
+{#                        <h4 class="news__price">Бирки</h4>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="news__item">#}
+{#                    <img src="{% static 'viki_web/images/veer_cover.jpg' %}" alt="веер"#}
+{#                         class="news__img">#}
+{#                    <div class="news__label">#}
+{#                        <h4 class="news__title">Рекламный&nbsp;веер</h4>#}
+{#                        <h4 class="news__price"></h4>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="news__item">#}
+{#                    <img src="{% static 'viki_web/images/eco_cover.jpeg' %}" alt="экосувениры"#}
+{#                         class="news__img">#}
+{#                    <div class="news__label">#}
+{#                        <h4 class="news__title">Прочая&nbsp;экопродукция</h4>#}
+{#                        <h4 class="news__price"></h4>#}
+{#                    </div>#}
+{#                </div>#}
+            </section>
+        </div>
+        <div class="container">
+            <h2>Новинки</h2>
+            <section class="category">
+                <div class="news__item">
+                    <img src="{% static 'viki_web/images/recess_bw.jpg' %}" alt="reChess" class="news__img">
+                    <div class="news__label">
+                        <h4 class="news__title">Шахматы&nbsp;reChess</h4>
+                        <h4 class="news__price">6&nbsp;000&nbsp;р.</h4>
+                        <div class="news__text"></div>
+                    </div>
+                </div>
+                <div class="news__item">
+                    <img src="{% static 'viki_web/images/horeca_cover.jpg' %}" alt="reChess" class="news__img">
+                    <div class="news__label">
+                        <h4 class="news__title">Хэнгер 210*110 мм</h4>
+                        <h4 class="news__price">94&nbsp;р.</h4>
+                        <div class="news__text"></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="container">
+            <h2>Новости</h2>
+            <section class="category">
+                <div class="news__item">
+                    <img src="{% static 'viki_web/images/pens_cover.JPG' %}" alt="ручки" class="news__img">
+                    <div class="news__label">
+                        <h4 class="news_title">Шахматы&nbsp;reChess</h4>
+                        <div class="news__text"></div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+
+{% endblock %}

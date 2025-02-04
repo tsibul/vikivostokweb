@@ -1,0 +1,72 @@
+@import "vars";
+@import "mixins";
+
+.dictionary-frame {
+  width: 100%;
+  @include brd-standard;
+  padding: 8px;
+  margin-bottom: 8px;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px;
+    width: 100%;
+    @include brd-standard;
+    border-color: transparent;
+    background-color: rgba($colorSecondary, 0.3);
+
+    &_left {
+      padding: 8px;
+      font-weight: 600;
+    }
+
+    &_right {
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+  }
+
+  &__input {
+    padding: 8px;
+    @include brd-standard;
+    width: 320px;
+  }
+
+  &__label {
+    font-size: 14px;
+    margin-right: 12px;
+    margin-left: -4px;
+    cursor: pointer;
+  }
+}
+
+.dictionary-content {
+  //grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+  //grid-auto-flow: row;
+  wrap-option: no-wrap;
+
+  &__header {
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  &__title {
+    display: grid;
+    gap: 6px;
+    align-items: center;
+    padding: 4px 12px 0 4px;
+
+    &_item {
+      text-align: center;
+      font-weight: 600;
+      font-size: 14px;
+      text-wrap: pretty;
+      word-break: break-all;
+    }
+  }
+}

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>Вики Восток</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'viki_web/icons/logo.svg' %}">
+
+    {#    <script src="{% static 'production/js/dist/login.bundle.js' %}" defer type="module"></script>#}
+    <script src="{% static 'viki_web/js/login.js' %}" defer type="module"></script>
+    <script src="https://kit.fontawesome.com/e2a5b405b2.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'viki_web/css/style.css' %}">
+
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+
+</head>
+<body>
+<menu class="menu">
+    <div class="container">
+        <div class="menu__line">
+            <nav>
+                <ul class="menu__left">
+                    <li class="menu__item">
+                        <img src="{% static 'viki_web/icons/logo.svg' %}" alt="ВикиВосток" class="menu__logo">
+                    </li>
+                    <li class="menu__item">
+                        <div>Каталог</div>
+                    </li>
+                    <li class="menu__item">
+                        <div>Прайс</div>
+                    </li>
+                    <li class="menu__item">
+                        <div>Шаблоны</div>
+                    </li>
+                    <li class="menu__item">
+                        <div>О компании</div>
+                    </li>
+                    <li class="menu__item">
+                        <div>Контакты</div>
+                    </li>
+                </ul>
+            </nav>
+            <nav class="menu__right">
+                <i class="fa-regular fa-user"></i>
+                <div>Личный&nbsp;Кабинет</div>
+            </nav>
+        </div>
+    </div>
+</menu>
+<header class="header">
+    <div class="container">
+        <div class="header__line">
+            <div>
+                <h1 class="header__left">Вики Восток</h1>
+                <a href="https://api.whatsapp.com/send/?phone=79266026441" class="header__social">
+                    <img src="{% static 'viki_web/icons/whatsapp_white_small.svg' %}" alt="whatsapp_logo" class="header__social_item">
+                    <p class="header__social_item">+7&nbsp;926&nbsp;6026441</p>
+                </a>
+            </div>
+            <div class="header__right">
+                <img src="{% static 'viki_web/images/factory.jpg' %}" alt="factory">
+            </div>
+        </div>
+    </div>
+</header>
+{% block content %}
+{% endblock %}
+</body>
+</html>
