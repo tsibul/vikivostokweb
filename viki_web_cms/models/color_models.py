@@ -3,6 +3,27 @@ from django.db import models
 from viki_web_cms.models import SettingsDictionary, MaterialType, PantoneToHex
 
 
+class ColorGroup(SettingsDictionary):
+    """ nearest color """
+    hex = models.CharField(max_length=7, null=False, blank=False)
+
+    class Meta(SettingsDictionary.Meta):
+        verbose_name = 'Цветовая группа'
+        verbose_name_plural = 'Цветовые группы'
+        db_table_comment = 'nearest color'
+        db_table = 'color_group'
+
+    @staticmethod
+    def dictionary_fields():
+        return SettingsDictionary.dictionary_fields() + [
+            {
+                'field': 'hex',
+                'type': 'string',
+                'label': 'HEX',
+                'null': False
+            },
+        ]
+
 class ColorScheme(SettingsDictionary):
     """ color scheme IV, Grant, Eco """
     color_scheme_type = models.ForeignKey(MaterialType, on_delete=models.SET_NULL, verbose_name='материал', null=True,

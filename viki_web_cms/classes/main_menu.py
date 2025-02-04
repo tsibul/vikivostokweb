@@ -30,6 +30,7 @@ class MainMenu:
                 MenuSection('Цвета, материалы', [
                     CMSSetting('Материал', 'MaterialType'),
                     CMSSetting('Цветовая Схема', 'ColorScheme'),
+                    CMSSetting('Цветовая Группа', 'ColorGroup'),
                     CMSSetting('Цвет', 'Color'),
                 ]),
                 MenuSection('Отображение', [
