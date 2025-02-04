@@ -64,6 +64,7 @@ class Color(SettingsDictionary):
     pantone = models.CharField(max_length=20, default='', verbose_name='PANTONE', null=True, blank=True)
     hex = models.CharField(max_length=7, verbose_name='HEX', null=True, blank=True)
     color_scheme = models.ForeignKey(ColorScheme, models.SET_NULL, null=True, verbose_name='цветовая схема')
+    color_group = models.ForeignKey(ColorGroup, models.SET_NULL, null=True, verbose_name='цветовая группа')
     standard = models.BooleanField(default=True, verbose_name='стандарт')
 
     def save(self, *args, **kwargs):
