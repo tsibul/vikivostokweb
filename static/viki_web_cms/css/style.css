@@ -229,5 +229,9 @@ body {
   text-wrap: pretty;
   word-break: break-all;
 }
+.dictionary-content__square {
+  width: 14px;
+  height: 14px;
+}
 
 /*# sourceMappingURL=style.css.map */
