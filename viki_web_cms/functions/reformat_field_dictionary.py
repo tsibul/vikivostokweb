@@ -11,7 +11,7 @@ def reformat_field_dictionary(class_name):
     field_array = class_entity.dictionary_fields()
     field_dictionary = {}
     for field in field_array:
-        field_copy = field['field'].copy()
+        field_copy = field.copy()
         del field_copy['field']
         field_dictionary[field['field']] = field_copy
     return field_dictionary
