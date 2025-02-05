@@ -2,6 +2,8 @@
 
 
 import {deletedFilter} from "../deletedFilter.js";
+import {searchFilter} from "../searchFilter.js";
+import {clearSearchFilter} from "../clearSearchFilter.js";
 
 export function createDictionaryFrame(dictionaryClass, dictionaryName) {
     const outputFrame = document.createElement('section');
@@ -37,9 +39,11 @@ export function createDictionaryFrame(dictionaryClass, dictionaryName) {
     const searchBtn = document.createElement('button');
     searchBtn.classList.add('btn', 'btn__save');
     searchBtn.textContent = 'Поиск';
+    searchBtn.addEventListener('click', (e) => searchFilter(e.target, dictionaryClass));
     const clearBtn = document.createElement('button');
     clearBtn.classList.add('btn', 'btn__cancel');
     clearBtn.textContent = 'Очистить';
+    clearBtn.addEventListener('click', (e) => clearSearchFilter(e.target, dictionaryClass));
     headerRight.appendChild(searchBtn);
     headerRight.appendChild(clearBtn);
     frameHeader.appendChild(headerRight);
