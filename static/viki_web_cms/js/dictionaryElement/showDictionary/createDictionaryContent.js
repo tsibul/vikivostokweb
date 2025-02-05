@@ -10,6 +10,7 @@ import {createForeignField} from "../createInput/createForeignField.js";
 import {createImageField} from "../createInput/createImageField.js";
 import {jsonUrl} from "../../main.js";
 import {fetchJsonData} from "../../fetchJsonData.js";
+import {createDictionaryRows} from "./createDictionaryRows.js";
 
 const fieldCreation = {
     'string': createStringField,
@@ -28,5 +29,8 @@ export async function createDictionaryContent(elementClass) {
     const dictionaryTitle = await createDictionaryTitle(titleObject);
     dictionaryTitle.style.gridTemplateColumns = rowGrid;
     outputContent.appendChild(dictionaryTitle);
+    const dictionaryRows = await createDictionaryRows(elementClass, 0, 0);
+    dictionaryRows.style.gridTemplateColumns = rowGrid;
+    outputContent.appendChild(dictionaryRows);
     return outputContent;
 }
