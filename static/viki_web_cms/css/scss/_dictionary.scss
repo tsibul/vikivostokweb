@@ -62,15 +62,27 @@
     padding: 4px 12px 0 4px;
 
     &_item {
-      text-align: center;
+      //text-align: center;
       font-weight: 600;
       font-size: 14px;
       text-wrap: pretty;
       word-break: break-all;
     }
   }
-  &__square{
+
+  &__row {
+    &_item {
+      //text-align: center;
+      font-size: 14px;
+      text-wrap: pretty;
+      word-break: break-all;
+
+    }
+  }
+
+  &__square {
     width: 14px;
     height: 14px;
   }
+
 }

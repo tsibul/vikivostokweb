@@ -223,8 +223,12 @@ body {
   padding: 4px 12px 0 4px;
 }
 .dictionary-content__title_item {
-  text-align: center;
   font-weight: 600;
+  font-size: 14px;
+  text-wrap: pretty;
+  word-break: break-all;
+}
+.dictionary-content__row_item {
   font-size: 14px;
   text-wrap: pretty;
   word-break: break-all;
