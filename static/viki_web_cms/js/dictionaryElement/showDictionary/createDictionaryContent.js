@@ -20,7 +20,7 @@ const fieldCreation = {
     'image': createImageField,
 };
 
-export async function createDictionaryContent(elementClass) {
+export async function createDictionaryContent(elementClass, deleted, searchString) {
     const url = jsonUrl + 'field_names/' + elementClass;
     const titleObject = await fetchJsonData(url);
     const rowGrid = gridDictionaryStyle(titleObject);
@@ -29,7 +29,7 @@ export async function createDictionaryContent(elementClass) {
     const dictionaryTitle = await createDictionaryTitle(titleObject);
     dictionaryTitle.style.gridTemplateColumns = rowGrid;
     outputContent.appendChild(dictionaryTitle);
-    const dictionaryRows = await createDictionaryRows(elementClass, 0, 0);
+    const dictionaryRows = await createDictionaryRows(elementClass, deleted, 0, searchString);
     dictionaryRows.style.gridTemplateColumns = rowGrid;
     outputContent.appendChild(dictionaryRows);
     return outputContent;

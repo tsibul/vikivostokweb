@@ -8,7 +8,7 @@ export async function toggleDictionary(divElement, divElementClass, details, chi
     if (!document.getElementById(divElementClass)) {
         const contentRight = document.querySelector('.content__right');
         const dictionaryFrame = createDictionaryFrame(divElementClass, divElement.textContent);
-        const dictionaryContent = await createDictionaryContent(divElementClass);
+        const dictionaryContent = await createDictionaryContent(divElementClass, 0, 'None');
         dictionaryFrame.appendChild(dictionaryContent);
         contentRight.appendChild(dictionaryFrame);
     } else {
