@@ -18,7 +18,7 @@ def field_values(request, class_name, deleted=0, first_record=0):
     if not request.user.is_authenticated:
         return JsonResponse(None, safe=False)
     dict_model = getattr(models, class_name)
-    if deleted:
+    if not deleted:
         field_values_request = dict_model.objects.filter(deleted=False)[first_record: first_record + 20]
     else:
         field_values_request = dict_model.objects.all()[first_record: first_record + 20]
