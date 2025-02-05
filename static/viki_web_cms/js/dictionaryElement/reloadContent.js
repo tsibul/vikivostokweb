@@ -1,6 +1,7 @@
 'use strict'
 
-import {createDictionaryContent} from "./createDictionaryContent.js";
+
+import {createDictionaryContent} from "./showDictionary/createDictionaryContent.js";
 
 export async function reloadContent(dictionarySection, className, deletedCheck, searchString) {
     let dictionaryContent = dictionarySection.querySelector('.dictionary-content');
