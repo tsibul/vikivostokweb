@@ -20,7 +20,7 @@ export function createDictionaryFrame(dictionaryClass, dictionaryName) {
     deletedCheck.type = 'checkbox';
     deletedCheck.checked = true;
     deletedCheck.classList.add('check');
-    deletedCheck.addEventListener('change', (e) => deletedFilter(dictionaryClass))
+    deletedCheck.addEventListener('change', (e) => deletedFilter(dictionaryClass, deletedCheck))
     headerRight.appendChild(deletedCheck);
     const checkLabel = document.createElement('label');
     checkLabel.htmlFor = dictionaryClass + '-deleted';
