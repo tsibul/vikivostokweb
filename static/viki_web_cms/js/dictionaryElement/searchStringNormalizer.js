@@ -9,7 +9,7 @@ import {searchStringValidator} from "./searchStringValidator.js";
  */
 export function searchStringNormalizer(searchString) {
     let normalizedSearchString = searchString;
-    if (!searchStringValidator(searchString) || searchString) {
+    if (!searchStringValidator(searchString) || !searchString) {
         normalizedSearchString = 'None';
     }
     return normalizedSearchString.replace(/ /g, "|");
