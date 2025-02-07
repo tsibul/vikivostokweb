@@ -2,7 +2,7 @@
 
 
 import {reloadContent} from "./reloadContent.js";
-import {searchStringValidator} from "./searchStringValidator.js";
+import {searchStringNormalizer} from "./searchStringNormalizer.js";
 
 /**
  * reload content onchange deletedCheck
@@ -13,6 +13,5 @@ import {searchStringValidator} from "./searchStringValidator.js";
 export async function deletedFilter(className, deletedCheck) {
     const dictionarySection = deletedCheck.closest('.dictionary-frame');
     let searchString = dictionarySection.querySelector('.dictionary-frame__input').textContent;
-    !searchStringValidator(searchString) ? searchString = 'None' : null;
-    await reloadContent(dictionarySection,className,deletedCheck, searchString);
+    await reloadContent(dictionarySection, className, deletedCheck, searchStringNormalizer(searchString));
 }
