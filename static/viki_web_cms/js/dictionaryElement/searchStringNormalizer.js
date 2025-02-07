@@ -12,5 +12,5 @@ export function searchStringNormalizer(searchString) {
     if (!searchStringValidator(searchString) || searchString) {
         normalizedSearchString = 'None';
     }
-    return normalizedSearchString;
+    return normalizedSearchString.replace(/ /g, "|");
 }
