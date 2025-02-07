@@ -28,7 +28,7 @@ export async function createDictionaryRows(dictionaryClass, deleted, lastRecord,
 
 function createRow(value) {
     const row = document.createElement('div');
-    row.classList.add('dictionary-content__title', 'dictionary-content__row');
+    row.classList.add('dictionary-content__row');
     const square = createHEXSquare();
     value.hex ? square.style.backgroundColor = value.hex : null;
     row.appendChild(square)

@@ -4,7 +4,7 @@ import {createHEXSquare} from "./createHEXSquare.js";
 
 export async function createDictionaryTitle(titleObject) {
     const dictionaryTitle = document.createElement('div');
-    dictionaryTitle.classList.add('dictionary-content__title');
+    dictionaryTitle.classList.add('dictionary-content__title', 'dictionary-content__row');
     dictionaryTitle.appendChild(createHEXSquare());
     titleObject.forEach(title => {
         let titleItem = document.createElement("div");
