@@ -17,6 +17,6 @@ export async function reloadContent(dictionarySection, className, deletedCheck, 
     dictionaryContent.remove();
     dictionaryContent = await createDictionaryContent(className,
         deletedCheck.checked ? 0 : 1,
-        searchString ? searchString : 'None');
+        searchString );
     dictionarySection.appendChild(dictionaryContent);
 }
