@@ -8,9 +8,8 @@ import {createBooleanField} from "../createInput/createBooleanField.js";
 import {createNumberField} from "../createInput/createNumberField.js";
 import {createForeignField} from "../createInput/createForeignField.js";
 import {createImageField} from "../createInput/createImageField.js";
-import {jsonUrl} from "../../main.js";
-import {fetchJsonData} from "../../fetchJsonData.js";
 import {createDictionaryRows} from "./createDictionaryRows.js";
+import {getFieldStructure} from "../getFieldStructure.js";
 
 const fieldCreation = {
     'string': createStringField,
@@ -20,9 +19,16 @@ const fieldCreation = {
     'image': createImageField,
 };
 
+/**
+ * create dictionary content (create once)
+ * @param elementClass dictionary class
+ * Query params:
+ * @param deleted if deleted checked true
+ * @param searchString value of searchString input
+ * @returns {Promise<HTMLDivElement>}
+ */
 export async function createDictionaryContent(elementClass, deleted, searchString) {
-    const url = jsonUrl + 'field_names/' + elementClass;
-    const titleObject = await fetchJsonData(url);
+    const titleObject = await getFieldStructure(elementClass);
     const rowGrid = gridDictionaryStyle(titleObject);
     const outputContent = document.createElement('div');
     outputContent.classList.add('dictionary-content');
