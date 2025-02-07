@@ -5,6 +5,7 @@
   display: flex;
   margin-top: 68px;
   gap: 8px;
+  //position: relative;
 
   &__left {
     display: flex;
@@ -13,12 +14,15 @@
     @include brd-standard;
     padding: 20px;
     gap: 20px;
+    max-height: fit-content;
+    position: fixed;
   }
 
   &__right {
     display: flex;
     flex-direction: column;
-    width: 84%;
+    margin-left: calc(16% + 14px);
+    width: 100%;
   }
 }
 

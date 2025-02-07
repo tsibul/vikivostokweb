@@ -6,6 +6,8 @@
   @include brd-standard;
   padding: 8px;
   margin-bottom: 8px;
+  //max-height: calc(100vh - 60px);
+  min-height: 160px;
 
   &__header {
     display: flex;
@@ -48,7 +50,7 @@
 .dictionary-content {
   //grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
   //grid-auto-flow: row;
-  wrap-option: no-wrap;
+  //wrap-option: no-wrap;
 
   &__header {
     font-size: 18px;
@@ -68,6 +70,11 @@
       text-wrap: pretty;
       word-break: break-all;
     }
+  }
+
+  &__rows {
+    max-height: calc(100vh - 190px);
+    overflow: auto;
   }
 
   &__row {
