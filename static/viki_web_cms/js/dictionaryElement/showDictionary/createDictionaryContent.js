@@ -29,8 +29,7 @@ export async function createDictionaryContent(elementClass, deleted, searchStrin
     const dictionaryTitle = await createDictionaryTitle(titleObject);
     dictionaryTitle.style.gridTemplateColumns = rowGrid;
     outputContent.appendChild(dictionaryTitle);
-    const dictionaryRows = await createDictionaryRows(elementClass, deleted, 0, searchString);
-    dictionaryRows.style.gridTemplateColumns = rowGrid;
+    const dictionaryRows = await createDictionaryRows(elementClass, deleted, 0, searchString, rowGrid);
     outputContent.appendChild(dictionaryRows);
     return outputContent;
 }
