@@ -14,14 +14,14 @@ def field_names(request, class_name):
     return JsonResponse(dict_fields, safe=False)
 
 
-def field_values(request, class_name, deleted=0, first_record=0, search_string=None):
+def field_values(request, class_name, deleted, first_record, search_string):
     if not request.user.is_authenticated:
         return JsonResponse(None, safe=False)
     dict_model = getattr(models, class_name)
     if not deleted:
-        field_values_request = dict_model.objects.filter(deleted=False)[first_record: first_record + 20]
+        field_values_request = dict_model.objects.filter(deleted=False).order_by(*dict_model.order_default())[first_record: first_record + 20]
     else:
-        field_values_request = dict_model.objects.all()[first_record: first_record + 20]
+        field_values_request = dict_model.objects.all().order_by(*dict_model.order_default())[first_record: first_record + 20]
     if not request.user.is_authenticated:
         return JsonResponse(None, safe=False)
     field_list = dict_model.dictionary_fields()
