@@ -213,15 +213,18 @@ body {
   cursor: pointer;
 }
 
+.dictionary-content {
+  max-height: calc(100vh - 190px);
+  overflow: auto;
+}
 .dictionary-content__header {
   font-size: 18px;
   font-weight: bold;
 }
 .dictionary-content__title {
-  display: grid;
-  gap: 6px;
-  align-items: center;
-  padding: 4px 12px 0 4px;
+  position: sticky;
+  top: 0;
+  background-color: #F2FFFF;
 }
 .dictionary-content__title_item {
   font-weight: 600;
@@ -229,9 +232,11 @@ body {
   text-wrap: pretty;
   word-break: break-all;
 }
-.dictionary-content__rows {
-  max-height: calc(100vh - 190px);
-  overflow: auto;
+.dictionary-content__row {
+  display: grid;
+  gap: 6px;
+  align-items: center;
+  padding: 4px 12px 2px 4px;
 }
 .dictionary-content__row_item {
   font-size: 14px;
