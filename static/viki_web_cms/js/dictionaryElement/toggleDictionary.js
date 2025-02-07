@@ -3,6 +3,15 @@ import {createDictionaryFrame} from "./showDictionary/createDictionaryFrame.js";
 import {createDictionaryContent} from "./showDictionary/createDictionaryContent.js";
 
 
+/**
+ * create dictionary section if not exist, toggle visibility if exist
+ * toggle active on element & parent section
+ * @param divElement menu element click
+ * @param divElementClass dictionary class corresponding to element
+ * @param details parent menu section of clicked element
+ * @param childList clicked element siblings
+ * @returns {Promise<void>}
+ */
 export async function toggleDictionary(divElement, divElementClass, details, childList) {
     divElement.classList.toggle('text-active');
     if (!document.getElementById(divElementClass)) {
