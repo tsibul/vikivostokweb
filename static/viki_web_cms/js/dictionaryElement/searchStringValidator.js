@@ -1,7 +1,7 @@
 'use strict'
 
 /**
- * validate if searchString is Cyrillic, Latin, '_' or '#'
+ * validate if searchString is Cyrillic, Latin, '_', ' ' or '#'
  * @param searchString
  * @returns {boolean}
  */
