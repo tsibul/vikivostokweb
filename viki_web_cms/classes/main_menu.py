@@ -41,9 +41,29 @@ class MainMenu:
                 ]),
             ], default=lambda o: o.__dict__,
                 sort_keys=True))),
-            MainMenu('Номенклатура', '[]'),
-            MainMenu('Менеджеры', '[]'),
-            MainMenu('Клиенты', '[]'),
-            MainMenu('Заказы', '[]'),
+            MainMenu('Номенклатура', str(json.dumps([
+                MenuSection('Группы', [
+                    CMSSetting('Группы товара', 'ProductGroups'),
+                    CMSSetting('Товары/артикулы', 'Goods'),
+                    CMSSetting('Опции товара', 'GoodsOptions'),
+                    CMSSetting('Связь товаров и опций', 'GoodsToOptions'),
+                ]),
+            ], default=lambda o: o.__dict__,
+                sort_keys=True))),
+            MainMenu('Менеджеры', str(json.dumps([
+                MenuSection('Менеджеры', [
+                ]),
+            ], default=lambda o: o.__dict__,
+                sort_keys=True))),
+            MainMenu('Клиенты', str(json.dumps([
+                MenuSection('Клиенты', [
+                ]),
+            ], default=lambda o: o.__dict__,
+                sort_keys=True))),
+            MainMenu('Заказы', str(json.dumps([
+                MenuSection('Заказы', [
+                ]),
+            ], default=lambda o: o.__dict__,
+                sort_keys=True))),
         ]
         return menu_list
