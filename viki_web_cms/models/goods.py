@@ -88,7 +88,7 @@ class Goods(SettingsDictionary):
         ]
 
 
-class GoodsOptions(SettingsDictionary):
+class GoodsOption(SettingsDictionary):
     """ goods options"""
     option_article = models.CharField(max_length=120)
 
@@ -115,10 +115,10 @@ class GoodsOptions(SettingsDictionary):
         ]
 
 
-class GoodsToOptions(SettingsDictionary):
+class GoodsToOption(SettingsDictionary):
     """ goods vs options corresponding """
     goods = models.ForeignKey(Goods, on_delete=models.SET_NULL, null=True)
-    goods_options = models.ForeignKey(GoodsOptions, on_delete=models.SET_NULL, null=True)
+    goods_options = models.ForeignKey(GoodsOption, on_delete=models.SET_NULL, null=True)
 
     class Meta(SettingsDictionary.Meta):
         verbose_name = 'Связь модификация-товар'
