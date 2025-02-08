@@ -43,10 +43,10 @@ class MainMenu:
                 sort_keys=True))),
             MainMenu('Номенклатура', str(json.dumps([
                 MenuSection('Группы', [
-                    CMSSetting('Группы товара', 'ProductGroups'),
+                    CMSSetting('Группы товара', 'ProductGroup'),
                     CMSSetting('Товары/артикулы', 'Goods'),
-                    CMSSetting('Опции товара', 'GoodsOptions'),
-                    CMSSetting('Связь товаров и опций', 'GoodsToOptions'),
+                    CMSSetting('Опции товара', 'GoodsOption'),
+                    CMSSetting('Связь товаров и опций', 'GoodsToOption'),
                 ]),
             ], default=lambda o: o.__dict__,
                 sort_keys=True))),
