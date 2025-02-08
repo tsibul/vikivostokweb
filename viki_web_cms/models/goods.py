@@ -74,12 +74,6 @@ class Goods(SettingsDictionary):
                 'label': 'микс',
             },
             {
-                'field': 'details_number',
-                'type': 'number',
-                'label': 'кол-во деталей',
-                'null': False,
-            },
-            {
                 'field': 'print_layout',
                 'type': 'file',
                 'label': 'макет нанесения',
