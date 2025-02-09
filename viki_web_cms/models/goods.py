@@ -6,6 +6,33 @@ from viki_web_cms.models import SettingsDictionary, LayoutType, ColorScheme
 fs_goods = FileSystemStorage(location='viki_web_cms/files/goods')
 
 
+class GoodsGroup(SettingsDictionary):
+    """ goods groups"""
+    goods_group_url = models.CharField(max_length=60)
+
+    class Meta(SettingsDictionary.Meta):
+        verbose_name = 'Группа товара'
+        verbose_name_plural = 'Группы товаров'
+        db_table_comment = 'Goods group'
+        db_table = 'goods_group'
+        ordering = ['name']
+
+    @staticmethod
+    def order_default():
+        return ['name']
+
+    @staticmethod
+    def dictionary_fields():
+        return SettingsDictionary.dictionary_fields() + [
+            {
+                'field': 'goods_group_url',
+                'type': 'string',
+                'label': 'адрес страницы',
+                'null': True,
+            },
+        ]
+
+
 class Goods(SettingsDictionary):
     """
     Goods
@@ -13,7 +40,8 @@ class Goods(SettingsDictionary):
     article = models.CharField(max_length=120)
     additional_material = models.BooleanField(default=False)
     color_scheme = models.ForeignKey(ColorScheme, on_delete=models.SET_NULL, null=True, related_name='color_scheme')
-    additional_color_scheme = models.ForeignKey(ColorScheme, on_delete=models.SET_NULL, blank=True, null=True, related_name='additional_color_scheme')
+    additional_color_scheme = models.ForeignKey(ColorScheme, on_delete=models.SET_NULL, blank=True, null=True,
+                                                related_name='additional_color_scheme')
     details_number = models.IntegerField(default=1)
     multicolor = models.BooleanField(default=False)
     print_layout = models.FileField(upload_to=fs_goods, storage=fs_goods, blank=True, null=True)
