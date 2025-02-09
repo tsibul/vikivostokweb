@@ -4,5 +4,5 @@ from viki_web_cms.models.material_models import *
 from viki_web_cms.models.layout_models import *
 from viki_web_cms.models.color_models import *
 from viki_web_cms.models.printing_models import *
-from viki_web_cms.models.product_groups import *
+from viki_web_cms.models.product_group_models import *
 from viki_web_cms.models.goods import *
