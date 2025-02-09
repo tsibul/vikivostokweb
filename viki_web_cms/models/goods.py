@@ -1,7 +1,7 @@
 from django.core.files.storage import FileSystemStorage
 from django.db import models
 
-from viki_web_cms.models import SettingsDictionary, LayoutType, ColorScheme
+from viki_web_cms.models import SettingsDictionary, ColorScheme, ProductGroup
 
 fs_goods = FileSystemStorage(location='viki_web_cms/files/goods')
 
@@ -39,6 +39,8 @@ class Goods(SettingsDictionary):
     """
     article = models.CharField(max_length=120)
     additional_material = models.BooleanField(default=False)
+    product_group = models.ForeignKey(ProductGroup, on_delete=models.SET_NULL, null=True)
+    goods_group = models.ForeignKey(GoodsGroup, on_delete=models.SET_NULL, null=True)
     color_scheme = models.ForeignKey(ColorScheme, on_delete=models.SET_NULL, null=True, related_name='color_scheme')
     additional_color_scheme = models.ForeignKey(ColorScheme, on_delete=models.SET_NULL, blank=True, null=True,
                                                 related_name='additional_color_scheme')
@@ -75,6 +77,20 @@ class Goods(SettingsDictionary):
                 'type': 'boolean',
                 'label': 'доп. материал',
                 'null': True,
+            },
+            {
+                'field': 'product_group',
+                'type': 'foreign',
+                'label': 'группа каталога',
+                'foreignClass': 'ProductGroup',
+                'null': False,
+            },
+            {
+                'field': 'goods_group',
+                'type': 'foreign',
+                'label': 'группа товаров',
+                'foreignClass': 'GoodsGroup',
+                'null': False,
             },
             {
                 'field': 'color_scheme',
