@@ -14,6 +14,8 @@ def field_names(request, class_name):
     """
     if not request.user.is_authenticated:
         return JsonResponse(None, safe=False)
+    if not class_name:
+        return JsonResponse(None, safe=False)
     dict_model = getattr(models, class_name)
     dict_fields = dict_model.dictionary_fields()
     return JsonResponse(dict_fields, safe=False)
