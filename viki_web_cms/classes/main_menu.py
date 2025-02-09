@@ -64,8 +64,8 @@ class MainMenu:
                     CMSSetting('Интерфейс товара', 'LayoutType'),
                 ]),
                 MenuSection('Нанесение', [
-                    CMSSetting('Тип нанесения', ''),
-                    CMSSetting('Место нанесения', ''),
+                    CMSSetting('Тип нанесения', 'PrintType'),
+                    CMSSetting('Место нанесения', 'PrintPlace'),
                 ]),
                 MenuSection('Дополнительные фильтры', [
                     CMSSetting('Фильтры', ''),
