@@ -1,10 +1,10 @@
 import json
 
-
 class CMSSetting:
-    def __init__(self, setting: str, setting_class: str):
+    def __init__(self, setting: str, setting_class: str, upload: bool):
         self.setting = setting
         self.setting_class = setting_class
+        self.upload = upload
 
     @staticmethod
     def cms_set(setting):
@@ -18,64 +18,65 @@ class MenuSection:
 
 
 class MainMenu:
-    def __init__(self, name: str, item: str):
+    def __init__(self, name: str, item: str, page_type: str):
         self.name = name
         self.item = item
+        self.page_type = page_type
 
     @staticmethod
     def menu_set():
         menu_list = [
             MainMenu('Номенклатура', str(json.dumps([
                 MenuSection('Номенклатура', [
-                    CMSSetting('Товары/артикулы', 'Goods'),
+                    CMSSetting('Товары/артикулы', 'Goods', True),
                 ]),
             ], default=lambda o: o.__dict__,
-                sort_keys=True))),
+                sort_keys=True)), 'Goods'),
             MainMenu('Каталог', str(json.dumps([
                 MenuSection('Каталог', [
-                    CMSSetting('Каталог', ''),
+                    CMSSetting('Каталог', '', True),
                 ]),
             ], default=lambda o: o.__dict__,
-                sort_keys=True))),
+                sort_keys=True)), 'Catalogue'),
             MainMenu('Прайс-лист', str(json.dumps([
                 MenuSection('Прайс-лист', [
-                    CMSSetting('Прайс-лист', ''),
+                    CMSSetting('Прайс-лист', '', True),
                 ]),
             ], default=lambda o: o.__dict__,
-                sort_keys=True))),
+                sort_keys=True)), 'PriceList'),
             MainMenu("Настройки", str(json.dumps([
 
                 MenuSection('Цвета, материалы', [
-                    CMSSetting('Материал', 'MaterialType'),
-                    CMSSetting('Цветовая Схема', 'ColorScheme'),
-                    CMSSetting('Цветовая Группа', 'ColorGroup' ),
-                    CMSSetting('Цвет', 'Color' ),
+                    CMSSetting('Материал', 'MaterialType', False),
+                    CMSSetting('Цветовая Схема', 'ColorScheme', False),
+                    CMSSetting('Цветовая Группа', 'ColorGroup', False ),
+                    CMSSetting('Цвет', 'Color', True ),
                 ]),
                 MenuSection('Настройки товаров', [
-                    CMSSetting('Группы каталога', 'ProductGroup' ),
-                    CMSSetting('Группы товара', 'GoodsGroup' ),
-                    CMSSetting('Опции товара', 'GoodsOption'),
-                    CMSSetting('Связь товаров и опций', 'GoodsToOption'),
+                    CMSSetting('Группы каталога', 'ProductGroup', False ),
+                    CMSSetting('Группы товара', 'GoodsGroup', False ),
+                    CMSSetting('Опции товара', 'GoodsOption', False),
+                    CMSSetting('Связь товаров и опций', 'GoodsToOption', True ),
                 ]),
                 MenuSection('Фото товаров', [
-                    CMSSetting('Фото товаров', ''),
+                    CMSSetting('Фото товаров', '', True),
                 ]),
                 MenuSection('Отображение', [
-                    CMSSetting('Интерфейс товара', 'LayoutType'),
+                    CMSSetting('Интерфейс товара', 'LayoutType', False),
                 ]),
                 MenuSection('Нанесение', [
-                    CMSSetting('Тип нанесения', 'PrintType'),
-                    CMSSetting('Место нанесения', 'PrintPlace'),
+                    CMSSetting('Тип нанесения', 'PrintType', False),
+                    CMSSetting('Место нанесения', 'PrintPlace', False),
                 ]),
                 MenuSection('Дополнительные фильтры', [
-                    CMSSetting('Фильтры', ''),
-                    CMSSetting('Фильтры', ''),
+                    CMSSetting('Фильтры', '', False),
+                    CMSSetting('Фильтры', '', False),
                 ]),
                 MenuSection('PANTONE-HEX', [
-                    CMSSetting('PANTONE-HEX', 'PantoneToHex'),
+                    CMSSetting('PANTONE-HEX', 'PantoneToHex', True),
                 ]),
             ], default=lambda o: o.__dict__,
-                sort_keys=True))),
+                sort_keys=True)), 'Standard'),
         #     MainMenu('Менеджеры', str(json.dumps([
         #         MenuSection('Менеджеры', [
         #         ]),
