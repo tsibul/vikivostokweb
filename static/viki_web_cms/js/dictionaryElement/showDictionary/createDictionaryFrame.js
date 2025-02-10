@@ -1,10 +1,14 @@
 'use strict';
 
-
 import {deletedFilter} from "../deletedFilter.js";
 import {searchFilter} from "../searchFilter.js";
 import {clearSearchFilter} from "../clearSearchFilter.js";
 import {csvUpload} from "../../csvUpload/csvUpload.js";
+import {createSaveButton} from "../../createStandardElements/createSaveButton.js";
+import {createCancelButton} from "../../createStandardElements/createCancelButton.js";
+import {createNeutralButton} from "../../createStandardElements/createNeutralButton.js";
+import {searchIcon} from "../../createStandardElements/searchIcon.js";
+import {createCheckbox} from "../../createStandardElements/createCheckbox.js";
 
 export function createDictionaryFrame(dictionaryClass, dictionaryName, fileUpload) {
     const outputFrame = document.createElement('section');
@@ -19,17 +23,12 @@ export function createDictionaryFrame(dictionaryClass, dictionaryName, fileUploa
     const headerRight = document.createElement('div');
     headerRight.classList.add('dictionary-frame__header_right');
     if (fileUpload === 'true') {
-        const uploadButton = document.createElement('button');
-        uploadButton.classList.add('btn', 'btn__neutral');
-        uploadButton.textContent = 'Загрузить'
-        headerRight.appendChild(uploadButton);
+        const uploadButton = createNeutralButton('Загрузить');
         uploadButton.addEventListener('click', () => csvUpload(dictionaryClass))
+        headerRight.appendChild(uploadButton);
     }
-    const deletedCheck = document.createElement('input');
+    const deletedCheck = createCheckbox(true);
     deletedCheck.id = dictionaryClass + '-deleted';
-    deletedCheck.type = 'checkbox';
-    deletedCheck.checked = true;
-    deletedCheck.classList.add('check');
     deletedCheck.addEventListener('change', () => deletedFilter(dictionaryClass, deletedCheck))
     headerRight.appendChild(deletedCheck);
     const checkLabel = document.createElement('label');
@@ -37,20 +36,15 @@ export function createDictionaryFrame(dictionaryClass, dictionaryName, fileUploa
     checkLabel.classList.add('dictionary-frame__label');
     checkLabel.textContent = 'скрыть удаленные';
     headerRight.appendChild(checkLabel);
-    const searchIcon = '<i class="fa fa-solid fa-magnifying-glass"></i>';
     headerRight.insertAdjacentHTML('beforeend', searchIcon);
     const searchInput = document.createElement('input');
     searchInput.classList.add('dictionary-frame__input');
     searchInput.type = 'text';
     searchInput.placeholder = 'поиск...';
     headerRight.appendChild(searchInput);
-    const searchBtn = document.createElement('button');
-    searchBtn.classList.add('btn', 'btn__save');
-    searchBtn.textContent = 'Поиск';
+    const searchBtn = createSaveButton('Поиск');
     searchBtn.addEventListener('click', (e) => searchFilter(e.target, dictionaryClass));
-    const clearBtn = document.createElement('button');
-    clearBtn.classList.add('btn', 'btn__cancel');
-    clearBtn.textContent = 'Очистить';
+    const clearBtn = createCancelButton('Очистить');
     clearBtn.addEventListener('click', (e) => clearSearchFilter(e.target, dictionaryClass));
     headerRight.appendChild(searchBtn);
     headerRight.appendChild(clearBtn);
