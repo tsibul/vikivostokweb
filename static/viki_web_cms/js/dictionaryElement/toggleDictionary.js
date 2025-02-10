@@ -8,15 +8,16 @@ import {createDictionaryContent} from "./showDictionary/createDictionaryContent.
  * toggle active on element & parent section
  * @param divElement menu element click
  * @param divElementClass dictionary class corresponding to element
+ * @param divElementUpload if possible to upload file with data
  * @param details parent menu section of clicked element
  * @param childList clicked element siblings
  * @returns {Promise<void>}
  */
-export async function toggleDictionary(divElement, divElementClass, details, childList) {
+export async function toggleDictionary(divElement, divElementClass, divElementUpload, details, childList) {
     divElement.classList.toggle('text-active');
     if (!document.getElementById(divElementClass)) {
         const contentRight = document.querySelector('.content__right');
-        const dictionaryFrame = createDictionaryFrame(divElementClass, divElement.textContent);
+        const dictionaryFrame = createDictionaryFrame(divElementClass, divElement.textContent, divElementUpload);
         const dictionaryContent = await createDictionaryContent(divElementClass, 0, 'None');
         dictionaryFrame.appendChild(dictionaryContent);
         contentRight.appendChild(dictionaryFrame);

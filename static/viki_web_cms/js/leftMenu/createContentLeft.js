@@ -12,13 +12,14 @@ export function createContentLeft(leftMenuElement, leftMenuCode) {
             let divElement = document.createElement('li');
             divElement.textContent = cms.setting;
             divElement.dataset.class = cms.setting_class;
+            divElement.dataset.upload = cms.upload;
             divElement.classList.add('section-left__content');
             sectionDetails.appendChild(divElement);
         });
         const childList = sectionDetails.querySelectorAll('li');
         childList.forEach((item) => {
             item.addEventListener('click',() =>
-                toggleDictionary(item, item.dataset.class, sectionDetails, childList));
+                toggleDictionary(item, item.dataset.class, item.dataset.upload ,sectionDetails, childList));
         })
         leftMenuElement.appendChild(sectionDetails);
     });

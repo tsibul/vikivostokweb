@@ -4,8 +4,9 @@
 import {deletedFilter} from "../deletedFilter.js";
 import {searchFilter} from "../searchFilter.js";
 import {clearSearchFilter} from "../clearSearchFilter.js";
+import {csvUpload} from "../../csvUpload/csvUpload.js";
 
-export function createDictionaryFrame(dictionaryClass, dictionaryName) {
+export function createDictionaryFrame(dictionaryClass, dictionaryName, fileUpload) {
     const outputFrame = document.createElement('section');
     outputFrame.classList.add('dictionary-frame');
     outputFrame.id = dictionaryClass;
@@ -17,12 +18,19 @@ export function createDictionaryFrame(dictionaryClass, dictionaryName) {
     frameHeader.appendChild(headerLeft);
     const headerRight = document.createElement('div');
     headerRight.classList.add('dictionary-frame__header_right');
+    if (fileUpload === 'true') {
+        const uploadButton = document.createElement('button');
+        uploadButton.classList.add('btn', 'btn__neutral');
+        uploadButton.textContent = 'Загрузить'
+        headerRight.appendChild(uploadButton);
+        uploadButton.addEventListener('click', () => csvUpload(dictionaryClass))
+    }
     const deletedCheck = document.createElement('input');
     deletedCheck.id = dictionaryClass + '-deleted';
     deletedCheck.type = 'checkbox';
     deletedCheck.checked = true;
     deletedCheck.classList.add('check');
-    deletedCheck.addEventListener('change', (e) => deletedFilter(dictionaryClass, deletedCheck))
+    deletedCheck.addEventListener('change', () => deletedFilter(dictionaryClass, deletedCheck))
     headerRight.appendChild(deletedCheck);
     const checkLabel = document.createElement('label');
     checkLabel.htmlFor = dictionaryClass + '-deleted';
