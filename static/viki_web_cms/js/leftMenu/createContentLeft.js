@@ -1,6 +1,12 @@
 import {toggleDictionary} from "../dictionaryElement/toggleDictionary.js";
 
-export function createContentLeft(leftMenuElement, leftMenuCode) {
+export function createContentLeft(content, leftMenuCode) {
+    const leftMenuElement = document.createElement("div");
+    leftMenuElement.classList.add("content__left");
+    content.appendChild(leftMenuElement);
+    const rightMenuElement = document.createElement("div");
+    rightMenuElement.classList.add("content__right");
+    content.appendChild(rightMenuElement);
     const leftMenu = JSON.parse(leftMenuCode);
     leftMenu.forEach((item) => {
         let sectionDetails = document.createElement('details');
