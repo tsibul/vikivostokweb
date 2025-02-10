@@ -8,13 +8,13 @@
   color: $colorPrimary950;
   font-family: 'Montserrat', sans-serif;
   margin-block-start: 0;
-    margin-block-end: 0;
-    margin-inline-start: 0;
-    margin-inline-end: 0;
-    font-weight: 500;
+  margin-block-end: 0;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+  font-weight: 500;
 }
 
-h2{
+h2 {
   //padding-left: 30px;
   font-weight: 700;
   font-size: 26px;
@@ -32,47 +32,62 @@ body {
   background-color: transparent;
 }
 
-.text-active{
+.text-active {
   font-weight: 600;
 }
 
-.invisible{
+.invisible {
   display: none;
 }
 
-.check{
+.check {
   accent-color: $colorSecondary;
   cursor: pointer;
 }
 
-.btn{
+.btn {
   padding: 8px;
   @include brd-standard;
   transition: 0.2s ease color;
   cursor: pointer;
-  &__save{
+
+  &__save {
     background-color: $colorSecondary;
     border-color: $colorSecondary;
     color: $colorSecondary50;
-    &:hover{
+
+    &:hover {
       background-color: $colorSecondary50;
       color: $colorSecondary;
     }
   }
-  &__cancel{
+
+  &__cancel {
     background-color: $colorNeutral500;
     border-color: $colorNeutral500;
     color: $colorSecondary50;
-    &:hover{
+
+    &:hover {
       background-color: $colorSecondary50;
       color: $colorNeutral500;
+    }
+  }
+
+  &__neutral {
+    background-color: $colorPrimary500;
+    border-color: $colorPrimary500;
+    color: $colorSecondary50;
+
+    &:hover {
+      background-color: $colorSecondary50;
+      color: $colorPrimary500;
     }
   }
 }
 
 @media (max-width: 1330px) {
-  .container{
+  .container {
     padding: 0 30px;
   }
-  
+
 }

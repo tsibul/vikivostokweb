@@ -65,6 +65,15 @@ body {
   background-color: #F2FFFF;
   color: #4A4A4A;
 }
+.btn__neutral {
+  background-color: #0F4880;
+  border-color: #0F4880;
+  color: #F2FFFF;
+}
+.btn__neutral:hover {
+  background-color: #F2FFFF;
+  color: #0F4880;
+}
 
 @media (max-width: 1330px) {
   .container {
