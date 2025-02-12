@@ -1,5 +1,10 @@
 import {toggleDictionary} from "../dictionaryElement/toggleDictionary.js";
 
+/**
+ * create left menu for standard dictionaries
+ * @param content
+ * @param leftMenuCode
+ */
 export function createContentLeft(content, leftMenuCode) {
     content.style.flexDirection = 'row';
     const leftMenuElement = document.createElement("div");
