@@ -1,6 +1,7 @@
 import {toggleDictionary} from "../dictionaryElement/toggleDictionary.js";
 
 export function createContentLeft(content, leftMenuCode) {
+    content.style.flexDirection = 'row';
     const leftMenuElement = document.createElement("div");
     leftMenuElement.classList.add("content__left");
     content.appendChild(leftMenuElement);
@@ -24,8 +25,8 @@ export function createContentLeft(content, leftMenuCode) {
         });
         const childList = sectionDetails.querySelectorAll('li');
         childList.forEach((item) => {
-            item.addEventListener('click',() =>
-                toggleDictionary(item, item.dataset.class, item.dataset.upload ,sectionDetails, childList));
+            item.addEventListener('click', () =>
+                toggleDictionary(item, item.dataset.class, JSON.parse(item.dataset.upload), sectionDetails, childList));
         })
         leftMenuElement.appendChild(sectionDetails);
     });
