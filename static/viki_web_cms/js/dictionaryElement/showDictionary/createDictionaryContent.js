@@ -22,14 +22,14 @@ const fieldCreation = {
 /**
  * create dictionary content (create once)
  * @param elementClass dictionary class
+ * @param rowGrid grid-template-columns style
  * Query params:
  * @param deleted if deleted checked true
  * @param searchString value of searchString input
  * @returns {Promise<HTMLDivElement>}
  */
-export async function createDictionaryContent(elementClass, deleted, searchString) {
+export async function createDictionaryContent(elementClass, rowGrid, deleted, searchString) {
     const titleObject = await getFieldStructure(elementClass);
-    const rowGrid = gridDictionaryStyle(titleObject);
     const outputContent = document.createElement('div');
     outputContent.classList.add('dictionary-content');
     const dictionaryTitle = await createDictionaryTitle(titleObject);

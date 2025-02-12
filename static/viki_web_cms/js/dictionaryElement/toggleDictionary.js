@@ -17,8 +17,9 @@ export async function toggleDictionary(divElement, divElementClass, divElementUp
     divElement.classList.toggle('text-active');
     if (!document.getElementById(divElementClass)) {
         const contentRight = document.querySelector('.content__right');
-        const dictionaryFrame = createDictionaryFrame(divElementClass, divElement.textContent, divElementUpload);
-        const dictionaryContent = await createDictionaryContent(divElementClass, 0, 'None');
+        const dictionaryFrame = await createDictionaryFrame(divElementClass, divElement.textContent, divElementUpload);
+        const rowGrid = dictionaryFrame.querySelector('.dictionary-frame__header').dataset.grid;
+        const dictionaryContent = await createDictionaryContent(divElementClass, rowGrid, 0, 'None');
         dictionaryFrame.appendChild(dictionaryContent);
         contentRight.appendChild(dictionaryFrame);
     } else {
