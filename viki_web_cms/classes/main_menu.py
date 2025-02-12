@@ -68,9 +68,10 @@ class MainMenu:
                     CMSSetting('Тип нанесения', 'PrintType', False),
                     CMSSetting('Место нанесения', 'PrintPlace', False),
                 ]),
-                MenuSection('Дополнительные фильтры', [
-                    CMSSetting('Фильтры', '', False),
-                    CMSSetting('Фильтры', '', False),
+                MenuSection('Фильтры', [
+                    CMSSetting('Фильтры', 'FilterOption', False),
+                    CMSSetting('Фильтры товаров', 'FilterToGoods', False),
+                    CMSSetting('Фильтры групп товаров', 'FilterToGoodsGroup', False),
                 ]),
                 MenuSection('PANTONE-HEX', [
                     CMSSetting('PANTONE-HEX', 'PantoneToHex', True),
