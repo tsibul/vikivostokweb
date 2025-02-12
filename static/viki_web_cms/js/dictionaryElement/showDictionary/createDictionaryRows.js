@@ -5,8 +5,18 @@ import {jsonUrl} from "../../main.js";
 import {createHEXSquare} from "./createHEXSquare.js";
 import {addNext20Records} from "./addNext20Records.js";
 import {createCancelButton} from "../../createStandardElements/createCancelButton.js";
-import {createInputModal} from "../createInput/createInputModal.js";
+import {openEditModal} from "../createInput/openEditModal.js";
 
+/**
+ * create rows for dictionary with sertan query
+ * @param dictionaryClass
+ * query
+ * @param deleted if not show deleted
+ * @param lastRecord last record number
+ * @param searchString search string
+ * @param rowGrid row grid style (string)
+ * @returns {Promise<HTMLDivElement>}
+ */
 export async function createDictionaryRows(dictionaryClass, deleted, lastRecord, searchString, rowGrid) {
     const dictionaryRows = document.createElement('div');
     dictionaryRows.classList.add('dictionary-content__rows');
@@ -28,6 +38,11 @@ export async function createDictionaryRows(dictionaryClass, deleted, lastRecord,
     return dictionaryRows;
 }
 
+/**
+ * create single row
+ * @param value field information for row
+ * @returns {HTMLDivElement}
+ */
 function createRow(value) {
     const row = document.createElement('div');
     row.classList.add('dictionary-content__row');
@@ -44,7 +59,7 @@ function createRow(value) {
     })
     const newBtn = createCancelButton('Изм.');
     newBtn.dataset.itemId = value.id
-    newBtn.addEventListener('click', (e) => createInputModal(e.target))
+    newBtn.addEventListener('click', (e) => openEditModal(e.target))
     row.appendChild(newBtn);
     return row;
 }
