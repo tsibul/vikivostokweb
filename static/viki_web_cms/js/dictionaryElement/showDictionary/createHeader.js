@@ -53,5 +53,7 @@ export function createHeader(dictionaryClass, dictionaryName, fileUpload) {
     headerRight.appendChild(searchBtn);
     headerRight.appendChild(clearBtn);
     frameHeader.appendChild(headerRight);
+    frameHeader.dataset.class = dictionaryClass;
+    frameHeader.dataset.title = dictionaryName;
     return frameHeader;
 }
