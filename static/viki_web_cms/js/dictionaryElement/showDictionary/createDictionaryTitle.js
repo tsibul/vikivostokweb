@@ -1,8 +1,13 @@
 'use strict'
 
 import {createHEXSquare} from "./createHEXSquare.js";
-import {createInputModal} from "../createInput/createInputModal.js";
+import {openEditModal} from "../createInput/openEditModal.js";
 
+/**
+ * create dictionary title
+ * @param titleObject field names & params object
+ * @returns {Promise<HTMLDivElement>}
+ */
 export async function createDictionaryTitle(titleObject) {
     const dictionaryTitle = document.createElement('div');
     dictionaryTitle.classList.add('dictionary-content__title', 'dictionary-content__row');
@@ -17,7 +22,7 @@ export async function createDictionaryTitle(titleObject) {
     newBtn.classList.add('btn', 'btn__save');
     newBtn.textContent = 'Создать';
     newBtn.dataset.itemId = '0';
-    newBtn.addEventListener('click', (e) => createInputModal(e.target))
+    newBtn.addEventListener('click', (e) => openEditModal(e.target))
     dictionaryTitle.appendChild(newBtn);
     return dictionaryTitle;
 }
