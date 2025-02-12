@@ -1,6 +1,7 @@
 'use strict'
 
 import {createHEXSquare} from "./createHEXSquare.js";
+import {createInputModal} from "../createInput/createInputModal.js";
 
 export async function createDictionaryTitle(titleObject) {
     const dictionaryTitle = document.createElement('div');
@@ -15,6 +16,8 @@ export async function createDictionaryTitle(titleObject) {
     const newBtn = document.createElement("button");
     newBtn.classList.add('btn', 'btn__save');
     newBtn.textContent = 'Создать';
+    newBtn.dataset.itemId = '0';
+    newBtn.addEventListener('click', (e) => createInputModal(e.target))
     dictionaryTitle.appendChild(newBtn);
     return dictionaryTitle;
 }
