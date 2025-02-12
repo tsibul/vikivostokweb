@@ -35,7 +35,7 @@ def field_values(request, class_name, deleted, first_record, search_string):
         return JsonResponse(None, safe=False)
     dict_model = getattr(models, class_name)
     field_list = dict_model.dictionary_fields()
-    fields_out = []
+    fields_out = ['id']
     fields_search = []
     for field in field_list:
         current_field = field['field'] + '__name' if field['type'] == 'foreign' else field['field']
