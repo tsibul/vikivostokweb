@@ -4,6 +4,8 @@ import {fetchJsonData} from "../../fetchJsonData.js";
 import {jsonUrl} from "../../main.js";
 import {createHEXSquare} from "./createHEXSquare.js";
 import {addNext20Records} from "./addNext20Records.js";
+import {createCancelButton} from "../../createStandardElements/createCancelButton.js";
+import {createInputModal} from "../createInput/createInputModal.js";
 
 export async function createDictionaryRows(dictionaryClass, deleted, lastRecord, searchString, rowGrid) {
     const dictionaryRows = document.createElement('div');
@@ -31,16 +33,18 @@ function createRow(value) {
     row.classList.add('dictionary-content__row');
     const square = createHEXSquare();
     value.hex ? square.style.backgroundColor = value.hex : null;
-    row.appendChild(square)
-    Object.values(value).forEach((item, index) => {
-        let itemDiv = document.createElement('div');
-        itemDiv.classList.add('dictionary-content__row_item');
-        itemDiv.textContent = item;
-        row.appendChild(itemDiv)
+    row.appendChild(square);
+    Object.keys(value).forEach((key, index) => {
+        if (key !== 'id') {
+            let itemDiv = document.createElement('div');
+            itemDiv.classList.add('dictionary-content__row_item');
+            itemDiv.textContent = value[key];
+            row.appendChild(itemDiv)
+        }
     })
-    const newBtn = document.createElement("button");
-    newBtn.classList.add('btn', 'btn__cancel');
-    newBtn.textContent = 'Изм.';
+    const newBtn = createCancelButton('Изм.');
+    newBtn.dataset.itemId = value.id
+    newBtn.addEventListener('click', (e) => createInputModal(e.target))
     row.appendChild(newBtn);
     return row;
 }
