@@ -77,5 +77,6 @@ def record_info (request, class_name, record_id):
     if not request.user.is_authenticated:
         return JsonResponse(None, safe=False)
     dict_model = getattr(models, class_name)
+    url = dict_model.storage_url()
     record = dict_model.objects.filter(id=record_id).values()[0]
-    return JsonResponse(record, safe=False)
+    return JsonResponse({'record' :record, 'url': url}, safe=False)
