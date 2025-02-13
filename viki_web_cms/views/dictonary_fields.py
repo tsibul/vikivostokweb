@@ -64,3 +64,18 @@ def field_values(request, class_name, deleted, first_record, search_string):
     values = list(field_values_request.values(*fields_out))
     context = {'field_params': field_params, 'values': values}
     return JsonResponse(context, safe=False)
+
+
+def record_info (request, class_name, record_id):
+    """
+    return record info for requested class and id
+    :param request:
+    :param class_name:
+    :param record_id:
+    :return:
+    """
+    if not request.user.is_authenticated:
+        return JsonResponse(None, safe=False)
+    dict_model = getattr(models, class_name)
+    record = dict_model.objects.filter(id=record_id).values()[0]
+    return JsonResponse(record, safe=False)
