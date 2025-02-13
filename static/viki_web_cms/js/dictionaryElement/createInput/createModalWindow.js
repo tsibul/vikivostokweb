@@ -16,8 +16,9 @@ export async function createModalWindow(className, title, elementId){
     modalWindow.classList.add('modal');
     const modalHeader = createModalHeader(modalWindow, title, elementId);
     modalWindow.appendChild(modalHeader);
-    const form = document.createElement("modal__form");
+    const form = document.createElement('form');
     form.id = className + '__form';
+    form.classList.add('modal__form');
     const modalContent = await createModalContent(modalWindow, className, elementId);
     form.appendChild(modalContent);
     form.appendChild(createButtonBlock(modalWindow));
