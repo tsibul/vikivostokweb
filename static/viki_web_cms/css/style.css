@@ -256,6 +256,13 @@ body {
   height: 36px;
   overflow: hidden;
   content: inherit;
+  transition: 0.2s ease transform;
+  border: 1px solid #0F4880;
+  border-radius: 12px;
+  border-radius: 4px;
+}
+.dictionary-content__row_img:hover {
+  transform: scale(3);
 }
 .dictionary-content__square {
   width: 14px;
@@ -343,6 +350,16 @@ body {
   top: -2px;
   padding: 8px 4px;
   position: absolute;
+}
+.modal__content_image {
+  height: 36px;
+  border: 1px solid #0F4880;
+  border-radius: 12px;
+  border-radius: 4px;
+  transition: 0.2s ease transform;
+}
+.modal__content_image:hover {
+  transform: scale(4);
 }
 .modal__button-block {
   min-width: 100%;

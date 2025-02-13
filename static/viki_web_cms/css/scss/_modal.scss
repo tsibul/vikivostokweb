@@ -78,7 +78,8 @@
       padding: 8px 4px;
       overflow: hidden;
       transition: 0.2s ease background-color;
-      &:hover{
+
+      &:hover {
         background-color: rgba($colorSecondary, 0.1);
       }
     }
@@ -89,6 +90,16 @@
       top: -2px;
       padding: 8px 4px;
       position: absolute;
+    }
+
+    &_image {
+      height: 36px;
+      @include brd-standard;
+      border-radius: 4px;
+      transition: 0.2s ease transform;
+      &:hover{
+        transform: scale(4);
+      }
     }
   }
 
