@@ -11,14 +11,6 @@ import {createImageField} from "../createInput/createImageField.js";
 import {createDictionaryRows} from "./createDictionaryRows.js";
 import {getFieldStructure} from "../getFieldStructure.js";
 
-const fieldCreation = {
-    'string': createStringField,
-    'boolean': createBooleanField,
-    'number': createNumberField,
-    'foreign': createForeignField,
-    'image': createImageField,
-};
-
 /**
  * create dictionary content (create once)
  * @param elementClass dictionary class
