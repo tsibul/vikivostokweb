@@ -15,6 +15,10 @@ class SettingsDictionary(models.Model):
         abstract = True
         ordering = ['name']
 
+    @property
+    def file_url(self):
+        return None
+
     @staticmethod
     def order_default():
         return ['name']
