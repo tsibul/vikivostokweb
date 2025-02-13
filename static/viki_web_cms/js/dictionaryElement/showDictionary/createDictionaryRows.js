@@ -24,7 +24,7 @@ export async function createDictionaryRows(dictionaryClass, deleted, lastRecord,
     const dictionaryValues = await fetchJsonData(url);
     let counter = 0;
     dictionaryValues.values.forEach(value => {
-        let row = createRow(value);
+        let row = createRow(value, dictionaryValues.field_params);
         row.style.gridTemplateColumns = rowGrid;
         dictionaryRows.appendChild(row);
         counter++;
@@ -41,9 +41,10 @@ export async function createDictionaryRows(dictionaryClass, deleted, lastRecord,
 /**
  * create single row
  * @param value field information for row
+ * @param fieldParams
  * @returns {HTMLDivElement}
  */
-function createRow(value) {
+function createRow(value, fieldParams) {
     const row = document.createElement('div');
     row.classList.add('dictionary-content__row');
     const square = createHEXSquare();
@@ -51,9 +52,17 @@ function createRow(value) {
     row.appendChild(square);
     Object.keys(value).forEach((key, index) => {
         if (key !== 'id') {
-            let itemDiv = document.createElement('div');
-            itemDiv.classList.add('dictionary-content__row_item');
-            itemDiv.textContent = value[key];
+            let itemDiv;
+            if (Object.keys(fieldParams).includes(key) && fieldParams[key]['type'] === 'image') {
+                itemDiv = document.createElement('img');
+                itemDiv.classList.add('dictionary-content__row_img');
+                itemDiv.src = fieldParams[key]['url'] + value[key];
+                itemDiv.alt = value[key];
+            } else {
+                itemDiv = document.createElement('div');
+                itemDiv.classList.add('dictionary-content__row_item');
+                itemDiv.textContent = value[key];
+            }
             row.appendChild(itemDiv)
         }
     })
