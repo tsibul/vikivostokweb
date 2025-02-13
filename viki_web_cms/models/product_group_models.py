@@ -23,7 +23,7 @@ class ProductGroup(SettingsDictionary):
 
 
     @property
-    def cover_url(self):
+    def file_url(self):
         return f"/static/viki_web_cms/files/cover/{self.cover.name}" if self.cover else None
 
     @staticmethod
@@ -63,6 +63,7 @@ class ProductGroup(SettingsDictionary):
                 'field': 'cover',
                 'type': 'image',
                 'label': 'обложка',
+                'url': '/static/viki_web_cms/files/cover/',
                 'null': True,
             },
         ]
