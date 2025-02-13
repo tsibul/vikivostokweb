@@ -27,6 +27,10 @@ class ProductGroup(SettingsDictionary):
         return f"/static/viki_web_cms/files/cover/{self.cover.name}" if self.cover else None
 
     @staticmethod
+    def storage_url():
+        return '/static/viki_web_cms/files/cover/'
+
+    @staticmethod
     def order_default():
         return ['priority', 'name']
 

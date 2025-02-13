@@ -20,6 +20,11 @@ class SettingsDictionary(models.Model):
         return None
 
     @staticmethod
+    def storage_url():
+        return None
+
+
+    @staticmethod
     def order_default():
         return ['name']
 
