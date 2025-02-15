@@ -1,13 +1,16 @@
 'use strict'
 
-import {createFieldFrame} from "./createFieldFrame.js";
 import {createModalInput} from "./createModalInput.js";
 
+/**
+ * create number input
+ * @param fieldName
+ * @param fieldValue
+ * @param url
+ * @returns {HTMLInputElement}
+ */
 export function createNumberField(fieldName, fieldValue, url) {
-    const fieldFrame = createFieldFrame(fieldName);
     const input = createModalInput('number');
     input.value = fieldValue;
-    fieldFrame.appendChild(input);
-    return fieldFrame;
-
+    return input;
 }

@@ -1,13 +1,17 @@
 'use strict'
 
-import {createFieldFrame} from "./createFieldFrame.js";
 import {createModalInput} from "./createModalInput.js";
 
+/**
+ * create text input
+ * @param fieldName
+ * @param fieldValue
+ * @param url
+ * @returns {HTMLInputElement}
+ */
 export function createStringField(fieldName, fieldValue, url) {
-    const fieldFrame = createFieldFrame(fieldName);
     const input = createModalInput('text');
     input.value = fieldValue;
-    fieldFrame.appendChild(input);
-    return fieldFrame;
+    return input;
 
 }

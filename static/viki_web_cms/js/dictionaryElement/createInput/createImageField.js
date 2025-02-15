@@ -1,14 +1,17 @@
 'use strict'
 
-import {createFieldFrame} from "./createFieldFrame.js";
-import {createModalInput} from "./createModalInput.js";
-
+/**
+ * create only image as editing of image in separate interface
+ * @param fieldName
+ * @param fieldValue
+ * @param url
+ * @returns {HTMLDivElement}
+ */
 export function createImageField(fieldName, fieldValue, url) {
-    const fieldFrame = createFieldFrame(fieldName);
-    const input = createModalInput('image');
+    const input = document.createElement('div');
+    input.classList.add('modal__content_' + inputType);
     input.src = url + fieldValue;
     input.alt = fieldName.field;
-    fieldFrame.appendChild(input);
-    return fieldFrame;
+    return input;
 
 }

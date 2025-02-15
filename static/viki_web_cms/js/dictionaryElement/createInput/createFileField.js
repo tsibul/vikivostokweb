@@ -1,6 +1,5 @@
 'use strict'
 
-import {createFieldFrame} from "./createFieldFrame.js";
 import {createModalInput} from "./createModalInput.js";
 
 /**
@@ -10,13 +9,11 @@ import {createModalInput} from "./createModalInput.js";
  * @returns {HTMLDivElement}
  */
 export function createFileField(fieldName, fieldValue, url) {
-    const fieldFrame = createFieldFrame(fieldName);
     const fileFrame = document.createElement('div');
     fileFrame.classList.add('modal__content_file-frame');
     const input = createModalInput('file');
-    input.value = fieldValue;
+    input.placeholder = fieldValue;
     fileFrame.appendChild(input);
-    fieldFrame.appendChild(fileFrame);
-    return fieldFrame;
+    return fileFrame;
 
 }
