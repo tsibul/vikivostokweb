@@ -19,6 +19,7 @@ export async function createModalWindow(className, title, elementId){
     const form = document.createElement('form');
     form.id = className + '__form';
     form.classList.add('modal__form');
+    form.enctype = 'multipart/form-data'
     const elemId = document.createElement('input');
     elemId.value = elementId;
     elemId.hidden = true;
