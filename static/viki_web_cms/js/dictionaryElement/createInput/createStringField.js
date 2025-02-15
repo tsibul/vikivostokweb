@@ -4,14 +4,13 @@ import {createModalInput} from "./createModalInput.js";
 
 /**
  * create text input
- * @param fieldName
- * @param fieldValue
- * @param url
  * @returns {HTMLInputElement}
+ * @param fieldData
  */
-export function createStringField(fieldName, fieldValue, url) {
+export function createStringField(fieldData) {
     const input = createModalInput('text');
-    input.value = fieldValue;
+    input.value = fieldData.fieldValue;
+    input.name = fieldData.fieldName.fieldValue;
     return input;
 
 }

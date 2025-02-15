@@ -4,13 +4,12 @@ import {createModalInput} from "./createModalInput.js";
 
 /**
  * create number input
- * @param fieldName
- * @param fieldValue
- * @param url
  * @returns {HTMLInputElement}
+ * @param fieldData
  */
-export function createNumberField(fieldName, fieldValue, url) {
+export function createNumberField(fieldData) {
     const input = createModalInput('number');
-    input.value = fieldValue;
+    input.value = fieldData.fieldValue;
+    input.name = fieldData.fieldName.field;
     return input;
 }

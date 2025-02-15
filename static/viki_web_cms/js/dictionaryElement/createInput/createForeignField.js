@@ -4,13 +4,13 @@ import {createDropDown} from "../../dropDown/createDropDown.js";
 
 /**
  * create field for foreign key
- * @param fieldName
- * @param fieldValue
- * @param url
  * @returns {HTMLInputElement}
+ * @param fieldData
  */
-export async function createForeignField(fieldName, fieldValue, url) {
-  const input = await createDropDown(fieldName.foreignClass, fieldValue)
-  return input;
+export async function createForeignField(fieldData) {
+    const fieldClass = fieldData.fieldName.foreignClass;
+    const fieldValue = fieldData.fieldValue;
+    const input = await createDropDown(fieldClass, fieldValue)
+    return input;
 
 }

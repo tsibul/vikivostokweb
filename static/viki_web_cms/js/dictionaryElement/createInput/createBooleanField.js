@@ -4,13 +4,12 @@ import {createModalInput} from "./createModalInput.js";
 
 /**
  * create boolean field for modal as checkbox
- * @param fieldName
- * @param fieldValue
  * @returns {HTMLInputElement}
+ * @param fieldData
  */
-export function createBooleanField(fieldName, fieldValue) {
+export function createBooleanField(fieldData) {
   const input = createModalInput('checkbox');
-  input.checked = fieldValue;
-  input.id = fieldName.field +'Input';
+  input.checked = fieldData.fieldValue;
+  input.id = fieldData.fieldName.field +'Input';
   return input;
 }

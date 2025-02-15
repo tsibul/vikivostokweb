@@ -2,16 +2,14 @@
 
 /**
  * create only image as editing of image in separate interface
- * @param fieldName
- * @param fieldValue
- * @param url
  * @returns {HTMLDivElement}
+ * @param fieldData
  */
-export function createImageField(fieldName, fieldValue, url) {
+export function createImageField(fieldData) {
     const input = document.createElement('div');
     input.classList.add('modal__content_' + 'image');
-    input.src = url + fieldValue;
-    input.alt = fieldName.field;
+    input.src = fieldData.url + fieldData.fieldValue;
+    input.alt = fieldData.fieldName.field;
     return input;
 
 }
