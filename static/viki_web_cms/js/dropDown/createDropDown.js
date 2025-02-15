@@ -23,10 +23,9 @@ export async function createDropDown(className, itemValue) {
     const url = jsonUrl + 'dropdown_list/' + className;
     const dropdownValues = await fetchJsonData(url);
     if (itemValue) {
-        dropdownUl.value = itemValue
-        dropDownInput.value = itemValue;
+        let itemElement = dropdownValues.find(e => e.id === itemValue)
+        dropDownInput.value = itemElement.value;
     } else if (dropdownValues[0]) {
-        dropdownUl.value = dropdownValues[0].id;
         dropDownInput.value = dropdownValues[0].value;
     }
     let dropDownListItem;
