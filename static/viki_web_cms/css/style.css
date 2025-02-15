@@ -106,6 +106,7 @@ body {
   background-color: #fff;
 }
 .dropdown__list_item {
+  font-size: 14px;
   padding: 8px;
 }
 .dropdown__list_item:hover {
