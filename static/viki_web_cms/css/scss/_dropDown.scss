@@ -9,10 +9,12 @@
     @include brd-standard;
     padding: 8px;
     position: relative;
+    background-color: transparent;
     &_icon{
       position: absolute;
       right: 0;
       padding: 8px;
+      z-index: -3;
     }
   }
 
