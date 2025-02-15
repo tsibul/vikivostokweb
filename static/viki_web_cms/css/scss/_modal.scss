@@ -3,10 +3,9 @@
 
 .modal {
   top: 15%;
-  left: 10%;
-  //max-height: 30%;
-  //max-width: 50%;
-  min-width: 600px;
+  left: 20%;
+  max-width: 1100px;
+  min-width: 800px;
   @include brd-standard;
   padding: 8px;
   box-shadow: 4px 4px 6px $colorNeutral500;
@@ -33,41 +32,35 @@
 
   &__content {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, 1fr 1.5fr);
     grid-auto-flow: row;
-    width: 100%;
+    gap: 12px;
     height: 100%;
 
     &_item {
       display: flex;
       align-items: center;
-      //justify-content: space-between;
-      min-width: 100%;
       padding: 12px 8px;
     }
 
     &_label {
-      margin-right: 8px;
-      width: 100%;
+      align-self: center;
     }
 
     &_number {
       @include brd-standard;
-      min-width: 80px;
-      padding: 8px 4px;
+      padding: 8px;
     }
 
     &_text {
       @include brd-standard;
-      min-width: 400px;
-      padding: 8px 4px;
+      padding: 8px;
     }
 
     &_checkbox {
       accent-color: $colorSecondary;
       cursor: pointer;
-      padding: 8px 4px;
-      transform: scale(1.5);
+      transform: scale(0.7);
     }
 
     &_file-frame {
@@ -79,6 +72,11 @@
       overflow: hidden;
       transition: 0.2s ease background-color;
 
+      &-short {
+        min-width: 360px;
+        margin-left: 4px;
+      }
+
       &:hover {
         background-color: rgba($colorSecondary, 0.1);
       }
@@ -86,10 +84,15 @@
 
     &_file {
       left: -30%;
-      width: 536px;
+      width: 520px;
       top: -2px;
       padding: 8px 4px;
       position: absolute;
+
+      &-short {
+        width: 480px;
+        left: -33%;
+      }
     }
 
     &_image {
@@ -97,9 +100,14 @@
       @include brd-standard;
       border-radius: 4px;
       transition: 0.2s ease transform;
-      &:hover{
+
+      &:hover {
         transform: scale(4);
       }
+    }
+
+    &_span {
+      display: flex;
     }
   }
 
