@@ -78,5 +78,6 @@ def record_info (request, class_name, record_id):
         return JsonResponse(None, safe=False)
     dict_model = getattr(models, class_name)
     url = dict_model.storage_url()
-    record = dict_model.objects.filter(id=record_id).values()[0]
+    record = dict_model.objects.filter(id=record_id).values()
+    record = record[0] if len(record) else None
     return JsonResponse({'record' :record, 'url': url}, safe=False)
