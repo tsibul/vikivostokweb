@@ -34,20 +34,19 @@ export async function createModalContent(modal, className, elementId) {
     let tmpField;
     const url = jsonUrl + 'record_info/' + className + '/' + elementId;
     const recordInfo = await fetchJsonData(url);
-    if (elementId !== '0') {
-        for (const field of titleObject) {
-            modalContent.appendChild(createFieldLabel(field))
-            tmpField = await fieldCreation[field.type](field, recordInfo.record[field.field], recordInfo.url);
-            tmpField.name = field.field;
-            modalContent.appendChild(tmpField);
+    for (const field of titleObject) {
+        let fieldData = {
+            'fieldName': field,
+            'fieldValue': null,
+            'url': recordInfo.url
         }
-    } else {
-        for (const field of titleObject) {
-            modalContent.appendChild(createFieldLabel(field))
-            tmpField = await fieldCreation[field.type](field, null, recordInfo.url);
-            tmpField.name = field.field;
-            modalContent.appendChild(tmpField);
+        if (elementId !== '0') {
+            field.type !== 'foreign' ? fieldData.fieldValue = recordInfo.record[field.field]
+                : fieldData.fieldValue = recordInfo.record[field.field + '_id']
         }
+        modalContent.appendChild(createFieldLabel(field))
+        tmpField = await fieldCreation[field.type](fieldData);
+        modalContent.appendChild(tmpField);
     }
     return modalContent;
 }
