@@ -1,4 +1,5 @@
-from django.db.models import Q
+from django.db.models import Q, Count, F, Value
+from django.db.models.functions import Concat
 from django.http import JsonResponse
 
 from viki_web_cms import models
@@ -66,7 +67,7 @@ def field_values(request, class_name, deleted, first_record, search_string):
     return JsonResponse(context, safe=False)
 
 
-def record_info (request, class_name, record_id):
+def record_info(request, class_name, record_id):
     """
     return record info for requested class and id
     :param request:
@@ -80,4 +81,30 @@ def record_info (request, class_name, record_id):
     url = dict_model.storage_url()
     record = dict_model.objects.filter(id=record_id).values()
     record = record[0] if len(record) else None
-    return JsonResponse({'record' :record, 'url': url}, safe=False)
+    return JsonResponse({'record': record, 'url': url}, safe=False)
+
+
+def dropdown_list(request, class_name):
+    """
+
+    :param request:
+    :param class_name:
+    :return:
+    """
+    if not request.user.is_authenticated:
+        return JsonResponse(None, safe=False)
+    dict_model = getattr(models, class_name)
+    match class_name:
+        case 'Goods':
+            option_list = (dict_model.objects.filter(deleted=False)
+                           .annotate(value=Concat(F('article'), Value(' '), F('name')))
+                           .values('id', 'value'))
+        case 'Color':
+            option_list = (dict_model.objects.filter(deleted=False)
+                           .annotate(value=Concat(F('code'), Value(' '), F('name')))
+                           .values('id', 'value'))
+        case _:
+            option_list = (dict_model.objects.filter(deleted=False)
+                           .annotate(value=F('name'))
+                           .values('id', 'value'))
+    return JsonResponse(list(option_list), safe=False)
