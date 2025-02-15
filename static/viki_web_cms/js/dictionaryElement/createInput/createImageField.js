@@ -9,7 +9,7 @@
  */
 export function createImageField(fieldName, fieldValue, url) {
     const input = document.createElement('div');
-    input.classList.add('modal__content_' + inputType);
+    input.classList.add('modal__content_' + 'image');
     input.src = url + fieldValue;
     input.alt = fieldName.field;
     return input;
