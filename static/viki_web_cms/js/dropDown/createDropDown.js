@@ -19,7 +19,7 @@ export async function createDropDown(className, itemValue) {
     dropdown.insertAdjacentHTML('beforeend',
         '<i class="fa-solid fa-chevron-down dropdown__input_icon"></i>');
     const dropdownUl = document.createElement('ul')
-    dropdownUl.classList.add('dropdown__list');
+    dropdownUl.classList.add('dropdown__list', 'invisible');
     const url = jsonUrl + 'dropdown_list/' + className;
     const dropdownValues = await fetchJsonData(url);
     if (itemValue) {
@@ -34,8 +34,15 @@ export async function createDropDown(className, itemValue) {
         dropDownListItem.classList.add('dropdown__list_item');
         dropDownListItem.value = item.id;
         dropDownListItem.textContent = item.value;
+        dropDownListItem.addEventListener('click', (e) =>{
+            dropDownInput.value = e.target.textContent;
+            dropdownUl.classList.add('invisible');
+        })
         dropdownUl.appendChild(dropDownListItem);
     });
+    dropDownInput.addEventListener('click', () => {
+        dropdownUl.classList.toggle('invisible')
+    })
     dropdown.appendChild(dropdownUl);
     return dropdown;
 }
