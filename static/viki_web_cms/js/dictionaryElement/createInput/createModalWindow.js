@@ -24,6 +24,7 @@ export async function createModalWindow(className, title, elementId){
     elemId.hidden = true;
     elemId.name = 'id';
     const modalContent = await createModalContent(modalWindow, className, elementId);
+    form.appendChild(elemId);
     form.appendChild(modalContent);
     form.appendChild(createButtonBlock(modalWindow));
     modalWindow.appendChild(form);
