@@ -35,19 +35,19 @@ export async function createModalContent(modal, className, elementId) {
     const url = jsonUrl + 'record_info/' + className + '/' + elementId;
     const recordInfo = await fetchJsonData(url);
     if (elementId !== '0') {
-        titleObject.forEach(field => {
+        for (const field of titleObject) {
             modalContent.appendChild(createFieldLabel(field))
-            tmpField = fieldCreation[field.type](field, recordInfo.record[field.field], recordInfo.url);
+            tmpField = await fieldCreation[field.type](field, recordInfo.record[field.field], recordInfo.url);
             tmpField.name = field.field;
             modalContent.appendChild(tmpField);
-        });
+        }
     } else {
-        titleObject.forEach(field => {
+        for (const field of titleObject) {
             modalContent.appendChild(createFieldLabel(field))
-            tmpField = fieldCreation[field.type](field, null, recordInfo.url);
-            tmpField = field.field;
+            tmpField = await fieldCreation[field.type](field, null, recordInfo.url);
+            tmpField.name = field.field;
             modalContent.appendChild(tmpField);
-        });
+        }
     }
     return modalContent;
 }
