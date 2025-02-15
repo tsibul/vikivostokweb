@@ -14,8 +14,12 @@ export async function createDropDown(className, itemValue) {
     const dropdown = document.createElement('div');
     dropdown.classList.add('dropdown');
     const dropDownInput = createModalInput('text');
+    const hiddenInput = document.createElement('input');
+    hiddenInput.hidden = true;
+    hiddenInput.type = 'text';
     dropDownInput.classList.add('dropdown__input');
     dropdown.appendChild(dropDownInput);
+    dropdown.appendChild(hiddenInput);
     dropdown.insertAdjacentHTML('beforeend',
         '<i class="fa-solid fa-chevron-down dropdown__input_icon"></i>');
     const dropdownUl = document.createElement('ul')
@@ -25,8 +29,10 @@ export async function createDropDown(className, itemValue) {
     if (itemValue) {
         let itemElement = dropdownValues.find(e => e.id === itemValue)
         dropDownInput.value = itemElement.value;
+        hiddenInput.value = itemElement.id
     } else if (dropdownValues[0]) {
         dropDownInput.value = dropdownValues[0].value;
+        hiddenInput.value = dropdownValues[0].id;
     }
     let dropDownListItem;
     dropdownValues.forEach(item => {
