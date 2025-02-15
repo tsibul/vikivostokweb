@@ -9,6 +9,7 @@
   @include brd-standard;
   padding: 8px;
   box-shadow: 4px 4px 6px $colorNeutral500;
+  overflow: visible;
 
   &__header {
     display: flex;
