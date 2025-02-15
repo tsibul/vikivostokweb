@@ -1,5 +1,7 @@
 'use strict'
 
+import {createDropDown} from "../../dropDown/createDropDown.js";
+
 /**
  * create field for foreign key
  * @param fieldName
@@ -7,11 +9,8 @@
  * @param url
  * @returns {HTMLInputElement}
  */
-export function createForeignField(fieldName, fieldValue, url) {
-  const input = document.createElement('input');
-  input.type = 'text';
-  input.classList.add('modal__content_text');
-  input.value = fieldValue;
+export async function createForeignField(fieldName, fieldValue, url) {
+  const input = await createDropDown(fieldName.foreignClass, fieldValue)
   return input;
 
 }
