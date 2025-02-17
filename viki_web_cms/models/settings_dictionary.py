@@ -41,6 +41,5 @@ class SettingsDictionary(models.Model):
                 'field': 'deleted',
                 'type': 'boolean',
                 'label': 'удалено',
-                'null': False
             },
         ]

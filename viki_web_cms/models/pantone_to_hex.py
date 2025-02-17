@@ -26,5 +26,6 @@ class PantoneToHex(SettingsDictionary):
                 'field': 'hex',
                 'type': 'string',
                 'label': 'hex',
+                'null': False,
             },
         ]

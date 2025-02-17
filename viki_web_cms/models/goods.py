@@ -76,7 +76,6 @@ class Goods(SettingsDictionary):
                 'field': 'additional_material',
                 'type': 'boolean',
                 'label': 'доп. материал',
-                'null': True,
             },
             {
                 'field': 'product_group',
@@ -90,7 +89,7 @@ class Goods(SettingsDictionary):
                 'type': 'foreign',
                 'label': 'группа товаров',
                 'foreignClass': 'GoodsGroup',
-                'null': False,
+                'null': True,
             },
             {
                 'field': 'color_scheme',
