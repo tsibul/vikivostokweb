@@ -46,7 +46,7 @@ export async function createDictionaryRows(dictionaryClass, deleted, lastRecord,
  * @param fieldParams
  * @returns {HTMLDivElement}
  */
-function createRow(row, value, fieldParams) {
+export function createRow(row, value, fieldParams) {
     row.classList.add('dictionary-content__row');
     const square = createHEXSquare();
     value.hex ? square.style.backgroundColor = value.hex : null;
