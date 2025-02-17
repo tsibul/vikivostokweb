@@ -18,7 +18,7 @@ const content = document.querySelector('.content');
 menuItems.forEach(menuItem => {
     menuItem.addEventListener('click', (event) => {
         if (!menuItem.classList.contains('menu__item_bold')) {
-            menuItem.classList.add('menu__item_bold')
+            menuItem.classList.add('menu__item_bold');
             content.innerHTML = '';
             if (event.target.dataset.page === 'Standard') {
                 createContentLeft(content, menuItem.dataset.content);
