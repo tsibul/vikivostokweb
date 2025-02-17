@@ -416,4 +416,9 @@ body {
   justify-content: flex-end;
 }
 
+.border-alert {
+  border-color: red;
+  border-width: 2px;
+}
+
 /*# sourceMappingURL=style.css.map */
