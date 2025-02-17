@@ -282,6 +282,9 @@ body {
   align-items: center;
   padding: 4px 12px 2px 4px;
 }
+.dictionary-content__row:hover {
+  background-color: rgba(74, 74, 74, 0.2);
+}
 .dictionary-content__row_item {
   font-size: 14px;
   text-wrap: pretty;
