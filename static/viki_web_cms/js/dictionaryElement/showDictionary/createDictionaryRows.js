@@ -24,7 +24,8 @@ export async function createDictionaryRows(dictionaryClass, deleted, lastRecord,
     const dictionaryValues = await fetchJsonData(url);
     let counter = 0;
     dictionaryValues.values.forEach(value => {
-        let row = createRow(value, dictionaryValues.field_params);
+        let row = document.createElement('div');
+        createRow(row, value, dictionaryValues.field_params);
         row.style.gridTemplateColumns = rowGrid;
         dictionaryRows.appendChild(row);
         counter++;
@@ -40,16 +41,17 @@ export async function createDictionaryRows(dictionaryClass, deleted, lastRecord,
 
 /**
  * create single row
+ * @param row
  * @param value field information for row
  * @param fieldParams
  * @returns {HTMLDivElement}
  */
-function createRow(value, fieldParams) {
-    const row = document.createElement('div');
+function createRow(row, value, fieldParams) {
     row.classList.add('dictionary-content__row');
     const square = createHEXSquare();
     value.hex ? square.style.backgroundColor = value.hex : null;
     row.appendChild(square);
+    row.id = 'row_' + value['id'];
     Object.keys(value).forEach((key, index) => {
         if (key !== 'id') {
             let itemDiv;
@@ -70,5 +72,4 @@ function createRow(value, fieldParams) {
     newBtn.dataset.itemId = value.id
     newBtn.addEventListener('click', (e) => openEditModal(e.target))
     row.appendChild(newBtn);
-    return row;
 }
