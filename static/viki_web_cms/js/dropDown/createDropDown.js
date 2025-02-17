@@ -34,7 +34,7 @@ export async function createDropDown(className, itemValue) {
         dropDownInput.value = dropdownValues[0].value;
         hiddenInput.value = dropdownValues[0].id;
     }
-    createForeignList(dropdownValues, dropdownUl, dropDownInput);
+    createForeignList(dropdownValues, dropdownUl, dropDownInput, hiddenInput);
     dropDownInput.addEventListener('click', () => {
         dropdownUl.classList.toggle('invisible')
     });
@@ -44,7 +44,7 @@ export async function createDropDown(className, itemValue) {
         const filterValues = dropdownValues.filter(element =>
             element.value.toUpperCase().indexOf(filter) > -1);
         dropdownUl.innerHTML = '';
-        createForeignList(filterValues, dropdownUl, dropDownInput);
+        createForeignList(filterValues, dropdownUl, dropDownInput, hiddenInput);
     });
     return dropdown;
 }
@@ -54,8 +54,9 @@ export async function createDropDown(className, itemValue) {
  * @param dropdownValues
  * @param dropdownUl
  * @param dropDownInput
+ * @param hiddenInput
  */
-function createForeignList(dropdownValues, dropdownUl, dropDownInput) {
+function createForeignList(dropdownValues, dropdownUl, dropDownInput, hiddenInput) {
     let dropDownListItem;
     dropdownValues.forEach(item => {
         dropDownListItem = document.createElement('li');
@@ -64,6 +65,7 @@ function createForeignList(dropdownValues, dropdownUl, dropDownInput) {
         dropDownListItem.textContent = item.value;
         dropDownListItem.addEventListener('click', (e) => {
             dropDownInput.value = e.target.textContent;
+            hiddenInput.value = e.target.value;
             dropdownUl.classList.add('invisible');
         })
         dropdownUl.appendChild(dropDownListItem);
