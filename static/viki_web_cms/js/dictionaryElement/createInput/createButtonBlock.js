@@ -19,7 +19,8 @@ export function createButtonBlock(modal) {
         closeModal(modal);
     });
     const saveButton = createSaveButton('Записать');
-    saveButton.type = 'submit';
+    saveButton.type = 'button';
+    saveButton.classList.add('submit');
     buttonBlock.appendChild(cancelButton);
     buttonBlock.appendChild(saveButton);
     return buttonBlock;
