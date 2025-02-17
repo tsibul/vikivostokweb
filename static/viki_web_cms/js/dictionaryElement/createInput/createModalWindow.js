@@ -5,6 +5,7 @@ import {createButtonBlock} from "./createButtonBlock.js";
 import {createModalContent} from "./createModalContent.js";
 import {jsonUrl} from "../../main.js";
 import {closeModal} from "../../modalFunction/closeModal.js";
+import {createRow} from "../showDictionary/createDictionaryRows.js";
 
 /**
  * create modal window foe add/edit class element
@@ -22,15 +23,10 @@ export async function createModalWindow(className, title, elementId) {
     form.id = className + '__form';
     form.classList.add('modal__form');
     form.enctype = 'multipart/form-data';
-    // form.method = 'post';
-    const elemId = document.createElement('input');
-    elemId.value = elementId;
-    elemId.hidden = true;
-    elemId.name = 'id';
     const modalContent = await createModalContent(modalWindow, className, elementId);
-    form.appendChild(elemId);
+    // form.appendChild(elemId);
     form.appendChild(modalContent);
-    form.appendChild(createButtonBlock(modalWindow));
+    form.appendChild(createButtonBlock(modalWindow, elementId));
     modalWindow.appendChild(form);
     const initialData = new FormData(form)
     const buttonSubmit = form.querySelector('.submit');
@@ -47,18 +43,40 @@ export async function createModalWindow(className, title, elementId) {
  */
 async function sendForm(event, form, className, initialData) {
     event.preventDefault();
+    const elementId = event.target.dataset.id;
     const modal = form.closest('.modal')
+    const modalInputs = modal.querySelectorAll('input');
+    modalInputs.forEach(input => {
+        input.classList.remove('border-alert');
+    });
     event.target.disabled = true;
     const formData = new FormData(form);
     if (!checkChangeForm(formData, initialData)) {
-        const fetchPath = jsonUrl + 'edit_dictionary/' + className;
+        const fetchPath = jsonUrl + 'edit_dictionary/' + className + '/' + elementId;
         await fetch(fetchPath, {
             method: 'POST',
             body: formData,
-        });
+        })
+            .then(response => response.json())
+            .then(rowData => {
+                const errors = rowData.errors;
+                if (!errors) {
+                    const editingRow = document.querySelector('#row_' + elementId);
+                    editingRow.innerHTML = ''
+                    createRow(editingRow, rowData.values, rowData.params);
+                    closeModal(modal);
+                    editingRow.focus();
+                } else {
+                    let errorField;
+                    errors.forEach(error => {
+                        event.target.disabled = false;
+                        errorField = modal.querySelector(`[name = "${error}"]`);
+                        errorField.classList.add('border-alert');
+                        event.target.focus();
+                    });
+                }
+            });
     }
-    closeModal(modal);
-    console.log();
 }
 
 /**
