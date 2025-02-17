@@ -8,8 +8,9 @@ import {createModalInput} from "./createModalInput.js";
  * @param fieldData
  */
 export function createBooleanField(fieldData) {
-  const input = createModalInput('checkbox');
-  input.checked = fieldData.fieldValue;
-  input.id = fieldData.fieldName.field +'Input';
-  return input;
+    const input = createModalInput('checkbox');
+    input.checked = fieldData.fieldValue;
+    input.id = fieldData.fieldName.field + 'Input';
+    input.name = fieldData.fieldName.field;
+    return input;
 }
