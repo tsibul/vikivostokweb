@@ -10,7 +10,7 @@ import {createModalInput} from "./createModalInput.js";
 export function createStringField(fieldData) {
     const input = createModalInput('text');
     input.value = fieldData.fieldValue;
-    input.name = fieldData.fieldName.fieldValue;
+    input.name = fieldData.fieldName.field;
     return input;
 
 }
