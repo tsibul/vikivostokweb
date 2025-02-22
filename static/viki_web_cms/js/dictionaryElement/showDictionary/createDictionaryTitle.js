@@ -22,7 +22,7 @@ export async function createDictionaryTitle(titleObject) {
     newBtn.classList.add('btn', 'btn__save');
     newBtn.textContent = 'Создать';
     newBtn.dataset.itemId = '0';
-    newBtn.addEventListener('click', (e) => openEditModal(e.target))
+    newBtn.addEventListener('click', (e) => openEditModal(e))
     dictionaryTitle.appendChild(newBtn);
     return dictionaryTitle;
 }

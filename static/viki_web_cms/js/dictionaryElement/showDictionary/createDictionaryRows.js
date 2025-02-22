@@ -70,7 +70,7 @@ export function createRow(row, value, fieldParams, dictionaryClass) {
         }
     })
     const newBtn = createCancelButton('Изм.');
-    newBtn.dataset.itemId = value.id
-    newBtn.addEventListener('click', (e) => openEditModal(e.target))
+    newBtn.dataset.itemId = value.id;
+    newBtn.addEventListener('click', (e) => openEditModal(e))
     row.appendChild(newBtn);
 }
