@@ -25,7 +25,7 @@ export async function createDictionaryRows(dictionaryClass, deleted, lastRecord,
     let counter = 0;
     dictionaryValues.values.forEach(value => {
         let row = document.createElement('div');
-        createRow(row, value, dictionaryValues.field_params);
+        createRow(row, value, dictionaryValues.field_params, dictionaryClass);
         row.style.gridTemplateColumns = rowGrid;
         dictionaryRows.appendChild(row);
         counter++;
@@ -44,14 +44,15 @@ export async function createDictionaryRows(dictionaryClass, deleted, lastRecord,
  * @param row
  * @param value field information for row
  * @param fieldParams
+ * @param dictionaryClass
  * @returns {HTMLDivElement}
  */
-export function createRow(row, value, fieldParams) {
+export function createRow(row, value, fieldParams, dictionaryClass) {
     row.classList.add('dictionary-content__row');
     const square = createHEXSquare();
     value.hex ? square.style.backgroundColor = value.hex : null;
     row.appendChild(square);
-    row.id = 'row_' + value['id'];
+    row.id = dictionaryClass + '_row_' + value['id'];
     Object.keys(value).forEach((key, index) => {
         if (key !== 'id') {
             let itemDiv;
