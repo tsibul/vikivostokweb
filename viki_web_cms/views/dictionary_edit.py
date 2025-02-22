@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from viki_web_cms import models
 from viki_web_cms.functions.reformat_field_dictionary import reformat_field_dictionary
-from viki_web_cms.models import Color
+from viki_web_cms.models import Color, Goods
 
 
 @csrf_exempt
@@ -22,8 +22,11 @@ def edit_dictionary(request, class_name, element_id):
     dict_model = getattr(models, class_name)
     fields = dict_model.dictionary_fields()
     errors = dictionary_fields_validation(fields, request.POST)
-    if element_id == 0 and class_name == 'Color':
-        errors = color_validation(errors, request.POST)
+    if element_id == 0:
+        if class_name == 'Color':
+            errors = color_validation(errors, request.POST)
+        if class_name == 'Goods':
+            errors = goods_validation(errors, request.POST)
     if errors :
         return JsonResponse({'errors': errors}, safe=False)
     post_data = request.POST.dict()
@@ -113,3 +116,12 @@ def color_validation (errors, value):
 def pantone_validation(value):
     if value[-2] != ' C':
         return False
+
+def goods_validation(errors, value):
+    goods_old = Goods.objects.filter(article=value['article'], name__icontains=value['name'])
+    if goods_old:
+        if not 'article' in errors:
+            errors.append('article')
+        if not 'name' in errors:
+            errors.append('name')
+    return errors
