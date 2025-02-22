@@ -45,6 +45,9 @@ export function createHeader(dictionaryClass, dictionaryName, fileUpload) {
     searchInput.classList.add('dictionary-frame__input');
     searchInput.type = 'text';
     searchInput.placeholder = 'поиск...';
+    searchInput.addEventListener('keypress', (e) => {
+        e.key === 'Enter' ? searchFilter(e.target, dictionaryClass) : null;
+    });
     headerRight.appendChild(searchInput);
     const searchBtn = createSaveButton('Поиск');
     searchBtn.addEventListener('click', (e) => searchFilter(e.target, dictionaryClass));
