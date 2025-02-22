@@ -17,6 +17,9 @@ import {createRow} from "../showDictionary/createDictionaryRows.js";
 export async function createModalWindow(className, title, elementId) {
     const modalWindow = document.createElement("dialog");
     modalWindow.classList.add('modal');
+    modalWindow.addEventListener('keypress', (e) => {
+        e.key === 'Escape' ? closeModal(modalWindow) : null;
+    })
     const modalHeader = createModalHeader(modalWindow, title, elementId);
     modalWindow.appendChild(modalHeader);
     const form = document.createElement('form');
@@ -30,7 +33,7 @@ export async function createModalWindow(className, title, elementId) {
     modalWindow.appendChild(form);
     const initialData = new FormData(form)
     const buttonSubmit = form.querySelector('.submit');
-    buttonSubmit.addEventListener('mousedown', (e) => sendForm(e, form, className, initialData))
+    buttonSubmit.addEventListener('click', (e) => sendForm(e, form, className, initialData))
     return modalWindow;
 }
 
@@ -61,17 +64,34 @@ async function sendForm(event, form, className, initialData) {
             .then(rowData => {
                 const errors = rowData.errors;
                 if (!errors) {
-                    const editingRow = document.querySelector('#row_' + elementId);
-                    editingRow.innerHTML = ''
-                    createRow(editingRow, rowData.values, rowData.params);
-                    closeModal(modal);
+                    let editingRow;
+                    if (elementId !== '0') {
+                        editingRow = document.querySelector('#' + className + '_row_' + elementId);
+                        editingRow.innerHTML = ''
+                    } else {
+                        editingRow = document.createElement('div');
+                        editingRow.id = className + '_row_' + rowData.values.id;
+                        editingRow.classList.add('dictionary-content__row');
+                        const rows = document.getElementById(className)
+                            .querySelector('.dictionary-content__rows');
+                        rows.insertAdjacentElement("afterbegin", editingRow);
+                        editingRow.style.gridTemplateColumns = rows.closest('.dictionary-frame')
+                            .querySelector('.dictionary-frame__header').dataset.grid;
+                    }
+                    createRow(editingRow, rowData.values, rowData.params, className);
+                    editingRow.scrollIntoView({
+                        behavior: 'smooth'
+                    });
                     editingRow.focus();
+                    closeModal(modal);
                 } else {
                     let errorField;
                     errors.forEach(error => {
                         event.target.disabled = false;
                         errorField = modal.querySelector(`[name = "${error}"]`);
-                        errorField.classList.add('border-alert');
+                        errorField.hidden
+                            ? errorField.previousElementSibling.classList.add('border-alert')
+                            :errorField.classList.add('border-alert');
                         event.target.focus();
                     });
                 }
