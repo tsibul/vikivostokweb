@@ -183,6 +183,6 @@ class GoodsToOption(SettingsDictionary):
                 'type': 'foreign',
                 'label': 'опция',
                 'null': False,
-                'foreignClass': 'GoodsOptions',
+                'foreignClass': 'GoodsOption',
             },
         ]
