@@ -14,7 +14,7 @@ import {createDictionaryContent} from "./showDictionary/createDictionaryContent.
  */
 export async function reloadContent(dictionarySection, className, deletedCheck, searchString) {
     let dictionaryContent = dictionarySection.querySelector('.dictionary-content');
-    const rowGrid = dictionarySection.querySelector('.dictionary-frame__header').dataset.grid;
+    const rowGrid = dictionaryContent.dataset.grid;
     dictionaryContent.remove();
     dictionaryContent = await createDictionaryContent(className,
         rowGrid,

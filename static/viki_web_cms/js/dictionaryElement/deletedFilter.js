@@ -11,7 +11,7 @@ import {searchStringNormalizer} from "./searchStringNormalizer.js";
  * @returns {Promise<void>}
  */
 export async function deletedFilter(className, deletedCheck) {
-    const dictionarySection = deletedCheck.closest('.dictionary-frame');
+    const dictionarySection = deletedCheck.closest('.dictionary-frame__header').parentElement;
     let searchString = dictionarySection.querySelector('.dictionary-frame__input').value;
     await reloadContent(dictionarySection, className, deletedCheck, searchStringNormalizer(searchString));
 }

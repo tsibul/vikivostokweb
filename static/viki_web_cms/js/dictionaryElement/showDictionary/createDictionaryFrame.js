@@ -12,13 +12,10 @@ import {gridDictionaryStyle} from "./gridDictonaryStyle.js";
  * @returns {HTMLElement}
  */
 export async function createDictionaryFrame(dictionaryClass, dictionaryName, fileUpload) {
-    const titleObject = await getFieldStructure(dictionaryClass);
-    const rowGrid = gridDictionaryStyle(titleObject);
     const outputFrame = document.createElement('section');
     outputFrame.classList.add('dictionary-frame');
     outputFrame.id = dictionaryClass;
     const frameHeader = createHeader(dictionaryClass, dictionaryName, fileUpload);
-    frameHeader.dataset.grid = rowGrid
     outputFrame.appendChild(frameHeader);
     return outputFrame;
 }

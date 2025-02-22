@@ -1,6 +1,8 @@
 import {toggleActive} from "./toggleActive.js";
 import {createDictionaryFrame} from "./showDictionary/createDictionaryFrame.js";
 import {createDictionaryContent} from "./showDictionary/createDictionaryContent.js";
+import {gridDictionaryStyle} from "./showDictionary/gridDictonaryStyle.js";
+import {getFieldStructure} from "./getFieldStructure.js";
 
 
 /**
@@ -18,7 +20,8 @@ export async function toggleDictionary(divElement, divElementClass, divElementUp
     if (!document.getElementById(divElementClass)) {
         const contentRight = document.querySelector('.content__right');
         const dictionaryFrame = await createDictionaryFrame(divElementClass, divElement.textContent, divElementUpload);
-        const rowGrid = dictionaryFrame.querySelector('.dictionary-frame__header').dataset.grid;
+        const titleObject = await getFieldStructure(divElementClass);
+        const rowGrid = gridDictionaryStyle(titleObject);
         const dictionaryContent = await createDictionaryContent(divElementClass, rowGrid, 0, 'None');
         dictionaryFrame.appendChild(dictionaryContent);
         contentRight.appendChild(dictionaryFrame);

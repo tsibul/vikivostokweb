@@ -29,5 +29,6 @@ export async function createDictionaryContent(elementClass, rowGrid, deleted, se
     outputContent.appendChild(dictionaryTitle);
     const dictionaryRows = await createDictionaryRows(elementClass, deleted, 0, searchString, rowGrid);
     outputContent.appendChild(dictionaryRows);
+    outputContent.dataset.grid = rowGrid;
     return outputContent;
 }
