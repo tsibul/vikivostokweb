@@ -72,11 +72,12 @@ async function sendForm(event, form, className, initialData) {
                         editingRow = document.createElement('div');
                         editingRow.id = className + '_row_' + rowData.values.id;
                         editingRow.classList.add('dictionary-content__row');
-                        const rows = document.getElementById(className)
-                            .querySelector('.dictionary-content__rows');
+                        let rows;
+                        document.getElementById(className)
+                            ? rows = document.getElementById(className).querySelector('.dictionary-content__rows')
+                            : rows = document.querySelector('.dictionary-content__rows');
                         rows.insertAdjacentElement("afterbegin", editingRow);
-                        editingRow.style.gridTemplateColumns = rows.closest('.dictionary-frame')
-                            .querySelector('.dictionary-frame__header').dataset.grid;
+                        editingRow.style.gridTemplateColumns = rows.closest('.dictionary-content').dataset.grid;
                     }
                     createRow(editingRow, rowData.values, rowData.params, className);
                     editingRow.scrollIntoView({
