@@ -8,6 +8,6 @@ urlpatterns = [
     path('json/field_values/<str:class_name>/<int:deleted>/<int:first_record>/<str:search_string>', views.field_values),
     path('json/record_info/<str:class_name>/<int:record_id>', views.record_info),
     path('json/dropdown_list/<str:class_name>', views.dropdown_list),
-    path('json/edit_dictionary/<str:class_name>/<int:elementId>', views.edit_dictionary),
+    path('json/edit_dictionary/<str:class_name>/<int:element_id>', views.edit_dictionary),
 
 ]
