@@ -10,7 +10,7 @@ import {jsonUrl} from "../main.js";
  * @param itemValue
  * @returns {Promise<void>}
  */
-export async function createDropDown(className, itemValue) {
+export async function createDropDown(className, itemValue, blankField) {
     const dropdown = document.createElement('div');
     dropdown.classList.add('dropdown');
     const dropDownInput = createModalInput('text');
@@ -30,11 +30,11 @@ export async function createDropDown(className, itemValue) {
         let itemElement = dropdownValues.find(e => e.id === itemValue)
         dropDownInput.value = itemElement.value;
         hiddenInput.value = itemElement.id
-    } else if (dropdownValues[0]) {
+    } else if (dropdownValues[0]  && !blankField) {
         dropDownInput.value = dropdownValues[0].value;
         hiddenInput.value = dropdownValues[0].id;
     }
-    createForeignList(dropdownValues, dropdownUl, dropDownInput, hiddenInput);
+    createForeignList(dropdownValues, dropdownUl, dropDownInput, hiddenInput, blankField);
     dropDownInput.addEventListener('click', () => {
         dropdownUl.classList.toggle('invisible')
     });
@@ -55,20 +55,27 @@ export async function createDropDown(className, itemValue) {
  * @param dropdownUl
  * @param dropDownInput
  * @param hiddenInput
+ * @param blankField
  */
-function createForeignList(dropdownValues, dropdownUl, dropDownInput, hiddenInput) {
-    let dropDownListItem;
+function createForeignList(dropdownValues, dropdownUl, dropDownInput, hiddenInput, blankField) {
+    if (blankField) {
+        createDropDownListItem({'id': '', 'value': ''}, dropdownUl, dropDownInput, hiddenInput)
+    }
     dropdownValues.forEach(item => {
-        dropDownListItem = document.createElement('li');
-        dropDownListItem.classList.add('dropdown__list_item');
-        dropDownListItem.value = item.id;
-        dropDownListItem.textContent = item.value;
-        dropDownListItem.addEventListener('click', (e) => {
-            dropDownInput.value = e.target.textContent;
-            hiddenInput.value = e.target.value;
-            dropdownUl.classList.add('invisible');
-        })
-        dropdownUl.appendChild(dropDownListItem);
+        createDropDownListItem(item, dropdownUl, dropDownInput, hiddenInput)
     });
+}
 
+
+function createDropDownListItem(item, dropdownUl, dropDownInput, hiddenInput) {
+    const dropDownListItem = document.createElement('li');
+    dropDownListItem.classList.add('dropdown__list_item');
+    dropDownListItem.value = item.id;
+    dropDownListItem.textContent = item.value;
+    dropDownListItem.addEventListener('click', (e) => {
+        dropDownInput.value = e.target.textContent;
+        hiddenInput.value = e.target.value;
+        dropdownUl.classList.add('invisible');
+    });
+    dropdownUl.appendChild(dropDownListItem);
 }
