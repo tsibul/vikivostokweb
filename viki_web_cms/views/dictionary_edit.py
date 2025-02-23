@@ -105,7 +105,7 @@ def color_validation (errors, value):
     :param value:
     :return:
     """
-    color_old = Color.objects.filter(code=value['code'], color_scheme__id=value['color_scheme_id'])
+    color_old = Color.objects.filter(code=value['code'], color_scheme__id=value['color_scheme_id'], deleted=False)
     if color_old:
         if not 'code' in errors:
             errors.append('code')
@@ -118,7 +118,7 @@ def pantone_validation(value):
         return False
 
 def goods_validation(errors, value):
-    goods_old = Goods.objects.filter(article=value['article'], name__icontains=value['name'])
+    goods_old = Goods.objects.filter(article=value['article'], name__icontains=value['name'], deleted=False)
     if goods_old:
         if not 'article' in errors:
             errors.append('article')
