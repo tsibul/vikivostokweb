@@ -421,4 +421,24 @@ body {
   border-width: 2px;
 }
 
+.catalogue {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 3fr 0.5fr 2fr 3fr 2fr 3fr 3fr 1fr;
+  align-items: center;
+  padding: 0 10px 0 10px;
+}
+.catalogue__title {
+  padding-right: 28px;
+}
+.catalogue__title-item {
+  font-weight: 600;
+}
+.catalogue__content {
+  overflow-y: visible;
+}
+.catalogue__row:hover {
+  background-color: rgba(74, 74, 74, 0.2);
+}
+
 /*# sourceMappingURL=style.css.map */

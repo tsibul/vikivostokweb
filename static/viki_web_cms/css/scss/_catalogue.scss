@@ -1,0 +1,24 @@
+@import "vars";
+@import "mixins";
+
+.catalogue {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 3fr 0.5fr 2fr 3fr 2fr 3fr 3fr 1fr;
+  align-items: center;
+  padding: 0 10px 0 10px;
+  &__title{
+    padding-right: 28px;
+  }
+  &__title-item{
+    font-weight: 600;
+  }
+  &__content{
+    overflow-y: visible;
+  }
+  &__row{
+    &:hover{
+      background-color: rgba($colorNeutral500, 0.2);
+    }
+  }
+}
