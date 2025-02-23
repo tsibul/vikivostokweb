@@ -7,3 +7,4 @@ from viki_web_cms.models.printing_models import *
 from viki_web_cms.models.product_group_models import *
 from viki_web_cms.models.goods import *
 from viki_web_cms.models.goods_filter import *
+from viki_web_cms.models.item_models import *
