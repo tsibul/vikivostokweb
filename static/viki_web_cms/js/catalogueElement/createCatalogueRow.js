@@ -7,6 +7,8 @@ import {createCatalogueItem} from "./createCatalogueItem.js";
 import {createColors} from "./createColors.js";
 import {fileChange} from "./fileChange.js";
 import {cancelEdit} from "./cancelEdit.js";
+import {fieldNotFileChange} from "./fieldNotFileChange.js";
+import {deletedChange} from "./deletedChange.js";
 
 /**
  *
@@ -18,7 +20,9 @@ export async function createCatalogueRow(item, catalogueRow) {
     catalogueRow.enctype = 'multipart/form-data';
     catalogueRow.classList.add('catalogue', 'catalogue__row');
     catalogueRow.appendChild(createCatalogueItem('number', 'id', item.id));
-    catalogueRow.appendChild(createCatalogueItem('checkbox', 'deleted', item.deleted));
+    const deleted = createCatalogueItem('checkbox', 'deleted', item.deleted);
+    deleted.addEventListener('change', (e) => deletedChange(e));
+    catalogueRow.appendChild(deleted);
     const itemName = document.createElement('textarea');
     itemName.value = item.name;
     itemName.name = 'name'
@@ -40,11 +44,13 @@ export async function createCatalogueRow(item, catalogueRow) {
     if (item.id === 0) {
         simpleArticle.checked = true;
     }
+    simpleArticle.addEventListener('change', (e) => fieldNotFileChange(e));
     catalogueRow.appendChild(simpleArticle);
     const goodsField = await createDropDown('Goods', item.goods__id, false)
     catalogueRow.appendChild(goodsField);
     const goodsId = goodsField.querySelector('input[hidden]');
-    goodsId.name = 'goods__id'
+    goodsId.name = 'goods__id';
+    goodsId.addEventListener('change', (e) => fieldNotFileChange(e));
     const file = document.createElement('div');
     file.classList.add('catalogue__file');
     const fileName = document.createElement('div');
@@ -76,7 +82,7 @@ export async function createCatalogueRow(item, catalogueRow) {
     cancelBtn.disabled = true;
     cancelBtn.innerHTML = '<i class="catalogue__icon fa-solid fa-x"></i>' +
         '<span class="tooltip-text">отменить</span>';
-    cancelBtn.addEventListener('click', (e) => cancelEdit(e) );
+    cancelBtn.addEventListener('click', (e) => cancelEdit(e));
     btnBlock.appendChild(saveBtn);
     btnBlock.appendChild(cancelBtn);
     catalogueRow.appendChild(btnBlock);
