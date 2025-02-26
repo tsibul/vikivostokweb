@@ -12,4 +12,5 @@ urlpatterns = [
     path('json/catalogue_data/<int:deleted>/<int:first_record>/<str:search_string>/<str:order>', views.catalogue_data),
     path('json/parse_file_data/<int:goods_id>/<int:simple_article>/<str:file_name>', views.parse_file_data),
 
+    path('json/catalogue_record/<int:record_id>', views.parse_file_data),
 ]
