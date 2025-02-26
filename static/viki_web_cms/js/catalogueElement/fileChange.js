@@ -5,7 +5,7 @@ import {fetchJsonData} from "../fetchJsonData.js";
 import {createColors} from "./createColors.js";
 
 /**
- * 
+ *
  * @param e
  * @param fileName
  * @param goodsId
@@ -48,6 +48,9 @@ export async function fileChange(e, fileName, goodsId, simpleArticle, photo) {
             mainColorText.textContent = parseData.values.main_color_text;
             option.value = parseData.values.option;
             createColors(parseData.values.colors, colors);
+            const btnSave = form.querySelector('.btn__save');
+            btnSave.disabled = false;
+            btnSave.classList.remove('btn__disabled');
         } else {
             fileName.textContent = '';
             photo.src = '';
