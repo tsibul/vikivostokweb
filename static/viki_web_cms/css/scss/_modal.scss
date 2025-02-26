@@ -1,0 +1,128 @@
+@import "vars";
+@import "mixins";
+
+.modal {
+  top: 15%;
+  left: 20%;
+  max-width: 1100px;
+  min-width: 800px;
+  @include brd-standard;
+  padding: 8px;
+  box-shadow: 4px 4px 6px $colorNeutral500;
+  overflow: visible;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba($colorSecondary, 0.3);
+    @include brd-standard;
+    border-color: transparent;
+    padding: 8px;
+
+    &_btn {
+      background-color: transparent;
+      border: none;
+      font-size: 18px;
+    }
+  }
+
+  &__form {
+    margin-top: 12px;
+  }
+
+  &__content {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr 1.5fr);
+    grid-auto-flow: row;
+    gap: 12px;
+    height: 100%;
+
+    &_item {
+      display: flex;
+      align-items: center;
+      padding: 12px 8px;
+    }
+
+    &_label {
+      align-self: center;
+    }
+
+    &_number {
+      @include brd-standard;
+      padding: 8px;
+    }
+
+    &_text {
+      @include brd-standard;
+      padding: 8px;
+    }
+
+    &_checkbox {
+      accent-color: $colorSecondary;
+      cursor: pointer;
+      transform: scale(0.7);
+    }
+
+    &_file-frame {
+      @include brd-standard;
+      min-width: 400px;
+      height: 33.6px;
+      position: relative;
+      padding: 8px 4px;
+      overflow: hidden;
+      transition: 0.2s ease background-color;
+
+      &-short {
+        min-width: 360px;
+        margin-left: 4px;
+      }
+
+      &:hover {
+        background-color: rgba($colorSecondary, 0.1);
+      }
+    }
+
+    &_file {
+      left: -30%;
+      width: 520px;
+      top: -2px;
+      padding: 8px 4px;
+      position: absolute;
+
+      &-short {
+        width: 480px;
+        left: -33%;
+      }
+    }
+
+    &_image {
+      height: 36px;
+      @include brd-standard;
+      border-radius: 4px;
+      transition: 0.2s ease transform;
+
+      &:hover {
+        transform: scale(4);
+      }
+    }
+
+    &_span {
+      display: flex;
+    }
+  }
+
+  &__button-block {
+    min-width: 100%;
+    padding: 8px 0;
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    justify-content: flex-end;
+  }
+}
+
+.border-alert{
+  border-color: red;
+  border-width: 2px;
+}

@@ -6,6 +6,8 @@
   @include brd-standard;
   padding: 8px;
   margin-bottom: 8px;
+  //max-height: calc(100vh - 60px);
+  min-height: 160px;
 
   &__header {
     display: flex;
@@ -46,9 +48,9 @@
 }
 
 .dictionary-content {
-  //grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
-  //grid-auto-flow: row;
-  wrap-option: no-wrap;
+  max-height: calc(100vh - 190px);
+  overflow: auto;
+  //position: relative;
 
   &__header {
     font-size: 18px;
@@ -56,17 +58,56 @@
   }
 
   &__title {
-    display: grid;
-    gap: 6px;
-    align-items: center;
-    padding: 4px 12px 0 4px;
+    //display: grid;
+    //gap: 6px;
+    //align-items: center;
+    //padding: 4px 12px 0 4px;
+    position: sticky;
+    top: 0;
+    background-color: $colorSecondary50;
+    //z-index: 3;
 
     &_item {
-      text-align: center;
       font-weight: 600;
       font-size: 14px;
       text-wrap: pretty;
       word-break: break-all;
     }
   }
+
+  &__rows {
+  }
+
+  &__row {
+    display: grid;
+    gap: 6px;
+    align-items: center;
+    padding: 4px 12px 2px 4px;
+    &:hover{
+      background-color: rgba($colorNeutral500, 0.2);
+    }
+
+    &_item {
+      font-size: 14px;
+      text-wrap: pretty;
+      word-break: break-all;
+    }
+    &_img{
+      height: 36px;
+      overflow: hidden;
+      content: inherit;
+      transition: 0.2s ease transform;
+      @include brd-standard;
+      border-radius: 4px;
+      &:hover{
+        transform: scale(3);
+      }
+    }
+  }
+
+  &__square {
+    width: 14px;
+    height: 14px;
+  }
+
 }

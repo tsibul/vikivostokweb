@@ -23,8 +23,12 @@ class ProductGroup(SettingsDictionary):
 
 
     @property
-    def cover_url(self):
+    def file_url(self):
         return f"/static/viki_web_cms/files/cover/{self.cover.name}" if self.cover else None
+
+    @staticmethod
+    def storage_url():
+        return '/static/viki_web_cms/files/cover/'
 
     @staticmethod
     def order_default():
@@ -38,21 +42,32 @@ class ProductGroup(SettingsDictionary):
                 'field': 'second_name',
                 'type': 'string',
                 'label': 'пояснение',
+                'null': True,
             },
             {
                 'field': 'product_group_url',
                 'type': 'string',
                 'label': 'адрес страницы',
+                'null': True,
             },
             {
                 'field': 'layout',
                 'type': 'foreign',
                 'label': 'тип макета страницы каталога',
                 'foreignClass': 'LayoutType',
+                'null': False,
             },
             {
                 'field': 'priority',
                 'type': 'number',
                 'label': 'приоритет показа',
+                'null': False,
+            },
+            {
+                'field': 'cover',
+                'type': 'image',
+                'label': 'обложка',
+                'url': '/static/viki_web_cms/files/cover/',
+                'null': True,
             },
         ]

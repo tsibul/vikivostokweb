@@ -1,15 +1,17 @@
 'use strict'
 
-import {jsonUrl} from "../main.js";
-import {fetchJsonData} from "../fetchJsonData.js";
-import {gridDictionaryStyle} from "./gridDictonaryStyle.js";
+import {createHEXSquare} from "./createHEXSquare.js";
+import {openEditModal} from "../createInput/openEditModal.js";
 
-export async function createDictionaryTitle(dictionaryClass) {
+/**
+ * create dictionary title
+ * @param titleObject field names & params object
+ * @returns {Promise<HTMLDivElement>}
+ */
+export async function createDictionaryTitle(titleObject) {
     const dictionaryTitle = document.createElement('div');
-    dictionaryTitle.classList.add('dictionary-content__title');
-    const url = jsonUrl + 'field_names/' + dictionaryClass;
-    const titleObject = await fetchJsonData(url);
-    gridDictionaryStyle(dictionaryTitle, titleObject);
+    dictionaryTitle.classList.add('dictionary-content__title', 'dictionary-content__row');
+    dictionaryTitle.appendChild(createHEXSquare());
     titleObject.forEach(title => {
         let titleItem = document.createElement("div");
         titleItem.classList.add('dictionary-content__title_item');
@@ -19,6 +21,8 @@ export async function createDictionaryTitle(dictionaryClass) {
     const newBtn = document.createElement("button");
     newBtn.classList.add('btn', 'btn__save');
     newBtn.textContent = 'Создать';
+    newBtn.dataset.itemId = '0';
+    newBtn.addEventListener('click', (e) => openEditModal(e))
     dictionaryTitle.appendChild(newBtn);
     return dictionaryTitle;
 }

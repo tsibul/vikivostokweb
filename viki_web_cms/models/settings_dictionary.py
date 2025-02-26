@@ -15,6 +15,15 @@ class SettingsDictionary(models.Model):
         abstract = True
         ordering = ['name']
 
+    @property
+    def file_url(self):
+        return None
+
+    @staticmethod
+    def storage_url():
+        return None
+
+
     @staticmethod
     def order_default():
         return ['name']
@@ -32,6 +41,5 @@ class SettingsDictionary(models.Model):
                 'field': 'deleted',
                 'type': 'boolean',
                 'label': 'удалено',
-                'null': False
             },
         ]
