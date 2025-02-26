@@ -6,6 +6,7 @@ import {createCancelButton} from "../createStandardElements/createCancelButton.j
 import {createCatalogueItem} from "./createCatalogueItem.js";
 import {createColors} from "./createColors.js";
 import {fileChange} from "./fileChange.js";
+import {cancelEdit} from "./cancelEdit.js";
 
 /**
  *
@@ -75,6 +76,7 @@ export async function createCatalogueRow(item, catalogueRow) {
     cancelBtn.disabled = true;
     cancelBtn.innerHTML = '<i class="catalogue__icon fa-solid fa-x"></i>' +
         '<span class="tooltip-text">отменить</span>';
+    cancelBtn.addEventListener('click', (e) => cancelEdit(e) );
     btnBlock.appendChild(saveBtn);
     btnBlock.appendChild(cancelBtn);
     catalogueRow.appendChild(btnBlock);
