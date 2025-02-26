@@ -98,6 +98,8 @@ def parse_file_data(request, goods_id, simple_article, file_name):
             else:
                 current_color = Color.objects.filter(color_scheme=goods.additional_color_scheme,
                                                      code=color_article[i]).first()
+            if not current_color:
+                return JsonResponse({'error': True}, safe=False)
             name = name + '/' + current_color.name
             colors_to_save.append({
                 'color__id': current_color.id,
@@ -106,6 +108,8 @@ def parse_file_data(request, goods_id, simple_article, file_name):
     elif  goods.additional_material:
         current_color = Color.objects.filter(color_scheme=goods.additional_color_scheme,
                                              code=color_article[-1]).first()
+        if not current_color:
+            return JsonResponse({'error': True}, safe=False)
         colors_to_save.append({
             'color__id': current_color.id,
             'color_position': goods.details_number,
