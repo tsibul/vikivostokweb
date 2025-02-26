@@ -13,4 +13,5 @@ urlpatterns = [
     path('json/parse_file_data/<int:goods_id>/<int:simple_article>/<str:file_name>', views.parse_file_data),
 
     path('json/catalogue_record/<int:record_id>', views.parse_file_data),
+    path('json/save_catalogue_item/<int:record_id>', views.save_catalogue_item),
 ]

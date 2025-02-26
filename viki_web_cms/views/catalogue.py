@@ -155,6 +155,9 @@ def catalogue_record(request, record_id):
         'values': values,
     }, safe=False)
 
+def save_catalogue_item(request, record_id):
+    return JsonResponse({'id': record_id}, safe=False)
+
 
 def catalogue_value_query(items):
     """
