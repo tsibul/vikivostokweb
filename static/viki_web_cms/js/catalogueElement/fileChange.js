@@ -15,15 +15,37 @@ import {createColors} from "./createColors.js";
  */
 export async function fileChange(e, fileName, goodsId, simpleArticle, photo) {
     const form = e.target.closest('form');
-    const oldFormData = new FormData(form);
     const colors = form.querySelector('.colors');
     const option = form.querySelector('input[name="option__id"]');
+    const name = form.querySelector('textarea[name="name"]');
+    const itemArticle = form.querySelector('input[name="item_article"]');
+    const mainColorId = form.querySelector('input[name="main_color__id"]');
+    const mainColorText = form.querySelector('.main_color_text');
+    const btnSave = form.querySelector('.btn__save');
+
+    /**
+     *
+     */
+    function clearData() {
+        fileName.textContent = '';
+        photo.src = '';
+        name.value = '';
+        itemArticle.value = '';
+        mainColorId.value = '';
+        mainColorText.textContent = '';
+        option.value = '';
+        colors.innerHTML = '';
+        btnSave.disabled = true;
+        if (!btnSave.classList.contains('btn__disabled')) btnSave.classList.add('btn__disabled');
+
+    }
+
     colors.innerHTML = '';
     option.value = '';
     const re = /(\.jpg|\.jpeg|\.png)$/i;
     if (!re.exec(e.target.value)) {
         e.target.value = '';
-        fileName.textContent = '';
+        clearData();
     } else {
         const newFile = e.target.files[0];
         const reader = new FileReader();
@@ -38,25 +60,16 @@ export async function fileChange(e, fileName, goodsId, simpleArticle, photo) {
             '/' + simpleArticle + '/' + fileNameText;
         const parseData = await fetchJsonData(url);
         if (!parseData.error) {
-            const name = form.querySelector('textarea[name="name"]');
-            const itemArticle = form.querySelector('input[name="item_article"]');
-            const mainColorId = form.querySelector('input[name="main_color__id"]');
-            const mainColorText = form.querySelector('.main_color_text');
             name.value = parseData.values.name;
             itemArticle.value = parseData.values.item_article;
             mainColorId.value = parseData.values.main_color__id;
             mainColorText.textContent = parseData.values.main_color_text;
             option.value = parseData.values.option;
             createColors(parseData.values.colors, colors);
-            const btnSave = form.querySelector('.btn__save');
             btnSave.disabled = false;
             btnSave.classList.remove('btn__disabled');
         } else {
-            fileName.textContent = '';
-            photo.src = '';
+            clearData();
         }
-
-        console.log()
-
     }
 }
