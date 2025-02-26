@@ -82,6 +82,7 @@ function createDropDownListItem(item, dropdownUl, dropDownInput, hiddenInput) {
     dropDownListItem.addEventListener('click', (e) => {
         dropDownInput.value = e.target.textContent;
         hiddenInput.value = e.target.value;
+        hiddenInput.dispatchEvent(new Event('change', {bubbles: true}))
         dropdownUl.classList.add('invisible');
     });
     dropdownUl.appendChild(dropDownListItem);
