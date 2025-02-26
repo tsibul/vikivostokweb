@@ -56,9 +56,19 @@ body {
     border-color: $colorSecondary;
     color: $colorSecondary50;
 
+    & * {
+      color: $colorSecondary50;
+    }
+
     &:hover {
       background-color: $colorSecondary50;
       color: $colorSecondary;
+    }
+
+    &:hover * {
+      background-color: $colorSecondary50;
+      color: $colorSecondary;
+
     }
   }
 
@@ -67,10 +77,28 @@ body {
     border-color: $colorNeutral500;
     color: $colorSecondary50;
 
+    & * {
+      color: $colorSecondary50;
+    }
+
     &:hover {
       background-color: $colorSecondary50;
       color: $colorNeutral500;
     }
+
+    &:hover * {
+      //background-color: $colorSecondary50;
+      color: $colorNeutral500;
+    }
+  }
+
+  &__disabled {
+    opacity: 0.3;
+
+    & * {
+      opacity: 0.2;
+    }
+
   }
 
   &__neutral {
@@ -83,7 +111,42 @@ body {
       color: $colorPrimary500;
     }
   }
+
 }
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+
+  &:hover .tooltip-text {
+    visibility: visible;
+  }
+}
+
+.tooltip-text {
+  visibility: hidden;
+  width: 120px;
+  background-color: #fff;
+  text-align: center;
+  @include brd-standard;
+  padding: 4px 0;
+  position: absolute;
+  z-index: 1;
+  top: 24px;
+  right: 60%;
+
+  //&::after {
+  //  content: " ";
+  //  position: absolute;
+  //  top: 50%;
+  //  right: 100%; /* To the left of the tooltip */
+  //  margin-top: -5px;
+  //  border-width: 5px;
+  //  border-style: solid;
+  //  border-color: transparent $colorPrimary transparent transparent;
+  //}
+}
+
 
 @media (max-width: 1330px) {
   .container {
