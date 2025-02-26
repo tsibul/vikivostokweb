@@ -8,6 +8,7 @@ import {jsonUrl} from "../main.js";
  * create dropdown
  * @param className
  * @param itemValue
+ * @param blankField
  * @returns {Promise<void>}
  */
 export async function createDropDown(className, itemValue, blankField) {
@@ -30,7 +31,7 @@ export async function createDropDown(className, itemValue, blankField) {
         let itemElement = dropdownValues.find(e => e.id === itemValue)
         dropDownInput.value = itemElement.value;
         hiddenInput.value = itemElement.id
-    } else if (dropdownValues[0]  && !blankField) {
+    } else if (dropdownValues[0] && !blankField) {
         dropDownInput.value = dropdownValues[0].value;
         hiddenInput.value = dropdownValues[0].id;
     }
@@ -66,7 +67,13 @@ function createForeignList(dropdownValues, dropdownUl, dropDownInput, hiddenInpu
     });
 }
 
-
+/**
+ *
+ * @param item
+ * @param dropdownUl
+ * @param dropDownInput
+ * @param hiddenInput
+ */
 function createDropDownListItem(item, dropdownUl, dropDownInput, hiddenInput) {
     const dropDownListItem = document.createElement('li');
     dropDownListItem.classList.add('dropdown__list_item');
