@@ -124,6 +124,11 @@ class CatalogueItem(SettingsDictionary):
                 'url': '/static/viki_web_cms/files/item_photo/',
                 'null': True,
             },
+            {
+                'field': 'simple_article',
+                'type': 'boolean',
+                'label': 'простой артикул',
+            }
         ]
 
 
