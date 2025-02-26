@@ -47,42 +47,7 @@ def catalogue_data(request, deleted, first_record, search_string, order):
                 Q(main_color__code__icontains=search_string) |
                 Q(image__icontains=search_string)
             ).order_by(*order)[first_record: first_record + 20]
-
-    colors_subquery = (CatalogueItemColor.objects.filter(
-        item=OuterRef('id')  # Связь по внешнему ключу
-    ).annotate(
-        colors=Concat(
-            Value('"color__id":'),
-            Cast(F('color__id'), output_field=CharField()),
-            Value('"color_position":'),
-            Cast(F('color_position'), output_field=CharField()),
-        )
-    )
-    .values(
-        'colors',
-    ))
-    option_subquery = CatalogueItemOption.objects.filter(
-        item__id=OuterRef('id')
-    ).values('option__id')[:1]
-
-    values = list(
-        items.annotate(
-            goods_text=Concat(F('goods__article'), Value(' '), F('goods__name')),
-            main_color_text=Concat(F('main_color__code'), Value(' '), F('main_color__name')),
-            option=Subquery(option_subquery, output_field=CharField()),
-            colors=Subquery(colors_subquery, output_field=CharField()),
-        ).values(
-            'name',
-            'deleted',
-            'item_article',
-            'goods__id',
-            'goods_text',
-            'main_color__id',
-            'main_color_text',
-            'image',
-            'option',
-            'colors',
-        ))
+    values = catalogue_value_query(items)
     return JsonResponse({
         'values': values,
     }, safe=False)
@@ -169,3 +134,62 @@ def parse_file_data(request, goods_id, simple_article, file_name):
         'values': item_values,
         'error': False,
     }, safe=False)
+
+
+def catalogue_record(request, record_id):
+    """
+    return single catalogue record with option & additional colors by id
+    :param request:
+    :param record_id:
+    :return:
+    """
+    if not request.user.is_authenticated:
+        return JsonResponse(None, safe=False)
+    item = CatalogueItem.objects.filter(id=record_id)
+    values = catalogue_value_query(item)
+    return JsonResponse({
+        'values': values,
+    }, safe=False)
+
+
+def catalogue_value_query(items):
+    """
+    prepare json serialize data for catalogye record
+    :param items:
+    :return:
+    """
+    colors_subquery = (CatalogueItemColor.objects.filter(
+        item=OuterRef('id')
+    ).annotate(
+        colors=Concat(
+            Value('"color__id":'),
+            Cast(F('color__id'), output_field=CharField()),
+            Value('"color_position":'),
+            Cast(F('color_position'), output_field=CharField()),
+        )
+    )
+    .values(
+        'colors',
+    ))
+    option_subquery = CatalogueItemOption.objects.filter(
+        item__id=OuterRef('id')
+    ).values('option__id')[:1]
+
+    values = list(items.annotate(
+            goods_text=Concat(F('goods__article'), Value(' '), F('goods__name')),
+            main_color_text=Concat(F('main_color__code'), Value(' '), F('main_color__name')),
+            option=Subquery(option_subquery, output_field=CharField()),
+            colors=Subquery(colors_subquery, output_field=CharField()),
+        ).values(
+            'name',
+            'deleted',
+            'item_article',
+            'goods__id',
+            'goods_text',
+            'main_color__id',
+            'main_color_text',
+            'image',
+            'option',
+            'colors',
+        ))
+    return values
