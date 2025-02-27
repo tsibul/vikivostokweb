@@ -19,7 +19,7 @@ export function createCatalogueItem(itemType, itemName, itemValue) {
         item.classList.add('check', 'catalogue__check');
     } else {
         item.value = itemValue;
-        item.disabled = true;
+        item.readOnly = true;
         item.classList.add('catalogue__input');
     }
     return item;
