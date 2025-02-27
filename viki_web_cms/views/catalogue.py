@@ -122,6 +122,8 @@ def parse_file_data(request, goods_id, simple_article, file_name, item_id):
             name = name + '/' + new_option.name
         else:
             return JsonResponse({'error': True}, safe=False)
+    else:
+        new_option = None
     item_values = {
         'name': name,
         'item_article': item_article,
