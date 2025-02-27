@@ -30,6 +30,12 @@ export const catalogueFields = [
         'null': false,
     },
     {
+        'field': 'goods_option',
+        'type': 'foreign',
+        'label': 'опция',
+        'foreignClass': 'GoodsOption',
+        'null': false,
+    }, {
         'field': 'image',
         'type': 'img',
         'label': 'фото',
@@ -39,7 +45,7 @@ export const catalogueFields = [
     {
         'field': 'simple_article',
         'type': 'boolean',
-        'label': 'простой артикул',
+        'label': 'ст. арт.',
     },
     {
         'field': 'goods',
