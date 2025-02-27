@@ -121,6 +121,13 @@ class Goods(SettingsDictionary):
                 'null': True,
             },
             {
+                'field': 'goods_option_group',
+                'type': 'foreign',
+                'label': 'опция',
+                'foreignClass': 'GoodsOptionGroup',
+                'null': True,
+            },
+            {
                 'field': 'details_number',
                 'type': 'number',
                 'label': 'кол-во деталей',
@@ -135,13 +142,6 @@ class Goods(SettingsDictionary):
                 'field': 'print_layout',
                 'type': 'file',
                 'label': 'макет нанесения',
-                'null': True,
-            },
-            {
-                'field': 'goods_option_group',
-                'type': 'foreign',
-                'label': 'опция',
-                'foreignClass': 'GoodsOptionGroup',
                 'null': True,
             },
         ]
