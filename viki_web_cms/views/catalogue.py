@@ -96,7 +96,11 @@ def parse_file_data(request, goods_id, simple_article, file_name, item_id):
                 color_scheme=goods.color_scheme,
                 code=color_article[i],
                 deleted=False).first()
-            if not goods.multicolor and i and current_color.id != temp_color_id:
+            if (not goods.multicolor
+                    and i
+                    and current_color.id != temp_color_id
+                    or not current_color
+            ):
                 return JsonResponse({'error': True}, safe=False)
             temp_color_id = current_color.id
         else:
@@ -104,8 +108,8 @@ def parse_file_data(request, goods_id, simple_article, file_name, item_id):
                 color_scheme=goods.additional_color_scheme,
                 code=color_article[i],
                 deleted=False).first()
-        if not current_color:
-            return JsonResponse({'error': True}, safe=False)
+            if not current_color:
+                return JsonResponse({'error': True}, safe=False)
         if goods.multicolor or i == 0:
             name = name + '/' + current_color.name
         colors_to_save.append({
