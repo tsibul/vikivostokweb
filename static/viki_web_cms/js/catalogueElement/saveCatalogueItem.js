@@ -6,12 +6,13 @@ import {fetchJsonData} from "../fetchJsonData.js";
 /**
  *
  * @param e
+ * @param btn
  * @returns {Promise<void>}
  */
-export async function saveCatalogueItem(e) {
-    e.target.disabled = true;
-    e.target.classList.add('btn__disabled');
-    const form = e.target.closest('form')
+export async function saveCatalogueItem(e, btn) {
+    btn.disabled = true;
+    btn.classList.add('btn__disabled');
+    const form = btn.closest('form')
     const rowId = form.querySelector('input[name="id"]').value;
     const newBtn = document.querySelector('.catalogue__title').querySelector('.btn__save');
     newBtn.disabled = false;
@@ -30,7 +31,8 @@ export async function saveCatalogueItem(e) {
         }
     }
     if (rowId === '0' || dataDifferent) {
-        const saveUrl = jsonUrl + 'save_catalogue_item /' + rowId;
+        e.preventDefault();
+        const saveUrl = jsonUrl + 'save_catalogue_item/' + rowId;
         await fetch(saveUrl, {
             method: 'POST',
             body: formData,
@@ -39,6 +41,8 @@ export async function saveCatalogueItem(e) {
             .then(rowData => {
                 if (rowId === '0')
                 form.querySelector('input[name="id"]').value = rowData.id;
+                // console.log(rowId);
+                // console.log();
             });
     }
 }
