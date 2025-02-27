@@ -32,6 +32,20 @@ class GoodsGroup(SettingsDictionary):
             },
         ]
 
+class GoodsOptionGroup(SettingsDictionary):
+    """ goods options"""
+
+    class Meta(SettingsDictionary.Meta):
+        verbose_name = 'Модификация товара'
+        verbose_name_plural = 'Модификации товаров'
+        db_table_comment = 'Goods options'
+        db_table = 'goods_option_group'
+        ordering = ['name']
+
+    @staticmethod
+    def order_default():
+        return ['name']
+
 
 class Goods(SettingsDictionary):
     """
@@ -47,6 +61,7 @@ class Goods(SettingsDictionary):
     details_number = models.IntegerField(default=1)
     multicolor = models.BooleanField(default=False)
     print_layout = models.FileField(upload_to=fs_goods, storage=fs_goods, blank=True, null=True)
+    goods_option_group = models.ForeignKey(GoodsOptionGroup, on_delete=models.SET_NULL, null=True)
 
     class Meta(SettingsDictionary.Meta):
         verbose_name = 'Товар'
@@ -122,12 +137,20 @@ class Goods(SettingsDictionary):
                 'label': 'макет нанесения',
                 'null': True,
             },
+            {
+                'field': 'goods_option_group',
+                'type': 'foreign',
+                'label': 'опция',
+                'foreignClass': 'GoodsOptionGroup',
+                'null': True,
+            },
         ]
 
 
 class GoodsOption(SettingsDictionary):
     """ goods options"""
     option_article = models.CharField(max_length=120)
+    option_group = models.ForeignKey(GoodsOptionGroup, on_delete=models.SET_NULL, null=True)
 
     class Meta(SettingsDictionary.Meta):
         verbose_name = 'Модификация товара'
@@ -149,40 +172,13 @@ class GoodsOption(SettingsDictionary):
                 'label': 'артикул опции',
                 'null': False,
             },
+            {
+                'field': 'option_group',
+                'type': 'foreign',
+                'label': 'группа опций',
+                'foreignClass': 'GoodsOptionGroup',
+                'null': True,
+            },
+
         ]
 
-
-class GoodsToOption(SettingsDictionary):
-    """ goods vs options corresponding """
-    goods = models.ForeignKey(Goods, on_delete=models.SET_NULL, null=True)
-    goods_options = models.ForeignKey(GoodsOption, on_delete=models.SET_NULL, null=True)
-
-    class Meta(SettingsDictionary.Meta):
-        verbose_name = 'Связь модификация-товар'
-        verbose_name_plural = 'Связи модификация-товар'
-        db_table_comment = 'Goods  to options'
-        db_table = 'goods_to_options'
-        ordering = ['name']
-
-    @staticmethod
-    def order_default():
-        return ['name']
-
-    @staticmethod
-    def dictionary_fields():
-        return SettingsDictionary.dictionary_fields() + [
-            {
-                'field': 'goods',
-                'type': 'foreign',
-                'label': 'товар',
-                'null': False,
-                'foreignClass': 'Goods',
-            },
-            {
-                'field': 'goods_options',
-                'type': 'foreign',
-                'label': 'опция',
-                'null': False,
-                'foreignClass': 'GoodsOption',
-            },
-        ]
