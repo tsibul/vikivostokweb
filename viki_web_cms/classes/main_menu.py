@@ -56,7 +56,7 @@ class MainMenu:
                     CMSSetting('Группы каталога', 'ProductGroup', False ),
                     CMSSetting('Группы товара', 'GoodsGroup', False ),
                     CMSSetting('Опции товара', 'GoodsOption', False),
-                    CMSSetting('Связь товаров и опций', 'GoodsToOption', True ),
+                    CMSSetting('Группы опций товара', 'GoodsOptionGroup', False ),
                 ]),
                 MenuSection('Фото товаров', [
                     CMSSetting('Фото товаров', '', True),
