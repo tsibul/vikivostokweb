@@ -208,8 +208,8 @@ def catalogue_value_query(items):
         'main_color__id',
         'main_color_text',
         'image',
-        'option__id',
-        'option__name',
+        'goods_option__id',
+        'goods_option__name',
         'colors',
     ))
     return values
