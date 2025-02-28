@@ -4,7 +4,7 @@ from django.db import models
 
 from viki_web_cms.models import Goods, SettingsDictionary, Color, GoodsOption
 
-fs_item_photo = FileSystemStorage(location='viki_web_cms/files/item_photo')
+fs_item_photo = FileSystemStorage(location='static/viki_web_cms/files/item_photo')
 
 
 class CatalogueItem(SettingsDictionary):
@@ -12,7 +12,7 @@ class CatalogueItem(SettingsDictionary):
     item_article = models.CharField(max_length=120)
     goods = models.ForeignKey(Goods, on_delete=models.CASCADE)
     main_color = models.ForeignKey(Color, on_delete=models.CASCADE)
-    image = models.FileField(upload_to=fs_item_photo, storage=fs_item_photo, null=True, blank=True)
+    image = models.FileField(storage=fs_item_photo, null=True, blank=True)
     simple_article = models.BooleanField(default=True)
     goods_option = models.ForeignKey(GoodsOption, on_delete=models.SET_NULL, null=True, blank=True)
 

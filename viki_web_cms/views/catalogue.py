@@ -1,6 +1,6 @@
 import json
 
-from django.db.models import Q, F, Value, Subquery, OuterRef, CharField
+from django.db.models import Q, F, Value, Subquery, OuterRef, CharField, Func
 from django.db.models.functions import Concat, Cast
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -22,7 +22,7 @@ def catalogue_data(request, deleted, first_record, search_string, order):
         return JsonResponse(None, safe=False)
     if order == '0':
         order = CatalogueItem.order_default()
-    if not search_string:
+    if not search_string != 'None':
         if not deleted:
             items = CatalogueItem.objects.filter(deleted=False).order_by(*order)[first_record: first_record + 20]
         else:
@@ -163,22 +163,39 @@ def catalogue_record(request, record_id):
 def save_catalogue_item(request, record_id):
     if not request.user.is_authenticated:
         return JsonResponse(None, safe=False)
-    colors = json.loads(request.POST.get('colors'))
-    option_id = request.POST.get('option')
-    if option_id:
-        option_object = GoodsOption.objects.get(id=option_id)
     if record_id:
         item = CatalogueItem.objects.get(id=record_id)
     else:
-        item = CatalogueItem(id=record_id)
+        item = CatalogueItem()
     item.name = request.POST['name']
     item.item_article = request.POST['item_article']
-    item.main_color__id = int(request.POST['main_color__id'])
-    item.goods__id = int(request.POST['goods__id'])
+    item.main_color_id = int(request.POST['main_color__id'])
+    item.goods_id = int(request.POST['goods__id'])
     item.deleted = item.deleted = True if request.POST.get('deleted') else False
     item.simple_article = True if request.POST.get('simple_article') else False
+    option_id = request.POST.get('option')
+    option_object = GoodsOption.objects.get(id=option_id) if option_id else None
+    item.option = option_object
+    item.image.save(request.FILES['image'].name, request.FILES['image'])
+    item.save()
 
-    return JsonResponse({'id': record_id}, safe=False)
+    colors = json.loads(request.POST.get('colors'))
+    for color in colors:
+        if record_id:
+            color_object = CatalogueItemColor.objects.get(
+                item_id=item.id,
+                color_position=color['color_position']
+            )
+            color_object.color_id = color['color__id']
+        else:
+            color_object = CatalogueItemColor(
+                item_id=item.id,
+                color_position=color['color_position'],
+                color_id=color['color__id']
+            )
+        color_object.save()
+
+    return JsonResponse({'id': item.id}, safe=False)
 
 
 def catalogue_value_query(items):
@@ -187,19 +204,25 @@ def catalogue_value_query(items):
     :param items:
     :return:
     """
-    colors_subquery = (CatalogueItemColor.objects.filter(
+    colors_subquery = CatalogueItemColor.objects.filter(
         item=OuterRef('id')
     ).annotate(
-        colors=Concat(
-            Value('"color__id":'),
+        color_data=Concat(
+            Value('{"color__id":'),
             Cast(F('color__id'), output_field=CharField()),
-            Value('"color_position":'),
+            Value(', "color_position":'),
             Cast(F('color_position'), output_field=CharField()),
+            Value('}'),
         )
+    ).values(
+        'item',
+    ).annotate(
+        color_list=Concat(
+            Value('['), Func(F('color_data'), function='GROUP_CONCAT'), Value(']')
+        )
+    ).values(
+        'color_list',
     )
-    .values(
-        'colors',
-    ))
 
     values = list(items.annotate(
         goods_text=Concat(F('goods__article'), Value(' '), F('goods__name')),
@@ -213,6 +236,7 @@ def catalogue_value_query(items):
         'goods_text',
         'main_color__id',
         'main_color_text',
+        'simple_article',
         'image',
         'goods_option__id',
         'goods_option__name',

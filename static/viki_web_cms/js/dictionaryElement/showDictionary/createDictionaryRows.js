@@ -61,6 +61,12 @@ export function createRow(row, value, fieldParams, dictionaryClass) {
                 itemDiv.classList.add('dictionary-content__row_img');
                 itemDiv.src = fieldParams[key]['url'] + value[key];
                 itemDiv.alt = value[key];
+            } else if (Object.keys(fieldParams).includes(key) && fieldParams[key]['type'] === 'boolean') {
+                itemDiv = document.createElement('input');
+                itemDiv.type = 'checkbox';
+                itemDiv.checked = value[key];
+                itemDiv.disabled = true;
+                itemDiv.classList.add('dictionary-content__check');
             } else {
                 itemDiv = document.createElement('div');
                 itemDiv.classList.add('dictionary-content__row_item');

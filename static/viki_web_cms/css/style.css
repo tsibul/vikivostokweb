@@ -343,6 +343,11 @@ body {
 .dictionary-content__row_img:hover {
   transform: scale(3);
 }
+.dictionary-content__check {
+  height: 16px;
+  width: 16px;
+  accent-color: #0F4880;
+}
 .dictionary-content__square {
   width: 14px;
   height: 14px;
@@ -483,10 +488,13 @@ body {
 }
 .catalogue__content {
   overflow-y: scroll;
-  min-height: 400px;
+  height: calc(100vh - 180px);
 }
-.catalogue__row:hover {
-  background-color: rgba(74, 74, 74, 0.1);
+.catalogue__row {
+  position: relative;
+}
+.catalogue__row:has(.catalogue__img:hover) {
+  grid-template-columns: 0.5fr 6.5fr 2fr 1.5fr 1.5fr 0.5fr 3fr 2fr 0.95fr;
 }
 .catalogue__row * {
   text-wrap: wrap;
@@ -497,6 +505,7 @@ body {
   border-color: transparent;
   background-color: #F2FFFF;
   padding: 7px 0;
+  word-break: break-word;
 }
 .catalogue__check {
   height: 22px;
@@ -504,11 +513,16 @@ body {
 }
 .catalogue__img {
   max-height: 36px;
-  transition: max-height 0.2s ease;
+  max-width: 240px;
+  transition: transform 0.6s ease;
 }
 .catalogue__img:hover {
+  position: absolute;
+  left: 30%;
   z-index: 10;
-  max-height: 108px;
+  max-height: 300px;
+  max-width: 600px;
+  transform: scale(1.1);
 }
 .catalogue__file {
   position: relative;

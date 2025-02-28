@@ -15,7 +15,7 @@ export function createCatalogueItem(itemType, itemName, itemValue) {
         item.hidden = true;
     }
     if (itemType === 'checkbox') {
-        item.checked = itemValue
+        item.checked = itemValue;
         item.classList.add('check', 'catalogue__check');
     } else {
         item.value = itemValue;

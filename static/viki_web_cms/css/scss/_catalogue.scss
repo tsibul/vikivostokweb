@@ -26,12 +26,15 @@
 
   &__content {
     overflow-y: scroll;
-    min-height: 400px;
+    height: calc(100vh - 180px);
   }
 
   &__row {
-    &:hover {
-      background-color: rgba($colorNeutral500, 0.1);
+    position: relative;
+
+    &:has(.catalogue__img:hover) {
+      //background-color: rgba($colorNeutral500, 0.1);
+      grid-template-columns: 0.5fr 6.5fr 2fr 1.5fr 1.5fr 0.5fr 3fr 2fr 0.95fr;
     }
 
     & * {
@@ -44,6 +47,7 @@
     border-color: transparent;
     background-color: $colorSecondary50;
     padding: 7px 0;
+    word-break: break-word;
   }
 
   &__check {
@@ -53,11 +57,16 @@
 
   &__img {
     max-height: 36px;
-    transition: max-height 0.2s ease;
+    max-width: 240px;
+    transition: transform 0.6s ease;
 
     &:hover {
+      position: absolute;
+      left: 30%;
       z-index: 10;
-      max-height: 108px;
+      max-height: 300px;
+      max-width: 600px;
+      transform: scale(1.1);
     }
   }
 
@@ -107,6 +116,6 @@
 
 }
 
-.main_color_text{
+.main_color_text {
   font-size: 14px;
 }
