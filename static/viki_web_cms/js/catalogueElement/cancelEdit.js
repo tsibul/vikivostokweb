@@ -21,6 +21,6 @@ export async function cancelEdit(e){
         form.innerHTML = ''
         const url = jsonUrl + 'catalogue_record/' + rowId;
         const item = await fetchJsonData(url);
-        await createCatalogueRow(item[0], form);
+        await createCatalogueRow(item.values[0], form);
     }
 }
