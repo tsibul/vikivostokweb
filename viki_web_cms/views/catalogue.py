@@ -229,6 +229,7 @@ def catalogue_value_query(items):
         main_color_text=Concat(F('main_color__code'), Value(' '), F('main_color__name')),
         colors=Subquery(colors_subquery, output_field=CharField()),
     ).values(
+        'id',
         'name',
         'deleted',
         'item_article',
