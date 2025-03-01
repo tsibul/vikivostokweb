@@ -36,10 +36,10 @@ export async function createCatalogueRow(item, catalogueRow) {
     mainColor.textContent = item.main_color_text;
     catalogueRow.appendChild(mainColor)
     catalogueRow.appendChild(createCatalogueItem('text', 'main_color__id', item.main_color__id));
-    catalogueRow.appendChild(createCatalogueItem('number', 'option__id', item.option));
+    catalogueRow.appendChild(createCatalogueItem('number', 'goods_option__id', item.goods_option__id));
     const optionName = document.createElement('div');
-    optionName.classList.add('catalogue__input', 'main_color_text');
-    optionName.textContent = item.option__name;
+    optionName.classList.add('catalogue__input', 'goods_option__name');
+    optionName.textContent = item.goods_option__name;
     catalogueRow.appendChild(optionName);
     const photo = document.createElement('img');
     photo.classList.add('catalogue__img');
