@@ -16,14 +16,14 @@ const menuItems = document.querySelectorAll('.menu__item');
 const content = document.querySelector('.content');
 
 menuItems.forEach(menuItem => {
-    menuItem.addEventListener('click', (event) => {
+    menuItem.addEventListener('click', async (event) => {
         if (!menuItem.classList.contains('menu__item_bold')) {
             menuItem.classList.add('menu__item_bold');
             content.innerHTML = '';
             if (event.target.dataset.page === 'Standard') {
                 createContentLeft(content, menuItem.dataset.content);
             } else {
-                createFullScreenContent(content, menuItem.dataset.content, event.target.dataset.page);
+                await createFullScreenContent(content, menuItem.dataset.content, event.target.dataset.page);
             }
         }
         menuItems.forEach(item => {
