@@ -10,8 +10,14 @@ import {reloadContent} from "./reloadContent.js";
  * @returns {Promise<void>}
  */
 export async function clearSearchFilter(button, className) {
-    const dictionarySection = button.closest('.dictionary-frame');
+    const dictionarySection = button.closest('.dictionary-frame__header').parentElement;
     dictionarySection.querySelector('.dictionary-frame__input').value = '';
     const deletedCheck = dictionarySection.querySelector('.check');
-    await reloadContent(dictionarySection, className, deletedCheck, 'None');
+    switch (className) {
+        case 'Catalogue':
+
+
+        default:
+            await reloadContent(dictionarySection, className, deletedCheck, 'None');
+    }
 }
