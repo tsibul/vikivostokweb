@@ -24,7 +24,7 @@ export async function saveCatalogueItem(e, btn) {
         const url = jsonUrl + 'catalogue_record/' + rowId;
         const item = await fetchJsonData(url);
         for (const key in formDataDict) {
-            if (item.values.key !== formDataDict.key) {
+            if (item.values[0][key] !== formDataDict[key]) {
                 dataDifferent = true;
                 break;
             }
