@@ -180,7 +180,7 @@ def save_catalogue_item(request, record_id):
         item.image.save(request.FILES['image'].name, request.FILES['image'])
     item.save()
 
-    colors = json.loads(request.POST.get('colors'))
+    colors = json.loads(json.loads(request.POST.get('colors')))
     for color in colors:
         if record_id:
             color_object = CatalogueItemColor.objects.get(
