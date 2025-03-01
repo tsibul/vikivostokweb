@@ -4,6 +4,7 @@ import {closeModal} from "../modalFunction/closeModal.js";
 import {createModalHeader} from "../dictionaryElement/createInput/createModalHeader.js";
 import {createButtonBlock} from "../dictionaryElement/createInput/createButtonBlock.js";
 import {modalDnD} from "../modalFunction/modalDnD.js";
+import {uploadCsvCatalogue} from "./uploadCsvCatalogue.js";
 
 export function createCatalogueModal() {
     const service = document.querySelector('.service')
@@ -30,9 +31,7 @@ export function createCatalogueModal() {
     form.appendChild(createButtonBlock(modalWindow, 0));
     modalWindow.appendChild(form);
     const buttonSubmit = form.querySelector('.submit');
-    buttonSubmit.addEventListener('click', (e) => {
-
-    });
+    buttonSubmit.addEventListener('click', uploadCsvCatalogue);
     service.appendChild(modalWindow);
     modalHeader.firstElementChild.textContent = 'Загрузить csv файл'
     modalWindow.showModal();
