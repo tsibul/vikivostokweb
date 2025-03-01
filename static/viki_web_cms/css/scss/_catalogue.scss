@@ -8,6 +8,23 @@
   align-items: center;
   padding: 4px 10px;
 
+  &__modal {
+    top: 15%;
+    left: 30%;;
+    @include brd-standard;
+    padding: 8px;
+    box-shadow: 4px 4px 6px $colorNeutral500;
+    width: 360px;
+    &_file-input{
+      position: absolute;
+      top: 0;
+      left: -116px;
+      z-index: 3;
+      padding: 6px 0;
+      width: 456px;
+    }
+  }
+
   &__top {
     height: 100%;
   }
@@ -113,7 +130,6 @@
   &__icon {
     padding: 0 3px;
   }
-
 }
 
 .main_color_text {

@@ -474,6 +474,23 @@ body {
   align-items: center;
   padding: 4px 10px;
 }
+.catalogue__modal {
+  top: 15%;
+  left: 30%;
+  border: 1px solid #0F4880;
+  border-radius: 12px;
+  padding: 8px;
+  box-shadow: 4px 4px 6px #4A4A4A;
+  width: 360px;
+}
+.catalogue__modal_file-input {
+  position: absolute;
+  top: 0;
+  left: -116px;
+  z-index: 3;
+  padding: 6px 0;
+  width: 456px;
+}
 .catalogue__top {
   height: 100%;
 }
