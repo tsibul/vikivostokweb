@@ -41,8 +41,9 @@ export async function saveCatalogueItem(e, btn) {
             .then(rowData => {
                 if (rowId === '0')
                 form.querySelector('input[name="id"]').value = rowData.id;
-                // console.log(rowId);
-                // console.log();
+                const btnCancel = form.querySelector.querySelector('.btn__cancel');
+                btnCancel.disabled = true;
+                btnCancel.classList.add('btn__disabled');
             });
     }
 }
