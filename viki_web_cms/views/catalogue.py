@@ -110,7 +110,7 @@ def parse_file_data(request, goods_id, simple_article, file_name, item_id):
                 deleted=False).first()
             if not current_color:
                 return JsonResponse({'error': True}, safe=False)
-        if goods.multicolor or i == 0:
+        if goods.multicolor or goods.additional_material or i == 0:
             name = name + '/' + current_color.name
         colors_to_save.append({
             'color__id': current_color.id,
@@ -133,8 +133,8 @@ def parse_file_data(request, goods_id, simple_article, file_name, item_id):
         'item_article': item_article,
         'main_color__id': colors_to_save[0]['color__id'],
         'main_color_text': colors_to_save[0]['color_text'],
-        'option__id': new_option.id if new_option else None,
-        'option__name': new_option.name if new_option else None,
+        'goods_option__id': new_option.id if new_option else None,
+        'goods_option__name': new_option.name if new_option else None,
         'colors': colors_to_save if colors_to_save else None,
     }
     return JsonResponse({
@@ -173,10 +173,11 @@ def save_catalogue_item(request, record_id):
     item.goods_id = int(request.POST['goods__id'])
     item.deleted = item.deleted = True if request.POST.get('deleted') else False
     item.simple_article = True if request.POST.get('simple_article') else False
-    option_id = request.POST.get('option')
+    option_id = request.POST['goods_option__id']
     option_object = GoodsOption.objects.get(id=option_id) if option_id else None
-    item.option = option_object
-    item.image.save(request.FILES['image'].name, request.FILES['image'])
+    item.goods_option = option_object
+    if len(request.FILES):
+        item.image.save(request.FILES['image'].name, request.FILES['image'])
     item.save()
 
     colors = json.loads(request.POST.get('colors'))
