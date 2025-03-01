@@ -2,6 +2,7 @@
 
 
 import {reloadContent} from "./reloadContent.js";
+import {reloadCatalogue} from "../catalogueElement/reloadCatalogue.js";
 
 /**
  * clear searchString on click and remove search results
@@ -15,8 +16,8 @@ export async function clearSearchFilter(button, className) {
     const deletedCheck = dictionarySection.querySelector('.check');
     switch (className) {
         case 'Catalogue':
-
-
+            await reloadCatalogue(dictionarySection, deletedCheck, 'None');
+            break;
         default:
             await reloadContent(dictionarySection, className, deletedCheck, 'None');
     }

@@ -35,7 +35,7 @@ export async function createCatalogueElement(className) {
     catalogue.appendChild(catalogueTitle);
     const catalogueContent = document.createElement('div');
     catalogueContent.classList.add('catalogue__content');
-    await createCatalogueContent(catalogueContent);
+    await createCatalogueContent(catalogueContent, 0, 0, 'None', 0);
     catalogue.appendChild(catalogueContent);
     return catalogue;
 }

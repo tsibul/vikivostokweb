@@ -7,10 +7,15 @@ import {createCatalogueRow} from "./createCatalogueRow.js";
 /**
  * create catalogue content
  * @param catalogueContent
+ * @param deletedCheck
+ * @param firstRecord
+ * @param searchString
+ * @param order
  * @returns {Promise<void>}
  */
-export async function createCatalogueContent(catalogueContent) {
-    const url = jsonUrl + 'catalogue_data/0/0/None/0';
+export async function createCatalogueContent(catalogueContent, deletedCheck, firstRecord, searchString, order) {
+    const url = jsonUrl + 'catalogue_data/' + deletedCheck + '/' + firstRecord + '/'
+        + searchString + '/' + order;
     const jsonData = await fetchJsonData(url);
     const itemData = jsonData.values;
     let newRow

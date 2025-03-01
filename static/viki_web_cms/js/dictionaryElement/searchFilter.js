@@ -2,6 +2,7 @@
 
 import {reloadContent} from "./reloadContent.js";
 import {searchStringNormalizer} from "./searchStringNormalizer.js";
+import {reloadCatalogue} from "../catalogueElement/reloadCatalogue.js";
 
 /**
  * reload dictionary content onclick search button
@@ -15,8 +16,8 @@ export async function searchFilter(button, className) {
     const deletedCheck = dictionarySection.querySelector('.check');
     switch (className) {
         case 'Catalogue':
-
-
+            await reloadCatalogue(dictionarySection, deletedCheck, searchStringNormalizer(searchString));
+            break;
         default:
             await reloadContent(dictionarySection, className, deletedCheck, searchStringNormalizer(searchString));
     }
