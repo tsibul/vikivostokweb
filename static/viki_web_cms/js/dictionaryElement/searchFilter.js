@@ -13,5 +13,11 @@ export async function searchFilter(button, className) {
     const dictionarySection = button.closest('.dictionary-frame__header').parentElement;
     const searchString = dictionarySection.querySelector('.dictionary-frame__input').value;
     const deletedCheck = dictionarySection.querySelector('.check');
-    await reloadContent(dictionarySection, className, deletedCheck, searchStringNormalizer(searchString));
+    switch (className) {
+        case 'Catalogue':
+
+
+        default:
+            await reloadContent(dictionarySection, className, deletedCheck, searchStringNormalizer(searchString));
+    }
 }
