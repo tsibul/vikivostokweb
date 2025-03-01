@@ -28,6 +28,7 @@ export async function createCatalogueElement(className) {
         cncBtn.disabled = false;
         cncBtn.classList.remove('btn__disabled')
         catalogueContent.insertAdjacentElement('afterbegin', newRow);
+        newRow.scrollIntoView({ behavior: 'smooth' });
         newRow.focus();
     });
     catalogueTitle.appendChild(newBtn);
