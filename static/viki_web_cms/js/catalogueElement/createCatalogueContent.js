@@ -29,7 +29,7 @@ export async function createCatalogueContent(catalogueContent, deletedCheck, fir
         catalogueContent.appendChild(await newRow);
         counter++;
         if (counter === 20) {
-            newRow.dataset.lastId = firstRecord + counter;
+            newRow.dataset.lastId = Number.parseInt(firstRecord) + counter;
             newRow.addEventListener('mouseover', scrollRecords);
         }
     }
