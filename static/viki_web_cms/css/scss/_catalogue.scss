@@ -15,7 +15,8 @@
     padding: 8px;
     box-shadow: 4px 4px 6px $colorNeutral500;
     width: 360px;
-    &_file-input{
+
+    &_file-input {
       position: absolute;
       top: 0;
       left: -116px;
@@ -140,8 +141,39 @@
   font-size: 14px;
 }
 
-.error-message{
+.error-message {
   color: red;
   padding: 8px 0;
   display: none;
+}
+
+.alert {
+  @include brd-standard;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  top: 15%;
+  max-height: 600px;
+  overflow: auto;
+  left: 30%;
+  width: 800px;
+  padding: 20px 16px 16px 16px;
+  box-shadow: 4px 4px 6px $colorNeutral500;
+
+  &__header{
+    background-color: rgba($colorSecondary, 0.5);
+    @include brd-standard;
+    border-color: transparent;
+    display: flex;
+    justify-content: space-between;
+    padding: 6px;
+  }
+
+  &__element{
+    display: grid;
+    padding: 3px;
+    grid-template-columns: repeat(3, 1fr) 2fr;
+    gap: 16px;
+  }
+
 }

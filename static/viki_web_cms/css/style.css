@@ -595,4 +595,34 @@ body {
   display: none;
 }
 
+.alert {
+  border: 1px solid #0F4880;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  top: 15%;
+  max-height: 600px;
+  overflow: auto;
+  left: 30%;
+  width: 800px;
+  padding: 20px 16px 16px 16px;
+  box-shadow: 4px 4px 6px #4A4A4A;
+}
+.alert__header {
+  background-color: rgba(0, 158, 163, 0.5);
+  border: 1px solid #0F4880;
+  border-radius: 12px;
+  border-color: transparent;
+  display: flex;
+  justify-content: space-between;
+  padding: 6px;
+}
+.alert__element {
+  display: grid;
+  padding: 3px;
+  grid-template-columns: repeat(3, 1fr) 2fr;
+  gap: 16px;
+}
+
 /*# sourceMappingURL=style.css.map */
