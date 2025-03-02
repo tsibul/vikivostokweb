@@ -1,5 +1,6 @@
 import csv
 from io import TextIOWrapper
+from pathlib import Path
 
 from django.core.files import File
 from django.http import JsonResponse
@@ -120,9 +121,10 @@ def csv_row_validation(row):
         simple_article=True,
         goods_option=new_option,
     )
-    # with open(row['file'], "rb") as f:
-    #     catalogue_item.image.save("new_image.jpg", File(f))
-    # catalogue_item.save()
+    unix_path =  Path(row['file']).as_posix()
+    with open(unix_path, "rb") as f:
+        catalogue_item.image.save(row['file'].split('\\')[-1], File(f))
+    catalogue_item.save()
     catalogue_item_colors = []
     for color in colors_to_save:
         catalogue_item_color = CatalogueItemColor(
@@ -131,7 +133,7 @@ def csv_row_validation(row):
             color_position=color['color_position'],
             item=catalogue_item,
         )
-        # catalogue_item_color.save()
+        catalogue_item_color.save()
         catalogue_item_colors.append(catalogue_item_color)
     return {
         'type': 'success',
