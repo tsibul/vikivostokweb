@@ -6,6 +6,6 @@
  * @returns {boolean}
  */
 export function searchStringValidator(searchString) {
-        const validator = /^[a-zA-Zа-яА-ЯёЁ0-9 _#]*$/;
+        const validator = /^[a-zA-Zа-яА-ЯёЁ0-9 ._#]*$/;
         return validator.test(searchString);
 }
