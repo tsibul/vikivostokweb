@@ -589,4 +589,10 @@ body {
   font-size: 14px;
 }
 
+.error-message {
+  color: red;
+  padding: 8px 0;
+  display: none;
+}
+
 /*# sourceMappingURL=style.css.map */
