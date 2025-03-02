@@ -26,14 +26,22 @@ export function createCatalogueModal() {
     fileInput.type = 'file';
     fileInput.name = 'csv_file';
     fileInput.accept = '.csv';
-    inputFrame.appendChild(fileInput)
+    inputFrame.appendChild(fileInput);
     form.appendChild(inputFrame);
+    const errorMessage = document.createElement('div');
+    errorMessage.classList.add('error-message');
+    errorMessage.textContent = 'Error';
+    form.appendChild(errorMessage);
     form.appendChild(createButtonBlock(modalWindow, 0));
     modalWindow.appendChild(form);
     const buttonSubmit = form.querySelector('.submit');
     buttonSubmit.addEventListener('click', uploadCsvCatalogue);
     service.appendChild(modalWindow);
     modalHeader.firstElementChild.textContent = 'Загрузить csv файл'
+    fileInput.addEventListener('change', () => {
+        errorMessage.textContent = '';
+        errorMessage.style.display = 'none';
+    })
     modalWindow.showModal();
     modalDnD(modalWindow);
 }
