@@ -14,4 +14,5 @@ urlpatterns = [
 
     path('json/catalogue_record/<int:record_id>', views.catalogue_record),
     path('json/save_catalogue_item/<int:record_id>', views.save_catalogue_item),
+    path('catalogue_csv_load', views.catalogue_csv_load),
 ]
