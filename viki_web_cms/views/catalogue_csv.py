@@ -28,7 +28,41 @@ def catalogue_csv_load(request):
     record_double = []
     record_error = []
     for row in reader:
-        validation = csv_row_validation(row)
+        goods = Goods.objects.filter(article=row['article'], name=row['name']).first()
+        validation = row_validation(row, goods)
+        match (validation['type']):
+            case 'error':
+                record_error.append(validation)
+            case 'double':
+                record_double.append(validation)
+            case 'success':
+                record_success.append(validation)
+    return JsonResponse({
+        'recordSuccess': record_success,
+        'recordSuccessLength': len(record_success),
+        'recordDouble': record_double,
+        'recordDoubleLength': len(record_double),
+        'recordError': record_error,
+        'recordErrorLength': len(record_error),
+    }, safe=False)
+
+@csrf_exempt
+def catalogue_files_load(request):
+    """
+    check file if csv, save data
+    :param request:
+    :return:
+    """
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'Незарегистрированный пользователь'}, safe=False)
+    files = request.FILES.getlist('files')
+    record_success = []
+    record_double = []
+    record_error = []
+    goods = Goods.objects.get(id=request.POST['goods_id'])
+    for file in files:
+        row = {'file': file.name, 'article': goods.article, 'body': file}
+        validation = row_validation(row, goods)
         match (validation['type']):
             case 'error':
                 record_error.append(validation)
@@ -46,13 +80,12 @@ def catalogue_csv_load(request):
     }, safe=False)
 
 
-def csv_row_validation(row):
+def row_validation(row, goods):
     """
     validate csv row data & save to db
     :param row:
     :return:
     """
-    goods = Goods.objects.filter(article=row['article'], name=row['name']).first()
     file_name = (row['file'].split('.')[0]).split('\\')[-1]
     if not goods:
         return {'type': 'error', 'message': 'Несоответствие артикула и названия товара', 'item': file_name}
@@ -122,10 +155,18 @@ def csv_row_validation(row):
         simple_article=True,
         goods_option=new_option,
     )
-    unix_path =  Path(row['file']).as_posix()
-    with open(unix_path, "rb") as f:
-        webp_image = webp_convertor(f)
-        catalogue_item.image.save(file_name + '.webp', webp_image)
+    if 'body' in row.keys():
+        if (row['file'].split('.')[-1] != 'jpeg' and
+            row['file'].split('.')[-1] != 'jpg' and
+            row['file'].split('.')[-1] != 'png'):
+            return {'type': 'error', 'message': 'Неверный формат файла', 'item': file_name}
+        webp_image = webp_convertor(row['body'])
+        catalogue_item.image.save(webp_image.name, webp_image)
+    else:
+        unix_path =  Path(row['file']).as_posix()
+        with open(unix_path, "rb") as f:
+            webp_image = webp_convertor(f)
+            catalogue_item.image.save(file_name + '.webp', webp_image)
     catalogue_item.save()
     catalogue_item_colors = []
     for color in colors_to_save:
