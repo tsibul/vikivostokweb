@@ -6,6 +6,7 @@ from django.db.models.functions import Concat, Cast
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
+from viki_web_cms.functions.webp_convertor import webp_convertor
 from viki_web_cms.models import CatalogueItem, Goods, Color, CatalogueItemColor, GoodsOption
 
 
@@ -178,8 +179,10 @@ def save_catalogue_item(request, record_id):
     option_object = GoodsOption.objects.get(id=option_id) if option_id else None
     item.goods_option = option_object
     if len(request.FILES):
-        os.remove(item.image.path)
-        item.image.save(request.FILES['image'].name, request.FILES['image'])
+        if item.image:
+            os.remove(item.image.path)
+        webp_image = webp_convertor(request.FILES['image'])
+        item.image.save(webp_image.name, webp_image)
     item.save()
 
     colors = json.loads(request.POST.get('colors'))
