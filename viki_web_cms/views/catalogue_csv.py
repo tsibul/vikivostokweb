@@ -2,7 +2,6 @@ import csv
 from io import TextIOWrapper
 from pathlib import Path
 
-from django.core.files import File
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
