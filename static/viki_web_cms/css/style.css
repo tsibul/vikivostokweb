@@ -482,6 +482,7 @@ body {
   padding: 8px;
   box-shadow: 4px 4px 6px #4A4A4A;
   width: 360px;
+  overflow: visible;
 }
 .catalogue__modal_file-input {
   position: absolute;
