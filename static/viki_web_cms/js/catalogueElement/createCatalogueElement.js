@@ -4,8 +4,14 @@ import {createSaveButton} from "../createStandardElements/createSaveButton.js";
 import {catalogueFields} from "./catalogueFields.js";
 import {createCatalogueContent} from "./createCatalogueContent.js";
 import {createCatalogueRow} from "./createCatalogueRow.js";
+import {createNeutralButton} from "../createStandardElements/createNeutralButton.js";
+import {massImagesUpload} from "./massImagesUpload.js";
 
 export async function createCatalogueElement(className) {
+    const headerRight = document.querySelector('.dictionary-frame__header_right');
+    const uploadButton = createNeutralButton('Загрузить несколько фото');
+    uploadButton.addEventListener('click', () => massImagesUpload());
+    headerRight.insertAdjacentElement('afterbegin', uploadButton);
     const catalogue = document.createElement('div');
     const catalogueTitle = document.createElement('div')
     catalogueTitle.classList.add('catalogue', 'catalogue__title');
@@ -28,7 +34,7 @@ export async function createCatalogueElement(className) {
         cncBtn.disabled = false;
         cncBtn.classList.remove('btn__disabled')
         catalogueContent.insertAdjacentElement('afterbegin', newRow);
-        newRow.scrollIntoView({ behavior: 'smooth' });
+        newRow.scrollIntoView({behavior: 'smooth'});
         newRow.focus();
     });
     catalogueTitle.appendChild(newBtn);
