@@ -44,6 +44,7 @@ export async function createCatalogueRow(item, catalogueRow) {
     const photo = document.createElement('img');
     photo.classList.add('catalogue__img');
     photo.alt = item.item_article;
+    photo.loading = 'lazy';
     photo.src = '/static/viki_web_cms/files/item_photo/' + item.image;
     catalogueRow.appendChild(photo)
     const simpleArticle = createCatalogueItem('checkbox', 'simple_article', item.simple_article);
