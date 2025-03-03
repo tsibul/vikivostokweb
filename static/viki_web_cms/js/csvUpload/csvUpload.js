@@ -1,11 +1,11 @@
 'use strict'
 
-import {createCatalogueModal} from "../catalogueElement/createCatalogueModal.js";
+import {uploadCsvCatalogue} from "../catalogueElement/uploadCatalogueModal.js";
 
 export async function csvUpload(className) {
     switch (className) {
         case 'Catalogue':
-            createCatalogueModal();
+            uploadCsvCatalogue();
             break;
         case 'Price':
             break;

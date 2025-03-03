@@ -4,9 +4,47 @@ import {closeModal} from "../modalFunction/closeModal.js";
 import {createModalHeader} from "../dictionaryElement/createInput/createModalHeader.js";
 import {createButtonBlock} from "../dictionaryElement/createInput/createButtonBlock.js";
 import {modalDnD} from "../modalFunction/modalDnD.js";
-import {uploadCsvCatalogue} from "./uploadCsvCatalogue.js";
+import {createForeignField} from "../dictionaryElement/createInput/createForeignField.js";
+import {csvUploadCatalogueSave, filesUploadCatalogueSave} from "./uploadCatalogueSave.js";
 
-export function createCatalogueModal() {
+/**
+ *upload catalogue with csv file
+ */
+export function uploadCsvCatalogue() {
+    const modalObject = uploadCatalogueModal('Загрузить csv файл');
+    modalObject.fileInput.name = 'csv_file'
+    modalObject.fileInput.accept = '.csv'
+    modalObject.buttonSubmit.addEventListener('click', csvUploadCatalogueSave);
+}
+
+/**
+ * upload catalogue with multiple photos goods preliminary selected
+ * @returns {Promise<void>}
+ */
+export async function uploadFilesCatalogue() {
+    const modalObject = uploadCatalogueModal('Загрузить несколько фото');
+    const goods = await createForeignField({
+        'fieldName': {
+            'field': 'goods',
+            'foreignClass': 'Goods',
+            'null': false,
+        }
+    });
+    goods.style.marginTop = '8px';
+    const buttonBlock = modalObject.form.querySelector('.modal__button-block');
+    buttonBlock.insertAdjacentElement('beforebegin', goods);
+    modalObject.fileInput.name = 'files';
+    modalObject.fileInput.accept = 'image/png, image/jpeg, image/jpg';
+    modalObject.fileInput.multiple = true;
+    modalObject.buttonSubmit.addEventListener('click', filesUploadCatalogueSave);
+}
+
+/**
+ * prepare dialog form for upload
+ * @param text header text
+ * @returns {{form: HTMLFormElement, fileInput: HTMLInputElement, buttonSubmit: Element}}
+ */
+function uploadCatalogueModal(text) {
     const service = document.querySelector('.service')
     const modalWindow = document.createElement("dialog");
     modalWindow.classList.add('catalogue__modal');
@@ -14,6 +52,7 @@ export function createCatalogueModal() {
         e.key === 'Escape' ? closeModal(modalWindow) : null;
     })
     const modalHeader = createModalHeader(modalWindow, '', 0);
+    modalHeader.firstElementChild.textContent = text;
     modalWindow.appendChild(modalHeader);
     const form = document.createElement('form');
     form.id = 'catalogueDialog';
@@ -24,8 +63,6 @@ export function createCatalogueModal() {
     const fileInput = document.createElement('input');
     fileInput.classList.add('catalogue__modal_file-input');
     fileInput.type = 'file';
-    fileInput.name = 'csv_file';
-    fileInput.accept = '.csv';
     inputFrame.appendChild(fileInput);
     form.appendChild(inputFrame);
     const errorMessage = document.createElement('div');
@@ -35,13 +72,13 @@ export function createCatalogueModal() {
     form.appendChild(createButtonBlock(modalWindow, 0));
     modalWindow.appendChild(form);
     const buttonSubmit = form.querySelector('.submit');
-    buttonSubmit.addEventListener('click', uploadCsvCatalogue);
     service.appendChild(modalWindow);
-    modalHeader.firstElementChild.textContent = 'Загрузить csv файл'
     fileInput.addEventListener('change', () => {
         errorMessage.textContent = '';
         errorMessage.style.display = 'none';
     })
     modalWindow.showModal();
     modalDnD(modalWindow);
+    return {'form': form, 'fileInput': fileInput, 'buttonSubmit': buttonSubmit};
 }
+

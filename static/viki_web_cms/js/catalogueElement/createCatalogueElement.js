@@ -5,12 +5,12 @@ import {catalogueFields} from "./catalogueFields.js";
 import {createCatalogueContent} from "./createCatalogueContent.js";
 import {createCatalogueRow} from "./createCatalogueRow.js";
 import {createNeutralButton} from "../createStandardElements/createNeutralButton.js";
-import {massImagesUpload} from "./massImagesUpload.js";
+import {uploadFilesCatalogue} from "./uploadCatalogueModal.js";
 
 export async function createCatalogueElement(className) {
     const headerRight = document.querySelector('.dictionary-frame__header_right');
     const uploadButton = createNeutralButton('Загрузить несколько фото');
-    uploadButton.addEventListener('click', () => massImagesUpload());
+    uploadButton.addEventListener('click', await uploadFilesCatalogue);
     headerRight.insertAdjacentElement('afterbegin', uploadButton);
     const catalogue = document.createElement('div');
     const catalogueTitle = document.createElement('div')
