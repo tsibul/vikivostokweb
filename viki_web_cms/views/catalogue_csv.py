@@ -6,6 +6,7 @@ from django.core.files import File
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
+from viki_web_cms.functions.webp_convertor import webp_convertor
 from viki_web_cms.models import Goods, CatalogueItem, Color, GoodsOption, CatalogueItemColor
 
 
@@ -53,9 +54,9 @@ def csv_row_validation(row):
     """
     goods = Goods.objects.filter(article=row['article'], name=row['name']).first()
     file_name = (row['file'].split('.')[0]).split('\\')[-1]
-    name = goods.name
     if not goods:
         return {'type': 'error', 'message': 'Несоответствие артикула и названия товара', 'item': file_name}
+    name = goods.name
     if not file_name.startswith(row['article']):
         return {'type': 'error', 'message': 'Несоответствие названия файла и артикула товара', 'item': file_name}
     option_length = 1 if goods.goods_option_group else 0
@@ -123,7 +124,8 @@ def csv_row_validation(row):
     )
     unix_path =  Path(row['file']).as_posix()
     with open(unix_path, "rb") as f:
-        catalogue_item.image.save(row['file'].split('\\')[-1], File(f))
+        webp_image = webp_convertor(f)
+        catalogue_item.image.save(file_name + '.webp', webp_image)
     catalogue_item.save()
     catalogue_item_colors = []
     for color in colors_to_save:
