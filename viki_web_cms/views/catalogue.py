@@ -1,4 +1,5 @@
 import json
+import os
 
 from django.db.models import Q, F, Value, Subquery, OuterRef, CharField, Func
 from django.db.models.functions import Concat, Cast
@@ -177,6 +178,7 @@ def save_catalogue_item(request, record_id):
     option_object = GoodsOption.objects.get(id=option_id) if option_id else None
     item.goods_option = option_object
     if len(request.FILES):
+        os.remove(item.image.path)
         item.image.save(request.FILES['image'].name, request.FILES['image'])
     item.save()
 
@@ -186,7 +188,6 @@ def save_catalogue_item(request, record_id):
             color_object = CatalogueItemColor.objects.get(
                 item_id=item.id,
                 color_position=color['color_position'],
-                name=Color.objects.get(id=color['color__id']).name,
             )
             color_object.color_id = color['color__id']
         else:
