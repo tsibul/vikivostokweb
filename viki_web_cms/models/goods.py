@@ -1,9 +1,10 @@
-from django.core.files.storage import FileSystemStorage
+# from django.core.files.storage import FileSystemStorage
 from django.db import models
 
 from viki_web_cms.models import SettingsDictionary, ColorScheme, ProductGroup
 
-fs_goods = FileSystemStorage(location='viki_web_cms/files/goods')
+
+# fs_goods = FileSystemStorage(location='viki_web_cms/files/goods')
 
 
 class GoodsGroup(SettingsDictionary):
@@ -31,6 +32,7 @@ class GoodsGroup(SettingsDictionary):
                 'null': True,
             },
         ]
+
 
 class GoodsOptionGroup(SettingsDictionary):
     """ goods options"""
@@ -60,7 +62,8 @@ class Goods(SettingsDictionary):
                                                 related_name='additional_color_scheme')
     details_number = models.IntegerField(default=1)
     multicolor = models.BooleanField(default=False)
-    print_layout = models.FileField(upload_to=fs_goods, storage=fs_goods, blank=True, null=True)
+    standard_price = models.BooleanField(default=True)
+    # print_layout = models.FileField(upload_to=fs_goods, storage=fs_goods, blank=True, null=True)
     goods_option_group = models.ForeignKey(GoodsOptionGroup, on_delete=models.SET_NULL, null=True)
 
     class Meta(SettingsDictionary.Meta):
@@ -70,9 +73,9 @@ class Goods(SettingsDictionary):
         db_table = 'goods'
         ordering = ['article', 'name']
 
-    @property
-    def cover_url(self):
-        return f"/static/viki_web_cms/files/goods/{self.print_layout.name}" if self.print_layout else None
+    # @property
+    # def cover_url(self):
+    #     return f"/static/viki_web_cms/files/goods/{self.print_layout.name}" if self.print_layout else None
 
     @staticmethod
     def order_default():
@@ -139,11 +142,16 @@ class Goods(SettingsDictionary):
                 'label': 'микс',
             },
             {
-                'field': 'print_layout',
-                'type': 'file',
-                'label': 'макет нанесения',
-                'null': True,
+                'field': 'standard_price',
+                'type': 'boolean',
+                'label': 'ст. прайс',
             },
+            # {
+            #     'field': 'print_layout',
+            #     'type': 'file',
+            #     'label': 'макет нанесения',
+            #     'null': True,
+            # },
         ]
 
 
@@ -181,4 +189,3 @@ class GoodsOption(SettingsDictionary):
             },
 
         ]
-
