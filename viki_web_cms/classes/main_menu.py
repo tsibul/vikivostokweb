@@ -40,7 +40,7 @@ class MainMenu:
                 sort_keys=True)), 'Catalogue'),
             MainMenu('Прайс-лист', str(json.dumps([
                 MenuSection('Прайс-лист', [
-                    CMSSetting('Прайс-лист', 'Price', True),
+                    CMSSetting('Прайс-лист', 'Price', False),
                 ]),
             ], default=lambda o: o.__dict__,
                 sort_keys=True)), 'PriceList'),
