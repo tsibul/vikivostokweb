@@ -277,6 +277,9 @@ body {
 .dictionary-frame__header_left {
   padding: 8px;
   font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 .dictionary-frame__header_right {
   padding: 8px;
