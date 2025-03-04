@@ -3,7 +3,7 @@ import {createContentLeft} from './leftMenu/createContentLeft.js';
 import {createFullScreenContent} from "./fullScreenElement/createFullScreenContent.js";
 import {createGoodsElement} from "./goodsElement/createGoodsElement.js";
 import {createCatalogueElement} from "./catalogueElement/createCatalogueElement.js";
-import {createPriceElement} from "./priceElement/createGoodsElement.js";
+import {createPriceElement} from "./priceElement/createPriceElement.js";
 
 export const jsonUrl = './json/'
 export const cmsPages = {
