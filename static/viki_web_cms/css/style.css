@@ -672,6 +672,7 @@ body {
 .price-dropdown__input {
   font-size: 16px;
   border: transparent;
+  width: 120px;
 }
 .price-dropdown__input:focus {
   outline: none;
