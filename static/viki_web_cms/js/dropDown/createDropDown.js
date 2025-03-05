@@ -74,7 +74,7 @@ function createForeignList(dropdownValues, dropdownUl, dropDownInput, hiddenInpu
  * @param dropDownInput
  * @param hiddenInput
  */
-function createDropDownListItem(item, dropdownUl, dropDownInput, hiddenInput) {
+export function createDropDownListItem(item, dropdownUl, dropDownInput, hiddenInput) {
     const dropDownListItem = document.createElement('li');
     dropDownListItem.classList.add('dropdown__list_item');
     dropDownListItem.value = item.id;
