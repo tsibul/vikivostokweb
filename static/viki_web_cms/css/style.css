@@ -657,4 +657,24 @@ body {
   border-width: 2px;
 }
 
+.price-dropdown {
+  position: relative;
+}
+.price-dropdown__frame {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #0F4880;
+  border-radius: 12px;
+  padding: 7px;
+  background-color: #fff;
+}
+.price-dropdown__input {
+  font-size: 16px;
+  border: transparent;
+}
+.price-dropdown__input:focus {
+  outline: none;
+}
+
 /*# sourceMappingURL=style.css.map */

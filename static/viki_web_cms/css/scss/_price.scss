@@ -43,3 +43,25 @@
 
 .price-content {
 }
+
+.price-dropdown {
+  position: relative;
+
+  &__frame {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    @include brd-standard;
+    padding: 7px;
+    background-color: #fff;
+  }
+
+  &__input {
+    font-size: 16px;
+    border: transparent;
+
+    &:focus {
+      outline: none;
+    }
+  }
+}
