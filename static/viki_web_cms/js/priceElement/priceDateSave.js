@@ -1,6 +1,6 @@
 'use strict'
 
-import {createDropDown} from "../dropDown/createDropDown.js";
+import {loadPriceDates} from "./priceDropdown.js";
 
 export async function priceDateSave(e) {
     e.preventDefault();
@@ -26,11 +26,12 @@ export async function priceDateSave(e) {
         const formData = new FormData(form);
 
 
-        const headerLeft = document.querySelector('.dictionary-frame__header_left');
-        const dropdown = headerLeft.querySelector('.dropdown');
-        const newBtn = headerLeft.querySelector('button');
-        dropdown.remove();
-        const newDropDown = await createDropDown('Price', '', false)
-        newBtn.insertAdjacentElement('beforebegin', newDropDown);
+        // const headerLeft = document.querySelector('.dictionary-frame__header_left');
+        // const dropdown = headerLeft.querySelector('.dropdown');
+        // const newBtn = headerLeft.querySelector('button');
+        // dropdown.remove();
+        // const newDropDown = await createDropDown('Price', '', false)
+        // newBtn.insertAdjacentElement('beforebegin', newDropDown);
+        await loadPriceDates(priceDatesData);
     }
 }
