@@ -32,7 +32,7 @@ export async function createPriceDropdown() {
         dropDownInput.value = priceData[0].value;
         hiddenInput.value = priceData[0].id;
     }
-    loadPriceDates(priceData, dropdownUl);
+    loadPriceDates(priceData, dropdownUl, dropDownInput, hiddenInput);
     dropdown.addEventListener('click', (e) => {
         dropdownUl.classList.remove('invisible');
     })
@@ -47,17 +47,11 @@ export async function createPriceDropdown() {
 }
 
 
-export function loadPriceDates(priceData, dropdownUl) {
-    const headerLeft = document.querySelector('.dictionary-frame__header_left');
+export function loadPriceDates(priceData, dropdownUl, dropDownInput, hiddenInput) {
     dropdownUl.innerHTML = ''
-    const dropDownInput = headerLeft.querySelector('.price-dropdown__input');
-    const hiddenInput = headerLeft.querySelector('input[name="priceDateId"]');
-
     priceData.forEach((item) => {
         createDropDownListItem(item, dropdownUl, dropDownInput, hiddenInput);
+        dropDownInput.value = priceData[0].value;
+        hiddenInput.value = priceData[0].id;
     });
-}
-
-function closeDropdown(e) {
-
 }
