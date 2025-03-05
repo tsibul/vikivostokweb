@@ -1,6 +1,6 @@
 'use strict'
 
-import {loadPriceDates} from "./priceDropdown.js";
+import {loadPriceDates} from "./priceDropdownBody.js";
 import {jsonUrl} from "../main.js";
 import {closeModal} from "../modalFunction/closeModal.js";
 
@@ -39,7 +39,7 @@ export async function priceDateSave(e) {
 
                 const modal = e.target.closest('dialog');
                 await loadPriceDates(priceDateData, dropdownUl, dropDownInput, hiddenInput);
-                
+
                 closeModal(modal);
             });
     }
