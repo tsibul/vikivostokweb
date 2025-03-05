@@ -1,6 +1,45 @@
 @import "vars";
 @import "mixins";
 
-.price-header{}
+.price {
+  &__modal {
+    &_date {
+      @include brd-standard;
+      padding: 6px;
+    }
 
-.price-content{}
+    &_row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 4px 0;
+    }
+
+    &_label {
+      padding: 0 6px;
+    }
+
+    &_btn {
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    &_check {
+      height: 18px;
+      width: 18px;
+      accent-color: $colorSecondary;
+    }
+
+    &_border-alert {
+      border-color: red;
+      border-width: 2px;
+    }
+
+  }
+}
+
+.price-header {
+}
+
+.price-content {
+}

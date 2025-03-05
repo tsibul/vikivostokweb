@@ -629,4 +629,32 @@ body {
   gap: 16px;
 }
 
+.price__modal_date {
+  border: 1px solid #0F4880;
+  border-radius: 12px;
+  padding: 6px;
+}
+.price__modal_row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 0;
+}
+.price__modal_label {
+  padding: 0 6px;
+}
+.price__modal_btn {
+  width: 100%;
+  margin-top: 10px;
+}
+.price__modal_check {
+  height: 18px;
+  width: 18px;
+  accent-color: #009EA3;
+}
+.price__modal_border-alert {
+  border-color: red;
+  border-width: 2px;
+}
+
 /*# sourceMappingURL=style.css.map */
