@@ -1,11 +1,12 @@
 'use strict'
 
 import {loadPriceDates} from "./priceDropdown.js";
+import {jsonUrl} from "../main.js";
+import {closeModal} from "../modalFunction/closeModal.js";
 
 export async function priceDateSave(e) {
     e.preventDefault();
     const form = e.target.closest('form');
-    const modal = e.target.closest('dialog');
     const check = document.getElementById('promoCheck');
     const promoDate = document.getElementById('promoDate');
     promoDate.addEventListener('click', () => {
@@ -24,14 +25,22 @@ export async function priceDateSave(e) {
         promoDate.classList.add('price__modal_border-alert');
     } else {
         const formData = new FormData(form);
+        const saveUrl = jsonUrl + 'save_new_price_date';
+        await fetch(saveUrl, {
+            method: 'POST',
+            body: formData,
+        })
+            .then(res => res.json())
+            .then(async priceDateData => {
+                const headerLeft = document.querySelector('.dictionary-frame__header_left');
+                const dropdownUl = headerLeft.querySelector('.dropdown__list');
+                const dropDownInput = headerLeft.querySelector('.price-dropdown__input');
+                const hiddenInput = headerLeft.querySelector('input[name="priceDateId"]');
 
-
-        // const headerLeft = document.querySelector('.dictionary-frame__header_left');
-        // const dropdown = headerLeft.querySelector('.dropdown');
-        // const newBtn = headerLeft.querySelector('button');
-        // dropdown.remove();
-        // const newDropDown = await createDropDown('Price', '', false)
-        // newBtn.insertAdjacentElement('beforebegin', newDropDown);
-        await loadPriceDates(priceDatesData);
+                const modal = e.target.closest('dialog');
+                await loadPriceDates(priceDateData, dropdownUl, dropDownInput, hiddenInput);
+                
+                closeModal(modal);
+            });
     }
 }

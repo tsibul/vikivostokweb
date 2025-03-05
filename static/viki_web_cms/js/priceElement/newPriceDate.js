@@ -29,6 +29,7 @@ export async function newPriceDate(e) {
     priceDate.classList.add('price__modal_date');
     priceDate.type = 'date';
     priceDate.id = 'priceDate';
+    priceDate.name = 'priceDate';
     priceRow.appendChild(priceDateLabel);
     priceRow.appendChild(priceDate);
     form.appendChild(priceRow);
@@ -43,6 +44,7 @@ export async function newPriceDate(e) {
     promoCheck.classList.add('price__modal_check');
     promoCheck.type = 'checkbox';
     promoCheck.id = 'promoCheck';
+    promoCheck.name = 'promoCheck';
     const promoDateLabel = document.createElement('label');
     promoDateLabel.classList.add('price__modal_label');
     promoDateLabel.textContent = 'окончание';
@@ -51,6 +53,7 @@ export async function newPriceDate(e) {
     promoDate.classList.add('price__modal_date');
     promoDate.type = 'date';
     promoDate.id = 'promoDate';
+    promoDate.name = 'promoDate';
     promoRow.appendChild(promoCheckLabel);
     promoRow.appendChild(promoCheck);
     promoRow.appendChild(promoDateLabel);
