@@ -666,11 +666,11 @@ body {
   gap: 6px;
   border: 1px solid #0F4880;
   border-radius: 12px;
-  padding: 7px;
+  padding: 8px;
   background-color: #fff;
 }
 .price-dropdown__input {
-  font-size: 16px;
+  font-size: 14px;
   border: transparent;
   width: 120px;
 }
