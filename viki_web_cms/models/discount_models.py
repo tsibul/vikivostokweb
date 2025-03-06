@@ -41,7 +41,7 @@ class CustomerDiscount(SettingsDictionary):
             },
             {
                 'field': 'discount',
-                'type': 'number',
+                'type': 'float',
                 'label': 'доля от конечника',
                 'null': False,
             },
@@ -57,8 +57,8 @@ class VolumeDiscount(SettingsDictionary):
     class Meta(SettingsDictionary.Meta):
         verbose_name = 'Скидка партнера'
         verbose_name_plural = 'Скидки партнеров'
-        db_table_comment = 'price discount'
-        db_table = 'price_discount'
+        db_table_comment = 'Volume Discount'
+        db_table = 'volume_discount'
 
     def save(self, *args, **kwargs):
         self.name = self.price_name.name + ' ' + str(self.volume)
@@ -76,7 +76,7 @@ class VolumeDiscount(SettingsDictionary):
             },
             {
                 'field': 'discount',
-                'type': 'number',
+                'type': 'float',
                 'label': 'доля от конечника',
                 'null': False,
             },
