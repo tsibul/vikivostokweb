@@ -6,12 +6,29 @@ from viki_web_cms.models import SettingsDictionary
 
 class StandardPriceType(SettingsDictionary):
     """ standard price type retail dealer etc. """
+    priority = models.SmallIntegerField(default=10)
 
     class Meta(SettingsDictionary.Meta):
         verbose_name = 'Тип цены'
         verbose_name_plural = 'Типы цен'
         db_table_comment = 'standard price type'
         db_table = 'standard_price_type'
+        ordering = ['priority']
+
+    @staticmethod
+    def order_default():
+        return ['priority']
+
+    @staticmethod
+    def dictionary_fields():
+        return SettingsDictionary.dictionary_fields() + [
+            {
+                'field': 'priority',
+                'type': 'number',
+                'label': 'приоритет',
+                'null': False,
+            },
+        ]
 
 
 class CustomerDiscount(SettingsDictionary):
@@ -24,10 +41,15 @@ class CustomerDiscount(SettingsDictionary):
         verbose_name_plural = 'Скидки партнеров'
         db_table_comment = 'customer discount'
         db_table = 'customer_discount'
+        ordering = ['price_name__priority']
 
     def save(self, *args, **kwargs):
         self.name = self.price_name.name
         super(CustomerDiscount, self).save(*args, **kwargs)
+
+    @staticmethod
+    def order_default():
+        return ['price_name__priority']
 
     @staticmethod
     def dictionary_fields():
@@ -59,10 +81,15 @@ class VolumeDiscount(SettingsDictionary):
         verbose_name_plural = 'Скидки партнеров'
         db_table_comment = 'Volume Discount'
         db_table = 'volume_discount'
+        ordering = ['price_name__priority']
 
     def save(self, *args, **kwargs):
         self.name = self.price_name.name + ' ' + str(self.volume)
         super(VolumeDiscount, self).save(*args, **kwargs)
+
+    @staticmethod
+    def order_default():
+        return ['price_name__priority']
 
     @staticmethod
     def dictionary_fields():
