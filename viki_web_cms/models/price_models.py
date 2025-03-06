@@ -58,7 +58,7 @@ class PriceGoodsStandard(SettingsDictionary):
     customer_price = models.FloatField()
     agency_one_price = models.FloatField()
     agency_two_price = models.FloatField()
-    dealer = models.BooleanField(default=True)
+    retail = models.BooleanField(default=True)
     goods_group = models.ForeignKey(GoodsGroup, on_delete=models.SET_NULL, null=True, blank=True)
     dealer_price = models.FloatField()
     retail_price = models.FloatField()
@@ -108,15 +108,15 @@ class PriceGoodsStandard(SettingsDictionary):
                 'null': True,
             },
             {
-                'field': 'dealer',
-                'type': 'boolean',
-                'label': 'дилерская цена',
-            },
-            {
                 'field': 'dealer_price',
                 'type': 'number',
                 'label': 'дилер',
                 'null': True,
+            },
+            {
+                'field': 'retail',
+                'type': 'boolean',
+                'label': 'розн. цена',
             },
             {
                 'field': 'retail_price',

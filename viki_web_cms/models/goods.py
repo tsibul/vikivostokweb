@@ -65,6 +65,7 @@ class Goods(SettingsDictionary):
     standard_price = models.BooleanField(default=True)
     # print_layout = models.FileField(upload_to=fs_goods, storage=fs_goods, blank=True, null=True)
     goods_option_group = models.ForeignKey(GoodsOptionGroup, on_delete=models.SET_NULL, null=True)
+    dealer_price = models.BooleanField(default=True)
 
     class Meta(SettingsDictionary.Meta):
         verbose_name = 'Товар'
@@ -145,6 +146,11 @@ class Goods(SettingsDictionary):
                 'field': 'standard_price',
                 'type': 'boolean',
                 'label': 'ст. прайс',
+            },
+            {
+                'field': 'dealer_price',
+                'type': 'boolean',
+                'label': 'дил. цена',
             },
             # {
             #     'field': 'print_layout',
