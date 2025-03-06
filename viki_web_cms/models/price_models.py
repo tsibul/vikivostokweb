@@ -3,7 +3,7 @@
 from django.db import models
 from django.utils import timezone
 
-from viki_web_cms.models import SettingsDictionary, Goods, CatalogueItem, GoodsGroup
+from viki_web_cms.models import SettingsDictionary, Goods, CatalogueItem, GoodsGroup, StandardPriceType
 
 
 # fs_product_group = FileSystemStorage(location='viki_web_cms/files/cover')
@@ -55,13 +55,8 @@ class Price(SettingsDictionary):
 class PriceGoodsStandard(SettingsDictionary):
     """ goods price list"""
     goods = models.ForeignKey(Goods, on_delete=models.CASCADE)
-    customer_price = models.FloatField()
-    agency_one_price = models.FloatField()
-    agency_two_price = models.FloatField()
-    retail = models.BooleanField(default=True)
-    goods_group = models.ForeignKey(GoodsGroup, on_delete=models.SET_NULL, null=True, blank=True)
-    dealer_price = models.FloatField()
-    retail_price = models.FloatField()
+    price_type = models.ForeignKey(StandardPriceType, on_delete=models.CASCADE)
+    price = models.FloatField(default=0)
     price_list = models.ForeignKey(Price, on_delete=models.CASCADE)
 
     class Meta(SettingsDictionary.Meta):
@@ -72,7 +67,8 @@ class PriceGoodsStandard(SettingsDictionary):
         ordering = ['goods__product_group__priority', 'goods__article', 'goods__name']
 
     def save(self, *args, **kwargs):
-        self.name = self.goods.name + ' price dd ' + self.price_list.price_list_date.strftime('%d.%m.%Y')
+        self.name = self.goods.name + ' цена от ' + self.price_list.price_list_date.strftime('%d.%m.%Y')
+        self.price = round(self.price, 2)
         super(PriceGoodsStandard, self).save(*args, **kwargs)
 
     @staticmethod
@@ -90,39 +86,17 @@ class PriceGoodsStandard(SettingsDictionary):
                 'foreignClass': 'Goods'
             },
             {
-                'field': 'customer_price',
-                'type': 'number',
-                'label': 'конечник',
+                'field': 'price',
+                'type': 'float',
+                'label': 'цена',
                 'null': False,
             },
             {
-                'field': 'agency_one_price',
-                'type': 'number',
-                'label': 'рекламщик',
-                'null': True,
-            },
-            {
-                'field': 'agency_two_price',
-                'type': 'number',
-                'label': 'агентство',
-                'null': True,
-            },
-            {
-                'field': 'dealer_price',
-                'type': 'number',
-                'label': 'дилер',
-                'null': True,
-            },
-            {
-                'field': 'retail',
-                'type': 'boolean',
-                'label': 'розн. цена',
-            },
-            {
-                'field': 'retail_price',
-                'type': 'number',
-                'label': 'розница',
-                'null': True,
+                'field': 'price_type',
+                'type': 'foreign',
+                'label': 'тип цены',
+                'null': False,
+                'foreignClass': 'StandardPriceType'
             },
             {
                 'field': 'price_list',
@@ -137,12 +111,8 @@ class PriceGoodsStandard(SettingsDictionary):
 class PriceItemStandard(SettingsDictionary):
     """ item price list"""
     item = models.ForeignKey(CatalogueItem, on_delete=models.CASCADE)
-    customer_price = models.FloatField()
-    agency_one_price = models.FloatField()
-    agency_two_price = models.FloatField()
-    dealer = models.BooleanField(default=True)
-    dealer_price = models.FloatField()
-    retail_price = models.FloatField()
+    price_type = models.ForeignKey(StandardPriceType, on_delete=models.CASCADE)
+    price = models.FloatField(default=0)
     price_list = models.ForeignKey(Price, on_delete=models.CASCADE)
 
     class Meta(SettingsDictionary.Meta):
@@ -153,7 +123,8 @@ class PriceItemStandard(SettingsDictionary):
         ordering = ['item__item_article']
 
     def save(self, *args, **kwargs):
-        self.name = self.item.name + ' price dd ' + self.price_list.price_list_date.strftime('%d.%m.%Y')
+        self.name = self.item.name + ' цена от ' + self.price_list.price_list_date.strftime('%d.%m.%Y')
+        self.price = round(self.price, 2)
         super(PriceItemStandard, self).save(*args, **kwargs)
 
     @staticmethod
@@ -171,39 +142,17 @@ class PriceItemStandard(SettingsDictionary):
                 'foreignClass': 'CatalogueItem'
             },
             {
-                'field': 'customer_price',
-                'type': 'number',
-                'label': 'конечник',
+                'field': 'price',
+                'type': 'float',
+                'label': 'цена',
                 'null': False,
             },
             {
-                'field': 'agency_one_price',
-                'type': 'number',
-                'label': 'рекламщик',
-                'null': True,
-            },
-            {
-                'field': 'agency_two_price',
-                'type': 'number',
-                'label': 'агентство',
-                'null': True,
-            },
-            {
-                'field': 'dealer',
-                'type': 'boolean',
-                'label': 'дилерская цена',
-            },
-            {
-                'field': 'dealer_price',
-                'type': 'number',
-                'label': 'дилер',
-                'null': True,
-            },
-            {
-                'field': 'retail_price',
-                'type': 'number',
-                'label': 'розница',
-                'null': True,
+                'field': 'price_type',
+                'type': 'foreign',
+                'label': 'тип цены',
+                'null': False,
+                'foreignClass': 'StandardPriceType'
             },
             {
                 'field': 'price_list',
