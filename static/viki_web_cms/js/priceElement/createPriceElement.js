@@ -4,6 +4,7 @@ import {reloadPriceList} from "./reloadPriceList.js";
 import {newPriceDate} from "./newPriceDate.js";
 import {createNeutralButton} from "../createStandardElements/createNeutralButton.js";
 import {createPriceDropdown, priceDropdownBody} from "./priceDropdownBody.js";
+import {createPriceContent} from "./createPriceContent.js";
 
 export async function createPriceElement(className){
     const dictionaryHeaderLeft = document.querySelector('.dictionary-frame__header_left');
@@ -30,10 +31,10 @@ export async function createPriceElement(className){
     priceTypeDropdown.id = "priceType";
     dictionaryHeaderRight.insertAdjacentElement('afterbegin', priceTypeDropdown);
     dictionaryHeaderRight.insertAdjacentElement('afterbegin',priceTypeLabel);
-
-
-    const priceElement = document.createElement('div');
-    return priceElement;
+    const priceContent = document.createElement("div");
+    const priceTypeId = priceTypeDropdown.querySelector('input[hidden]').value;
+    priceContent.appendChild(await createPriceContent(dropDownInput.value, priceTypeId, 'None'));
+    return priceContent;
 }
 
 
