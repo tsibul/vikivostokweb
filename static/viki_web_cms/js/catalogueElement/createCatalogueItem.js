@@ -9,7 +9,12 @@
  */
 export function createCatalogueItem(itemType, itemName, itemValue) {
     const item = document.createElement('input');
-    item.type = itemType;
+    if (ItemType !== 'float') {
+        item.type = itemType
+    } else { i
+        item.type = 'number';
+        item.step = '0.01';
+    }
     item.name = itemName;
     if (itemName.slice(-2) === 'id') {
         item.hidden = true;
