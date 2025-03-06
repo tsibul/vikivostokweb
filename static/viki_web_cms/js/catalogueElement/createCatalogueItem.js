@@ -9,11 +9,14 @@
  */
 export function createCatalogueItem(itemType, itemName, itemValue) {
     const item = document.createElement('input');
-    if (ItemType !== 'float') {
-        item.type = itemType
-    } else { i
+    if (itemType !== 'precise') {
+        item.type = 'number';
+        item.step = '0.0001';
+    } else if (itemType === 'float') {
         item.type = 'number';
         item.step = '0.01';
+    } else {
+        item.type = itemType
     }
     item.name = itemName;
     if (itemName.slice(-2) === 'id') {
