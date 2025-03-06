@@ -2,12 +2,6 @@
 
 
 import {createDictionaryTitle} from "./createDictionaryTitle.js";
-import {gridDictionaryStyle} from "./gridDictonaryStyle.js";
-import {createStringField} from "../createInput/createStringField.js";
-import {createBooleanField} from "../createInput/createBooleanField.js";
-import {createNumberField} from "../createInput/createNumberField.js";
-import {createForeignField} from "../createInput/createForeignField.js";
-import {createImageField} from "../createInput/createImageField.js";
 import {createDictionaryRows} from "./createDictionaryRows.js";
 import {getFieldStructure} from "../getFieldStructure.js";
 
