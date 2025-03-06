@@ -6,7 +6,6 @@ from viki_web_cms.models import SettingsDictionary
 
 class StandardPriceType(SettingsDictionary):
     """ standard price type retail dealer etc. """
-    field_name = models.CharField(max_length=120, null=False, blank=False, unique=True)
 
     class Meta(SettingsDictionary.Meta):
         verbose_name = 'Тип цены'
@@ -14,16 +13,6 @@ class StandardPriceType(SettingsDictionary):
         db_table_comment = 'standard price type'
         db_table = 'standard_price_type'
 
-    @staticmethod
-    def dictionary_fields():
-        return SettingsDictionary.dictionary_fields() + [
-            {
-                'field': 'field_name',
-                'type': 'string',
-                'label': 'название поля',
-                'null': False
-            },
-        ]
 
 class CustomerDiscount(SettingsDictionary):
     """ discounts on standard price """
@@ -35,6 +24,10 @@ class CustomerDiscount(SettingsDictionary):
         verbose_name_plural = 'Скидки партнеров'
         db_table_comment = 'customer discount'
         db_table = 'customer_discount'
+
+    def save(self, *args, **kwargs):
+        self.name = self.price_name.name
+        super(CustomerDiscount, self).save(*args, **kwargs)
 
     @staticmethod
     def dictionary_fields():
@@ -54,6 +47,7 @@ class CustomerDiscount(SettingsDictionary):
             },
         ]
 
+
 class VolumeDiscount(SettingsDictionary):
     """ discounts on volume """
     price_name = models.ForeignKey(StandardPriceType, on_delete=models.CASCADE)
@@ -65,6 +59,10 @@ class VolumeDiscount(SettingsDictionary):
         verbose_name_plural = 'Скидки партнеров'
         db_table_comment = 'price discount'
         db_table = 'price_discount'
+
+    def save(self, *args, **kwargs):
+        self.name = self.price_name.name + ' ' + str(self.volume)
+        super(VolumeDiscount, self).save(*args, **kwargs)
 
     @staticmethod
     def dictionary_fields():
