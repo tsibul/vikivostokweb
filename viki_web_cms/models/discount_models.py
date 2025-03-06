@@ -41,7 +41,7 @@ class CustomerDiscount(SettingsDictionary):
             },
             {
                 'field': 'discount',
-                'type': 'float',
+                'type': 'precise',
                 'label': 'доля от конечника',
                 'null': False,
             },

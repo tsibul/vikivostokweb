@@ -11,12 +11,14 @@ import {fetchJsonData} from "../../fetchJsonData.js";
 import {createFileField} from "./createFileField.js";
 import {createFieldLabel} from "./createFieldLabel.js";
 import {createFloatField} from "./createFloatField.js";
+import {createPreciseFloatField} from "./createPreciseFloatField.js";
 
 const fieldCreation = {
     'string': createStringField,
     'boolean': createBooleanField,
     'number': createNumberField,
     'float': createFloatField,
+    'precise': createPreciseFloatField,
     'foreign': createForeignField,
     'image': createImageField,
     'file': createFileField,
