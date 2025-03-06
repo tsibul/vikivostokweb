@@ -10,11 +10,13 @@ import {jsonUrl} from "../../main.js";
 import {fetchJsonData} from "../../fetchJsonData.js";
 import {createFileField} from "./createFileField.js";
 import {createFieldLabel} from "./createFieldLabel.js";
+import {createFloatField} from "./createFloatField.js";
 
 const fieldCreation = {
     'string': createStringField,
     'boolean': createBooleanField,
     'number': createNumberField,
+    'float': createFloatField,
     'foreign': createForeignField,
     'image': createImageField,
     'file': createFileField,
