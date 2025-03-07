@@ -5,6 +5,7 @@ import {newPriceDate} from "./newPriceDate.js";
 import {createNeutralButton} from "../createStandardElements/createNeutralButton.js";
 import {createPriceDropdown, priceDropdownBody} from "./priceDropdownBody.js";
 import {createPriceContent} from "./createPriceContent.js";
+import {createCancelButton} from "../createStandardElements/createCancelButton.js";
 
 export async function createPriceElement(className){
     const dictionaryHeaderLeft = document.querySelector('.dictionary-frame__header_left');
@@ -13,6 +14,8 @@ export async function createPriceElement(className){
     const dropDownInput = priceDropdown.querySelector('input');
     const newPriceBtn = createNeutralButton('Новый прайс');
     dictionaryHeaderLeft.appendChild(newPriceBtn);
+    const downloadBtn = createCancelButton('Выгрузить прайс');
+    dictionaryHeaderLeft.appendChild(downloadBtn);
     dropDownInput.addEventListener('change', reloadPriceList);
     newPriceBtn.addEventListener('click', newPriceDate);
 
@@ -33,7 +36,9 @@ export async function createPriceElement(className){
     dictionaryHeaderRight.insertAdjacentElement('afterbegin',priceTypeLabel);
     const priceContent = document.createElement("div");
     const priceTypeId = priceTypeDropdown.querySelector('input[hidden]').value;
-    priceContent.appendChild(await createPriceContent(dropDownInput.value, priceTypeId, 'None'));
+    const priceBlocks = await createPriceContent(dropDownInput.value, priceTypeId, 'None')
+    priceContent.appendChild(priceBlocks.header);
+    priceContent.appendChild(priceBlocks.form);
     return priceContent;
 }
 
