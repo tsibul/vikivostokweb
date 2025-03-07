@@ -35,16 +35,7 @@ def standard_price_data(request, str_price_date, search_string):
         'price_name__name',
         'discount'
     ))
-    all_items_query = CatalogueItem.objects.filter(
-        deleted=False, goods__standard_price=True).order_by(
-        *CatalogueItem.order_default())
-    all_items = all_items_query.annotate(
-        value=Concat(F('item_article'), Value(' '), F('main_color__name')),
-    ).values(
-        'id',
-        'goods__id',
-        'value'
-    )
+
 
     price_subquery = price_goods_subquery(price_date)
     goods = goods_query(search_string).annotate(
@@ -59,6 +50,7 @@ def standard_price_data(request, str_price_date, search_string):
     item_subquery = price_items_subquery(price_date)
     items = item_query(search_string).annotate(
         price=Subquery(item_subquery, output_field=CharField()),
+        article=F('item_article'),
     ).values(
         'id',
         'item_article',
@@ -71,9 +63,23 @@ def standard_price_data(request, str_price_date, search_string):
         'form': {
             'goods': list(goods),
             'items': list(items),
-            'all_items': list(all_items),
         }
     }, safe=False)
+
+def all_items_all_items_for_dropdown(request):
+    if not request.user.is_authenticated:
+        return JsonResponse(None, safe=False)
+    all_items_query = CatalogueItem.objects.filter(
+        deleted=False, goods__standard_price=True).order_by(
+        *CatalogueItem.order_default())
+    all_items = all_items_query.annotate(
+        value=Concat(F('item_article'), Value(' '), F('main_color__name')),
+    ).values(
+        'id',
+        'goods__id',
+        'value'
+    )
+    return JsonResponse(list(all_items), safe=False)
 
 
 def price_goods_subquery(date):

@@ -12,8 +12,9 @@ export async function standardPrice(priceDate, searchString) {
     priceForm.classList.add('price-content');
     const priceUrl = jsonUrl + 'standard_price_data/' + priceDate + '/' + searchString;
     const priceData = await fetchJsonData(priceUrl);
+    const allItems = await fetchJsonData(jsonUrl +'all_items_all_items_for_dropdown')
     const priceHeader = priceHeaderBuild(priceData.header);
-    await priceFormBuild(priceData.form, priceForm, priceData.header);
+    await priceFormBuild(priceData.form, priceForm, priceData.header, allItems);
     return {'form': priceForm, 'header': priceHeader};
 }
 
@@ -42,15 +43,14 @@ function priceHeaderBuild(headerData) {
     return priceHeader;
 }
 
-function priceFormBuild(data, priceForm, headerData){
+function priceFormBuild(data, priceForm, headerData, allItems) {
     let goodsRow, itemRow, items;
-    const allItems = data['all_items'];
     data['goods'].forEach((goodsItem) => {
-        goodsRow = goodsRowBuild(goodsItem, headerData, allItems);
+        goodsRow = rowBuild(goodsItem, headerData, allItems);
         priceForm.appendChild(goodsRow);
         items = data['items'].filter(item => goodsItem['id'] === item['goods__id'].id);
         items.forEach(item => {
-            itemRow = itemRowBuild(item, headerData);
+            itemRow = rowBuild(item, headerData);
             priceForm.appendChild(itemRow);
         });
     });
@@ -58,22 +58,23 @@ function priceFormBuild(data, priceForm, headerData){
 
 }
 
-function goodsRowBuild(goodsItem, headerData, allItems) {
+function rowBuild(rowData, headerData, allItems, rowType) {
     const goodsRow = document.createElement('div');
+    goodsRow.dataset.type = rowType
     goodsRow.classList.add('price-row');
     const idField = document.createElement('input');
     idField.type = 'text';
     idField.hidden = true;
-    idField.name = 'goods__id'
-    idField.value = goodsItem.id;
+    idField.name = 'id'
+    idField.value = rowData.id;
     goodsRow.appendChild(idField);
     const articleField = document.createElement('div');
     articleField.classList.add('price-row__name');
-    articleField.textContent = goodsItem.article;
+    articleField.textContent = rowData.article;
     goodsRow.appendChild(articleField);
     const nameField = document.createElement('div');
     nameField.classList.add('price-row__name');
-    nameField.textContent = goodsItem.name;
+    nameField.textContent = rowData.name;
     goodsRow.appendChild(nameField);
     let priceField;
     headerData.forEach(element => {
@@ -82,10 +83,10 @@ function goodsRowBuild(goodsItem, headerData, allItems) {
         priceField.type = 'number';
         priceField.step = '0.01';
         priceField.lang = 'en';
-        const priceItem = JSON.parse(goodsItem.price).find(item => {
+        const priceItem = JSON.parse(rowData.price).find(item => {
             return 'price_type__id' in item && item['price_type__id'] === element.price_name__id;
         });
-        priceField.name = 'goods_' + goodsItem.id + '_' + element.price_name__id;
+        priceField.name = 'goods_' + rowData.id + '_' + element.price_name__id;
         priceField.dataset.priceType = element.price_name__id;
         priceField.dataset.discount = element.discount;
         priceField.value = priceItem ? priceItem['price'] : '';
@@ -110,7 +111,7 @@ function goodsRowBuild(goodsItem, headerData, allItems) {
         }
         goodsRow.appendChild(priceField);
     });
-    const dropDownItems = allItems.filter(item => item.goods__id === goodsItem.id);
+    const dropDownItems = allItems.filter(item => item.goods__id === rowData.id);
     goodsRow.appendChild(priceDropdownBody(dropDownItems));
     const itemBtn = createCancelButton('Добавить цвет');
     goodsRow.appendChild(itemBtn);
@@ -118,10 +119,3 @@ function goodsRowBuild(goodsItem, headerData, allItems) {
     return goodsRow;
 }
 
-function itemRowBuild(item, headerData){
-
-}
-
-function itemDropdown(items){
-
-}
