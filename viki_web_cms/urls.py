@@ -17,5 +17,6 @@ urlpatterns = [
     path('json/catalogue_csv_load', views.catalogue_csv_load),
     path('json/catalogue_files_load', views.catalogue_files_load),
     path('json/save_new_price_date', views.save_new_price_date),
+    path('json/standard_price_data/<str:str_price_date>/<str:search_string>', views.standard_price_data),
 
 ]

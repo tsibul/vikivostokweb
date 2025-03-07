@@ -1,10 +1,12 @@
 from datetime import datetime
 
-from django.db.models import F
+from django.db.models import F, Q, OuterRef, CharField, Value, Func, Subquery
+from django.db.models.functions import Concat, Cast
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from viki_web_cms.models import Price
+from viki_web_cms.models import Price, StandardPriceType, Goods, PriceGoodsStandard, CatalogueItem, PriceItemStandard, \
+    CustomerDiscount
 
 
 @csrf_exempt
@@ -21,3 +23,154 @@ def save_new_price_date(request):
                    .annotate(value=F('name'))
                    .values('id', 'value'))
     return JsonResponse(list(option_list), safe=False)
+
+
+def standard_price_data(request, str_price_date, search_string):
+    if not request.user.is_authenticated:
+        return JsonResponse(None, safe=False)
+    price_date = datetime.strptime(str_price_date, '%d.%m.%Y').date()
+    price_type_query = CustomerDiscount.objects.filter(deleted=False).order_by(*CustomerDiscount.order_default())
+    price_types = list(price_type_query.values(
+        'price_name__id',
+        'price_name__name',
+        'discount'
+    ))
+    all_items_query = CatalogueItem.objects.filter(
+        deleted=False, goods__standard_price=True).order_by(
+        *CatalogueItem.order_default())
+    all_items = all_items_query.annotate(
+        value=Concat(F('item_article'), Value(' '), F('main_color__name')),
+    ).values(
+        'id',
+        'goods__id',
+        'value'
+    )
+
+    price_subquery = price_goods_subquery(price_date)
+    goods = goods_query(search_string).annotate(
+        price=Subquery(price_subquery, output_field=CharField()),
+    ).values(
+        'id',
+        'article',
+        'name',
+        'price',
+    )
+
+    item_subquery = price_items_subquery(price_date)
+    items = item_query(search_string).annotate(
+        price=Subquery(item_subquery, output_field=CharField()),
+    ).values(
+        'id',
+        'item_article',
+        'name',
+        'price',
+    )
+
+    return JsonResponse({
+        'header': price_types,
+        'form': {
+            'goods': list(goods),
+            'items': list(items),
+            'all_items': list(all_items),
+        }
+    }, safe=False)
+
+
+def price_goods_subquery(date):
+    return PriceGoodsStandard.objects.filter(
+        goods=OuterRef('id'),
+        price_list__price_list_date=date,
+    ).order_by(
+        'price_type__priority'
+    ).annotate(
+        price_data=Concat(
+            Value('{"id": '),
+            # F('id'),
+            Cast('id', output_field=CharField()),
+            Value(', "price_type__id": '),
+            Cast('price_type__id', output_field=CharField()),
+            Value(', "price_type": '),
+            Cast('price_type__name', output_field=CharField()),
+            Value(', "price": '),
+            Cast('price', output_field=CharField()),
+            Value('}')
+        )
+    ).values(
+        'goods'
+    ).annotate(
+        prices=Concat(
+            Value('['), Func(F('price_data'), function='GROUP_CONCAT'), Value(']')
+        )
+    ).values(
+        'prices',
+    )
+
+
+def goods_query(search_string):
+    if search_string == 'None':
+        goods = Goods.objects.filter(
+            deleted=False,
+            standard_price=True
+        ).order_by(*Goods.order_default())
+    else:
+        search_string = search_string.replace('|', ' ')
+        goods = Goods.objects.filter(
+            Q(deleted=False) &
+            Q(standard_price=True) & (
+                    Q(name__icontains=search_string) |
+                    Q(article__icontains=search_string)
+            )
+        ).order_by(*Goods.order_default())
+    return goods
+
+
+def price_items_subquery(date):
+    return PriceItemStandard.objects.filter(
+        item=OuterRef('id'),
+        price_list__price_list_date=date,
+    ).order_by(
+        'price_type__priority'
+    ).annotate(
+        price_data=Concat(
+            Value('{"id": '),
+            # F('id'),
+            Cast('id', output_field=CharField()),
+            Value(', "price_type__id": '),
+            Cast('price_type__id', output_field=CharField()),
+            Value(', "price_type": '),
+            Cast('price_type__name', output_field=CharField()),
+            Value(', "price": '),
+            Cast('price', output_field=CharField()),
+            Value('}')
+        )
+    ).values(
+        'item'
+    ).annotate(
+        prices=Concat(
+            Value('['), Func(F('price_data'), function='GROUP_CONCAT'), Value(']')
+        )
+    ).values(
+        'prices',
+    )
+
+
+def item_query(search_string):
+    if search_string == 'None':
+        items = CatalogueItem.objects.filter(
+            deleted=False,
+            goods__standard_price=True,
+            priceitemstandard__isnull=False
+        ).order_by(*CatalogueItem.order_default())
+    else:
+        search_string = search_string.replace('|', ' ')
+        items = CatalogueItem.objects.filter(
+            Q(deleted=False) &
+            Q(goods__standard_price=True) &
+            Q(priceitemstandard__isnull=False) &
+            (
+                    Q(goods__name__icontains=search_string) |
+                    Q(goods__article__icontains=search_string) |
+                    Q(main_color__icontains=search_string)
+            )
+        ).order_by(*CatalogueItem.order_default())
+    return items
