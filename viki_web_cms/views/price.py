@@ -11,6 +11,11 @@ from viki_web_cms.models import Price, StandardPriceType, Goods, PriceGoodsStand
 
 @csrf_exempt
 def save_new_price_date(request):
+    """
+
+    :param request:
+    :return:
+    """
     if not request.user.is_authenticated:
         return JsonResponse(None, safe=False)
     date = datetime.strptime(request.POST['priceDate'], '%Y-%m-%d').date()
@@ -28,6 +33,13 @@ def save_new_price_date(request):
 
 
 def standard_price_data(request, str_price_date, search_string):
+    """
+
+    :param request:
+    :param str_price_date:
+    :param search_string:
+    :return:
+    """
     if not request.user.is_authenticated:
         return JsonResponse(None, safe=False)
     price_date = datetime.strptime(str_price_date[0:8], '%d.%m.%y').date()
@@ -69,6 +81,11 @@ def standard_price_data(request, str_price_date, search_string):
     }, safe=False)
 
 def all_items_all_items_for_dropdown(request):
+    """
+
+    :param request:
+    :return:
+    """
     if not request.user.is_authenticated:
         return JsonResponse(None, safe=False)
     all_items_query = CatalogueItem.objects.filter(
@@ -85,6 +102,11 @@ def all_items_all_items_for_dropdown(request):
 
 
 def price_goods_subquery(date):
+    """
+
+    :param date:
+    :return:
+    """
     return PriceGoodsStandard.objects.filter(
         goods=OuterRef('id'),
         price_list__price_list_date=date,
@@ -133,6 +155,11 @@ def goods_query(search_string):
 
 
 def price_items_subquery(date):
+    """
+
+    :param date:
+    :return:
+    """
     return PriceItemStandard.objects.filter(
         item=OuterRef('id'),
         price_list__price_list_date=date,
@@ -163,6 +190,11 @@ def price_items_subquery(date):
 
 
 def item_query(search_string):
+    """
+
+    :param search_string:
+    :return:
+    """
     if search_string == 'None':
         items = CatalogueItem.objects.filter(
             deleted=False,
@@ -185,6 +217,12 @@ def item_query(search_string):
 
 @csrf_exempt
 def delete_item_price_row(request, row_id):
+    """
+
+    :param request:
+    :param row_id:
+    :return:
+    """
     if not request.user.is_authenticated:
         return JsonResponse(None, safe=False)
     catalogue_item = CatalogueItem.objects.get(id=row_id)
@@ -193,3 +231,9 @@ def delete_item_price_row(request, row_id):
         for item in item_price:
             item.delete()
     return JsonResponse('Success', safe=False)
+
+def volume_price_data(request, str_price_date, search_string):
+    return JsonResponse({}, safe=False)
+
+def printing_price_data(request, str_price_date, search_string):
+    return JsonResponse({}, safe=False)
