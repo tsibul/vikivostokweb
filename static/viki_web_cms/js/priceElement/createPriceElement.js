@@ -12,11 +12,12 @@ export async function createPriceElement(className){
     const priceDropdown = await createPriceDropdown();
     dictionaryHeaderLeft.appendChild(priceDropdown);
     const dropDownInput = priceDropdown.querySelector('input');
+    const hiddenPriceInput = priceDropdown.querySelector('input[hidden]');
     const newPriceBtn = createNeutralButton('Новый прайс');
     dictionaryHeaderLeft.appendChild(newPriceBtn);
     const downloadBtn = createCancelButton('Выгрузить прайс');
     dictionaryHeaderLeft.appendChild(downloadBtn);
-    dropDownInput.addEventListener('change', reloadPriceList);
+    hiddenPriceInput.addEventListener('change', await reloadPriceList);
     newPriceBtn.addEventListener('click', newPriceDate);
 
     const dictionaryHeaderRight = document.querySelector('.dictionary-frame__header_right');
@@ -32,9 +33,11 @@ export async function createPriceElement(className){
     ]
     const priceTypeDropdown = priceDropdownBody(priceType)
     priceTypeDropdown.id = "priceType";
+    priceTypeDropdown.addEventListener('change', await reloadPriceList);
     dictionaryHeaderRight.insertAdjacentElement('afterbegin', priceTypeDropdown);
     dictionaryHeaderRight.insertAdjacentElement('afterbegin',priceTypeLabel);
     const priceContent = document.createElement("div");
+    priceContent.classList.add('price-block');
     const priceTypeId = priceTypeDropdown.querySelector('input[hidden]').value;
     const priceBlocks = await createPriceContent(dropDownInput.value, priceTypeId, 'None')
     priceContent.appendChild(priceBlocks.header);
