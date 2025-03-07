@@ -41,9 +41,8 @@ class Price(SettingsDictionary):
             },
             {
                 'field': 'promotion_price',
-                'type': 'number',
+                'type': 'boolean',
                 'label': 'акция',
-                'null': True,
             },
             {
                 'field': 'promotion_end_date',
