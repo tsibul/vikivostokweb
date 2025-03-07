@@ -14,6 +14,8 @@ def save_new_price_date(request):
     if not request.user.is_authenticated:
         return JsonResponse(None, safe=False)
     date = datetime.strptime(request.POST['priceDate'], '%Y-%m-%d').date()
+    if Price.objects.filter(date=date).exists():
+        return JsonResponse(None, safe=False)
     new_price_date = Price(price_list_date=date)
     if request.POST.get('promoCheck'):
         new_price_date.promotion_price = True
