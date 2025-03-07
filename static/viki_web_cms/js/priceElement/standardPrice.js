@@ -12,7 +12,7 @@ export async function standardPrice(priceDate, searchString) {
     priceForm.classList.add('price-content');
     const priceUrl = jsonUrl + 'standard_price_data/' + priceDate + '/' + searchString;
     const priceData = await fetchJsonData(priceUrl);
-    const allItems = await fetchJsonData(jsonUrl +'all_items_all_items_for_dropdown')
+    const allItems = await fetchJsonData(jsonUrl + 'all_items_all_items_for_dropdown')
     const priceHeader = priceHeaderBuild(priceData.header);
     await priceFormBuild(priceData.form, priceForm, priceData.header, allItems);
     return {'form': priceForm, 'header': priceHeader};
@@ -46,11 +46,11 @@ function priceHeaderBuild(headerData) {
 function priceFormBuild(data, priceForm, headerData, allItems) {
     let goodsRow, itemRow, items;
     data['goods'].forEach((goodsItem) => {
-        goodsRow = rowBuild(goodsItem, headerData, allItems);
+        goodsRow = goodsRowBuild(goodsItem, headerData, allItems);
         priceForm.appendChild(goodsRow);
         items = data['items'].filter(item => goodsItem['id'] === item['goods__id'].id);
         items.forEach(item => {
-            itemRow = rowBuild(item, headerData);
+            itemRow = itemRowBuild(item, headerData);
             priceForm.appendChild(itemRow);
         });
     });
@@ -58,7 +58,55 @@ function priceFormBuild(data, priceForm, headerData, allItems) {
 
 }
 
-function rowBuild(rowData, headerData, allItems, rowType) {
+function goodsRowBuild(rowData, headerData, allItems) {
+    const goodsRow = rowBuild(rowData, headerData, 'goods');
+    const dropDownItems = allItems.filter(item => item.goods__id === rowData.id);
+    goodsRow.appendChild(priceDropdownBody(dropDownItems));
+    const itemBtn = createCancelButton('Добавить цвет');
+    itemBtn.addEventListener('click', () => {
+        const newItemId = goodsRow
+            .querySelector('.price-dropdown')
+            .querySelector('input[hidden]')
+            .value;
+        const newItemName = goodsRow
+            .querySelector('.price-dropdown__input')
+            .value;
+        const [article, ...rest] = newItemName.split(' ');
+        const oldArticle = Array.from(document
+            .querySelectorAll('div[data-type="item"] input[hidden]'))
+            .find(input => input.value === newItemId);
+        if (!oldArticle) {
+            const newItemData = {
+                'id': newItemId,
+                'article': article,
+                'name': rest.join(' '),
+                'price': "[]"
+            }
+            goodsRow.insertAdjacentElement('afterend', itemRowBuild(newItemData, headerData));
+        }
+    });
+    goodsRow.appendChild(itemBtn);
+    return goodsRow;
+}
+
+function itemRowBuild(rowData, headerData) {
+    const itemRow = rowBuild(rowData, headerData, 'item');
+    const itemBtn = createCancelButton('Убрать позицию');
+    itemBtn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const rowId = itemRow.querySelector('input[name="id"]').value;
+        fetch(jsonUrl + 'delete_item_price_row/' + rowId)
+            .then(res => res.json())
+            .then(data => {
+                if (data) itemRow.remove();
+            });
+    });
+    itemRow.appendChild(itemBtn);
+    return itemRow;
+}
+
+
+function rowBuild(rowData, headerData, rowType) {
     const goodsRow = document.createElement('div');
     goodsRow.dataset.type = rowType
     goodsRow.classList.add('price-row');
@@ -102,7 +150,7 @@ function rowBuild(rowData, headerData, allItems, rowType) {
                 const rowInputs = goodsRow.querySelectorAll('input[type="number"]');
                 rowInputs.forEach(input => {
                     if (input.dataset.discount !== '1') {
-                        input.value =  (Math.ceil(
+                        input.value = (Math.ceil(
                             e.target.value * Number.parseFloat(input.dataset.discount) * 100
                         ) / 100).toFixed(2);
                     }
@@ -111,11 +159,6 @@ function rowBuild(rowData, headerData, allItems, rowType) {
         }
         goodsRow.appendChild(priceField);
     });
-    const dropDownItems = allItems.filter(item => item.goods__id === rowData.id);
-    goodsRow.appendChild(priceDropdownBody(dropDownItems));
-    const itemBtn = createCancelButton('Добавить цвет');
-    goodsRow.appendChild(itemBtn);
-
     return goodsRow;
 }
 

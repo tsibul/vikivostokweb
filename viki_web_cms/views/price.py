@@ -180,3 +180,14 @@ def item_query(search_string):
             )
         ).order_by(*CatalogueItem.order_default())
     return items
+
+@csrf_exempt
+def delete_item_price_row(request, row_id):
+    if not request.user.is_authenticated:
+        return JsonResponse(None, safe=False)
+    catalogue_item = CatalogueItem.objects.get(id=row_id)
+    item_price = PriceItemStandard.objects.filter(item=catalogue_item)
+    if len(item_price):
+        for item in item_price:
+            item.delete()
+    return JsonResponse('Success', safe=False)
