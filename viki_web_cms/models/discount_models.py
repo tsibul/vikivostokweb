@@ -104,7 +104,7 @@ class VolumeDiscount(SettingsDictionary):
             {
                 'field': 'discount',
                 'type': 'float',
-                'label': 'доля от конечника',
+                'label': 'доля от цены',
                 'null': False,
             },
             {
