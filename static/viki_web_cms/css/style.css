@@ -657,6 +657,43 @@ body {
   border-width: 2px;
 }
 
+.price-header {
+  display: grid;
+  grid-template-columns: 0.8fr 3.2fr repeat(5, 1fr) 1.3fr 1fr;
+  gap: 16px;
+  align-items: center;
+  padding: 6px 20px 6px 6px;
+}
+.price-header__item {
+  font-weight: 700;
+}
+
+.price-content {
+  overflow: auto;
+  max-height: calc(100vh - 190px);
+}
+
+.price-row {
+  display: grid;
+  grid-template-columns: 0.8fr 3.2fr repeat(5, 1fr) 1.3fr 1fr;
+  gap: 16px;
+  align-items: center;
+  padding: 2px;
+}
+.price-row__item {
+  border: 1px solid #0F4880;
+  border-radius: 12px;
+  padding: 6px;
+  width: 100%;
+  text-align: end;
+  font-size: 16px;
+}
+.price-row__name {
+  padding: 6px;
+  width: 100%;
+  text-align: start;
+}
+
 .price-dropdown {
   position: relative;
 }
