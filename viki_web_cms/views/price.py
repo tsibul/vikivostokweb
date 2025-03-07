@@ -28,7 +28,7 @@ def save_new_price_date(request):
 def standard_price_data(request, str_price_date, search_string):
     if not request.user.is_authenticated:
         return JsonResponse(None, safe=False)
-    price_date = datetime.strptime(str_price_date, '%d.%m.%Y').date()
+    price_date = datetime.strptime(str_price_date[0:8], '%d.%m.%y').date()
     price_type_query = CustomerDiscount.objects.filter(deleted=False).order_by(*CustomerDiscount.order_default())
     price_types = list(price_type_query.values(
         'price_name__id',

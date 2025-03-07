@@ -5,6 +5,10 @@ import {fetchJsonData} from "../fetchJsonData.js";
 import {createDropDownListItem} from "../dropDown/createDropDown.js";
 
 
+/**
+ *
+ * @returns {Promise<HTMLDivElement>}
+ */
 export async function createPriceDropdown() {
     const priceDataUrl = jsonUrl + 'dropdown_list/Price';
     const priceData = await fetchJsonData(priceDataUrl);
@@ -12,6 +16,13 @@ export async function createPriceDropdown() {
 }
 
 
+/**
+ *
+ * @param priceData
+ * @param dropdownUl
+ * @param dropDownInput
+ * @param hiddenInput
+ */
 export function loadPriceDates(priceData, dropdownUl, dropDownInput, hiddenInput) {
     dropdownUl.innerHTML = ''
     priceData.forEach((item) => {
@@ -21,6 +32,11 @@ export function loadPriceDates(priceData, dropdownUl, dropDownInput, hiddenInput
     });
 }
 
+/**
+ *
+ * @param priceData
+ * @returns {HTMLDivElement}
+ */
 export function priceDropdownBody(priceData) {
     const dropdown = document.createElement('div');
     dropdown.classList.add('price-dropdown');

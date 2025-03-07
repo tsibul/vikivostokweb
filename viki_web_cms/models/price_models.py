@@ -21,7 +21,9 @@ class Price(SettingsDictionary):
         ordering = ['-price_list_date']
 
     def save(self, *args, **kwargs):
-        self.name = self.price_list_date.strftime('%d.%m.%Y')
+        self.name = self.price_list_date.strftime('%d.%m.%y')
+        if self.promotion_price:
+            self.name = self.name+ '-' + self.promotion_end_date.strftime('%d.%m.%y')
         super(Price, self).save(*args, **kwargs)
 
     @staticmethod
