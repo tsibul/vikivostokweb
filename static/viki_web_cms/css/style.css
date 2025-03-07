@@ -693,6 +693,9 @@ body {
   width: 100%;
   text-align: start;
 }
+.price-row__item-row {
+  background-color: rgba(74, 74, 74, 0.1);
+}
 
 .price-dropdown {
   position: relative;

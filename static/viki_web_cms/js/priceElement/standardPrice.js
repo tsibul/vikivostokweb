@@ -91,6 +91,7 @@ function goodsRowBuild(rowData, headerData, allItems) {
 
 function itemRowBuild(rowData, headerData) {
     const itemRow = rowBuild(rowData, headerData, 'item');
+    itemRow.classList.add('price-row__item-row');
     const itemBtn = createCancelButton('Убрать позицию');
     itemBtn.addEventListener('click', async (e) => {
         e.preventDefault();
