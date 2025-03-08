@@ -128,7 +128,7 @@ function rowBuild(rowData, headerData, rowType) {
     let priceField;
     headerData.forEach(element => {
         priceField = document.createElement('input');
-        priceField.classList.add('price-row__item');
+        priceField.classList.add('price-row__item', 'price-row__item_disabled');
         priceField.type = 'number';
         priceField.step = '0.01';
         priceField.lang = 'en';
@@ -145,12 +145,14 @@ function rowBuild(rowData, headerData, rowType) {
             const searchInput = dictionaryHeaderRight.querySelector('.dictionary-frame__input');
             const searchBtn = dictionaryHeaderRight.querySelector('.btn__save');
             e.target.readOnly = false;
+            e.target.classList.remove('price-row__item_disabled');
             searchInput.disabled = true;
             searchBtn.disabled = true;
             searchBtn.classList.add('btn__disabled');
         });
         priceField.addEventListener('change', (e) => {
             e.target.readOnly = true;
+            // e.target.classList.remove('price-row__item_disabled');
         });
         if (priceField.dataset.discount === '1') {
             priceField.addEventListener('change', (e) => {
@@ -160,6 +162,8 @@ function rowBuild(rowData, headerData, rowType) {
                         input.value = (Math.ceil(
                             e.target.value * Number.parseFloat(input.dataset.discount) * 100
                         ) / 100).toFixed(2);
+                        input.dispatchEvent(new Event('dblclick', {bubbles: true}));
+                        e.target.classList.remove('price-row__item_disabled');
                     }
                 });
             });
