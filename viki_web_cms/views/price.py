@@ -210,7 +210,7 @@ def item_query(search_string):
             (
                     Q(goods__name__icontains=search_string) |
                     Q(goods__article__icontains=search_string) |
-                    Q(main_color__icontains=search_string)
+                    Q(main_color__name__icontains=search_string)
             )
         ).order_by(*CatalogueItem.order_default())
     return items
