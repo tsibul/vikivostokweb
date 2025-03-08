@@ -688,6 +688,9 @@ body {
   text-align: end;
   font-size: 16px;
 }
+.price-row__item_disabled {
+  background-color: rgba(0, 158, 163, 0.05);
+}
 .price-row__name {
   padding: 6px;
   width: 100%;

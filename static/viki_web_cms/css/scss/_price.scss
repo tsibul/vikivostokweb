@@ -67,6 +67,11 @@
     width: 100%;
     text-align: end;
     font-size: 16px;
+
+    &_disabled{
+      background-color: rgba($colorSecondary, 0.05);
+      //color: rgba($colorPrimary950, 0.3);
+    }
   }
 
   &__name {
