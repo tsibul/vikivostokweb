@@ -5,6 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from viki_web_cms import models
 from viki_web_cms.functions.reformat_field_dictionary import reformat_field_dictionary
+from viki_web_cms.functions.user_validation import user_check
 from viki_web_cms.models import Color, Goods
 
 
@@ -17,8 +18,7 @@ def edit_dictionary(request, class_name, element_id):
     :param class_name:
     :return:
     """
-    if not request.user.is_authenticated:
-        return JsonResponse(None, safe=False)
+    user_check(request)
     dict_model = getattr(models, class_name)
     fields = dict_model.dictionary_fields()
     errors = dictionary_fields_validation(fields, request.POST)

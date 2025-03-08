@@ -6,6 +6,7 @@ from django.db.models.functions import Concat, Cast
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
+from viki_web_cms.functions.user_validation import user_check
 from viki_web_cms.functions.webp_convertor import webp_convertor
 from viki_web_cms.models import CatalogueItem, Goods, Color, CatalogueItemColor, GoodsOption
 
@@ -20,6 +21,7 @@ def catalogue_data(request, deleted, first_record, search_string, order):
     :param order:
     :return:
     """
+    user_check(request)
     if not request.user.is_authenticated:
         return JsonResponse(None, safe=False)
     if order == '0':
@@ -152,8 +154,7 @@ def catalogue_record(request, record_id):
     :param record_id:
     :return:
     """
-    if not request.user.is_authenticated:
-        return JsonResponse(None, safe=False)
+    user_check(request)
     item = CatalogueItem.objects.filter(id=record_id)
     values = catalogue_value_query(item)
     return JsonResponse({
@@ -163,8 +164,7 @@ def catalogue_record(request, record_id):
 
 @csrf_exempt
 def save_catalogue_item(request, record_id):
-    if not request.user.is_authenticated:
-        return JsonResponse(None, safe=False)
+    user_check(request)
     if record_id:
         item = CatalogueItem.objects.get(id=record_id)
     else:

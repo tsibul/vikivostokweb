@@ -5,6 +5,7 @@ from django.db.models.functions import Concat, Cast
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
+from viki_web_cms.functions.user_validation import user_check
 from viki_web_cms.models import Price, StandardPriceType, Goods, PriceGoodsStandard, CatalogueItem, PriceItemStandard, \
     CustomerDiscount
 
@@ -16,8 +17,7 @@ def save_new_price_date(request):
     :param request:
     :return:
     """
-    if not request.user.is_authenticated:
-        return JsonResponse(None, safe=False)
+    user_check(request)
     date = datetime.strptime(request.POST['priceDate'], '%Y-%m-%d').date()
     if Price.objects.filter(date=date).exists():
         return JsonResponse(None, safe=False)
@@ -40,8 +40,7 @@ def standard_price_data(request, str_price_date, search_string):
     :param search_string:
     :return:
     """
-    if not request.user.is_authenticated:
-        return JsonResponse(None, safe=False)
+    user_check(request)
     price_date = datetime.strptime(str_price_date[0:8], '%d.%m.%y').date()
     price_type_query = CustomerDiscount.objects.filter(deleted=False).order_by(*CustomerDiscount.order_default())
     price_types = list(price_type_query.values(
@@ -86,8 +85,7 @@ def all_items_all_items_for_dropdown(request):
     :param request:
     :return:
     """
-    if not request.user.is_authenticated:
-        return JsonResponse(None, safe=False)
+    user_check(request)
     all_items_query = CatalogueItem.objects.filter(
         deleted=False, goods__standard_price=True).order_by(
         *CatalogueItem.order_default())
@@ -223,8 +221,7 @@ def delete_item_price_row(request, row_id):
     :param row_id:
     :return:
     """
-    if not request.user.is_authenticated:
-        return JsonResponse(None, safe=False)
+    user_check(request)
     catalogue_item = CatalogueItem.objects.get(id=row_id)
     item_price = PriceItemStandard.objects.filter(item=catalogue_item)
     if len(item_price):
@@ -233,7 +230,9 @@ def delete_item_price_row(request, row_id):
     return JsonResponse('Success', safe=False)
 
 def volume_price_data(request, str_price_date, search_string):
+    user_check(request)
     return JsonResponse({}, safe=False)
 
 def printing_price_data(request, str_price_date, search_string):
+    user_check(request)
     return JsonResponse({}, safe=False)

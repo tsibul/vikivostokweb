@@ -4,6 +4,7 @@ from django.http import JsonResponse
 
 from viki_web_cms import models
 from viki_web_cms.functions.reformat_field_dictionary import reformat_field_dictionary
+from viki_web_cms.functions.user_validation import user_check
 
 
 def field_names(request, class_name):
@@ -13,8 +14,7 @@ def field_names(request, class_name):
     :param class_name:
     :return:
     """
-    if not request.user.is_authenticated:
-        return JsonResponse(None, safe=False)
+    user_check(request)
     if not class_name:
         return JsonResponse(None, safe=False)
     dict_model = getattr(models, class_name)
@@ -32,8 +32,7 @@ def field_values(request, class_name, deleted, first_record, search_string):
     :param search_string: filter for records
     :return:
     """
-    if not request.user.is_authenticated:
-        return JsonResponse(None, safe=False)
+    user_check(request)
     dict_model = getattr(models, class_name)
     field_list = dict_model.dictionary_fields()
     fields_out = ['id']
@@ -75,8 +74,7 @@ def record_info(request, class_name, record_id):
     :param record_id:
     :return:
     """
-    if not request.user.is_authenticated:
-        return JsonResponse(None, safe=False)
+    user_check(request)
     dict_model = getattr(models, class_name)
     url = dict_model.storage_url()
     record = dict_model.objects.filter(id=record_id).values()
@@ -91,8 +89,7 @@ def dropdown_list(request, class_name):
     :param class_name:
     :return:
     """
-    if not request.user.is_authenticated:
-        return JsonResponse(None, safe=False)
+    user_check(request)
     dict_model = getattr(models, class_name)
     match class_name:
         case 'Goods':
