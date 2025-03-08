@@ -141,7 +141,13 @@ function rowBuild(rowData, headerData, rowType) {
         priceField.value = priceItem ? priceItem['price'] : '';
         priceField.readOnly = true;
         priceField.addEventListener('dblclick', (e) => {
+            const dictionaryHeaderRight = document.querySelector('.dictionary-frame__header_right');
+            const searchInput = dictionaryHeaderRight.querySelector('.dictionary-frame__input');
+            const searchBtn = dictionaryHeaderRight.querySelector('.btn__save');
             e.target.readOnly = false;
+            searchInput.disabled = true;
+            searchBtn.disabled = true;
+            searchBtn.classList.add('btn__disabled');
         });
         priceField.addEventListener('change', (e) => {
             e.target.readOnly = true;

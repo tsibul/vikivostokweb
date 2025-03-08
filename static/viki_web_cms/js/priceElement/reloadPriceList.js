@@ -3,12 +3,18 @@
 import {createPriceContent} from "./createPriceContent.js";
 
 export async function reloadPriceList(e) {
-    const content = e.target.closest('.content');
+    const content = document.querySelector('.content');
+    const dictionaryHeaderRight = content.querySelector('.dictionary-frame__header_right');
+    const searchInput = dictionaryHeaderRight.querySelector('.dictionary-frame__input');
+    const searchBtn = dictionaryHeaderRight.querySelector('.btn__save');
+    searchInput.disabled = false;
+    searchBtn.disabled = false;
+    searchBtn.classList.remove('btn__disabled');
     const priceContent = content.querySelector('.price-block');
     const priceDate = content
         .querySelector('.dictionary-frame__header_left')
         .querySelector('.price-dropdown__input').value;
-    const searchString = content.querySelector('.dictionary-frame__input').value;
+    const searchString = searchInput.value;
     const priceType = content
         .querySelector('.dictionary-frame__header_right')
         .querySelector('input[hidden]').value;
