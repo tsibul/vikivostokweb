@@ -1,5 +1,7 @@
+import json
 from datetime import datetime
 
+from viki_web_cms import models
 from django.db.models import F, Q, OuterRef, CharField, Value, Func, Subquery
 from django.db.models.functions import Concat, Cast
 from django.http import JsonResponse
@@ -19,7 +21,7 @@ def save_new_price_date(request):
     """
     user_check(request)
     date = datetime.strptime(request.POST['priceDate'], '%Y-%m-%d').date()
-    if Price.objects.filter(date=date).exists():
+    if Price.objects.filter(price_list_date=date).exists():
         return JsonResponse(None, safe=False)
     new_price_date = Price(price_list_date=date)
     if request.POST.get('promoCheck'):
@@ -66,7 +68,8 @@ def standard_price_data(request, str_price_date, search_string):
         article=F('item_article'),
     ).values(
         'id',
-        'item_article',
+        'article',
+        'goods__id',
         'name',
         'price',
     )
@@ -117,8 +120,8 @@ def price_goods_subquery(date):
             Cast('id', output_field=CharField()),
             Value(', "price_type__id": '),
             Cast('price_type__id', output_field=CharField()),
-            Value(', "price_type": '),
-            Cast('price_type__name', output_field=CharField()),
+            # Value(', "price_type": '),
+            # Cast('price_type__name', output_field=CharField()),
             Value(', "price": '),
             Cast('price', output_field=CharField()),
             Value('}')
@@ -170,8 +173,8 @@ def price_items_subquery(date):
             Cast('id', output_field=CharField()),
             Value(', "price_type__id": '),
             Cast('price_type__id', output_field=CharField()),
-            Value(', "price_type": '),
-            Cast('price_type__name', output_field=CharField()),
+            # Value(', "price_type": '),
+            # Cast('price_type__name', output_field=CharField()),
             Value(', "price": '),
             Cast('price', output_field=CharField()),
             Value('}')
@@ -198,7 +201,7 @@ def item_query(search_string):
             deleted=False,
             goods__standard_price=True,
             priceitemstandard__isnull=False
-        ).order_by(*CatalogueItem.order_default())
+        ).order_by(*CatalogueItem.order_default()).distinct()
     else:
         search_string = search_string.replace('|', ' ')
         items = CatalogueItem.objects.filter(
@@ -210,7 +213,7 @@ def item_query(search_string):
                     Q(goods__article__icontains=search_string) |
                     Q(main_color__name__icontains=search_string)
             )
-        ).order_by(*CatalogueItem.order_default())
+        ).order_by(*CatalogueItem.order_default()).distinct()
     return items
 
 @csrf_exempt
@@ -236,3 +239,71 @@ def volume_price_data(request, str_price_date, search_string):
 def printing_price_data(request, str_price_date, search_string):
     user_check(request)
     return JsonResponse({}, safe=False)
+
+
+@csrf_exempt
+def price_list_save(request):
+    """
+
+    :param request:
+    :return:
+    """
+    user_check(request)
+    price_data = json.loads(request.body)
+    goods_list = []
+    goods_new_list = []
+    for item in price_data['goods']:
+        temp_item = prepare_item_kwargs(item)
+        goods_keys = [key for key in temp_item.keys() if key != "id"]
+        if temp_item['id']:
+            goods = PriceGoodsStandard.objects.get(id=item['id'])
+            for key, value in temp_item.items():
+                setattr(goods, key, value)
+            goods_list.append(goods)
+        else:
+            del temp_item['id']
+            goods = PriceGoodsStandard(**temp_item)
+            goods_new_list.append(goods)
+    item_list = []
+    item_new_list = []
+    for item in price_data['item']:
+        temp_item = prepare_item_kwargs(item)
+        item_keys = [key for key in temp_item.keys() if key != "id"]
+        if temp_item['id']:
+            item_price = PriceItemStandard.objects.get(id=temp_item['id'])
+            for key, value in temp_item.items():
+                setattr(item_price, key, value)
+            item_list.append(item_price)
+        else:
+            del temp_item['id']
+            item_price = PriceItemStandard(**temp_item)
+            item_new_list.append(item_price)
+    if len(goods_list):
+        PriceGoodsStandard.objects.bulk_update(goods_list, goods_keys)
+    if len(item_list):
+        PriceItemStandard.objects.bulk_update(item_list, item_keys)
+    if len(goods_new_list):
+        PriceGoodsStandard.objects.bulk_create(goods_new_list)
+    if len(item_new_list):
+        PriceItemStandard.objects.bulk_create(item_new_list)
+    return JsonResponse({'error': False}, safe=False)
+
+def prepare_item_kwargs(item):
+    """
+
+    :param item:
+    :return:
+    """
+    temp_item = {}
+    for key in item.keys():
+        if key.endswith('__id'):
+            key_split = key.split('__')
+            class_name_received = key_split[0]
+            class_name_received.split('_')
+            class_name = ''.join([word.capitalize() for word in class_name_received.split('_')])
+            field_name = key_split[1]
+            key_model = getattr(models, class_name)
+            temp_item[field_name] = key_model.objects.get(id=item[key])
+        else:
+            temp_item[key] = item[key]
+    return temp_item
