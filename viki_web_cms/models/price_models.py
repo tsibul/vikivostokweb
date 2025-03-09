@@ -190,7 +190,7 @@ class PriceGoodsQuantity(SettingsDictionary):
         ordering = ['quantity']
 
     def _set_name(self):
-        self.name = 'от ' + str(self.quantity)
+        self.name = 'до ' + str(self.quantity)
 
     def save(self, *args, **kwargs):
         self._set_name()
