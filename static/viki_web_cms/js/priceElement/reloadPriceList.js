@@ -18,7 +18,7 @@ export async function reloadPriceList(e) {
     const priceType = content
         .querySelector('.dictionary-frame__header_right')
         .querySelector('input[hidden]').value;
-    priceContent.innerHTML = '';
+    if (priceContent) priceContent.innerHTML = '';
     const priceBlocks = await createPriceContent(priceDate, priceType, searchString);
     priceContent.appendChild(priceBlocks.header);
     priceContent.appendChild(priceBlocks.form);
