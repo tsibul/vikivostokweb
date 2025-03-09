@@ -6,6 +6,7 @@ import {priceDropdownBody} from "./priceDropdownBody.js";
 import {createSaveButton} from "../createStandardElements/createSaveButton.js";
 import {createNeutralButton} from "../createStandardElements/createNeutralButton.js";
 import {createCancelButton} from "../createStandardElements/createCancelButton.js";
+import {savePriceList} from "./savePriceList.js";
 
 export async function standardPrice(priceDate, searchString) {
     const priceForm = document.createElement('div');
@@ -13,12 +14,12 @@ export async function standardPrice(priceDate, searchString) {
     const priceUrl = jsonUrl + 'standard_price_data/' + priceDate + '/' + searchString;
     const priceData = await fetchJsonData(priceUrl);
     const allItems = await fetchJsonData(jsonUrl + 'all_items_all_items_for_dropdown')
-    const priceHeader = priceHeaderBuild(priceData.header);
+    const priceHeader = await priceHeaderBuild(priceData.header);
     await priceFormBuild(priceData.form, priceForm, priceData.header, allItems);
     return {'form': priceForm, 'header': priceHeader};
 }
 
-function priceHeaderBuild(headerData) {
+async function priceHeaderBuild(headerData) {
     const priceHeader = document.createElement('header');
     priceHeader.classList.add('price-header');
     const article = document.createElement('div');
@@ -40,6 +41,7 @@ function priceHeaderBuild(headerData) {
     priceHeader.appendChild(loadBtn);
     const saveBtn = createSaveButton('Сохранить');
     priceHeader.appendChild(saveBtn);
+    saveBtn.addEventListener('click', await savePriceList);
     return priceHeader;
 }
 
@@ -48,7 +50,7 @@ function priceFormBuild(data, priceForm, headerData, allItems) {
     data['goods'].forEach((goodsItem) => {
         goodsRow = goodsRowBuild(goodsItem, headerData, allItems);
         priceForm.appendChild(goodsRow);
-        items = data['items'].filter(item => goodsItem['id'] === item['goods__id'].id);
+        items = data['items'].filter(item => goodsItem['id'] === item['goods__id'] && item['price'] !== '[]');
         items.forEach(item => {
             itemRow = itemRowBuild(item, headerData);
             priceForm.appendChild(itemRow);
@@ -59,7 +61,7 @@ function priceFormBuild(data, priceForm, headerData, allItems) {
 }
 
 function goodsRowBuild(rowData, headerData, allItems) {
-    const goodsRow = rowBuild(rowData, headerData, 'goods');
+    const goodsRow = rowBuild(rowData, headerData, 'goods', 'goods');
     const dropDownItems = allItems.filter(item => item.goods__id === rowData.id);
     goodsRow.appendChild(priceDropdownBody(dropDownItems));
     const itemBtn = createCancelButton('Добавить цвет');
@@ -90,7 +92,7 @@ function goodsRowBuild(rowData, headerData, allItems) {
 }
 
 function itemRowBuild(rowData, headerData) {
-    const itemRow = rowBuild(rowData, headerData, 'item');
+    const itemRow = rowBuild(rowData, headerData, 'item', 'catalogue_item');
     itemRow.classList.add('price-row__item-row');
     const itemBtn = createCancelButton('Убрать позицию');
     itemBtn.addEventListener('click', async (e) => {
@@ -107,7 +109,7 @@ function itemRowBuild(rowData, headerData) {
 }
 
 
-function rowBuild(rowData, headerData, rowType) {
+function rowBuild(rowData, headerData, rowType, typeClass) {
     const goodsRow = document.createElement('div');
     goodsRow.dataset.type = rowType
     goodsRow.classList.add('price-row');
@@ -135,8 +137,12 @@ function rowBuild(rowData, headerData, rowType) {
         const priceItem = JSON.parse(rowData.price).find(item => {
             return 'price_type__id' in item && item['price_type__id'] === element.price_name__id;
         });
-        priceField.name = 'goods_' + rowData.id + '_' + element.price_name__id;
-        priceField.dataset.priceType = element.price_name__id;
+        // priceField.name = 'goods_' + rowData.id + '_' + element.price_name__id;
+        priceField.dataset.class = rowType;
+        priceField.dataset.id = priceItem ? priceItem['id'] : '';
+        priceField.setAttribute('data-' + typeClass + '__' + rowType + '__id', rowData.id);
+        // priceField.setAttribute('data-StandardPriceType__price_type__id', element.price_name__id)
+        priceField.dataset.standard_price_type__price_type__id = element.price_name__id;
         priceField.dataset.discount = element.discount;
         priceField.value = priceItem ? priceItem['price'] : '';
         priceField.readOnly = true;
@@ -172,4 +178,3 @@ function rowBuild(rowData, headerData, rowType) {
     });
     return goodsRow;
 }
-
