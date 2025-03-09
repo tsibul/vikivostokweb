@@ -27,6 +27,8 @@ class Price(SettingsDictionary):
             self.price_list_date = datetime.datetime.strptime(self.price_list_date, '%Y-%m-%d')
         if not isinstance(self.promotion_end_date, datetime.date) and self.promotion_price:
             self.promotion_end_date = datetime.datetime.strptime(self.promotion_end_date, '%Y-%m-%d')
+            if self.promotion_end_date < self.price_list_date:
+                self.promotion_end_date = self.price_list_date
         self.name = self.price_list_date.strftime('%d.%m.%y')
         if self.promotion_price and self.promotion_end_date:
             self.name += f"-{self.promotion_end_date.strftime('%d.%m.%y')}"
