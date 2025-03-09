@@ -176,3 +176,101 @@ class PriceItemStandard(SettingsDictionary):
                 'foreignClass': 'Price'
             },
         ]
+
+
+class PriceGoodsQuantity(SettingsDictionary):
+    """ price list dates"""
+    quantity = models.IntegerField()
+
+    class Meta(SettingsDictionary.Meta):
+        verbose_name = 'Price Goods Quantity'
+        verbose_name_plural = 'Price Goods Quantities'
+        db_table_comment = 'price goods'
+        db_table = 'price_goods_quantity'
+        ordering = ['quantity']
+
+    def _set_name(self):
+        self.name = 'от ' + str(self.quantity)
+
+    def save(self, *args, **kwargs):
+        self._set_name()
+        super().save(*args, **kwargs)
+
+    @staticmethod
+    def order_default():
+        return ['quantity']
+
+    @staticmethod
+    def dictionary_fields():
+        return SettingsDictionary.dictionary_fields() + [
+            {
+                'field': 'quantity',
+                'type': 'number',
+                'label': 'тираж',
+                'null': False,
+            },
+        ]
+
+
+class PriceGoodsVolume(SettingsDictionary):
+    """ goods price list"""
+    goods = models.ForeignKey(Goods, on_delete=models.CASCADE)
+    price_type = models.ForeignKey(StandardPriceType, on_delete=models.CASCADE)
+    price = models.FloatField(default=0)
+    price_list = models.ForeignKey(Price, on_delete=models.CASCADE)
+    price_volume = models.ForeignKey(PriceGoodsQuantity, on_delete=models.CASCADE)
+
+    class Meta(SettingsDictionary.Meta):
+        verbose_name = 'Goods Price Volume'
+        verbose_name_plural = 'Goods Prices Volume'
+        db_table_comment = 'goods price volume'
+        db_table = 'goods_price_volume'
+        ordering = ['price_volume', 'goods__product_group__priority', 'goods__article', 'goods__name']
+
+    def save(self, *args, **kwargs):
+        self.name = self.goods.name + ' цена от ' + self.price_list.price_list_date.strftime('%d.%m.%Y')
+        self.price = round(self.price, 2)
+        super(PriceGoodsVolume, self).save(*args, **kwargs)
+
+    @staticmethod
+    def order_default():
+        return ['price_volume', 'goods__product_group__priority', 'goods__article', 'goods__name']
+
+    @staticmethod
+    def dictionary_fields():
+        return SettingsDictionary.dictionary_fields() + [
+            {
+                'field': 'goods',
+                'type': 'foreign',
+                'label': 'товар',
+                'null': False,
+                'foreignClass': 'Goods'
+            },
+            {
+                'field': 'price',
+                'type': 'float',
+                'label': 'цена',
+                'null': False,
+            },
+            {
+                'field': 'price_type',
+                'type': 'foreign',
+                'label': 'тип цены',
+                'null': False,
+                'foreignClass': 'StandardPriceType'
+            },
+            {
+                'field': 'price_list',
+                'type': 'foreign',
+                'label': 'прайс лист',
+                'null': False,
+                'foreignClass': 'Price'
+            },
+            {
+                'field': 'price_volume',
+                'type': 'foreign',
+                'label': 'тираж',
+                'null': False,
+                'foreignClass': 'PriceGoodsQuantity'
+            },
+        ]
