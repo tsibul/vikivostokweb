@@ -43,7 +43,10 @@ def edit_dictionary(request, class_name, element_id):
         new_item.save()
         element_id = new_item.id
     else:
-        dict_model.objects.filter(pk=element_id).update(**post_data)
+        dict_element = dict_model.objects.get(pk=element_id)
+        for key, value in post_data.items():
+            setattr(dict_element, key, value)
+        dict_element.save()
     editing_item = dict_model.objects.filter(pk=element_id)
     record = editing_item.values(*fields_out)
     return JsonResponse({'errors': None, 'values': record[0], 'params': params}, safe=False)
@@ -64,7 +67,7 @@ def dictionary_fields_validation(fields, field_values):
                         and field_null_validation(field, field_values[field['field']])):
                     errors.append(field['field'])
             case 'string':
-                pattern = r'^[a-zA-Zа-яА-ЯёЁ0-9 _#.]*$'
+                pattern = r'^[a-zA-Zа-яА-ЯёЁ0-9 -_#.]*$'
                 if field['field'] == 'pantone':
                     pattern = r'^[a-zA-Zа0-9 ]*$'
                 if not (re.fullmatch(pattern, field_values[field['field']])
