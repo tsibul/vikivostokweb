@@ -169,12 +169,9 @@ def price_items_subquery(date):
     ).annotate(
         price_data=Concat(
             Value('{"id": '),
-            # F('id'),
             Cast('id', output_field=CharField()),
             Value(', "price_type__id": '),
             Cast('price_type__id', output_field=CharField()),
-            # Value(', "price_type": '),
-            # Cast('price_type__name', output_field=CharField()),
             Value(', "price": '),
             Cast('price', output_field=CharField()),
             Value('}')
@@ -259,8 +256,11 @@ def price_list_save(request):
             goods = PriceGoodsStandard.objects.get(id=item['id'])
             for key, value in temp_item.items():
                 setattr(goods, key, value)
-            goods_list.append(goods)
-        else:
+            if temp_item['price'] is not None and temp_item['price'] != 0:
+                goods_list.append(goods)
+            else:
+                goods.delete()
+        elif temp_item['price'] != '' and temp_item['price'] != 0:
             del temp_item['id']
             goods = PriceGoodsStandard(**temp_item)
             goods_new_list.append(goods)
@@ -273,8 +273,11 @@ def price_list_save(request):
             item_price = PriceItemStandard.objects.get(id=temp_item['id'])
             for key, value in temp_item.items():
                 setattr(item_price, key, value)
-            item_list.append(item_price)
-        else:
+            if temp_item['price'] != '' and temp_item['price'] != 0:
+                item_list.append(item_price)
+            else:
+                item_price.delete()
+        elif temp_item['price'] != '' and temp_item['price'] != 0:
             del temp_item['id']
             item_price = PriceItemStandard(**temp_item)
             item_new_list.append(item_price)

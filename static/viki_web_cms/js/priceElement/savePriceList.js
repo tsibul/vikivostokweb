@@ -18,8 +18,8 @@ export async function savePriceList(e) {
         .querySelector('input[hidden]').value;
     const changedFields = document
         .querySelectorAll('input.price-row__item:not(.price-row__item_disabled)');
-    const inputsToSave = Array.from(changedFields)
-        .filter(input => input.value.trim() !== '' && input.value !== '0');
+    const inputsToSave = Array.from(changedFields);
+        // .filter(input => input.value.trim() !== '' && input.value !== '0');
     const priceListData = {'goods': [], 'item': []};
     let priceListDataItem;
     inputsToSave.forEach(input => {
