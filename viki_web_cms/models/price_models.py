@@ -1,4 +1,5 @@
 # from django.core.files.storage import FileSystemStorage
+from datetime import datetime
 
 from django.db import models
 from django.utils import timezone
@@ -20,11 +21,19 @@ class Price(SettingsDictionary):
         db_table = 'price'
         ordering = ['-price_list_date']
 
-    def save(self, *args, **kwargs):
+    def _set_name(self):
+        """Формирует name на основе price_list_date и promotion_end_date"""
+        if not isinstance(self.price_list_date, datetime):
+            self.price_list_date = datetime.strptime(self.price_list_date, '%Y-%m-%d')
+        if not isinstance(self.promotion_end_date, datetime):
+            self.promotion_end_date = datetime.strptime(self.promotion_end_date, '%Y-%m-%d')
         self.name = self.price_list_date.strftime('%d.%m.%y')
-        if self.promotion_price:
-            self.name = self.name+ '-' + self.promotion_end_date.strftime('%d.%m.%y')
-        super(Price, self).save(*args, **kwargs)
+        if self.promotion_price and self.promotion_end_date:
+            self.name += f"-{self.promotion_end_date.strftime('%d.%m.%y')}"
+
+    def save(self, *args, **kwargs):
+        self._set_name()
+        super().save(*args, **kwargs)
 
     @staticmethod
     def order_default():
