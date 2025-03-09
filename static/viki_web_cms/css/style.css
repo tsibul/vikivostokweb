@@ -410,6 +410,11 @@ body {
   border-radius: 12px;
   padding: 8px;
 }
+.modal__content_date {
+  border: 1px solid #0F4880;
+  border-radius: 12px;
+  padding: 8px;
+}
 .modal__content_checkbox {
   accent-color: #009EA3;
   cursor: pointer;
