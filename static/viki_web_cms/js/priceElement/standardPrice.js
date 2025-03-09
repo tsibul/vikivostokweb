@@ -8,6 +8,12 @@ import {createNeutralButton} from "../createStandardElements/createNeutralButton
 import {createCancelButton} from "../createStandardElements/createCancelButton.js";
 import {savePriceList} from "./savePriceList.js";
 
+/**
+ * create price-content element for standard price
+ * @param priceDate price list date
+ * @param searchString search string (optional)
+ * @returns {Promise<{form: HTMLDivElement, header: HTMLElement}>}
+ */
 export async function standardPrice(priceDate, searchString) {
     const priceForm = document.createElement('div');
     priceForm.classList.add('price-content');
@@ -19,6 +25,11 @@ export async function standardPrice(priceDate, searchString) {
     return {'form': priceForm, 'header': priceHeader};
 }
 
+/**
+ * build header for standard prices
+ * @param headerData
+ * @returns {Promise<HTMLElement>}
+ */
 async function priceHeaderBuild(headerData) {
     const priceHeader = document.createElement('header');
     priceHeader.classList.add('price-header');
@@ -45,6 +56,13 @@ async function priceHeaderBuild(headerData) {
     return priceHeader;
 }
 
+/**
+ * build content for priceForm
+ * @param data
+ * @param priceForm
+ * @param headerData
+ * @param allItems
+ */
 function priceFormBuild(data, priceForm, headerData, allItems) {
     let goodsRow, itemRow, items;
     data['goods'].forEach((goodsItem) => {
@@ -60,6 +78,13 @@ function priceFormBuild(data, priceForm, headerData, allItems) {
 
 }
 
+/**
+ * build row for goods
+ * @param rowData
+ * @param headerData
+ * @param allItems
+ * @returns {HTMLDivElement}
+ */
 function goodsRowBuild(rowData, headerData, allItems) {
     const goodsRow = rowBuild(rowData, headerData, 'goods', 'goods');
     const dropDownItems = allItems.filter(item => item.goods__id === rowData.id);
@@ -91,6 +116,12 @@ function goodsRowBuild(rowData, headerData, allItems) {
     return goodsRow;
 }
 
+/**
+ * build row for CatalogueItem
+ * @param rowData
+ * @param headerData
+ * @returns {HTMLDivElement}
+ */
 function itemRowBuild(rowData, headerData) {
     const itemRow = rowBuild(rowData, headerData, 'item', 'catalogue_item');
     itemRow.classList.add('price-row__item-row');
@@ -109,6 +140,14 @@ function itemRowBuild(rowData, headerData) {
 }
 
 
+/**
+ * build row according rowType
+ * @param rowData
+ * @param headerData
+ * @param rowType
+ * @param typeClass
+ * @returns {HTMLDivElement}
+ */
 function rowBuild(rowData, headerData, rowType, typeClass) {
     const goodsRow = document.createElement('div');
     goodsRow.dataset.type = rowType

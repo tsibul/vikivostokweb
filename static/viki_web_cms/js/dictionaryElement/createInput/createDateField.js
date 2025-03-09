@@ -3,7 +3,7 @@
 import {createModalInput} from "./createModalInput.js";
 
 /**
- * create number input
+ * create date input
  * @returns {HTMLInputElement}
  * @param fieldData
  */

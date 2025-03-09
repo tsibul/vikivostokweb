@@ -8,6 +8,11 @@ import {createPriceContent} from "./createPriceContent.js";
 import {createCancelButton} from "../createStandardElements/createCancelButton.js";
 import {createSaveButton} from "../createStandardElements/createSaveButton.js";
 
+/**
+ * create total price how you see it
+ * @param className
+ * @returns {Promise<HTMLDivElement>}
+ */
 export async function createPriceElement(className) {
     const dictionaryHeaderLeft = document.querySelector('.dictionary-frame__header_left');
     const priceDropdown = await createPriceDropdown();

@@ -3,6 +3,11 @@
 import {jsonUrl} from "../main.js";
 import {reloadPriceList} from "./reloadPriceList.js";
 
+/**
+ * save priceList for standard prices
+ * @param e
+ * @returns {Promise<void>}
+ */
 export async function savePriceList(e) {
     const content = document.querySelector('.content');
     const priceDateId = content
