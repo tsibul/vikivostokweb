@@ -4,7 +4,8 @@ import datetime
 from django.db import models
 from django.utils import timezone
 
-from viki_web_cms.models import SettingsDictionary, Goods, CatalogueItem, GoodsGroup, StandardPriceType
+from viki_web_cms.models import SettingsDictionary, Goods, CatalogueItem, GoodsGroup, StandardPriceType, PrintPlace, \
+    PrintPriceGroup
 
 
 # fs_product_group = FileSystemStorage(location='viki_web_cms/files/cover')
@@ -272,5 +273,53 @@ class PriceGoodsVolume(SettingsDictionary):
                 'label': 'тираж',
                 'null': False,
                 'foreignClass': 'PriceGoodsQuantity'
+            },
+        ]
+
+
+class PrintGroupToGoods(SettingsDictionary):
+    """ goods to print group"""
+    goods = models.ForeignKey(Goods, on_delete=models.CASCADE)
+    print_place = models.ForeignKey(PrintPlace, on_delete=models.CASCADE, null=True, blank=True)
+    print_price_group = models.ForeignKey(PrintPriceGroup, on_delete=models.CASCADE)
+
+    class Meta(SettingsDictionary.Meta):
+        verbose_name = 'Print Group To Goods'
+        verbose_name_plural = 'Print Group to Goods'
+        db_table_comment = 'print group to goods'
+        db_table = 'print_group_to_goods'
+        ordering = ['print_price_group', 'goods__article', 'goods__name']
+
+    def save(self, *args, **kwargs):
+        self.name = self.goods.name + ' ' + self.print_price_group.print_type.name + ' ' + str(self.print_place)
+        super(PrintGroupToGoods, self).save(*args, **kwargs)
+
+    @staticmethod
+    def order_default():
+        return ['print_price_group', 'goods__article', 'goods__name']
+
+    @staticmethod
+    def dictionary_fields():
+        return SettingsDictionary.dictionary_fields() + [
+            {
+                'field': 'goods',
+                'type': 'foreign',
+                'label': 'товар',
+                'null': False,
+                'foreignClass': 'Goods'
+            },
+            {
+                'field': 'print_place',
+                'type': 'foreign',
+                'label': 'место нанесения',
+                'null': True,
+                'foreignClass': 'PrintPlace'
+            },
+            {
+                'field': 'print_price_group',
+                'type': 'foreign',
+                'label': 'ценовая группа',
+                'null': True,
+                'foreignClass': 'PrintPriceGroup'
             },
         ]
