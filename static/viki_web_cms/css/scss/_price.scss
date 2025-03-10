@@ -115,3 +115,14 @@
     }
   }
 }
+
+.print-header{
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  gap: 16px;
+  padding: 6px;
+  @include brd-standard;
+  border-color: transparent;
+  background-color: rgba($colorSecondary, 0.05);
+}
