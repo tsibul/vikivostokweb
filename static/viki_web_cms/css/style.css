@@ -677,6 +677,14 @@ body {
   overflow: auto;
   max-height: calc(100vh - 190px);
 }
+.price-content__volume-header {
+  font-weight: 700;
+  padding: 16px;
+  background-color: rgba(74, 74, 74, 0.2);
+  border: 1px solid #0F4880;
+  border-radius: 12px;
+  border-color: transparent;
+}
 
 .price-row {
   display: grid;

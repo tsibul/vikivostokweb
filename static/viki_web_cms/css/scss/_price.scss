@@ -52,6 +52,14 @@
 .price-content {
   overflow: auto;
   max-height: calc(100vh - 190px);
+
+  &__volume-header{
+    font-weight: 700;
+    padding: 16px;
+    background-color: rgba($colorNeutral500, 0.2);
+    @include brd-standard;
+    border-color: transparent;
+  }
 }
 
 .price-row {
