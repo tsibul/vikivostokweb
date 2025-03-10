@@ -30,7 +30,7 @@ export async function standardPrice(priceDate, searchString) {
  * @param headerData
  * @returns {Promise<HTMLElement>}
  */
-async function priceHeaderBuild(headerData) {
+export async function priceHeaderBuild(headerData) {
     const priceHeader = document.createElement('header');
     priceHeader.classList.add('price-header');
     const article = document.createElement('div');
