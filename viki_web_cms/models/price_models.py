@@ -5,7 +5,7 @@ from django.db import models
 from django.utils import timezone
 
 from viki_web_cms.models import SettingsDictionary, Goods, CatalogueItem, GoodsGroup, StandardPriceType, PrintPlace, \
-    PrintPriceGroup
+    PrintPriceGroup, PrintVolume
 
 
 # fs_product_group = FileSystemStorage(location='viki_web_cms/files/cover')
@@ -322,5 +322,60 @@ class PrintGroupToGoods(SettingsDictionary):
                 'label': 'ценовая группа',
                 'null': False,
                 'foreignClass': 'PrintPriceGroup'
+            },
+        ]
+
+
+class PrintPrice(SettingsDictionary):
+    """ print price"""
+    print_price_group = models.ForeignKey(PrintPriceGroup, on_delete=models.CASCADE)
+    print_volume = models.ForeignKey(PrintVolume, on_delete=models.CASCADE)
+    price_list = models.ForeignKey(Price, on_delete=models.CASCADE)
+    price = models.FloatField(default=0)
+
+    class Meta(SettingsDictionary.Meta):
+        verbose_name = 'Print Price'
+        verbose_name_plural = 'Print Price List'
+        db_table_comment = 'print price list'
+        db_table = 'print_price'
+        ordering = ['print_price_group__print_type', 'print_volume__quantity']
+
+    def save(self, *args, **kwargs):
+        self.name = self.print_price_group.name + ' ' + self.price_list.name
+        super(PrintPrice, self).save(*args, **kwargs)
+
+    @staticmethod
+    def order_default():
+        return ['print_price_group__print_type', 'print_volume__quantity']
+
+    @staticmethod
+    def dictionary_fields():
+        return SettingsDictionary.dictionary_fields() + [
+            {
+                'field': 'print_price_group',
+                'type': 'foreign',
+                'label': 'ценовая группа',
+                'null': False,
+                'foreignClass': 'PrintPriceGroup'
+            },
+            {
+                'field': 'print_volume',
+                'type': 'foreign',
+                'label': 'тираж нанесения',
+                'null': False,
+                'foreignClass': 'PrintVolume'
+            },
+            {
+                'field': 'price_list',
+                'type': 'foreign',
+                'label': 'дата прайс листа',
+                'null': False,
+                'foreignClass': 'Price'
+            },
+            {
+                'field': 'price',
+                'type': 'float',
+                'label': 'цена',
+                'null': False,
             },
         ]
