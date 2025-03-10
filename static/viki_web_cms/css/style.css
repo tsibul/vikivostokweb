@@ -746,4 +746,26 @@ body {
   background-color: rgba(0, 158, 163, 0.05);
 }
 
+.type-table {
+  padding: 4px;
+}
+.type-table__row {
+  display: grid;
+  gap: 6px;
+  align-items: center;
+  border: 1px solid #0F4880;
+  border-radius: 12px;
+  padding: 3px;
+  border-color: transparent;
+}
+.type-table__header {
+  background-color: rgba(74, 74, 74, 0.05);
+}
+.type-table__input {
+  border: 1px solid #0F4880;
+  border-radius: 12px;
+  padding: 6px;
+  width: 100%;
+}
+
 /*# sourceMappingURL=style.css.map */

@@ -322,6 +322,7 @@ def printing_price_data(request, str_price_date):
         ).values(
             'print_volume_id',
             'print_volume__name',
+            'quantity'
         )
         )
         temp_item = type.copy()
@@ -353,7 +354,7 @@ def printing_price_data(request, str_price_date):
         temp_item['print_groups'] = print_groups_list
         price_data.append(temp_item)
 
-    return JsonResponse({'price_data': price_data, }, safe=False)
+    return JsonResponse({'priceData': price_data, }, safe=False)
 
 
 @csrf_exempt

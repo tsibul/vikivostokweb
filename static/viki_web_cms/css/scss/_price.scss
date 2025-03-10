@@ -126,3 +126,24 @@
   border-color: transparent;
   background-color: rgba($colorSecondary, 0.05);
 }
+
+.type-table{
+  padding: 4px;
+  &__row {
+    display: grid;
+    gap: 6px;
+    align-items: center;
+    @include brd-standard;
+    padding: 3px;
+    border-color: transparent;
+  }
+  &__header{
+    background-color: rgba($colorNeutral500, 0.05);
+  }
+
+  &__input{
+    @include brd-standard;
+    padding: 6px;
+    width: 100%;
+  }
+}
