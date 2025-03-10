@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from viki_web_cms.functions.user_validation import user_check
 from viki_web_cms.models import Price, StandardPriceType, Goods, PriceGoodsStandard, CatalogueItem, PriceItemStandard, \
-    CustomerDiscount
+    CustomerDiscount, PriceGoodsVolume, PriceGoodsQuantity
 
 
 @csrf_exempt
@@ -53,7 +53,7 @@ def standard_price_data(request, str_price_date, search_string):
 
 
     price_subquery = price_goods_subquery(price_date)
-    goods = goods_query(search_string).annotate(
+    goods = goods_query(search_string, True).annotate(
         price=Subquery(price_subquery, output_field=CharField()),
     ).values(
         'id',
@@ -137,17 +137,17 @@ def price_goods_subquery(date):
     )
 
 
-def goods_query(search_string):
+def goods_query(search_string, standard):
     if search_string == 'None':
         goods = Goods.objects.filter(
             deleted=False,
-            standard_price=True
+            standard_price=standard,
         ).order_by(*Goods.order_default())
     else:
         search_string = search_string.replace('|', ' ')
         goods = Goods.objects.filter(
             Q(deleted=False) &
-            Q(standard_price=True) & (
+            Q(standard_price=standard) & (
                     Q(name__icontains=search_string) |
                     Q(article__icontains=search_string)
             )
@@ -231,7 +231,70 @@ def delete_item_price_row(request, row_id):
 
 def volume_price_data(request, str_price_date, search_string):
     user_check(request)
-    return JsonResponse({}, safe=False)
+    price_date = datetime.strptime(str_price_date[0:8], '%d.%m.%y').date()
+    price_type_query = CustomerDiscount.objects.filter(deleted=False).order_by(*CustomerDiscount.order_default())
+    price_types = list(price_type_query.values(
+        'price_name__id',
+        'price_name__name',
+        'discount'
+    ))
+    price_subquery = price_goods_volume_subquery(price_date)
+    volume_types = PriceGoodsQuantity.objects.filter(deleted=False).order_by(*PriceGoodsQuantity.order_default())
+    volumes = list(volume_types.values(
+        'id',
+        'name',
+    ))
+    goods = goods_query(search_string, False).annotate(
+        price=Subquery(price_subquery, output_field=CharField()),
+    ).values(
+        'id',
+        'article',
+        'name',
+        'price',
+    )
+    return JsonResponse({
+        'header': price_types,
+        'form': {
+            'goods': list(goods),
+            'volumes': volumes,
+        }
+    }, safe=False)
+
+def price_goods_volume_subquery(date):
+    """
+
+    :param date:
+    :return:
+    """
+    return PriceGoodsVolume.objects.filter(
+        goods=OuterRef('id'),
+        price_list__price_list_date=date,
+    ).order_by(
+        'price_volume__quantity',
+        'price_type__priority',
+    ).annotate(
+        price_data=Concat(
+            Value('{"id": '),
+            Cast('id', output_field=CharField()),
+            Value(', "price_type__id": '),
+            Cast('price_type__id', output_field=CharField()),
+            Value(', "price_volume__id": '),
+            Cast('price_volume__id', output_field=CharField()),
+            Value(', "price": '),
+            Cast('price', output_field=CharField()),
+            Value('}')
+        )
+    ).values(
+        'goods'
+    ).annotate(
+        prices=Concat(
+            Value('['), Func(F('price_data'), function='GROUP_CONCAT'), Value(']')
+        )
+    ).values(
+        'prices',
+    )
+
+
 
 def printing_price_data(request, str_price_date, search_string):
     user_check(request)
@@ -247,22 +310,26 @@ def price_list_save(request):
     """
     user_check(request)
     price_data = json.loads(request.body)
+    if 'price_goods_quantity__price_volume__id' in price_data['goods'][0].keys():
+        price_goods_model = getattr(models, 'PriceGoodsVolume')
+    else:
+        price_goods_model = getattr(models, 'PriceGoodsStandard')
     goods_list = []
     goods_new_list = []
     for item in price_data['goods']:
         temp_item = prepare_item_kwargs(item)
         goods_keys = [key for key in temp_item.keys() if key != "id"]
         if temp_item['id']:
-            goods = PriceGoodsStandard.objects.get(id=item['id'])
+            goods = price_goods_model.objects.get(id=item['id'])
             for key, value in temp_item.items():
                 setattr(goods, key, value)
             if temp_item['price'] is not None and temp_item['price'] != 0:
                 goods_list.append(goods)
             else:
                 goods.delete()
-        elif temp_item['price'] != '' and temp_item['price'] != 0:
+        elif temp_item['price'] is not None and temp_item['price'] != 0:
             del temp_item['id']
-            goods = PriceGoodsStandard(**temp_item)
+            goods = price_goods_model(**temp_item)
             goods_new_list.append(goods)
     item_list = []
     item_new_list = []
@@ -273,20 +340,20 @@ def price_list_save(request):
             item_price = PriceItemStandard.objects.get(id=temp_item['id'])
             for key, value in temp_item.items():
                 setattr(item_price, key, value)
-            if temp_item['price'] != '' and temp_item['price'] != 0:
+            if temp_item['price'] is not None and temp_item['price'] != 0:
                 item_list.append(item_price)
             else:
                 item_price.delete()
-        elif temp_item['price'] != '' and temp_item['price'] != 0:
+        elif temp_item['price'] is not None and temp_item['price'] != 0:
             del temp_item['id']
             item_price = PriceItemStandard(**temp_item)
             item_new_list.append(item_price)
     if len(goods_list):
-        PriceGoodsStandard.objects.bulk_update(goods_list, goods_keys)
+        price_goods_model.objects.bulk_update(goods_list, goods_keys)
     if len(item_list):
         PriceItemStandard.objects.bulk_update(item_list, item_keys)
     if len(goods_new_list):
-        PriceGoodsStandard.objects.bulk_create(goods_new_list)
+        price_goods_model.objects.bulk_create(goods_new_list)
     if len(item_new_list):
         PriceItemStandard.objects.bulk_create(item_new_list)
     return JsonResponse({'error': False}, safe=False)
