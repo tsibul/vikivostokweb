@@ -291,7 +291,8 @@ class PrintGroupToGoods(SettingsDictionary):
         ordering = ['print_price_group', 'goods__article', 'goods__name']
 
     def save(self, *args, **kwargs):
-        self.name = self.goods.name + ' ' + self.print_price_group.print_type.name + ' ' + str(self.print_place)
+        p_place = self.print_place.name if self.print_place_id else ''
+        self.name = self.goods.name + ' ' + self.print_price_group.print_type.name + ' ' + p_place
         super(PrintGroupToGoods, self).save(*args, **kwargs)
 
     @staticmethod
