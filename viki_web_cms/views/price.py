@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from viki_web_cms.functions.user_validation import user_check
 from viki_web_cms.models import Price, StandardPriceType, Goods, PriceGoodsStandard, CatalogueItem, PriceItemStandard, \
-    CustomerDiscount, PriceGoodsVolume, PriceGoodsQuantity
+    CustomerDiscount, PriceGoodsVolume, PriceGoodsQuantity, PrintPriceGroup, PrintType, PrintVolume, PrintPrice
 
 
 @csrf_exempt
@@ -51,7 +51,6 @@ def standard_price_data(request, str_price_date, search_string):
         'discount'
     ))
 
-
     price_subquery = price_goods_subquery(price_date)
     goods = goods_query(search_string, True).annotate(
         price=Subquery(price_subquery, output_field=CharField()),
@@ -81,6 +80,7 @@ def standard_price_data(request, str_price_date, search_string):
             'items': list(items),
         }
     }, safe=False)
+
 
 def all_items_all_items_for_dropdown(request):
     """
@@ -213,6 +213,7 @@ def item_query(search_string):
         ).order_by(*CatalogueItem.order_default()).distinct()
     return items
 
+
 @csrf_exempt
 def delete_item_price_row(request, row_id):
     """
@@ -228,6 +229,7 @@ def delete_item_price_row(request, row_id):
         for item in item_price:
             item.delete()
     return JsonResponse('Success', safe=False)
+
 
 def volume_price_data(request, str_price_date, search_string):
     user_check(request)
@@ -259,6 +261,7 @@ def volume_price_data(request, str_price_date, search_string):
             'volumes': volumes,
         }
     }, safe=False)
+
 
 def price_goods_volume_subquery(date):
     """
@@ -295,10 +298,62 @@ def price_goods_volume_subquery(date):
     )
 
 
-
-def printing_price_data(request, str_price_date, search_string):
+def printing_price_data(request, str_price_date):
     user_check(request)
-    return JsonResponse({}, safe=False)
+    price_date = datetime.strptime(str_price_date[0:8], '%d.%m.%y').date()
+    print_type = list(PrintType.objects.filter(deleted=False).order_by(
+        *PrintType.order_default()
+    ).annotate(
+        print_type__id=F('id'),
+        print_type__name=F('name'),
+    ).values(
+        'print_type__id',
+        'print_type__name',
+    ))
+    price_data = []
+    for type in print_type:
+        print_volume = PrintVolume.objects.filter(
+            deleted=False, print_type__id=type['print_type__id']
+        ).order_by(*PrintVolume.order_default())
+        print_volume_length = len(print_volume)
+        print_volume_data = list(print_volume.annotate(
+            print_volume_id=F('id'),
+            print_volume__name=F('name'),
+        ).values(
+            'print_volume_id',
+            'print_volume__name',
+        )
+        )
+        temp_item = type.copy()
+        temp_item['print_volume_length'] = print_volume_length
+        temp_item['print_volume_data'] = print_volume_data
+        print_groups_list = []
+        print_groups = PrintPriceGroup.objects.filter(
+            deleted=False,
+            print_type__id=type['print_type__id']
+        ).order_by(*PrintPriceGroup.order_default())
+        for group in print_groups:
+            temp_group = {
+                'print_price_group__id': group.id,
+                'print_price_group__name': group.name,
+            }
+            prices = list(PrintPrice.objects.filter(
+                deleted=False,
+                print_price_group__id=group.id,
+                price_list__price_list_date=price_date,
+            ).order_by(*PrintPrice.order_default()).annotate(
+                price__id=F('id'),
+            ).values(
+                'price__id',
+                'price',
+                'print_volume__id'
+            ))
+            temp_group['prices'] = prices
+            print_groups_list.append(temp_group)
+        temp_item['print_groups'] = print_groups_list
+        price_data.append(temp_item)
+
+    return JsonResponse({'price_data': price_data, }, safe=False)
 
 
 @csrf_exempt
@@ -357,6 +412,7 @@ def price_list_save(request):
     if len(item_new_list):
         PriceItemStandard.objects.bulk_create(item_new_list)
     return JsonResponse({'error': False}, safe=False)
+
 
 def prepare_item_kwargs(item):
     """
