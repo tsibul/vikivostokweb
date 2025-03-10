@@ -319,7 +319,7 @@ class PrintGroupToGoods(SettingsDictionary):
                 'field': 'print_price_group',
                 'type': 'foreign',
                 'label': 'ценовая группа',
-                'null': True,
+                'null': False,
                 'foreignClass': 'PrintPriceGroup'
             },
         ]
