@@ -74,6 +74,8 @@ class MainMenu:
                 MenuSection('Нанесение', [
                     CMSSetting('Тип нанесения', 'PrintType', False),
                     CMSSetting('Место нанесения', 'PrintPlace', False),
+                    CMSSetting('Тиражи нанесения', 'PrintVolume', False),
+                    CMSSetting('Ценовые группы нанесения', 'PrintPriceGroup', False),
                 ]),
                 MenuSection('Фильтры', [
                     CMSSetting('Фильтры', 'FilterOption', False),
