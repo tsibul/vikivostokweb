@@ -74,7 +74,7 @@ function priceFormBuild(data, priceForm, headerData, allItems, rowGrid) {
         priceForm.appendChild(goodsRow);
         items = data['items'].filter(item => goodsItem['id'] === item['goods__id'] && item['price'] !== '[]');
         items.forEach(item => {
-            itemRow = itemRowBuild(item, headerData);
+            itemRow = itemRowBuild(item, headerData, rowGrid);
             priceForm.appendChild(itemRow);
         });
     });
@@ -131,6 +131,7 @@ function goodsRowBuild(rowData, headerData, allItems, rowGrid) {
 function itemRowBuild(rowData, headerData, rowGrid) {
     const itemRow = rowBuild(rowData, headerData, 'item', 'catalogue_item', rowGrid);
     itemRow.classList.add('price-row__item-row');
+    itemRow.style.gridTemplateColumns = rowGrid;
     const itemBtn = createCancelButton('Убрать позицию');
     itemBtn.addEventListener('click', async (e) => {
         e.preventDefault();
