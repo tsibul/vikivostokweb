@@ -50,6 +50,7 @@ def standard_price_data(request, str_price_date, search_string):
         'price_name__name',
         'discount'
     ))
+    price_type_length = len(price_types)
 
     price_subquery = price_goods_subquery(price_date)
     goods = goods_query(search_string, True).annotate(
@@ -75,6 +76,7 @@ def standard_price_data(request, str_price_date, search_string):
 
     return JsonResponse({
         'header': price_types,
+        'price_length': price_type_length,
         'form': {
             'goods': list(goods),
             'items': list(items),
@@ -240,6 +242,7 @@ def volume_price_data(request, str_price_date, search_string):
         'price_name__name',
         'discount'
     ))
+    price_type_length = len(price_types)
     price_subquery = price_goods_volume_subquery(price_date)
     volume_types = PriceGoodsQuantity.objects.filter(deleted=False).order_by(*PriceGoodsQuantity.order_default())
     volumes = list(volume_types.values(
@@ -256,6 +259,7 @@ def volume_price_data(request, str_price_date, search_string):
     )
     return JsonResponse({
         'header': price_types,
+        'price_type_length': price_type_length,
         'form': {
             'goods': list(goods),
             'volumes': volumes,
