@@ -434,3 +434,52 @@ def prepare_item_kwargs(item):
         else:
             temp_item[key] = item[key]
     return temp_item
+
+
+@csrf_exempt
+def printing_price_list_save(request):
+    """
+
+    :param request:
+    :return:
+    """
+    user_check(request)
+    price_data = json.loads(request.body)
+    price_keys = [
+        'print_volume',
+        'price_list',
+        'print_price_group',
+        'price',
+    ]
+    price_list = []
+    price_new_list = []
+    for item in price_data:
+        temp_item = prepare_price_kwargs(item)
+        if 'id' in temp_item.keys():
+            price = PrintPrice.objects.get(id=item['id'])
+            for key, value in temp_item.items():
+                setattr(price, key, value)
+            if temp_item['price'] is not None and temp_item['price'] != 0:
+                price_list.append(price)
+            else:
+                price.delete()
+        elif temp_item['price'] is not None and temp_item['price'] != 0:
+            price = PrintPrice(**temp_item)
+            price_new_list.append(price)
+    if len(price_list):
+        PrintPrice.objects.bulk_update(price_list, price_keys)
+    if len(price_new_list):
+        PrintPrice.objects.bulk_create(price_new_list)
+    return JsonResponse({'error': False}, safe=False)
+
+
+def prepare_price_kwargs(item):
+    price_kwargs = {
+        'print_volume': PrintVolume.objects.get(id=item['print_volume__id']),
+        'price_list': Price.objects.get(id=item['price_list__id']),
+        'print_price_group': PrintPriceGroup.objects.get(id=item['print_price_group__id']),
+        'price': item['price'],
+    }
+    if item['id']:
+        price_kwargs['id'] = item['id']
+    return price_kwargs
