@@ -19,20 +19,23 @@ export async function standardPrice(priceDate, searchString) {
     priceForm.classList.add('price-content');
     const priceUrl = jsonUrl + 'standard_price_data/' + priceDate + '/' + searchString;
     const priceData = await fetchJsonData(priceUrl);
+    const rowGrid = '0.8fr 3.2fr repeat(' + priceData.price_type_length + ', 1fr) 160px 120px'
     const allItems = await fetchJsonData(jsonUrl + 'all_items_all_items_for_dropdown')
-    const priceHeader = await priceHeaderBuild(priceData.header);
-    await priceFormBuild(priceData.form, priceForm, priceData.header, allItems);
+    const priceHeader = await priceHeaderBuild(priceData.header, rowGrid);
+    await priceFormBuild(priceData.form, priceForm, priceData.header, allItems, rowGrid);
     return {'form': priceForm, 'header': priceHeader};
 }
 
 /**
  * build header for standard prices
  * @param headerData
+ * @param rowGrid
  * @returns {Promise<HTMLElement>}
  */
-export async function priceHeaderBuild(headerData) {
+export async function priceHeaderBuild(headerData, rowGrid) {
     const priceHeader = document.createElement('header');
     priceHeader.classList.add('price-header');
+    priceHeader.style.gridTemplateColumns = rowGrid;
     const article = document.createElement('div');
     article.classList.add('price-header__item');
     article.textContent = 'Артикул';
@@ -62,11 +65,12 @@ export async function priceHeaderBuild(headerData) {
  * @param priceForm
  * @param headerData
  * @param allItems
+ * @param rowGrid
  */
-function priceFormBuild(data, priceForm, headerData, allItems) {
+function priceFormBuild(data, priceForm, headerData, allItems, rowGrid) {
     let goodsRow, itemRow, items;
     data['goods'].forEach((goodsItem) => {
-        goodsRow = goodsRowBuild(goodsItem, headerData, allItems);
+        goodsRow = goodsRowBuild(goodsItem, headerData, allItems, rowGrid);
         priceForm.appendChild(goodsRow);
         items = data['items'].filter(item => goodsItem['id'] === item['goods__id'] && item['price'] !== '[]');
         items.forEach(item => {
@@ -83,10 +87,11 @@ function priceFormBuild(data, priceForm, headerData, allItems) {
  * @param rowData
  * @param headerData
  * @param allItems
+ * @param rowGrid
  * @returns {HTMLDivElement}
  */
-function goodsRowBuild(rowData, headerData, allItems) {
-    const goodsRow = rowBuild(rowData, headerData, 'goods', 'goods');
+function goodsRowBuild(rowData, headerData, allItems, rowGrid) {
+    const goodsRow = rowBuild(rowData, headerData, 'goods', 'goods', rowGrid);
     const dropDownItems = allItems.filter(item => item.goods__id === rowData.id);
     goodsRow.appendChild(priceDropdownBody(dropDownItems));
     const itemBtn = createCancelButton('Добавить цвет');
@@ -120,10 +125,11 @@ function goodsRowBuild(rowData, headerData, allItems) {
  * build row for CatalogueItem
  * @param rowData
  * @param headerData
+ * @param rowGrid
  * @returns {HTMLDivElement}
  */
-function itemRowBuild(rowData, headerData) {
-    const itemRow = rowBuild(rowData, headerData, 'item', 'catalogue_item');
+function itemRowBuild(rowData, headerData, rowGrid) {
+    const itemRow = rowBuild(rowData, headerData, 'item', 'catalogue_item', rowGrid);
     itemRow.classList.add('price-row__item-row');
     const itemBtn = createCancelButton('Убрать позицию');
     itemBtn.addEventListener('click', async (e) => {
@@ -146,12 +152,14 @@ function itemRowBuild(rowData, headerData) {
  * @param headerData
  * @param rowType
  * @param typeClass
+ * @param rowGrid
  * @returns {HTMLDivElement}
  */
-function rowBuild(rowData, headerData, rowType, typeClass) {
+function rowBuild(rowData, headerData, rowType, typeClass, rowGrid) {
     const goodsRow = document.createElement('div');
     goodsRow.dataset.type = rowType
     goodsRow.classList.add('price-row');
+    goodsRow.style.gridTemplateColumns = rowGrid;
     const idField = document.createElement('input');
     idField.type = 'text';
     idField.hidden = true;

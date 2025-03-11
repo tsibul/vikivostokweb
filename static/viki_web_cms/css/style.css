@@ -664,7 +664,6 @@ body {
 
 .price-header {
   display: grid;
-  grid-template-columns: 0.8fr 3.2fr repeat(5, 1fr) 1.3fr 1fr;
   gap: 16px;
   align-items: center;
   padding: 6px 20px 6px 6px;
@@ -688,7 +687,6 @@ body {
 
 .price-row {
   display: grid;
-  grid-template-columns: 0.8fr 3.2fr repeat(5, 1fr) 1.3fr 1fr;
   gap: 16px;
   align-items: center;
   padding: 2px;

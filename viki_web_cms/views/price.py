@@ -76,7 +76,7 @@ def standard_price_data(request, str_price_date, search_string):
 
     return JsonResponse({
         'header': price_types,
-        'price_length': price_type_length,
+        'price_type_length': price_type_length,
         'form': {
             'goods': list(goods),
             'items': list(items),

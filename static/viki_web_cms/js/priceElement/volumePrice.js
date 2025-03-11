@@ -9,37 +9,39 @@ export async function volumePrice(priceDate, searchString) {
     priceForm.classList.add('price-content');
     const priceUrl = jsonUrl + 'volume_price_data/' + priceDate + '/' + searchString;
     const priceData = await fetchJsonData(priceUrl);
-    const priceHeader = await priceHeaderBuild(priceData.header);
-    volumePriceFormBuild(priceData.form, priceForm, priceData.header, priceData.form.volumes);
+    const rowGrid = '0.8fr 3.2fr repeat(' + priceData.price_type_length  + ', 1fr) 120px 102px'
+    const priceHeader = await priceHeaderBuild(priceData.header, rowGrid);
+    volumePriceFormBuild(priceData.form, priceForm, priceData.header, priceData.form.volumes, rowGrid);
 
     return {'form': priceForm, 'header': priceHeader};
 }
 
-function volumePriceFormBuild(priceData, priceForm, header, volumes) {
+function volumePriceFormBuild(priceData, priceForm, header, volumes, rowGrid) {
     volumes.forEach(volume => {
         const tableHeader = document.createElement('div');
         tableHeader.classList.add('price-content__volume-header');
         tableHeader.textContent = 'Количество ' + volume.name + ' шт';
         priceForm.appendChild(tableHeader);
         const volumeTable = document.createElement('div');
-        volumeTable.appendChild(createTableContent(priceData, header, volume));
+        volumeTable.appendChild(createTableContent(priceData, header, volume, rowGrid));
         priceForm.appendChild(volumeTable);
     });
 
 }
 
-function createTableContent(priceData, header, volume) {
+function createTableContent(priceData, header, volume, rowGrid) {
     const tableContent = document.createElement('div');
     priceData.goods.forEach((g) => {
-        tableContent.appendChild(createVolumeRow(g, header, volume));
+        tableContent.appendChild(createVolumeRow(g, header, volume, rowGrid));
     });
     return tableContent;
 }
 
 
-function createVolumeRow(g, header, volume) {
+function createVolumeRow(g, header, volume, rowGrid) {
     const volumeRow = document.createElement('div');
     volumeRow.classList.add('price-row');
+    volumeRow.style.gridTemplateColumns = rowGrid;
     const idField = document.createElement('input');
     idField.type = 'text';
     idField.hidden = true;
