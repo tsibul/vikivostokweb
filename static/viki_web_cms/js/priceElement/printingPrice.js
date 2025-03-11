@@ -22,7 +22,7 @@ export async function printingPrice(priceDate, searchString) {
     const priceHeader = await buildPriceHeader();
     const priceUrl = jsonUrl + 'printing_price_data/' + priceDate;
     const printPriceData = await fetchJsonData(priceUrl);
-    let tableRow, rowGrid, rowItem;
+    let rowGrid;
     printPriceData.priceData.forEach((printType) => {
         const typeTable = document.createElement('div');
         typeTable.classList.add('type-table');
@@ -90,8 +90,10 @@ function buildRowItem(group,volume) {
         e.target.readOnly = false;
         e.target.classList.remove('price-row__item_disabled');
     });
-    rowItem.dataset.print_volume__print_volume__id = volume.print_volume_id;
-    rowItem.dataset.print_price_group__print_price_group__id = group.print_price_group__id;
-    rowItem.value = group.prices.find(price => price['print_volume__id'] === volume.print_volume_id)?.['price'];
+    const price = group.prices.find(price => price['print_volume__id'] === volume.print_volume_id);
+    rowItem.dataset.id = price && 'id' in Object.keys(price) ? price['id'] : '';
+    rowItem.dataset.print_volume__id = volume.print_volume_id;
+    rowItem.dataset.print_price_group__id = group.print_price_group__id;
+    rowItem.value = price?.['price'];
     return rowItem;
 }
