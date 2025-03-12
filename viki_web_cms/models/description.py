@@ -63,15 +63,15 @@ class ArticleDescription(SettingsDictionary):
         verbose_name_plural = 'Article Descriptions'
         db_table_comment = 'article description'
         db_table = 'article_description'
-        ordering = ['goods__article', 'goods__name']
+        ordering = ['goods__article', 'goods__name', 'position']
 
     def save(self, *args, **kwargs):
-        self.name = self.goods.article + ' ' + self.goods.name
+        self.name = self.goods.article + ' ' + self.goods.name + ' ' + self.parts_description.name
         super(ArticleDescription, self).save(*args, **kwargs)
 
     @staticmethod
     def order_default():
-        return ['goods__article', 'goods__name']
+        return ['goods__article', 'goods__name', 'position']
 
     @staticmethod
     def dictionary_fields():
