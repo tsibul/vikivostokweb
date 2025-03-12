@@ -54,7 +54,8 @@ async function sendForm(event, form, className, initialData) {
     });
     event.target.disabled = true;
     const formData = new FormData(form);
-    if (!checkChangeForm(formData, initialData)) {
+    const fileIn = modal.querySelector('input[type="file"]');
+    if (!checkChangeForm(formData, initialData) || fileIn) {
         const fetchPath = jsonUrl + 'edit_dictionary/' + className + '/' + elementId;
         await fetch(fetchPath, {
             method: 'POST',
@@ -92,7 +93,7 @@ async function sendForm(event, form, className, initialData) {
                         errorField = modal.querySelector(`[name = "${error}"]`);
                         errorField.hidden
                             ? errorField.previousElementSibling.classList.add('border-alert')
-                            :errorField.classList.add('border-alert');
+                            : errorField.classList.add('border-alert');
                         event.target.focus();
                     });
                 }
