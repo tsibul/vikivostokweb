@@ -3,7 +3,7 @@ from django.db import models
 
 from viki_web_cms.models import SettingsDictionary, PrintType, PrintPlace, Goods
 
-fs_layout = FileSystemStorage(location='viki_web_cms/files/layout')
+fs_layout = FileSystemStorage(location='static/viki_web_cms/files/layout')
 
 
 class GoodsDimensions(SettingsDictionary):
@@ -77,10 +77,10 @@ class PrintData(SettingsDictionary):
         return (self.print_type.name + ' ' + self.print_place.name +
                 str(self.length) + '*' + str(self.height) + 'мм')
 
-    def save(self, *args, **kwargs):
-        self.name = (self.print_type.name + ' ' + self.print_place.name +
-                     str(self.length) + '*' + str(self.height) + 'мм')
-        super(PrintData, self).save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     self.name = (self.print_type.name + ' ' + self.print_place.name +
+    #                  str(self.length) + '*' + str(self.height) + 'мм')
+    #     super(PrintData, self).save(*args, **kwargs)
 
     @staticmethod
     def order_default():
@@ -92,14 +92,14 @@ class PrintData(SettingsDictionary):
             {
                 'field': 'print_type',
                 'type': 'foreign',
-                'label': 'длина',
+                'label': 'тип',
                 'null': False,
                 'foreignClass': 'PrintType'
             },
             {
                 'field': 'print_place',
                 'type': 'foreign',
-                'label': 'длина',
+                'label': 'место',
                 'null': False,
                 'foreignClass': 'PrintPlace'
             },
