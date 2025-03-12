@@ -38,6 +38,8 @@ def edit_dictionary(request, class_name, element_id):
         fields_out.append(current_field)
         if field['type'] == 'boolean':
             post_data[current_field] =  current_field in post_data
+        elif field['type'] == 'file':
+            post_data[current_field] = request.FILES.get(current_field)
     if element_id == 0:
         new_item = dict_model(**post_data)
         new_item.save()
