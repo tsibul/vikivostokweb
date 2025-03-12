@@ -66,6 +66,7 @@ class Goods(SettingsDictionary):
     # print_layout = models.FileField(upload_to=fs_goods, storage=fs_goods, blank=True, null=True)
     goods_option_group = models.ForeignKey(GoodsOptionGroup, on_delete=models.SET_NULL, null=True)
     dealer_price = models.BooleanField(default=True)
+    weight = models.FloatField(null=True, blank=True)
 
     class Meta(SettingsDictionary.Meta):
         verbose_name = 'Товар'
@@ -152,12 +153,12 @@ class Goods(SettingsDictionary):
                 'type': 'boolean',
                 'label': 'дил. цена',
             },
-            # {
-            #     'field': 'print_layout',
-            #     'type': 'file',
-            #     'label': 'макет нанесения',
-            #     'null': True,
-            # },
+            {
+                'field': 'weight',
+                'type': 'float',
+                'label': 'вес, г',
+                'null': True,
+            },
         ]
 
 
