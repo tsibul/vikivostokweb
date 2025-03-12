@@ -85,13 +85,13 @@ class Goods(SettingsDictionary):
 
     @staticmethod
     def dictionary_fields():
-        return SettingsDictionary.dictionary_fields() + [
-            {
-                'field': 'article',
-                'type': 'string',
-                'label': 'артикул',
-                'null': False,
-            },
+        return [{
+            'field': 'article',
+            'type': 'string',
+            'label': 'артикул',
+            'null': False,
+        },
+        ] + SettingsDictionary.dictionary_fields() + [
             {
                 'field': 'additional_material',
                 'type': 'boolean',
@@ -160,7 +160,6 @@ class Goods(SettingsDictionary):
                 'null': True,
             },
         ]
-
 
 class GoodsOption(SettingsDictionary):
     """ goods options"""
