@@ -219,7 +219,7 @@ class GoodsLayout(SettingsDictionary):
         return self.goods.name
 
     def save(self, *args, **kwargs):
-        self.name = self.goods.name
+        self.name = self.goods.article + ' ' + self.goods.name
         super(GoodsLayout, self).save(*args, **kwargs)
 
     @staticmethod
