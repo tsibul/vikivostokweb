@@ -70,6 +70,13 @@ class MainMenu:
                     CMSSetting('Скидки от объема', 'VolumeDiscount', False),
                     CMSSetting('Градация количества товара', 'PriceGoodsQuantity', False),
                 ]),
+                MenuSection('Техническая информация', [
+                    CMSSetting('Размеры деталей', 'GoodsDimensions', True),
+                    CMSSetting('Параметры нанесения', 'PrintData', False ),
+                    CMSSetting('Возможности нанесения', 'PrintOpportunity', False ),
+                    CMSSetting('Список шаблонов', 'PrintLayout', False),
+                    CMSSetting('Шаблоны для товара', 'GoodsLayout', False),
+                ]),
                 MenuSection('Фото товаров', [
                     CMSSetting('Фото товаров', '', True),
                 ]),
