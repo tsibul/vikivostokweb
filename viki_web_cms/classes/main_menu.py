@@ -59,7 +59,7 @@ class MainMenu:
                     CMSSetting('Группы опций товара', 'GoodsOptionGroup', False ),
                 ]),
                 MenuSection('Описания', [
-                    CMSSetting('Описание товарв', 'GoodsDescription', False),
+                    CMSSetting('Описание товаров', 'GoodsDescription', False),
                     CMSSetting('Названия деталей', 'PartsDescription', False ),
                     CMSSetting('Структура артикула', 'ArticleDescription', False ),
                 ]),

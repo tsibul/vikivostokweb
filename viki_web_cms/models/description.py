@@ -86,7 +86,7 @@ class ArticleDescription(SettingsDictionary):
             {
                 'field': 'parts_description',
                 'type': 'foreign',
-                'label': 'позиция',
+                'label': 'название детали',
                 'null': False,
                 'foreignClass': 'PartsDescription'
             },
