@@ -26,24 +26,6 @@ class MainMenu:
     @staticmethod
     def menu_set():
         menu_list = [
-            MainMenu('Номенклатура', str(json.dumps([
-                MenuSection('Номенклатура', [
-                    CMSSetting('Товары/артикулы', 'Goods', True),
-                ]),
-            ], default=lambda o: o.__dict__,
-                sort_keys=True)), 'Goods'),
-            MainMenu('Каталог', str(json.dumps([
-                MenuSection('Каталог', [
-                    CMSSetting('Каталог', 'Catalogue', True),
-                ]),
-            ], default=lambda o: o.__dict__,
-                sort_keys=True)), 'Catalogue'),
-            MainMenu('Прайс-лист', str(json.dumps([
-                MenuSection('Прайс-лист', [
-                    CMSSetting('Прайс-лист от', 'Price', False),
-                ]),
-            ], default=lambda o: o.__dict__,
-                sort_keys=True)), 'PriceList'),
             MainMenu("Настройки", str(json.dumps([
 
                 MenuSection('Цвета, материалы', [
@@ -100,7 +82,25 @@ class MainMenu:
                 ]),
             ], default=lambda o: o.__dict__,
                 sort_keys=True)), 'Standard'),
-        #     MainMenu('Менеджеры', str(json.dumps([
+            MainMenu('Номенклатура', str(json.dumps([
+                MenuSection('Номенклатура', [
+                    CMSSetting('Товары/артикулы', 'Goods', True),
+                ]),
+            ], default=lambda o: o.__dict__,
+                sort_keys=True)), 'Goods'),
+            MainMenu('Каталог', str(json.dumps([
+                MenuSection('Каталог', [
+                    CMSSetting('Каталог', 'Catalogue', True),
+                ]),
+            ], default=lambda o: o.__dict__,
+                sort_keys=True)), 'Catalogue'),
+            MainMenu('Прайс-лист', str(json.dumps([
+                MenuSection('Прайс-лист', [
+                    CMSSetting('Прайс-лист от', 'Price', False),
+                ]),
+            ], default=lambda o: o.__dict__,
+                sort_keys=True)), 'PriceList'),
+            #     MainMenu('Менеджеры', str(json.dumps([
         #         MenuSection('Менеджеры', [
         #         ]),
         #     ], default=lambda o: o.__dict__,
