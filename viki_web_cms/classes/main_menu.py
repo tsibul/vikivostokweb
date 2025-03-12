@@ -58,6 +58,11 @@ class MainMenu:
                     CMSSetting('Опции товара', 'GoodsOption', False),
                     CMSSetting('Группы опций товара', 'GoodsOptionGroup', False ),
                 ]),
+                MenuSection('Описания', [
+                    CMSSetting('Описание товарв', 'GoodsDescription', False),
+                    CMSSetting('Названия деталей', 'PartsDescription', False ),
+                    CMSSetting('Структура артикула', 'ArticleDescription', False ),
+                ]),
                 MenuSection('Виды цен и скидки', [
                     CMSSetting('Прайс листы', 'Price', False),
                     CMSSetting('Виды цен', 'StandardPriceType', False ),
