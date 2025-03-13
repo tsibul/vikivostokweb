@@ -4,12 +4,24 @@ import {createFullScreenContent} from "./fullScreenElement/createFullScreenConte
 import {createGoodsElement} from "./goodsElement/createGoodsElement.js";
 import {createCatalogueElement} from "./catalogueElement/createCatalogueElement.js";
 import {createPriceElement} from "./priceElement/createPriceElement.js";
+import {fetchJsonData} from "./fetchJsonData.js";
+import {checkUserData} from "./authentification/checkUserData.js";
+import {login} from "./authentification/login.js";
 
 export const jsonUrl = './json/'
 export const cmsPages = {
     'Goods': createGoodsElement,
     'Catalogue': createCatalogueElement,
     'PriceList': createPriceElement,
+}
+
+const checkUserUrl = jsonUrl + 'userdata';
+const userData = await fetchJsonData(checkUserUrl);
+localStorage.setItem('userData', JSON.stringify(userData));
+const userLogged = checkUserData();
+if (!userLogged) {
+    const menuRight = document.querySelector('.menu__right');
+    menuRight.addEventListener('click', login);
 }
 
 const menuItems = document.querySelectorAll('.menu__item');

@@ -24,5 +24,7 @@ urlpatterns = [
     path('json/printing_price_list_save', views.printing_price_list_save),
     path('json/all_items_all_items_for_dropdown', views.all_items_all_items_for_dropdown),
     path('json/delete_item_price_row/<int:row_id>', views.delete_item_price_row),
+    path('json/userdata', views.userdata),
+    path('user_login', views.user_login),
 
 ]
