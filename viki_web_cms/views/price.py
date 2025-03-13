@@ -19,7 +19,8 @@ def save_new_price_date(request):
     :param request:
     :return:
     """
-    user_check(request)
+    if user_check(request):
+        return JsonResponse(None, safe=False)
     date = datetime.strptime(request.POST['priceDate'], '%Y-%m-%d').date()
     if Price.objects.filter(price_list_date=date).exists():
         return JsonResponse(None, safe=False)
@@ -42,7 +43,8 @@ def standard_price_data(request, str_price_date, search_string):
     :param search_string:
     :return:
     """
-    user_check(request)
+    if user_check(request):
+        return JsonResponse(None, safe=False)
     price_date = datetime.strptime(str_price_date[0:8], '%d.%m.%y').date()
     price_type_query = CustomerDiscount.objects.filter(deleted=False).order_by(*CustomerDiscount.order_default())
     price_types = list(price_type_query.values(
@@ -90,7 +92,8 @@ def all_items_all_items_for_dropdown(request):
     :param request:
     :return:
     """
-    user_check(request)
+    if user_check(request):
+        return JsonResponse(None, safe=False)
     all_items_query = CatalogueItem.objects.filter(
         deleted=False, goods__standard_price=True).order_by(
         *CatalogueItem.order_default())
@@ -224,7 +227,8 @@ def delete_item_price_row(request, row_id):
     :param row_id:
     :return:
     """
-    user_check(request)
+    if user_check(request):
+        return JsonResponse(None, safe=False)
     catalogue_item = CatalogueItem.objects.get(id=row_id)
     item_price = PriceItemStandard.objects.filter(item=catalogue_item)
     if len(item_price):
@@ -234,7 +238,8 @@ def delete_item_price_row(request, row_id):
 
 
 def volume_price_data(request, str_price_date, search_string):
-    user_check(request)
+    if user_check(request):
+        return JsonResponse(None, safe=False)
     price_date = datetime.strptime(str_price_date[0:8], '%d.%m.%y').date()
     price_type_query = CustomerDiscount.objects.filter(deleted=False).order_by(*CustomerDiscount.order_default())
     price_types = list(price_type_query.values(
@@ -303,7 +308,8 @@ def price_goods_volume_subquery(date):
 
 
 def printing_price_data(request, str_price_date):
-    user_check(request)
+    if user_check(request):
+        return JsonResponse(None, safe=False)
     price_date = datetime.strptime(str_price_date[0:8], '%d.%m.%y').date()
     print_type = list(PrintType.objects.filter(deleted=False).order_by(
         *PrintType.order_default()
@@ -368,7 +374,8 @@ def price_list_save(request):
     :param request:
     :return:
     """
-    user_check(request)
+    if user_check(request):
+        return JsonResponse(None, safe=False)
     price_data = json.loads(request.body)
     if 'price_goods_quantity__price_volume__id' in price_data['goods'][0].keys():
         price_goods_model = getattr(models, 'PriceGoodsVolume')
@@ -447,7 +454,8 @@ def printing_price_list_save(request):
     :param request:
     :return:
     """
-    user_check(request)
+    if user_check(request):
+        return JsonResponse(None, safe=False)
     price_data = json.loads(request.body)
     price_keys = [
         'print_volume',

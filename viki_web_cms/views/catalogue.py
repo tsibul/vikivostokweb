@@ -21,8 +21,7 @@ def catalogue_data(request, deleted, first_record, search_string, order):
     :param order:
     :return:
     """
-    user_check(request)
-    if not request.user.is_authenticated:
+    if user_check(request):
         return JsonResponse(None, safe=False)
     if order == '0':
         order = CatalogueItem.order_default()
@@ -154,7 +153,8 @@ def catalogue_record(request, record_id):
     :param record_id:
     :return:
     """
-    user_check(request)
+    if user_check(request):
+        return JsonResponse(None, safe=False)
     item = CatalogueItem.objects.filter(id=record_id)
     values = catalogue_value_query(item)
     return JsonResponse({
@@ -164,7 +164,8 @@ def catalogue_record(request, record_id):
 
 @csrf_exempt
 def save_catalogue_item(request, record_id):
-    user_check(request)
+    if user_check(request):
+        return JsonResponse(None, safe=False)
     if record_id:
         item = CatalogueItem.objects.get(id=record_id)
     else:

@@ -18,7 +18,8 @@ def edit_dictionary(request, class_name, element_id):
     :param class_name:
     :return:
     """
-    user_check(request)
+    if user_check(request):
+        return JsonResponse(None, safe=False)
     dict_model = getattr(models, class_name)
     fields = dict_model.dictionary_fields()
     errors = dictionary_fields_validation(fields, request.POST)

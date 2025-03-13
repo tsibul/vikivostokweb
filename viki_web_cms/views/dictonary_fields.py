@@ -14,7 +14,8 @@ def field_names(request, class_name):
     :param class_name:
     :return:
     """
-    user_check(request)
+    if user_check(request):
+        return JsonResponse(None, safe=False)
     if not class_name:
         return JsonResponse(None, safe=False)
     dict_model = getattr(models, class_name)
@@ -32,7 +33,8 @@ def field_values(request, class_name, deleted, first_record, search_string):
     :param search_string: filter for records
     :return:
     """
-    user_check(request)
+    if user_check(request):
+        return JsonResponse(None, safe=False)
     dict_model = getattr(models, class_name)
     field_list = dict_model.dictionary_fields()
     fields_out = ['id']
@@ -74,7 +76,8 @@ def record_info(request, class_name, record_id):
     :param record_id:
     :return:
     """
-    user_check(request)
+    if user_check(request):
+        return JsonResponse(None, safe=False)
     dict_model = getattr(models, class_name)
     url = dict_model.storage_url()
     record = dict_model.objects.filter(id=record_id).values()
@@ -89,7 +92,8 @@ def dropdown_list(request, class_name):
     :param class_name:
     :return:
     """
-    user_check(request)
+    if user_check(request):
+        return JsonResponse(None, safe=False)
     dict_model = getattr(models, class_name)
     match class_name:
         case 'Goods':
