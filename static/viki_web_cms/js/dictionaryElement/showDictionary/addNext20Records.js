@@ -16,7 +16,9 @@ import {getFieldStructure} from "../getFieldStructure.js";
  */
 export async function addNext20Records(element, className, deleted, searchString, lastRecord) {
     const titleObject = await getFieldStructure(className);
-    const rowGrid = gridDictionaryStyle(titleObject);
+    const rowGrid = className !== 'Goods'
+        ? gridDictionaryStyle(titleObject)
+        : '14px 1.5fr 4fr 1fr 1fr 3fr 3fr 3fr 2fr 2fr 1fr 1fr 1fr 1fr 1fr 1.5fr';
     const dictionaryRows = element.closest('.dictionary-content__rows')
     const newRows = await createDictionaryRows(className, deleted,
         lastRecord, searchString, rowGrid);
