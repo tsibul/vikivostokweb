@@ -24,6 +24,10 @@ class FilterToGoods(SettingsDictionary):
         db_table_comment = 'Filter Goods'
         db_table = 'filter_goods'
 
+    def save(self, *args, **kwargs):
+        self.name = self.goods.name + self.filter_option.name
+        super(FilterToGoods, self).save(*args, **kwargs)
+
     @staticmethod
     def dictionary_fields():
         return SettingsDictionary.dictionary_fields() + [
@@ -54,6 +58,10 @@ class FilterToGoodsGroup(SettingsDictionary):
         verbose_name_plural = 'Фильтры группы товара'
         db_table_comment = 'Filter Goods Group'
         db_table = 'filter_goods_group'
+
+    def save(self, *args, **kwargs):
+        self.name = self.goods_group.name + self.filter_option.name
+        super(FilterToGoodsGroup, self).save(*args, **kwargs)
 
     @staticmethod
     def dictionary_fields():
