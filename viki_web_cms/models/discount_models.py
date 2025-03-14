@@ -2,7 +2,6 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 from django.contrib.auth.models import Group
 
-
 from viki_web_cms.models import SettingsDictionary
 
 
@@ -63,7 +62,18 @@ class CustomerDiscount(SettingsDictionary):
 
     @staticmethod
     def dictionary_fields():
-        return SettingsDictionary.dictionary_fields() + [
+        return [
+            {
+                'field': 'name',
+                'type': 'string',
+                'label': 'название',
+                'null': True,
+            },
+            {
+                'field': 'deleted',
+                'type': 'boolean',
+                'label': 'удалено',
+            },
             {
                 'field': 'price_name',
                 'type': 'foreign',
@@ -103,7 +113,18 @@ class VolumeDiscount(SettingsDictionary):
 
     @staticmethod
     def dictionary_fields():
-        return SettingsDictionary.dictionary_fields() + [
+        return [
+            {
+                'field': 'name',
+                'type': 'string',
+                'label': 'название',
+                'null': True,
+            },
+            {
+                'field': 'deleted',
+                'type': 'boolean',
+                'label': 'удалено',
+            },
             {
                 'field': 'price_name',
                 'type': 'foreign',

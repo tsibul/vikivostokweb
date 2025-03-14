@@ -46,7 +46,18 @@ class Price(SettingsDictionary):
 
     @staticmethod
     def dictionary_fields():
-        return SettingsDictionary.dictionary_fields() + [
+        return [
+            {
+                'field': 'name',
+                'type': 'string',
+                'label': 'название',
+                'null': True,
+            },
+            {
+                'field': 'deleted',
+                'type': 'boolean',
+                'label': 'удалено',
+            },
             {
                 'field': 'price_list_date',
                 'type': 'date',
@@ -92,7 +103,18 @@ class PriceGoodsStandard(SettingsDictionary):
 
     @staticmethod
     def dictionary_fields():
-        return SettingsDictionary.dictionary_fields() + [
+        return [
+            {
+                'field': 'name',
+                'type': 'string',
+                'label': 'название',
+                'null': True,
+            },
+            {
+                'field': 'deleted',
+                'type': 'boolean',
+                'label': 'удалено',
+            },
             {
                 'field': 'goods',
                 'type': 'foreign',
@@ -148,7 +170,18 @@ class PriceItemStandard(SettingsDictionary):
 
     @staticmethod
     def dictionary_fields():
-        return SettingsDictionary.dictionary_fields() + [
+        return [
+            {
+                'field': 'name',
+                'type': 'string',
+                'label': 'название',
+                'null': True,
+            },
+            {
+                'field': 'deleted',
+                'type': 'boolean',
+                'label': 'удалено',
+            },
             {
                 'field': 'item',
                 'type': 'foreign',
@@ -203,7 +236,19 @@ class PriceGoodsQuantity(SettingsDictionary):
 
     @staticmethod
     def dictionary_fields():
-        return SettingsDictionary.dictionary_fields() + [
+        return [
+            {
+                'field': 'name',
+                'type': 'string',
+                'label': 'название',
+                'null': True,
+            },
+            {
+                'field': 'deleted',
+                'type': 'boolean',
+                'label': 'удалено',
+            },
+
             {
                 'field': 'quantity',
                 'type': 'number',
@@ -239,7 +284,18 @@ class PriceGoodsVolume(SettingsDictionary):
 
     @staticmethod
     def dictionary_fields():
-        return SettingsDictionary.dictionary_fields() + [
+        return [
+            {
+                'field': 'name',
+                'type': 'string',
+                'label': 'название',
+                'null': True,
+            },
+            {
+                'field': 'deleted',
+                'type': 'boolean',
+                'label': 'удалено',
+            },
             {
                 'field': 'goods',
                 'type': 'foreign',
@@ -301,7 +357,19 @@ class PrintGroupToGoods(SettingsDictionary):
 
     @staticmethod
     def dictionary_fields():
-        return SettingsDictionary.dictionary_fields() + [
+        return [
+            {
+                'field': 'name',
+                'type': 'string',
+                'label': 'название',
+                'null': True,
+            },
+            {
+                'field': 'deleted',
+                'type': 'boolean',
+                'label': 'удалено',
+            },
+
             {
                 'field': 'goods',
                 'type': 'foreign',
@@ -350,7 +418,19 @@ class PrintPrice(SettingsDictionary):
 
     @staticmethod
     def dictionary_fields():
-        return SettingsDictionary.dictionary_fields() + [
+        return [
+            {
+                'field': 'name',
+                'type': 'string',
+                'label': 'название',
+                'null': True,
+            },
+            {
+                'field': 'deleted',
+                'type': 'boolean',
+                'label': 'удалено',
+            },
+
             {
                 'field': 'print_price_group',
                 'type': 'foreign',

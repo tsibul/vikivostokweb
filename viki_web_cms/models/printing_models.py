@@ -45,7 +45,18 @@ class PrintVolume(SettingsDictionary):
 
     @staticmethod
     def dictionary_fields():
-        return SettingsDictionary.dictionary_fields() + [
+        return [
+            {
+                'field': 'name',
+                'type': 'string',
+                'label': 'название',
+                'null': True,
+            },
+            {
+                'field': 'deleted',
+                'type': 'boolean',
+                'label': 'удалено',
+            },
             {
                 'field': 'quantity',
                 'type': 'number',
