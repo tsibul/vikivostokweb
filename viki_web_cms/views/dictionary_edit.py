@@ -69,6 +69,14 @@ def dictionary_fields_validation(fields, field_values):
                 if (not re.fullmatch(r'^[0-9]*$', field_values[field['field']])
                         and field_null_validation(field, field_values[field['field']])):
                     errors.append(field['field'])
+            case 'float':
+                if (not re.fullmatch(r'^[0-9.,]*$', field_values[field['field']])
+                        and field_null_validation(field, field_values[field['field']])):
+                    errors.append(field['field'])
+            case 'precise':
+                if (not re.fullmatch(r'^[0-9.,]*$', field_values[field['field']])
+                        and field_null_validation(field, field_values[field['field']])):
+                    errors.append(field['field'])
             case 'string':
                 pattern = r'^[a-zA-Zа-яА-ЯёЁ0-9 -_#.]*$'
                 if field['field'] == 'pantone':
