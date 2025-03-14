@@ -38,7 +38,7 @@ class FilterToGoods(SettingsDictionary):
                 'field': 'filter_option',
                 'type': 'foreign',
                 'label': 'фильтр',
-                'foreignClass': 'FiterOption',
+                'foreignClass': 'FilterOption',
                 'null': False
             },
         ]
@@ -69,7 +69,7 @@ class FilterToGoodsGroup(SettingsDictionary):
                 'field': 'filter_option',
                 'type': 'foreign',
                 'label': 'фильтр',
-                'foreignClass': 'FiterOption',
+                'foreignClass': 'FilterOption',
                 'null': False
             },
         ]
