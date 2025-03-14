@@ -25,7 +25,7 @@ class FilterToGoods(SettingsDictionary):
         db_table = 'filter_goods'
 
     def save(self, *args, **kwargs):
-        self.name = self.goods.name + self.filter_option.name
+        self.name = self.goods.article + ' ' + self.goods.name + ' ' + self.filter_option.name
         super(FilterToGoods, self).save(*args, **kwargs)
 
     @staticmethod
@@ -71,7 +71,7 @@ class FilterToGoodsGroup(SettingsDictionary):
         db_table = 'filter_goods_group'
 
     def save(self, *args, **kwargs):
-        self.name = self.goods_group.name + self.filter_option.name
+        self.name = self.goods_group.name + ' ' + self.filter_option.name
         super(FilterToGoodsGroup, self).save(*args, **kwargs)
 
     @staticmethod
