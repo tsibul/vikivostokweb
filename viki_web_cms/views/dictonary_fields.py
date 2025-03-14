@@ -108,6 +108,10 @@ def dropdown_list(request, class_name):
             option_list = (dict_model.objects.filter(deleted=False)
                            .annotate(value=Concat(F('print_type__name'), Value(' '), F('name')))
                            .values('id', 'value'))
+        case 'Group':
+            option_list = (dict_model.objects.filter(~Q(name='cms_staff'))
+                       .annotate(value=F('name'))
+                       .values('id', 'value'))
         case _:
             option_list = (dict_model.objects.filter(deleted=False)
                            .annotate(value=F('name'))
