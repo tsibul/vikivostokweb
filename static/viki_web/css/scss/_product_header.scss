@@ -1,0 +1,130 @@
+@import "vars";
+@import "mixins";
+
+.menu-product {
+  height: 60px;
+  width: 100%;
+  background-color: $colorSecondary;
+  position: sticky;
+  z-index: 10;
+}
+
+.submenu-group {
+  margin: 12px 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 206px);
+  gap: 12px;
+
+  &__item {
+    text-align: center;
+    color: $colorPrimary;
+    padding: 8px 0;
+    @include brd-standard;
+    border-color: $colorPrimary;
+    transform: scale(0.95);
+
+    &_inactive {
+      box-shadow: 4px 4px 4px 2px $colorSecondary;
+      transition: transorm 0.6s;
+      transform: scale(1);
+
+      &:hover {
+        box-shadow: none;
+        transform: scale(0.95);
+      }
+    }
+  }
+}
+
+.product-header {
+  position: sticky;
+  width: 100%;
+  margin-top: 24px;
+  display: flex;
+  //align-item;
+  justify-content: space-between;
+
+  &__filter {
+    height: 100%;
+    max-width: 60%;
+    padding: 16px;
+    max-height: 24px;
+    overflow: hidden;
+    transition: max-height 0.4s;
+
+    &:open {
+      @include brd-standard;
+      max-height: 400px;
+      height: 100%;
+    }
+  }
+
+  &__summary {
+    cursor: pointer;
+    display: flex;
+    gap: 16px;
+    justify-content: end;
+    padding-right: 8px;
+  }
+
+  &__filter-content {
+    display: grid;
+    gap: 8px;
+    grid-template-columns: 1fr 2fr;
+
+    &_color {
+      margin: 16px 0;
+      display: flex;
+      gap: 10px;
+      //align-items: center;
+      flex-wrap: wrap;
+    }
+
+    &_print {
+      margin: 16px 0;
+      display: grid;
+      grid-template-columns: 1fr 8fr;
+      gap: 6px;
+    }
+
+    &_filter {
+      display: grid;
+      align-items: center;
+      grid-template-columns: repeat(2, 1fr 9fr);
+      gap: 6px;
+      margin: 16px 0;
+    }
+
+    &_checkbox {
+      height: 20px;
+      width: 20px;
+    }
+  }
+
+  &__btn-block {
+    display: flex;
+    justify-content: end;
+    gap: 8px;
+  }
+}
+
+.color-label {
+  position: relative;
+
+  &__check {
+    position: absolute;
+    display: none;
+    z-index: 3;
+    //font-size: 24px;
+    //top: 0;
+    //left: 2px;
+    //color: $colorNeutral500;
+    border: 2px solid $colorSecondary;
+    border-radius: 6px;
+    top: -4px;
+    left: -4px;
+    height: 32px;
+    width: 32px;
+    background-color: transparent;
+  }
+}

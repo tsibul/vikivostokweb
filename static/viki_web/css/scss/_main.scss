@@ -8,13 +8,13 @@
   color: $colorPrimary950;
   font-family: 'Montserrat', sans-serif;
   margin-block-start: 0;
-    margin-block-end: 0;
-    margin-inline-start: 0;
-    margin-inline-end: 0;
-    font-weight: 500;
+  margin-block-end: 0;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+  font-weight: 500;
 }
 
-h2{
+h2 {
   //padding-left: 30px;
   font-weight: 700;
   font-size: 26px;
@@ -25,6 +25,14 @@ body {
 
 }
 
+a {
+  text-decoration: none;
+}
+
+input[type='checkbox'] {
+  accent-color: $colorSecondary;
+}
+
 .container {
   max-width: $displayWidth;
   margin: 0 auto;
@@ -32,9 +40,84 @@ body {
   background-color: transparent;
 }
 
+.btn {
+  padding: 8px;
+  @include brd-standard;
+  transition: 0.2s ease color;
+  cursor: pointer;
+
+  &__save {
+    background-color: $colorPrimary500;
+    border-color: $colorPrimary500;
+    color: $colorSecondary50;
+
+    & * {
+      color: $colorSecondary50;
+    }
+
+    &:hover {
+      background-color: $colorSecondary50;
+      color: $colorPrimary950;
+    }
+
+    &:hover * {
+      background-color: $colorSecondary50;
+      color: $colorPrimary950;
+
+    }
+  }
+
+  &__cancel {
+    background-color: $colorSecondary500;
+    border-color: $colorSecondary500;
+    color: $colorSecondary50;
+
+    & * {
+      color: $colorSecondary50;
+    }
+
+    &:hover {
+      background-color: $colorSecondary50;
+      color: $colorSecondary500;
+    }
+
+    &:hover * {
+      //background-color: $colorSecondary50;
+      color: $colorSecondary500;
+    }
+  }
+
+  &__disabled {
+    opacity: 0.3;
+
+    & * {
+      opacity: 0.2;
+    }
+  }
+
+  &__neutral {
+    background-color: $colorNeutral500;
+    border-color: $colorNeutral500;
+    color: $colorSecondary50;
+
+    &:hover {
+      background-color: $colorSecondary50;
+      color: $colorNeutral500;
+    }
+  }
+}
+
+.square {
+  height: 24px;
+  width: 24px;
+  border: 1px solid $colorPrimary500;
+  border-radius: 6px;
+}
+
+
 @media (max-width: 1330px) {
-  .container{
+  .container {
     padding: 0 30px;
   }
-  
+
 }
