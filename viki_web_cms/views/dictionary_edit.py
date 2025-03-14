@@ -39,6 +39,11 @@ def edit_dictionary(request, class_name, element_id):
             post_data[current_field] =  current_field in post_data
         elif field['type'] == 'file':
             post_data[current_field] = request.FILES.get(current_field)
+        elif field['type'] in ['number', 'float', 'precise']:
+            if current_field in post_data == '':
+                post_data[current_field] = 0
+            else:
+                post_data[current_field] = current_field in post_data
     if element_id == 0:
         new_item = dict_model(**post_data)
         new_item.save()
