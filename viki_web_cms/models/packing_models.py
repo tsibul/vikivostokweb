@@ -19,8 +19,8 @@ class Box(SettingsDictionary):
         ordering = ['name']
 
     def save(self, *args, **kwargs):
-        self.name = 'Гофрокороб' + str(self.length) + '*' + str(self.width) + '*' + str(self.height)
-        self.volume = float(self.length * self.width * self.height)/1000000000
+        self.name = 'Гофрокороб ' + str(self.length) + '*' + str(self.width) + '*' + str(self.height)
+        self.volume = round(float(int(self.length) * int(self.width) * int(self.height))/1000000000, 4)
         super(Box, self).save(*args, **kwargs)
 
     @staticmethod
