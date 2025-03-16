@@ -3,7 +3,8 @@ import random
 from django.shortcuts import render
 
 from viki_web_cms.models import ProductGroup, Goods, CatalogueItem, ColorGroup, FilterToGoodsGroup, GoodsGroup, \
-    PrintType, GoodsDescription, ArticleDescription, CatalogueItemColor, PrintOpportunity, GoodsLayout, GoodsDimensions
+    PrintType, GoodsDescription, ArticleDescription, CatalogueItemColor, PrintOpportunity, GoodsLayout, GoodsDimensions, \
+    Packing
 
 
 def product(request, product_group_url):
@@ -33,6 +34,12 @@ def product(request, product_group_url):
 
         print_data, print_layout = create_print_data(goods_item)
         item_list, id_list, colors = create_item_list(goods_item)
+        packing = Packing.objects.filter(deleted=False, goods=goods_item).values(
+            'box__name',
+            'box__volume',
+            'box_weight',
+            'quantity_in',
+        )
 
         if len(id_list) > 1:
             id_random = id_list[round(random.random()*(len(id_list)) - 1) ]
@@ -48,6 +55,7 @@ def product(request, product_group_url):
             'print_data': print_data,
             'print_layout': print_layout,
             'dimensions': str(dimensions),
+            'packing': packing,
         })
     context = {
         'product_groups': product_groups,

@@ -45,93 +45,99 @@
                                 <div class="product-hor__tab-content">
                                     <div class="product-hor__tab tab-show"
                                          data-id="main-{{ item.item.id }}">
-                                        <div class="product-hor__tab-main">
-                                            <div class="product-hor__tab-main_title">
-                                                <h4>Название: {{ item.item.name }}</h4>
-                                            </div>
-                                            <div class="product-hor__tab-main_title">
-                                                <h4>Артикул: {{ item.item.item_article }}</h4>
-                                                <h4 class="strong">Цена: {{ item.item.item_article }}</h4>
-                                            </div>
-                                            <div class="product-header__filter-content_color color-padding">
-                                                {% for color in goods.colors %}
-                                                    <input type="checkbox"
-                                                           id="item-color-{{ item.item.id }}_{{ color.main_color__hex|slice:"1:" }}"
-                                                           name="{{ color.name }}"
-                                                           class="product-header__filter-content_checkbox-hidden"
-                                                           data-id="{{ item.item.id }}"
-                                                            {% if  item.item.id == color.id %} checked {% endif %}
-                                                           hidden>
-                                                    <label for="item-color-{{ item.item.id }}_{{ color.main_color__hex|slice:"1:" }}"
-                                                           class="color-label"
-                                                           data-item-id="{{ color.id }}"
-                                                           data-hex="{{ color.main_color__hex|slice:"1:" }}"
-                                                    >
-                                                        <div class="square"
-                                                             style="background-color: {{ color.main_color__hex }};"></div>
-                                                        <div class="color-label__check"
-                                                                {% if item.item.id == color.id %}
-                                                             style="display:block;"  {% endif %}
-                                                        ></div>
-                                                    </label>
-                                                {% endfor %}
-                                            </div>
+                                        <div class="product-hor__tab-main_title">
+                                            <h4>Название: {{ item.item.name }}</h4>
+                                        </div>
+                                        <div class="product-hor__tab-main_title">
+                                            <h4>Артикул: {{ item.item.item_article }}</h4>
+                                            <h4 class="strong">Цена: {{ item.item.item_article }}</h4>
+                                        </div>
+                                        <div class="product-header__filter-content_color color-padding">
+                                            {% for color in goods.colors %}
+                                                <input type="checkbox"
+                                                       id="item-color-{{ item.item.id }}_{{ color.main_color__hex|slice:"1:" }}"
+                                                       name="{{ color.name }}"
+                                                       class="product-header__filter-content_checkbox-hidden"
+                                                       data-id="{{ item.item.id }}"
+                                                        {% if  item.item.id == color.id %} checked {% endif %}
+                                                       hidden>
+                                                <label for="item-color-{{ item.item.id }}_{{ color.main_color__hex|slice:"1:" }}"
+                                                       class="color-label"
+                                                       data-item-id="{{ color.id }}"
+                                                       data-hex="{{ color.main_color__hex|slice:"1:" }}"
+                                                >
+                                                    <div class="square"
+                                                         style="background-color: {{ color.main_color__hex }};"></div>
+                                                    <div class="color-label__check"
+                                                            {% if item.item.id == color.id %}
+                                                         style="display:block;"  {% endif %}
+                                                    ></div>
+                                                </label>
+                                            {% endfor %}
                                         </div>
                                     </div>
                                     <div class="product-hor__tab"
                                          data-id="description-{{ item.item.id }}">
-                                        <div class="product-hor__tab-description">
-                                            <article>
-                                                {{ goods.goods_description }}
-                                            </article>
-                                            <div>
-                                                {{ item.color_description }}
-                                            </div>
+                                        <article>
+                                            {{ goods.goods_description }}
+                                        </article>
+                                        <div>
+                                            {{ item.color_description }}
                                         </div>
                                     </div>
                                     <div class="product-hor__tab"
                                          data-id="tech-{{ item.item.id }}">
-                                        <div class="product-hor__tab-tech">
-                                            <div class="product-hor__tab-tech_data">
-                                                <div>размеры: {{ goods.dimensions }},&nbsp;&nbsp;вес: {{ goods.goods_item.weight }}г</div>
-                                                <div>шаблоны:</div>
-                                                {% for layout in goods.print_layout %}
-                                                    <a href="{% static 'viki_web_cms/files/layout'%}{{layout.layout.layout.file.name }}" target="_blank">
-                                                        <p>{{ layout.name }}</p>
-                                                        <i class="fa-regular fa-folder"></i>
-                                                    </a>
-                                                {% endfor %}
-                                            </div>
-                                            <div class="product-hor__tab-tech_link">
+                                        <div>
+                                            размеры: {{ goods.dimensions }},&nbsp;&nbsp;вес: {{ goods.goods_item.weight }}г
+                                        </div>
+                                        <div>
+                                            <div>шаблоны:</div>
+                                            {% for layout in goods.print_layout %}
+                                                <a href="
 
-                                            </div>
+
+                                                        {% static 'viki_web_cms/files/layout' %}{{ layout.layout.layout.file.name }}"
+                                                   target="_blank">
+                                                    <p>{{ layout.name }}</p>
+                                                    <i class="fa-regular fa-folder"></i>
+                                                </a>
+                                            {% endfor %}
                                         </div>
                                     </div>
                                     <div class="product-hor__tab"
                                          data-id="print-{{ item.item.id }}">
-                                        <div class="product-hor__tab-print">
-                                            <div class="product-hor__tab-print_data">
-                                                <div>тип</div>
-                                                <div>место</div>
-                                                <div>кол-во позиций</div>
-                                                <div>кол-во цветов</div>
-                                                <div>размер</div>
-                                            </div>
-                                            {% for print in goods.print_data %}
-                                                <div class="product-hor__tab-print_data">
-                                                    <div>{{ print.print_type }}</div>
-                                                    <div>{{ print.print_place }}</div>
-                                                    <div>{{ print.place_quantity }}</div>
-                                                    <div>{{ print.color_quantity }}</div>
-                                                    <div>{{ print.dimensions }}</div>
-                                                </div>{% endfor %}
+                                        <div class="product-hor__tab-print_data">
+                                            <div>тип</div>
+                                            <div>место</div>
+                                            <div>кол-во позиций</div>
+                                            <div>кол-во цветов</div>
+                                            <div>размер</div>
                                         </div>
+                                        {% for print in goods.print_data %}
+                                            <div class="product-hor__tab-print_data">
+                                                <div>{{ print.print_type }}</div>
+                                                <div>{{ print.print_place }}</div>
+                                                <div>{{ print.place_quantity }}</div>
+                                                <div>{{ print.color_quantity }}</div>
+                                                <div>{{ print.dimensions }}</div>
+                                            </div>{% endfor %}
                                     </div>
                                     <div class="product-hor__tab"
                                          data-id="pack-{{ item.item.id }}">
                                         <div class="product-hor__tab-pack">
-
+                                            <div>упаковка</div>
+                                            <div>штук в упаковке</div>
+                                            <div>вес, кг</div>
+                                            <div>объем, м3</div>
                                         </div>
+                                        {% for pack in goods.packing %}
+                                            <div class="product-hor__tab-pack">
+                                                <div>{{ pack.box__name }}</div>
+                                                <div>{{ pack.quantity_in }}</div>
+                                                <div>{{ pack.box_weight }}</div>
+                                                <div>{{ pack.box__volume }}</div>
+                                            </div>
+                                        {% endfor %}
                                     </div>
                                 </div>
                                 <button class="btn btn__save btn-hor">
