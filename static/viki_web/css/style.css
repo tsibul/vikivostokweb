@@ -469,7 +469,7 @@ input[type=checkbox] {
   padding: 4px 0;
 }
 .product-hor__tab-print_data * {
-  font-size: 14px;
+  font-size: 13px;
 }
 .tab-active {
   z-index: 3;
