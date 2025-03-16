@@ -3,7 +3,7 @@ import random
 from django.shortcuts import render
 
 from viki_web_cms.models import ProductGroup, Goods, CatalogueItem, ColorGroup, FilterToGoodsGroup, GoodsGroup, \
-    PrintType, GoodsDescription, ArticleDescription, CatalogueItemColor
+    PrintType, GoodsDescription, ArticleDescription, CatalogueItemColor, PrintOpportunity, GoodsLayout
 
 
 def product(request, product_group_url):
@@ -29,7 +29,10 @@ def product(request, product_group_url):
         description = GoodsDescription.objects.filter(
             goods=goods_item, deleted=False).first()
         goods_description = description.description if description else ''
+
+        print_data, print_layout = create_print_data(goods_item)
         item_list, id_list, colors = create_item_list(goods_item)
+
         if len(id_list) > 1:
             id_random = id_list[round(random.random()*(len(id_list)) - 1) ]
         else:
@@ -41,6 +44,8 @@ def product(request, product_group_url):
             'colors': colors,
             'id_random': id_random,
             'goods_description': goods_description,
+            'print_data': print_data,
+            'print_layout': print_layout,
         })
     context = {
         'product_groups': product_groups,
@@ -66,7 +71,7 @@ def create_item_list(goods_item):
         if len(article_description):
             for description in article_description:
                 color_description += (description.parts_description.name.upper() + ': ' +
-                                      item_colors.get(color_position=description.position).color.name + ', ')
+                                      item_colors.get(color_position=description.position).color.name + ' ')
         item_list.append({
             'item': item,
             'color_description': color_description
@@ -77,3 +82,20 @@ def create_item_list(goods_item):
     )
     id_list = list(items.values_list('id', flat=True))
     return item_list, id_list, colors
+
+def create_print_data(goods_item):
+    print_opportunity = PrintOpportunity.objects.filter(deleted=False, goods=goods_item)
+    print_data = []
+    if len(print_opportunity) > 0:
+        for print_opp in print_opportunity:
+            print_data.append(
+                {
+                    'print_type': print_opp.print_data.print_type,
+                    'print_place': print_opp.print_data.print_place,
+                    'place_quantity': print_opp.print_data.place_quantity,
+                    'color_quantity': print_opp.print_data.color_quantity,
+                    'dimensions': str(print_opp.print_data.length) + '*' + str(print_opp.print_data.height),
+                }
+            )
+    print_layout = list(GoodsLayout.objects.filter(goods=goods_item, deleted=False))
+    return print_data, print_layout

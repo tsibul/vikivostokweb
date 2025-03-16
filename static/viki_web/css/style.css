@@ -459,6 +459,18 @@ input[type=checkbox] {
 .product-hor__tab-description * {
   padding: 6px 0;
 }
+.product-hor__tab-print {
+  padding: 6px 10px;
+}
+.product-hor__tab-print_data {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 3fr 2fr 1fr 1fr 2fr;
+  padding: 4px 0;
+}
+.product-hor__tab-print_data * {
+  font-size: 14px;
+}
 .tab-active {
   z-index: 3;
   background-color: #F2FFFF;

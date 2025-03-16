@@ -76,7 +76,6 @@
                                                     </label>
                                                 {% endfor %}
                                             </div>
-
                                         </div>
                                     </div>
                                     <div class="product-hor__tab"
@@ -87,10 +86,8 @@
                                             </article>
                                             <div>
                                                 {{ item.color_description }}
-                                                </div>
-
+                                            </div>
                                         </div>
-
                                     </div>
                                     <div class="product-hor__tab"
                                          data-id="tech-{{ item.item.id }}">
@@ -100,8 +97,26 @@
                                     </div>
                                     <div class="product-hor__tab"
                                          data-id="print-{{ item.item.id }}">
-                                        <div class="product-hor__tab-printing">
+                                        <div class="product-hor__tab-print">
+                                            <div class="product-hor__tab-print_data">
+                                                <div>тип</div>
+                                                <div>место</div>
+                                                <div>кол-во позиций</div>
+                                                <div>кол-во цветов</div>
+                                                <div>размер</div>
+                                            </div>
+                                            {% for print in goods.print_data %}
+                                            <div class="product-hor__tab-print_data">
+                                                <div>{{ print.print_type }}</div>
+                                                <div>{{ print.print_place }}</div>
+                                                <div>{{ print.place_quantity }}</div>
+                                                <div>{{ print.color_quantity }}</div>
+                                                <div>{{ print.dimensions }}</div>
+                                            </div>{% endfor %}
+                                            <div class="product-hor__tab-print_link">
 
+
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="product-hor__tab"

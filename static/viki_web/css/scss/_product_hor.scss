@@ -92,6 +92,16 @@
   }
 
   &__tab-print {
+    padding: 6px 10px;
+    &_data{
+      display: grid;
+      gap: 8px;
+      grid-template-columns: 3fr 2fr 1fr 1fr 2fr;
+      padding: 4px 0;
+      & *{
+        font-size: 14px;
+      }
+    }
   }
 
   &__pack {
