@@ -3,6 +3,7 @@
 import {createDictionaryRows} from "./createDictionaryRows.js";
 import {gridDictionaryStyle} from "./gridDictonaryStyle.js";
 import {getFieldStructure} from "../getFieldStructure.js";
+import {openEditModal} from "../createInput/openEditModal.js";
 
 /**
  * add 20 records to dictionary screen when mouseover on element
@@ -27,5 +28,7 @@ export async function addNext20Records(element, className, deleted, searchString
         dictionaryRows.appendChild(el);
     });
     const newElement = element.cloneNode(true);
+    const btn =newElement.querySelector('button');
+    btn.addEventListener.addEventListener('click', (e) => openEditModal(e));
     element.parentNode.replaceChild(newElement, element);
 }
