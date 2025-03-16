@@ -8,6 +8,7 @@ fs_layout = FileSystemStorage(location='static/viki_web_cms/files/layout')
 
 class GoodsDimensions(SettingsDictionary):
     """ goods dimensions"""
+    goods = models.ForeignKey(Goods, on_delete=models.CASCADE)
     length = models.FloatField(default=0)
     width = models.FloatField(default=0)
     height = models.FloatField(default=0)
@@ -25,13 +26,35 @@ class GoodsDimensions(SettingsDictionary):
     def __repr__(self):
         return str(self.length) + '*' + str(self.width) + '*' + str(self.height) + 'мм'
 
+    def save(self, *args, **kwargs):
+        self.name = self.goods.article + ' ' + self.goods.name
+        super(GoodsDimensions, self).save(*args, **kwargs)
+
     @staticmethod
     def order_default():
         return ['name']
 
     @staticmethod
     def dictionary_fields():
-        return SettingsDictionary.dictionary_fields() + [
+        return [
+            {
+                'field': 'name',
+                'type': 'string',
+                'label': 'название',
+                'null': True
+            },
+            {
+                'field': 'deleted',
+                'type': 'boolean',
+                'label': 'удалено',
+            },
+            {
+                'field': 'goods',
+                'type': 'foreign',
+                'label': 'продукция',
+                'null': False,
+                'foreignClass': 'Goods',
+            },
             {
                 'field': 'length',
                 'type': 'float',
