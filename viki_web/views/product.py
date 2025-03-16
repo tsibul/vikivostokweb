@@ -3,7 +3,7 @@ import random
 from django.shortcuts import render
 
 from viki_web_cms.models import ProductGroup, Goods, CatalogueItem, ColorGroup, FilterToGoodsGroup, GoodsGroup, \
-    PrintType, GoodsDescription, ArticleDescription, CatalogueItemColor, PrintOpportunity, GoodsLayout
+    PrintType, GoodsDescription, ArticleDescription, CatalogueItemColor, PrintOpportunity, GoodsLayout, GoodsDimensions
 
 
 def product(request, product_group_url):
@@ -26,6 +26,7 @@ def product(request, product_group_url):
     )
     goods_list = []
     for goods_item in goods:
+        dimensions = GoodsDimensions.objects.filter(deleted=False, goods=goods_item).first()
         description = GoodsDescription.objects.filter(
             goods=goods_item, deleted=False).first()
         goods_description = description.description if description else ''
@@ -46,6 +47,7 @@ def product(request, product_group_url):
             'goods_description': goods_description,
             'print_data': print_data,
             'print_layout': print_layout,
+            'dimensions': str(dimensions),
         })
     context = {
         'product_groups': product_groups,
@@ -70,8 +72,9 @@ def create_item_list(goods_item):
         color_description = ''
         if len(article_description):
             for description in article_description:
+                color = item_colors.get(color_position=description.position).color
                 color_description += (description.parts_description.name.upper() + ': ' +
-                                      item_colors.get(color_position=description.position).color.name + ' ')
+                                      color.name + '(' + color.pantone + ') ')
         item_list.append({
             'item': item,
             'color_description': color_description

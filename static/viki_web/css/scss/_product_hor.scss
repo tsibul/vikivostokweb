@@ -13,7 +13,7 @@
 .product-hor {
   @include brd-standard;
   width: 620px;
-  min-height: 400px;
+  min-height: 420px;
   padding: 32px;
   margin: 8px 0;
   position: relative;
@@ -61,7 +61,7 @@
     position: relative;
     border: 1px solid rgba($colorSecondary, 0.2);
     border-radius: 0 12px 12px 12px;
-    height: 160px;
+    height: 180px;
     margin: -1px 0 10px 0;
     box-shadow: 4px -4px 8px 4px rgba($colorSecondary, 0.2);
     overflow: visible;
@@ -83,22 +83,43 @@
 
   &__tab-description {
     padding: 6px 10px;
-    & *{
+
+    & * {
       padding: 6px 0;
     }
   }
 
   &__tab-tech {
+    padding: 6px 10px;
+
+    & * {
+      padding: 6px 0;
+      //font-size: 14px;
+    }
+
+    & a {
+      display: flex;
+      justify-content: end;
+      align-items: center;
+      gap: 8px;
+      //padding: 6px 10px;
+      & *{
+      color: $colorSecondary;
+        //font-weight: 600;
+      }
+    }
   }
 
   &__tab-print {
     padding: 6px 10px;
-    &_data{
+
+    &_data {
       display: grid;
       gap: 8px;
       grid-template-columns: 3fr 2fr 1fr 1fr 2fr;
       padding: 4px 0;
-      & *{
+
+      & * {
         font-size: 13px;
       }
     }

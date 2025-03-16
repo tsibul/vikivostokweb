@@ -92,7 +92,19 @@
                                     <div class="product-hor__tab"
                                          data-id="tech-{{ item.item.id }}">
                                         <div class="product-hor__tab-tech">
+                                            <div class="product-hor__tab-tech_data">
+                                                <div>размеры: {{ goods.dimensions }},&nbsp;&nbsp;вес: {{ goods.goods_item.weight }}г</div>
+                                                <div>шаблоны:</div>
+                                                {% for layout in goods.print_layout %}
+                                                    <a href="{% static 'viki_web_cms/files/layout'%}{{layout.layout.layout.file.name }}" target="_blank">
+                                                        <p>{{ layout.name }}</p>
+                                                        <i class="fa-regular fa-folder"></i>
+                                                    </a>
+                                                {% endfor %}
+                                            </div>
+                                            <div class="product-hor__tab-tech_link">
 
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="product-hor__tab"
@@ -106,17 +118,13 @@
                                                 <div>размер</div>
                                             </div>
                                             {% for print in goods.print_data %}
-                                            <div class="product-hor__tab-print_data">
-                                                <div>{{ print.print_type }}</div>
-                                                <div>{{ print.print_place }}</div>
-                                                <div>{{ print.place_quantity }}</div>
-                                                <div>{{ print.color_quantity }}</div>
-                                                <div>{{ print.dimensions }}</div>
-                                            </div>{% endfor %}
-                                            <div class="product-hor__tab-print_link">
-
-
-                                            </div>
+                                                <div class="product-hor__tab-print_data">
+                                                    <div>{{ print.print_type }}</div>
+                                                    <div>{{ print.print_place }}</div>
+                                                    <div>{{ print.place_quantity }}</div>
+                                                    <div>{{ print.color_quantity }}</div>
+                                                    <div>{{ print.dimensions }}</div>
+                                                </div>{% endfor %}
                                         </div>
                                     </div>
                                     <div class="product-hor__tab"
