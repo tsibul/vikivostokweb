@@ -82,7 +82,8 @@ async function sendForm(event, form, className, initialData) {
                     }
                     createRow(editingRow, rowData.values, rowData.params, className);
                     editingRow.scrollIntoView({
-                        behavior: 'smooth'
+                        behavior: 'smooth',
+                        block: 'center',
                     });
                     editingRow.focus();
                     closeModal(modal);
@@ -94,7 +95,7 @@ async function sendForm(event, form, className, initialData) {
                         errorField.hidden
                             ? errorField.previousElementSibling.classList.add('border-alert')
                             : errorField.classList.add('border-alert');
-                        event.target.focus();
+                        event.target.scrollIntoView({behavior: 'smooth', block: 'center'});
                     });
                 }
             });
