@@ -82,6 +82,10 @@
   }
 
   &__tab-description {
+    padding: 6px 10px;
+    & *{
+      padding: 6px 0;
+    }
   }
 
   &__tab-tech {

@@ -8,61 +8,61 @@
     <main>
         <div class="container">
             <div class="products">
-                {% for goods in goods %}
+                {% for goods in goods_list %}
                     <section class="product-hor">
                         <h3>{{ goods.goods_item.name }}</h3>
-                        {% for item in goods.items %}
+                        {% for item in goods.item_list %}
                             <div class="product-hor__frame
-                                {% if goods.id_random != item.id %} item-hidden item-opaque{% endif %}"
-                                 data-id="{{ item.id }}">
+                                {% if goods.id_random != item.item.id %} item-hidden item-opaque{% endif %}"
+                                 data-id="{{ item.item.id }}">
                                 <img class="product-hor__img"
-                                     src="/static/viki_web_cms/files/item_photo/{{ item.image }}"
-                                     alt="{{ item.image_article }}"
+                                     src="/static/viki_web_cms/files/item_photo/{{ item.item.image }}"
+                                     alt="{{ item.item.image_article }}"
                                      loading="lazy">
                                 <div class="product-hor__tab-btn-block">
                                     <button class="product-hor__tab-btn tab-active"
-                                            type="button" data-id="main-{{ item.id }}">
+                                            type="button" data-id="main-{{ item.item.id }}">
                                         основное
                                     </button>
                                     <button class="product-hor__tab-btn"
-                                            type="button" data-id="description-{{ item.id }}">
+                                            type="button" data-id="description-{{ item.item.id }}">
                                         описание
                                     </button>
                                     <button class="product-hor__tab-btn"
-                                            type="button" data-id="tech-{{ item.id }}">
+                                            type="button" data-id="tech-{{ item.item.id }}">
                                         тех. информация
                                     </button>
                                     <button class="product-hor__tab-btn"
-                                            type="button" data-id="print-{{ item.id }}">
+                                            type="button" data-id="print-{{ item.item.id }}">
                                         брендирование
                                     </button>
                                     <button class="product-hor__tab-btn"
-                                            type="button" data-id="pack-{{ item.id }}">
+                                            type="button" data-id="pack-{{ item.item.id }}">
                                         упаковка
                                     </button>
 
                                 </div>
                                 <div class="product-hor__tab-content">
                                     <div class="product-hor__tab tab-show"
-                                         data-id="main-{{ item.id }}">
+                                         data-id="main-{{ item.item.id }}">
                                         <div class="product-hor__tab-main">
                                             <div class="product-hor__tab-main_title">
-                                                <h4>Название: {{ item.name }}</h4>
+                                                <h4>Название: {{ item.item.name }}</h4>
                                             </div>
                                             <div class="product-hor__tab-main_title">
-                                                <h4>Артикул: {{ item.item_article }}</h4>
-                                                <h4 class="strong">Цена: {{ item.item_article }}</h4>
+                                                <h4>Артикул: {{ item.item.item_article }}</h4>
+                                                <h4 class="strong">Цена: {{ item.item.item_article }}</h4>
                                             </div>
                                             <div class="product-header__filter-content_color color-padding">
                                                 {% for color in goods.colors %}
                                                     <input type="checkbox"
-                                                           id="item-color-{{ item.id }}_{{ color.main_color__hex|slice:"1:" }}"
+                                                           id="item-color-{{ item.item.id }}_{{ color.main_color__hex|slice:"1:" }}"
                                                            name="{{ color.name }}"
                                                            class="product-header__filter-content_checkbox-hidden"
-                                                           data-id="{{ item.id }}"
-                                                            {% if  item.id == color.id %} checked {% endif %}
+                                                           data-id="{{ item.item.id }}"
+                                                            {% if  item.item.id == color.id %} checked {% endif %}
                                                            hidden>
-                                                    <label for="item-color-{{ item.id }}_{{ color.main_color__hex|slice:"1:" }}"
+                                                    <label for="item-color-{{ item.item.id }}_{{ color.main_color__hex|slice:"1:" }}"
                                                            class="color-label"
                                                            data-item-id="{{ color.id }}"
                                                            data-hex="{{ color.main_color__hex|slice:"1:" }}"
@@ -70,7 +70,7 @@
                                                         <div class="square"
                                                              style="background-color: {{ color.main_color__hex }};"></div>
                                                         <div class="color-label__check"
-                                                                {% if item.id == color.id %}
+                                                                {% if item.item.id == color.id %}
                                                              style="display:block;"  {% endif %}
                                                         ></div>
                                                     </label>
@@ -80,26 +80,32 @@
                                         </div>
                                     </div>
                                     <div class="product-hor__tab"
-                                         data-id="description-{{ item.id }}">
+                                         data-id="description-{{ item.item.id }}">
                                         <div class="product-hor__tab-description">
+                                            <article>
+                                                {{ goods.goods_description }}
+                                            </article>
+                                            <div>
+                                                {{ item.color_description }}
+                                                </div>
 
                                         </div>
 
                                     </div>
                                     <div class="product-hor__tab"
-                                         data-id="tech-{{ item.id }}">
+                                         data-id="tech-{{ item.item.id }}">
                                         <div class="product-hor__tab-tech">
 
                                         </div>
                                     </div>
                                     <div class="product-hor__tab"
-                                         data-id="print-{{ item.id }}">
+                                         data-id="print-{{ item.item.id }}">
                                         <div class="product-hor__tab-printing">
 
                                         </div>
                                     </div>
                                     <div class="product-hor__tab"
-                                         data-id="pack-{{ item.id }}">
+                                         data-id="pack-{{ item.item.id }}">
                                         <div class="product-hor__tab-pack">
 
                                         </div>

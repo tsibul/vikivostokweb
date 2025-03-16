@@ -453,6 +453,12 @@ input[type=checkbox] {
   justify-content: space-between;
   padding: 6px 10px;
 }
+.product-hor__tab-description {
+  padding: 6px 10px;
+}
+.product-hor__tab-description * {
+  padding: 6px 0;
+}
 .tab-active {
   z-index: 3;
   background-color: #F2FFFF;
