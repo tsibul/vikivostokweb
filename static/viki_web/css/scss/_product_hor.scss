@@ -1,0 +1,132 @@
+@import "vars";
+@import "mixins";
+
+.products {
+  margin-top: 60px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-around;
+}
+
+
+.product-hor {
+  @include brd-standard;
+  width: 620px;
+  min-height: 400px;
+  padding: 32px;
+  margin: 8px 0;
+  position: relative;
+
+  &__frame {
+    position: absolute;
+    top: 60px;
+    left: 30px;
+    width: 568px;
+    z-index: 3;
+    transition: all 0.4s ease;
+    //visibility: visible;
+    opacity: 1;
+  }
+
+  &__img {
+    width: inherit;
+    @include brd-standard;
+    border-color: transparent;
+    overflow: hidden;
+  }
+
+  &__tab-btn-block {
+    margin-top: 8px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 8px;
+    //cursor: pointer;
+  }
+
+  &__tab-btn {
+    padding: 8px 8px 4px 8px;
+    border: 1px solid;
+    border-radius: 8px 8px 0 0;
+    border-color: rgba($colorSecondary, 0.2) rgba($colorSecondary, 0.1) transparent rgba($colorSecondary, 0.2);
+    z-index: 1;
+    box-shadow: 4px -4px 2px 1px rgba($colorSecondary, 0.2);
+    cursor: pointer;
+    overflow: hidden;
+    background-color: rgba($colorNeutral500, 0.05);
+  }
+
+  &__tab-content {
+    position: relative;
+    border: 1px solid rgba($colorSecondary, 0.2);
+    border-radius: 0 12px 12px 12px;
+    height: 160px;
+    margin: -1px 0 10px 0;
+    box-shadow: 4px -4px 8px 4px rgba($colorSecondary, 0.2);
+    overflow: visible;
+    z-index: 2;
+  }
+
+  &__tab {
+    display: none;
+  }
+
+  &__tab-main {
+    &_title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 10px;
+    }
+  }
+
+  &__tab-description {
+  }
+
+  &__tab-tech {
+  }
+
+  &__tab-print {
+  }
+
+  &__pack {
+
+  }
+}
+
+.tab-active {
+  z-index: 3;
+  background-color: $colorSecondary50;
+}
+
+.tab-show {
+  display: block;
+}
+
+.item-hidden {
+  display: none;
+  //visibility: hidden;
+}
+
+.item-opaque {
+  transition: all 0.4s ease;
+  opacity: 0;
+
+}
+
+
+.btn-hor {
+  width: 160px;
+  padding: 8px;
+  justify-content: center;
+  gap: 16px
+}
+
+.strong {
+  font-weight: 700;
+}
+
+.color-padding {
+  padding: 0 12px;
+}
