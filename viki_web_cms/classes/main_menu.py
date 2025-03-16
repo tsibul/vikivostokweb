@@ -77,6 +77,10 @@ class MainMenu:
                     CMSSetting('Фильтры товаров', 'FilterToGoods', False),
                     CMSSetting('Фильтры групп товаров', 'FilterToGoodsGroup', False),
                 ]),
+                MenuSection('Упаковка', [
+                    CMSSetting('Гофрокороб', 'Box', False),
+                    CMSSetting('Упаковка товара', 'Packing', False),
+                ]),
                 MenuSection('PANTONE-HEX', [
                     CMSSetting('PANTONE-HEX', 'PantoneToHex', True),
                 ]),
