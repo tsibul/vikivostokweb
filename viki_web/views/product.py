@@ -1,3 +1,5 @@
+import random
+
 from django.shortcuts import render
 
 from viki_web_cms.models import ProductGroup, Goods, CatalogueItem, ColorGroup, FilterToGoodsGroup, GoodsGroup, \
@@ -11,7 +13,7 @@ def product(request, product_group_url):
         'id',
         'name'
     )
-    goods = Goods.objects.filter(product_group=product_group, deleted=False)
+    goods = Goods.objects.filter(product_group=product_group, deleted=False, catalogueitem__isnull=False).distinct()
     goods_group = GoodsGroup.objects.filter(deleted=False, goods__in=goods)
     color_group = ColorGroup.objects.filter(deleted=False). values(
         'id',
@@ -22,13 +24,32 @@ def product(request, product_group_url):
         'filter_option__name',
         'filter_option__id'
     )
-    items = CatalogueItem.objects.filter(goods__in=goods, deleted=False)
+    goods_list = []
+    for goods_item in goods:
+        items = CatalogueItem.objects.filter(goods=goods_item, deleted=False)
+        colors = items.values(
+            'id',
+            'main_color__hex'
+        )
+        id_list = list(items.values_list('id', flat=True))
+        if len(id_list) > 1:
+            id_random = id_list[round(random.random()*(len(id_list)) - 1) ]
+        else:
+            id_random = id_list[0]
+        goods_list.append({
+            'goods_item': goods_item,
+            'items': items,
+            'item_id': id_list,
+            'colors': colors,
+            'id_random': id_random,
+        })
     context = {
         'product_groups': product_groups,
         'product_group': product_group,
         'color_group': color_group,
         'filter_option': filter_option,
         'print_types': print_types,
+        'goods': goods_list,
     }
     if product_group.layout.id == 1:
         return render(request, 'product_hor.html', context)
