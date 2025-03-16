@@ -14,5 +14,5 @@ export function changeDetailTab(e) {
     contents.forEach(content => {
         content.classList.remove('tab-show');
     });
-    newContent.classList.add('table-show');
+    newContent.classList.add('tab-show');
 }
