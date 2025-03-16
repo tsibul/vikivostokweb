@@ -1,5 +1,4 @@
 import random
-from nntplib import ArticleInfo
 
 from django.shortcuts import render
 
@@ -30,25 +29,7 @@ def product(request, product_group_url):
         description = GoodsDescription.objects.filter(
             goods=goods_item, deleted=False).first()
         goods_description = description.description if description else ''
-        items = CatalogueItem.objects.filter(goods=goods_item, deleted=False)
-        article_description = ArticleDescription.objects.filter(deleted=False, goods=goods_item)
-        item_list = []
-        for item in items:
-            item_colors = CatalogueItemColor.objects.filter(deleted=False, item=item)
-            color_description = ''
-            if len(article_description):
-                for description in article_description:
-                    color_description += (description.parts_description.name.upper() + ': ' +
-                                          item_colors.get(color_position=description.position).color.name + ', ')
-            item_list.append({
-                'item': item,
-                'color_description': color_description
-            })
-        colors = items.values(
-            'id',
-            'main_color__hex'
-        )
-        id_list = list(items.values_list('id', flat=True))
+        item_list, id_list, colors = create_item_list(goods_item)
         if len(id_list) > 1:
             id_random = id_list[round(random.random()*(len(id_list)) - 1) ]
         else:
@@ -73,3 +54,26 @@ def product(request, product_group_url):
         return render(request, 'product_hor.html', context)
     else:
         return render(request, 'product_sqr.html', context)
+
+
+def create_item_list(goods_item):
+    items = CatalogueItem.objects.filter(goods=goods_item, deleted=False)
+    article_description = ArticleDescription.objects.filter(deleted=False, goods=goods_item)
+    item_list = []
+    for item in items:
+        item_colors = CatalogueItemColor.objects.filter(deleted=False, item=item)
+        color_description = ''
+        if len(article_description):
+            for description in article_description:
+                color_description += (description.parts_description.name.upper() + ': ' +
+                                      item_colors.get(color_position=description.position).color.name + ', ')
+        item_list.append({
+            'item': item,
+            'color_description': color_description
+        })
+    colors = items.values(
+        'id',
+        'main_color__hex'
+    )
+    id_list = list(items.values_list('id', flat=True))
+    return item_list, id_list, colors
