@@ -461,15 +461,6 @@ input[type=checkbox] {
   align-items: center;
   justify-content: space-between;
 }
-.product-hor__tab-tech a {
-  display: flex;
-  justify-content: end;
-  align-items: center;
-  gap: 8px;
-}
-.product-hor__tab-tech a * {
-  color: #009EA3;
-}
 .product-hor__tab-print_data {
   display: grid;
   gap: 8px;
@@ -485,6 +476,9 @@ input[type=checkbox] {
   align-items: center;
   grid-template-columns: 4fr 2fr 1fr 1fr;
   gap: 8px;
+}
+.product-hor__tab-pack * {
+  font-size: 14px;
 }
 
 .tab-active {

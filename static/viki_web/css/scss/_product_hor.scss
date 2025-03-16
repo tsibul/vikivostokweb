@@ -25,7 +25,6 @@
     width: 568px;
     z-index: 3;
     transition: all 0.4s ease;
-    //visibility: visible;
     opacity: 1;
   }
 
@@ -42,7 +41,6 @@
     justify-content: flex-start;
     align-items: center;
     gap: 8px;
-    //cursor: pointer;
   }
 
   &__tab-btn {
@@ -86,25 +84,6 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      //padding: 6px 10px;
-    }
-  }
-
-  &__tab-description {
-    & * {
-      //padding: 6px 0;
-    }
-  }
-
-  &__tab-tech {
-    & a {
-      display: flex;
-      justify-content: end;
-      align-items: center;
-      gap: 8px;
-      & * {
-        color: $colorSecondary;
-      }
     }
   }
 
@@ -127,6 +106,9 @@
     align-items: center;
     grid-template-columns: 4fr 2fr 1fr 1fr;
     gap: 8px;
+    & *{
+      font-size: 14px;
+    }
   }
 }
 
@@ -145,7 +127,6 @@
 
 .item-hidden {
   display: none;
-  //visibility: hidden;
 }
 
 .item-opaque {
@@ -153,7 +134,6 @@
   opacity: 0;
 
 }
-
 
 .btn-hor {
   width: 160px;
