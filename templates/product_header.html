@@ -19,42 +19,53 @@
 
 </head>
 <body>
-<menu class="menu-product">
-    <div class="container">
-        <div class="menu__line">
-            <nav>
-                <ul class="menu__left">
-                    <li class="menu__item">
-                        <a href="/">
-                            <img src="{% static 'viki_web/icons/logo.svg' %}" alt="ВикиВосток" class="menu__logo">
-                        </a></li>
-                    <li class="menu__item">
-                        <div>Каталог</div>
-                    </li>
-                    <li class="menu__item">
-                        <div>Прайс</div>
-                    </li>
-                    <li class="menu__item">
-                        <div>Шаблоны</div>
-                    </li>
-                    <li class="menu__item">
-                        <div>О компании</div>
-                    </li>
-                    <li class="menu__item">
-                        <div>Контакты</div>
-                    </li>
-                </ul>
-            </nav>
-            <nav class="menu__right">
-                <i class="fa-regular fa-user"></i>
-                <div>Личный&nbsp;Кабинет</div>
-            </nav>
-        </div>
-    </div>
-</menu>
+{#<menu class="menu-product">#}
+{#    <div class="container">#}
+{#        <div class="menu__line">#}
+{#            <nav>#}
+{#                <ul class="menu__left">#}
+{#                    <li class="menu__item">#}
+{#                        <a href="/">#}
+{#                            <img src="{% static 'viki_web/icons/logo.svg' %}" alt="ВикиВосток" class="menu__logo">#}
+{#                        </a></li>#}
+{#                    <li class="menu__item">#}
+{#                        <div>Каталог</div>#}
+{#                    </li>#}
+{#                    <li class="menu__item">#}
+{#                        <div>Прайс</div>#}
+{#                    </li>#}
+{#                    <li class="menu__item">#}
+{#                        <div>Шаблоны</div>#}
+{#                    </li>#}
+{#                    <li class="menu__item">#}
+{#                        <div>О компании</div>#}
+{#                    </li>#}
+{#                    <li class="menu__item">#}
+{#                        <div>Контакты</div>#}
+{#                    </li>#}
+{#                </ul>#}
+{#            </nav>#}
+{#            <nav class="menu__right">#}
+{#                <i class="fa-regular fa-user"></i>#}
+{#                <div>Личный&nbsp;Кабинет</div>#}
+{#            </nav>#}
+{#        </div>#}
+{#    </div>#}
+{#</menu>#}
 <menu class="submenu-products">
     <div class="container">
+
         <div class="submenu-group">
+            <a href="/">
+                <div class="main-btn">
+                <span>
+                    <img src="{% static 'viki_web/icons/logo.svg' %}"
+                         alt="ВикиВосток" class="submenu-group__logo">
+                    Главная
+                </span>
+
+                </div>
+            </a>
             {% for group in product_groups %}
                 <a href="{{ group.product_group_url }}">
                     <div class="submenu-group__item {% if group.id != product_group.id %}
@@ -72,6 +83,7 @@
             <h1>{{ product_group.name }}</h1>
             <h3>{{ product_group.second_name }}</h3>
         </div>
+        {#        <aside>#}
         <details class="product-header__filter">
             <summary class="product-header__summary">
                 <h4>Фильтр</h4>
@@ -88,7 +100,6 @@
                             <label for="{{ color.hex }}" class="color-label">
                                 <div class="square" style="background-color: {{ color.hex }};"></div>
                                 <div class="color-label__check"></div>
-{#                                <i class="fa-solid fa-check color-label__check"></i>#}
                             </label>
                         {% endfor %}
                     </div>
@@ -120,6 +131,7 @@
                 <button class="btn btn__cancel">сбросить</button>
             </div>
         </details>
+        {#        </aside>#}
     </header>
 </div>
 {% block content %}
