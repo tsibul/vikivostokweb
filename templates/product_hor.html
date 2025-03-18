@@ -2,13 +2,13 @@
 {% load static %}
 {% block content %}
     <div class="container">
-    <header class="product-header">
-        <div class="product-header__title">
-            <h1>{{ product_group.name }}</h1>
-            <h3>{{ product_group.second_name }}</h3>
-        </div>
-    </header>
-</div>
+        <header class="product-header">
+            <div class="product-header__title">
+                <h1>{{ product_group.name }}</h1>
+                <h3>{{ product_group.second_name }}</h3>
+            </div>
+        </header>
+    </div>
 
     <main>
         <div class="container">
@@ -22,7 +22,7 @@
                                  data-id="{{ item.item.id }}">
                                 <div class="chevron-next"
                                      data-id="{{ item.item.id }}"
-                                     data-list ="{{ goods.item_id }}"
+                                     data-list="{{ goods.item_id }}"
                                 >
                                     <div>следующий</div>
                                     <i class="fa-solid fa-angles-right"></i>
@@ -86,7 +86,13 @@
                                             </div>
                                             <div class="product-hor__tab-main_title">
                                                 <h4>Артикул: {{ item.item.item_article }}</h4>
-                                                <h4 class="strong">Цена: {{ item.item.item_article }}</h4>
+                                                <h4 class="strong">Цена:
+                                                    {% if item.price %}
+                                                        {{ item.price }}
+                                                    {% else %}
+                                                        {{ goods.price }}
+                                                    {% endif %}
+                                                </h4>
                                             </div>
                                         </div>
                                         <div class="product-hor__tab"
@@ -104,6 +110,7 @@
                                                 <div>шаблоны:</div>
                                                 {% for layout in goods.print_layout %}
                                                     <a href="
+
                                                             {% static 'viki_web_cms/files/layout' %}{{ layout.layout.layout.file.name }}"
                                                        target="_blank">
                                                         <p>{{ layout.name }}</p>
