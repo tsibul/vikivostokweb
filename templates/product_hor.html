@@ -1,9 +1,61 @@
 {% extends 'product_header.html' %}
 {% load static %}
-{#{% block title %}Главная{% endblock %}#}
 {% block content %}
-    {#    <script src="{% static 'production/js/dist/index.bundle.js' %}" defer type="module"></script>#}
-    <script src="{% static 'viki_web/js/product.js' %}" defer type="module"></script>
+    <div class="container">
+    <header class="product-header">
+        <div class="product-header__title">
+            <h1>{{ product_group.name }}</h1>
+            <h3>{{ product_group.second_name }}</h3>
+        </div>
+{#        <details class="product-header__filter">#}
+{#            <summary class="product-header__summary">#}
+{#                <h4>Фильтр</h4>#}
+{#                <i class="fa-solid fa-list-check"></i>#}
+{#            </summary>#}
+{#            <div class="product-header__filter-content">#}
+{#                <div>#}
+{#                    <h3>Цвет</h3>#}
+{#                    <div class="filter__content_data_color">#}
+{#                        {% for color in color_group %}#}
+{#                            <input type="checkbox" id="{{ color.hex }}" name="{{ color.name }}"#}
+{#                                   class="product-header__filter-content_checkbox-hidden"#}
+{#                                   hidden>#}
+{#                            <label for="{{ color.hex }}" class="color-label">#}
+{#                                <div class="square" style="background-color: {{ color.hex }};"></div>#}
+{#                                <div class="color-label__check"></div>#}
+{#                            </label>#}
+{#                        {% endfor %}#}
+{#                    </div>#}
+{#                    <h3>Брендирование</h3>#}
+{#                    <div class="product-header__filter-content_print">#}
+{#                        {% for printing in print_types %}#}
+{#                            <input type="checkbox" id="print_{{ printing.id }}"#}
+{#                                   name="print_{{ printing.id }}"#}
+{#                                   class="product-header__filter-content_checkbox">#}
+{#                            <label for="print_{{ printing.id }}">{{ printing.name }}</label>#}
+{#                        {% endfor %}#}
+{##}
+{#                    </div>#}
+{#                </div>#}
+{#                <div>#}
+{#                    <h3>Свойства</h3>#}
+{#                    <div class="product-header__filter-content_filter">#}
+{#                        {% for filter in filter_option %}#}
+{#                            <input type="checkbox" id="{{ filter.filter_option__id }}"#}
+{#                                   name="{{ filter.filter_option__name }}"#}
+{#                                   class="product-header__filter-content_checkbox">#}
+{#                            <label for="{{ filter.filter_option__id }}">{{ filter.filter_option__name }}</label>#}
+{#                        {% endfor %}#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#            <div class="product-header__btn-block">#}
+{#                <button class="btn btn__save">применить</button>#}
+{#                <button class="btn btn__cancel">сбросить</button>#}
+{#            </div>#}
+{#        </details>#}
+    </header>
+</div>
 
     <main>
         <div class="container">
@@ -19,134 +71,131 @@
                                      src="/static/viki_web_cms/files/item_photo/{{ item.item.image }}"
                                      alt="{{ item.item.image_article }}"
                                      loading="lazy">
-                                <div class="product-hor__tab-btn-block">
-                                    <button class="product-hor__tab-btn tab-active"
-                                            type="button" data-id="main-{{ item.item.id }}">
-                                        основное
-                                    </button>
-                                    <button class="product-hor__tab-btn"
-                                            type="button" data-id="description-{{ item.item.id }}">
-                                        описание
-                                    </button>
-                                    <button class="product-hor__tab-btn"
-                                            type="button" data-id="tech-{{ item.item.id }}">
-                                        тех. информация
-                                    </button>
-                                    <button class="product-hor__tab-btn"
-                                            type="button" data-id="print-{{ item.item.id }}">
-                                        брендирование
-                                    </button>
-                                    <button class="product-hor__tab-btn"
-                                            type="button" data-id="pack-{{ item.item.id }}">
-                                        упаковка
-                                    </button>
-
+                                <div class="filter__content_data_color color-padding">
+                                    {% for color in goods.colors %}
+                                        <input type="checkbox"
+                                               id="item-color-{{ item.item.id }}_{{ color.main_color__hex|slice:"1:" }}"
+                                               name="{{ color.name }}"
+                                               class="product-header__filter-content_checkbox-hidden"
+                                               data-id="{{ item.item.id }}"
+                                                {% if  item.item.id == color.id %} checked {% endif %}
+                                               hidden>
+                                        <label for="item-color-{{ item.item.id }}_{{ color.main_color__hex|slice:"1:" }}"
+                                               class="color-label"
+                                               data-item-id="{{ color.id }}"
+                                               data-hex="{{ color.main_color__hex|slice:"1:" }}"
+                                        >
+                                            <div class="square"
+                                                 style="background-color: {{ color.main_color__hex }};"></div>
+                                            <div class="color-label__check"
+                                                    {% if item.item.id == color.id %}
+                                                 style="display:block;"  {% endif %}
+                                            ></div>
+                                        </label>
+                                    {% endfor %}
                                 </div>
-                                <div class="product-hor__tab-content">
-                                    <div class="product-hor__tab tab-show"
-                                         data-id="main-{{ item.item.id }}">
-                                        <div class="product-hor__tab-main_title">
-                                            <h4>Название: {{ item.item.name }}</h4>
-                                        </div>
-                                        <div class="product-hor__tab-main_title">
-                                            <h4>Артикул: {{ item.item.item_article }}</h4>
-                                            <h4 class="strong">Цена: {{ item.item.item_article }}</h4>
-                                        </div>
-                                        <div class="product-header__filter-content_color color-padding">
-                                            {% for color in goods.colors %}
-                                                <input type="checkbox"
-                                                       id="item-color-{{ item.item.id }}_{{ color.main_color__hex|slice:"1:" }}"
-                                                       name="{{ color.name }}"
-                                                       class="product-header__filter-content_checkbox-hidden"
-                                                       data-id="{{ item.item.id }}"
-                                                        {% if  item.item.id == color.id %} checked {% endif %}
-                                                       hidden>
-                                                <label for="item-color-{{ item.item.id }}_{{ color.main_color__hex|slice:"1:" }}"
-                                                       class="color-label"
-                                                       data-item-id="{{ color.id }}"
-                                                       data-hex="{{ color.main_color__hex|slice:"1:" }}"
-                                                >
-                                                    <div class="square"
-                                                         style="background-color: {{ color.main_color__hex }};"></div>
-                                                    <div class="color-label__check"
-                                                            {% if item.item.id == color.id %}
-                                                         style="display:block;"  {% endif %}
-                                                    ></div>
-                                                </label>
-                                            {% endfor %}
-                                        </div>
-                                    </div>
-                                    <div class="product-hor__tab"
-                                         data-id="description-{{ item.item.id }}">
-                                        <article>
-                                            {{ goods.goods_description }}
-                                        </article>
-                                        <div>
-                                            {{ item.color_description }}
-                                        </div>
-                                    </div>
-                                    <div class="product-hor__tab"
-                                         data-id="tech-{{ item.item.id }}">
-                                        <div>
-                                            размеры: {{ goods.dimensions }},&nbsp;&nbsp;вес: {{ goods.goods_item.weight }}г
-                                        </div>
-                                        <div>
-                                            <div>шаблоны:</div>
-                                            {% for layout in goods.print_layout %}
-                                                <a href="
+                                <div>
+                                    <div class="product-hor__tab-btn-block">
+                                        <button class="product-hor__tab-btn tab-active"
+                                                type="button" data-id="main-{{ item.item.id }}">
+                                            основное
+                                        </button>
+                                        <button class="product-hor__tab-btn"
+                                                type="button" data-id="description-{{ item.item.id }}">
+                                            описание
+                                        </button>
+                                        <button class="product-hor__tab-btn"
+                                                type="button" data-id="tech-{{ item.item.id }}">
+                                            тех. информация
+                                        </button>
+                                        <button class="product-hor__tab-btn"
+                                                type="button" data-id="print-{{ item.item.id }}">
+                                            брендирование
+                                        </button>
+                                        <button class="product-hor__tab-btn"
+                                                type="button" data-id="pack-{{ item.item.id }}">
+                                            упаковка
+                                        </button>
 
-
-                                                        {% static 'viki_web_cms/files/layout' %}{{ layout.layout.layout.file.name }}"
-                                                   target="_blank">
-                                                    <p>{{ layout.name }}</p>
-                                                    <i class="fa-regular fa-folder"></i>
-                                                </a>
-                                            {% endfor %}
-                                        </div>
                                     </div>
-                                    <div class="product-hor__tab"
-                                         data-id="print-{{ item.item.id }}">
-                                        <div class="product-hor__tab-print_data">
-                                            <div>тип</div>
-                                            <div>место</div>
-                                            <div>кол-во позиций</div>
-                                            <div>кол-во цветов</div>
-                                            <div>размер</div>
-                                        </div>
-                                        {% for print in goods.print_data %}
-                                            <div class="product-hor__tab-print_data">
-                                                <div>{{ print.print_type }}</div>
-                                                <div>{{ print.print_place }}</div>
-                                                <div>{{ print.place_quantity }}</div>
-                                                <div>{{ print.color_quantity }}</div>
-                                                <div>{{ print.dimensions }}</div>
-                                            </div>{% endfor %}
-                                    </div>
-                                    <div class="product-hor__tab"
-                                         data-id="pack-{{ item.item.id }}">
-                                        <div class="product-hor__tab-pack">
-                                            <div>упаковка</div>
-                                            <div>штук в упаковке</div>
-                                            <div>вес, кг</div>
-                                            <div>объем, м3</div>
-                                        </div>
-                                        {% for pack in goods.packing %}
-                                            <div class="product-hor__tab-pack">
-                                                <div>{{ pack.box__name }}</div>
-                                                <div>{{ pack.quantity_in }}</div>
-                                                <div>{{ pack.box_weight }}</div>
-                                                <div>{{ pack.box__volume }}</div>
+                                    <div class="product-hor__tab-content">
+                                        <div class="product-hor__tab tab-show"
+                                             data-id="main-{{ item.item.id }}">
+                                            <div>
+                                                {{ item.color_description }}
                                             </div>
-                                        {% endfor %}
+                                            <div class="product-hor__tab-main_title">
+                                                <h4>Артикул: {{ item.item.item_article }}</h4>
+                                                <h4 class="strong">Цена: {{ item.item.item_article }}</h4>
+                                            </div>
+                                        </div>
+                                        <div class="product-hor__tab"
+                                             data-id="description-{{ item.item.id }}">
+                                            <article>
+                                                {{ goods.goods_description }}
+                                            </article>
+                                        </div>
+                                        <div class="product-hor__tab"
+                                             data-id="tech-{{ item.item.id }}">
+                                            <div>
+                                                размеры: {{ goods.dimensions }},&nbsp;&nbsp;вес: {{ goods.goods_item.weight }}г
+                                            </div>
+                                            <div>
+                                                <div>шаблоны:</div>
+                                                {% for layout in goods.print_layout %}
+                                                    <a href="
+                                                            {% static 'viki_web_cms/files/layout' %}{{ layout.layout.layout.file.name }}"
+                                                       target="_blank">
+                                                        <p>{{ layout.name }}</p>
+                                                        <i class="fa-regular fa-folder"></i>
+                                                    </a>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                        <div class="product-hor__tab"
+                                             data-id="print-{{ item.item.id }}">
+                                            <div class="product-hor__tab-print_data">
+                                                <div>тип</div>
+                                                <div>место</div>
+                                                <div>кол-во позиций</div>
+                                                <div>кол-во цветов</div>
+                                                <div>размер</div>
+                                            </div>
+                                            {% for print in goods.print_data %}
+                                                <div class="product-hor__tab-print_data">
+                                                    <div>{{ print.print_type }}</div>
+                                                    <div>{{ print.print_place }}</div>
+                                                    <div>{{ print.place_quantity }}</div>
+                                                    <div>{{ print.color_quantity }}</div>
+                                                    <div>{{ print.dimensions }}</div>
+                                                </div>{% endfor %}
+                                        </div>
+                                        <div class="product-hor__tab"
+                                             data-id="pack-{{ item.item.id }}">
+                                            <div class="product-hor__tab-pack">
+                                                <div>упаковка</div>
+                                                <div>штук в упаковке</div>
+                                                <div>вес, кг</div>
+                                                <div>объем, м3</div>
+                                            </div>
+                                            {% for pack in goods.packing %}
+                                                <div class="product-hor__tab-pack">
+                                                    <div>{{ pack.box__name }}</div>
+                                                    <div>{{ pack.quantity_in }}</div>
+                                                    <div>{{ pack.box_weight }}</div>
+                                                    <div>{{ pack.box__volume }}</div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
                                     </div>
+                                    <button class="btn btn__save btn-hor">
+                                        <div>
+                                            В корзину&nbsp;
+                                        </div>
+                                        <img src="{% static 'viki_web/icons/cart.svg' %}"
+                                             alt="cart" class="">
+                                    </button>
                                 </div>
-                                <button class="btn btn__save btn-hor">
-                                    <div>
-                                        В корзину&nbsp;
-                                    </div>
-                                    <img src="{% static 'viki_web/icons/cart.svg' %}"
-                                         alt="cart" class="">
-                                </button>
                             </div>
                         {% endfor %}
                     </section>

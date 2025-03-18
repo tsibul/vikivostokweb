@@ -3,7 +3,7 @@
 import {selectItemColor} from "./product/selectItemColor.js";
 import {changeDetailTab} from "./product/changeDetailTab.js";
 
-const colorInputs = document.querySelectorAll('.product-header .product-header__filter-content_checkbox-hidden');
+const colorInputs = document.querySelectorAll('.filter .product-header__filter-content_checkbox-hidden');
 const productColorLabels  = document
     .querySelectorAll('.products label.color-label');
 const detailTabButtons = document.querySelectorAll('.product-hor__tab-btn');

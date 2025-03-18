@@ -5,7 +5,7 @@
   height: 60px;
   width: 100%;
   background-color: $colorSecondary;
-  position: sticky;
+  position: fixed;
   z-index: 10;
 }
 
@@ -56,69 +56,79 @@
   }
 }
 
-.product-header {
-  position: sticky;
-  width: 100%;
-  margin-top: 24px;
-  display: flex;
-  //align-item;
-  justify-content: space-between;
+.filter {
+  z-index: 5;
+  position: fixed;
+  top: 66px;
+  right: calc((100% - 1300px) / 2);
+  transition: max-height 0.6s ease;
+  max-height: 30px;
+  height: 100%;
+  overflow: hidden;
 
-  &__filter {
+  &:open {
+    max-height: 400px;
     height: 100%;
-    max-width: 60%;
-    padding: 16px;
-    max-height: 24px;
-    overflow: hidden;
-    transition: max-height 0.4s;
-
-    &:open {
-      @include brd-standard;
-      max-height: 400px;
-      height: 100%;
-    }
+    transition: max-height 0.6s ease;
   }
 
   &__summary {
+    //padding: 8px 0;
     cursor: pointer;
     display: flex;
-    gap: 16px;
     justify-content: end;
-    padding-right: 8px;
+
+    &_title {
+      display: flex;
+      gap: 16px;
+      justify-content: end;
+      align-items: center;
+      @include brd-standard;
+      border-color: transparent;
+      padding:  4px 10px;
+      background-color: rgba($colorSecondary, 0.5)
+    }
   }
 
-  &__filter-content {
-    display: grid;
-    gap: 8px;
-    grid-template-columns: 1fr 2fr;
+  &__content {
+    width: 100%;
+    background-color: $colorSecondary50;
+    @include brd-standard;
+    padding: 16px;
 
-    &_color {
-      margin: 16px 0;
-      display: flex;
-      gap: 10px;
-      //align-items: center;
-      flex-wrap: wrap;
-    }
-
-    &_print {
-      margin: 16px 0;
+    &_data {
       display: grid;
-      grid-template-columns: 1fr 8fr;
-      gap: 6px;
+      gap: 16px;
+      grid-template-columns: 1fr 2fr;
+
+      &_color {
+        margin: 16px 0;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      &_print {
+        margin: 16px 0;
+        display: grid;
+        grid-template-columns: 1fr 8fr;
+        gap: 6px;
+      }
+
+      &_filter {
+        display: grid;
+        align-items: center;
+        grid-template-columns: repeat(2, 1fr 9fr);
+        gap: 6px;
+        margin: 16px 0;
+      }
+
+      &_checkbox {
+        height: 20px;
+        width: 20px;
+      }
     }
 
-    &_filter {
-      display: grid;
-      align-items: center;
-      grid-template-columns: repeat(2, 1fr 9fr);
-      gap: 6px;
-      margin: 16px 0;
-    }
-
-    &_checkbox {
-      height: 20px;
-      width: 20px;
-    }
   }
 
   &__btn-block {
@@ -128,6 +138,14 @@
   }
 }
 
+.product-header {
+  width: 100%;
+  padding-top: 66px;
+  display: flex;
+  justify-content: space-between;
+}
+
+
 .color-label {
   position: relative;
 
@@ -135,10 +153,6 @@
     position: absolute;
     display: none;
     z-index: 3;
-    //font-size: 24px;
-    //top: 0;
-    //left: 2px;
-    //color: $colorNeutral500;
     border: 2px solid $colorSecondary;
     border-radius: 6px;
     top: -4px;
