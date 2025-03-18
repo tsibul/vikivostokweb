@@ -72,13 +72,13 @@
             <i class="fa-solid fa-list-check"></i>
         </div>
     </summary>
-    <div class="filter__content">
+    <form class="filter__content">
         <div class="filter__content_data">
             <div>
                 <h3>Цвет</h3>
                 <div class="filter__content_data_color">
                     {% for color in color_group %}
-                        <input type="checkbox" id="{{ color.hex }}" name="{{ color.name }}"
+                        <input type="checkbox" id="{{ color.hex }}" name="color_{{ color.id }}"
                                class="product-header__filter-content_checkbox-hidden"
                                hidden>
                         <label for="{{ color.hex }}" class="color-label">
@@ -95,7 +95,17 @@
                                class="product-header__filter-content_checkbox">
                         <label for="print_{{ printing.id }}">{{ printing.name }}</label>
                     {% endfor %}
-
+                </div>
+                <h3><label for="price-range">Цена</label></h3>
+                <div class="filter__price-range">
+                    <input id="price-range"
+                           type="range" class="input-range"
+                           min="{{ price_min }}"
+                           max="{{ price_max }}"
+                           step="0.1"
+                           value="{{ price_max }}"
+                           name="price_range">
+                    <div class="input-range__value">до&nbsp;{{ price_max }}</div>
                 </div>
             </div>
             <div>
@@ -103,7 +113,7 @@
                 <div class="filter__content_data_filter">
                     {% for filter in filter_option %}
                         <input type="checkbox" id="{{ filter.filter_option__id }}"
-                               name="{{ filter.filter_option__name }}"
+                               name="filter_{{ filter.filter_option__id }}"
                                class="filter__content_data_checkbox">
                         <label for="{{ filter.filter_option__id }}">{{ filter.filter_option__name }}</label>
                     {% endfor %}
@@ -114,7 +124,7 @@
             <button class="btn btn__save">применить</button>
             <button class="btn btn__cancel">сбросить</button>
         </div>
-    </div>
+    </form>
 </details>
 {#</div>#}
 {#<menu class="submenu-products">#}

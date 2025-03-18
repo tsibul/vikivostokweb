@@ -405,6 +405,22 @@ input[type=checkbox] {
   justify-content: end;
   gap: 8px;
 }
+.filter__price-range {
+  padding: 6px;
+  display: flex;
+  justify-content: flex-start;
+  gap: 16px;
+  align-items: center;
+}
+
+.input-range {
+  color: #0F4880;
+  accent-color: #0F4880;
+  width: 70%;
+}
+.input-range__value {
+  font-size: 18px;
+}
 
 .product-header {
   width: 100%;

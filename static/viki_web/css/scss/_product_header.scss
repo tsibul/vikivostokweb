@@ -136,6 +136,23 @@
     justify-content: end;
     gap: 8px;
   }
+  &__price-range {
+    padding: 6px;
+    display: flex;
+    justify-content: flex-start;
+    gap: 16px;
+    align-items: center;
+  }
+}
+
+.input-range{
+  color: $colorPrimary;
+  accent-color: $colorPrimary;
+  width: 70%;
+    &__value {
+      font-size: 18px;
+      //font-weight: 600;
+    }
 }
 
 .product-header {

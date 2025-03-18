@@ -21,11 +21,14 @@ def product(request, product_group_url):
     price_type = find_price_type(request)
 
     goods_list = []
+    price_min, price_max = 1000000, 0
     for goods_item in goods:
         dimensions, goods_description, packing = goods_data(goods_item)
         print_data, print_layout = create_print_data(goods_item)
-        item_list, id_list, colors = create_item_list(goods_item, price_type)
         price = goods_price(goods_item, price_type)
+        price_min, price_max = price_min_max(price_min, price_max, price)
+        item_list, id_list, colors, price_min, price_max = (
+            create_item_list(goods_item, price_type, price_min, price_max))
 
         if len(id_list) > 1:
             id_random = id_list[round(random.random()*(len(id_list)) - 1) ]
@@ -51,13 +54,15 @@ def product(request, product_group_url):
         'filter_option': filter_option,
         'print_types': print_types,
         'goods_list': goods_list,
+        'price_min': price_min,
+        'price_max': price_max,
     }
     if product_group.layout.id == 1:
         return render(request, 'product_hor.html', context)
     else:
         return render(request, 'product_sqr.html', context)
 
-def create_item_list(goods_item, price_type):
+def create_item_list(goods_item, price_type, price_min, price_max):
     items = CatalogueItem.objects.filter(goods=goods_item, deleted=False)
     article_description = ArticleDescription.objects.filter(deleted=False, goods=goods_item)
     item_list = []
@@ -70,6 +75,7 @@ def create_item_list(goods_item, price_type):
                 color_description += (description.parts_description.name.upper() + ': ' +
                                       color.name + '(' + color.pantone + ') ')
         price = item_price(item, price_type)
+        price_min, price_max = price_min_max(price_min, price_max, price)
         item_list.append({
             'item': item,
             'color_description': color_description,
@@ -80,7 +86,7 @@ def create_item_list(goods_item, price_type):
         'main_color__hex'
     )
     id_list = list(items.values_list('id', flat=True))
-    return item_list, id_list, colors
+    return item_list, id_list, colors, price_min, price_max
 
 def create_print_data(goods_item):
     print_opportunity = PrintOpportunity.objects.filter(deleted=False, goods=goods_item)
@@ -173,3 +179,12 @@ def item_price(item, price_type):
     ).first()
     price = price_obj.price if price_obj else None
     return price
+
+def price_min_max(price_min, price_max, price):
+    if not isinstance(price, str) and price is not None:
+        if price < price_min:
+            price_min = price
+        if price > price_max:
+            price_max = price
+    return price_min, price_max
+

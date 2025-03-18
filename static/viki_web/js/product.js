@@ -3,12 +3,14 @@
 import {selectItemColor} from "./product/selectItemColor.js";
 import {changeDetailTab} from "./product/changeDetailTab.js";
 import {selectNext} from "./product/selectNext.js";
+import {moveRange} from "./product/moveRange.js";
 
 const colorInputs = document.querySelectorAll('.filter .product-header__filter-content_checkbox-hidden');
 const productColorLabels  = document
     .querySelectorAll('.products label.color-label');
 const detailTabButtons = document.querySelectorAll('.product-hor__tab-btn');
 const chevronNext = document.querySelectorAll('.chevron-next');
+const priceRange = document.querySelector('.filter .input-range');
 
 
 colorInputs.forEach(colorInput => {
@@ -31,3 +33,5 @@ detailTabButtons.forEach(tab => {
 chevronNext.forEach( chev => {
     chev.addEventListener('click', selectNext);
 });
+
+priceRange.addEventListener('input', moveRange)
