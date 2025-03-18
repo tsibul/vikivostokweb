@@ -13,17 +13,17 @@
 .product-hor {
   @include brd-standard;
   width: 620px;
-  min-height: 430px;
+  min-height: 440px;
   padding: 32px;
   margin: 8px 0;
   position: relative;
 
   &__frame {
     position: absolute;
-    top: 60px;
+    top: 42px;
     left: 30px;
     width: 568px;
-    min-height: 360px;
+    min-height: 386px;
     z-index: 3;
     transition: all 0.4s ease;
     opacity: 1;
@@ -113,6 +113,25 @@
     & *{
       font-size: 13px;
     }
+  }
+}
+
+.chevron-next{
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  align-self: end;
+  padding: 8px;
+  cursor: pointer;
+
+  &__{
+    color: $colorPrimary;
+  }
+
+  &:hover *{
+    font-weight: bold;
+    transform: scale(1.05);
   }
 }
 

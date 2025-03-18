@@ -415,6 +415,7 @@ input[type=checkbox] {
 
 .color-label {
   position: relative;
+  cursor: pointer;
 }
 .color-label__check {
   position: absolute;
@@ -441,17 +442,17 @@ input[type=checkbox] {
   border: 1px solid #0F4880;
   border-radius: 12px;
   width: 620px;
-  min-height: 430px;
+  min-height: 440px;
   padding: 32px;
   margin: 8px 0;
   position: relative;
 }
 .product-hor__frame {
   position: absolute;
-  top: 60px;
+  top: 42px;
   left: 30px;
   width: 568px;
-  min-height: 360px;
+  min-height: 386px;
   z-index: 3;
   transition: all 0.4s ease;
   opacity: 1;
@@ -529,6 +530,23 @@ input[type=checkbox] {
 }
 .product-hor__tab-pack * {
   font-size: 13px;
+}
+
+.chevron-next {
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  align-self: end;
+  padding: 8px;
+  cursor: pointer;
+}
+.chevron-next__ {
+  color: #0F4880;
+}
+.chevron-next:hover * {
+  font-weight: bold;
+  transform: scale(1.05);
 }
 
 .tab-active {
