@@ -90,7 +90,7 @@ class PrintData(SettingsDictionary):
         verbose_name_plural = 'Данные печати'
         db_table_comment = 'Printing data'
         db_table = 'printing_data'
-        ordering = ['print_type', 'print_place']
+        ordering = ['name', 'print_place']
 
     def __str__(self):
         return (self.print_type.name + ' ' + self.print_place.name +
@@ -107,7 +107,7 @@ class PrintData(SettingsDictionary):
 
     @staticmethod
     def order_default():
-        return ['print_type', 'print_place']
+        return ['name', 'print_place']
 
     @staticmethod
     def dictionary_fields():
