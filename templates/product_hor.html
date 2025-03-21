@@ -14,23 +14,29 @@
         <div class="container">
             <div class="products">
                 {% for goods in goods_list %}
-                    <section class="product-hor">
+                    <section class="product product-hor"
+                             data-id="{{ goods.goods_item.id }}"
+                             data-price="{{ goods.price }}">
                         <h3>{{ goods.goods_item.name }}</h3>
                         {% for item in goods.item_list %}
                             <div class="product-hor__frame
                                 {% if goods.id_random != item.item.id %} item-hidden item-opaque{% endif %}"
-                                 data-id="{{ item.item.id }}">
-                                <div class="chevron-next"
-                                     data-id="{{ item.item.id }}"
-                                     data-list="{{ goods.item_id }}"
-                                >
-                                    <div>следующий</div>
-                                    <i class="fa-solid fa-angles-right"></i>
+                                 data-id="{{ item.item.id }}"
+                                 data-price="{{ item.item.price }}">
+                                <div>
+                                    <div class="chevron-next"
+                                         data-id="{{ item.item.id }}"
+                                         data-list="{{ goods.item_id }}"
+                                         data-listInitial="{{ goods.item.id }}"
+                                    >
+                                        <div>следующий</div>
+                                        <i class="fa-solid fa-angles-right"></i>
+                                    </div>
+                                    <img class="product-hor__img"
+                                         src="/static/viki_web_cms/files/item_photo/{{ item.item.image }}"
+                                         alt="{{ item.item.image_article }}"
+                                         loading="lazy">
                                 </div>
-                                <img class="product-hor__img"
-                                     src="/static/viki_web_cms/files/item_photo/{{ item.item.image }}"
-                                     alt="{{ item.item.image_article }}"
-                                     loading="lazy">
                                 <div class="filter__content_data_color color-padding">
                                     {% for color in goods.colors %}
                                         <input type="checkbox"
@@ -45,8 +51,10 @@
                                                data-item-id="{{ color.id }}"
                                                data-hex="{{ color.main_color__hex|slice:"1:" }}"
                                         >
-                                            <div class="square"
-                                                 style="background-color: {{ color.main_color__hex }};"></div>
+                                            <div class="square tooltip"
+                                                 style="background-color: {{ color.main_color__hex }};">
+                                                <div class="tooltip-text">{{ color.main_color__name }}</div>
+                                            </div>
                                             <div class="color-label__check"
                                                     {% if item.item.id == color.id %}
                                                  style="display:block;"  {% endif %}
@@ -110,6 +118,8 @@
                                                 <div>шаблоны:</div>
                                                 {% for layout in goods.print_layout %}
                                                     <a href="
+
+
 
                                                             {% static 'viki_web_cms/files/layout' %}{{ layout.layout.layout.file.name }}"
                                                        target="_blank">

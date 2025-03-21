@@ -110,6 +110,7 @@ input[type='checkbox'] {
 }
 
 .square {
+  z-index: 6;
   height: 24px;
   width: 24px;
   border: 1px solid $colorPrimary500;
@@ -127,7 +128,7 @@ input[type='checkbox'] {
 
 .tooltip-text {
   visibility: hidden;
-  font-size: 14px;
+  font-size: 13px;
   width: fit-content;
   background-color: #fff;
   text-align: center;
@@ -135,8 +136,8 @@ input[type='checkbox'] {
   @include brd-standard;
   padding: 2px 4px;
   position: absolute;
-  z-index: 11;
-  top: -70%;
+  z-index: 8;
+  top: -95%;
   left: 50%;
 
 }

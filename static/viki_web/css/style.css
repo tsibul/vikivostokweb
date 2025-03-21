@@ -92,10 +92,35 @@ input[type=checkbox] {
 }
 
 .square {
+  z-index: 6;
   height: 24px;
   width: 24px;
   border: 1px solid #0F4880;
   border-radius: 6px;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+.tooltip:hover .tooltip-text {
+  visibility: visible;
+}
+
+.tooltip-text {
+  visibility: hidden;
+  font-size: 13px;
+  width: fit-content;
+  background-color: #fff;
+  text-align: center;
+  text-wrap: nowrap;
+  border: 1px solid #0F4880;
+  border-radius: 12px;
+  padding: 2px 4px;
+  position: absolute;
+  z-index: 8;
+  top: -95%;
+  left: 50%;
 }
 
 @media (max-width: 1330px) {
@@ -436,7 +461,7 @@ input[type=checkbox] {
 .color-label__check {
   position: absolute;
   display: none;
-  z-index: 3;
+  z-index: 5;
   border: 2px solid #009EA3;
   border-radius: 6px;
   top: -4px;
@@ -458,17 +483,18 @@ input[type=checkbox] {
   border: 1px solid #0F4880;
   border-radius: 12px;
   width: 620px;
-  min-height: 440px;
+  min-height: 448px;
   padding: 32px;
   margin: 8px 0;
   position: relative;
+  background-color: #fff;
 }
 .product-hor__frame {
   position: absolute;
   top: 42px;
   left: 30px;
   width: 568px;
-  min-height: 386px;
+  min-height: 394px;
   z-index: 3;
   transition: all 0.4s ease;
   opacity: 1;
@@ -477,7 +503,7 @@ input[type=checkbox] {
   justify-content: space-between;
 }
 .product-hor__img {
-  width: inherit;
+  width: 568px;
   border: 1px solid #0F4880;
   border-radius: 12px;
   border-color: transparent;
@@ -499,7 +525,7 @@ input[type=checkbox] {
   box-shadow: 4px -4px 2px 1px rgba(0, 158, 163, 0.2);
   cursor: pointer;
   overflow: hidden;
-  background-color: rgba(74, 74, 74, 0.05);
+  background-color: #F2FFFF;
 }
 .product-hor__tab-content {
   position: relative;
@@ -553,7 +579,7 @@ input[type=checkbox] {
   display: flex;
   align-items: center;
   gap: 8px;
-  align-self: end;
+  justify-content: end;
   padding: 8px;
   cursor: pointer;
 }
@@ -567,7 +593,7 @@ input[type=checkbox] {
 
 .tab-active {
   z-index: 3;
-  background-color: #F2FFFF;
+  background-color: #fff;
 }
 
 .tab-show {
