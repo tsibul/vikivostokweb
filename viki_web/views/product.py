@@ -83,7 +83,8 @@ def create_item_list(goods_item, price_type, price_min, price_max):
         })
     colors = items.values(
         'id',
-        'main_color__hex'
+        'main_color__hex',
+        'main_color__name'
     )
     id_list = list(items.values_list('id', flat=True))
     return item_list, id_list, colors, price_min, price_max
