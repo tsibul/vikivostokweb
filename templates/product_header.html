@@ -72,17 +72,19 @@
             <i class="fa-solid fa-list-check"></i>
         </div>
     </summary>
-    <form class="filter__content">
+    <div class="filter__content">
         <div class="filter__content_data">
             <div>
                 <h3>Цвет</h3>
                 <div class="filter__content_data_color">
                     {% for color in color_group %}
-                        <input type="checkbox" id="{{ color.hex }}" name="color_{{ color.id }}"
+                        <input type="checkbox" id="{{ color.hex }}" name="{{ color.id }}"
                                class="product-header__filter-content_checkbox-hidden"
                                hidden>
                         <label for="{{ color.hex }}" class="color-label">
-                            <div class="square" style="background-color: {{ color.hex }};"></div>
+                            <div class="square tooltip" style="background-color: {{ color.hex }};">
+                                <div class="tooltip-text">{{ color.name }}</div>
+                            </div>
                             <div class="color-label__check"></div>
                         </label>
                     {% endfor %}
@@ -91,7 +93,7 @@
                 <div class="filter__content_data_print">
                     {% for printing in print_types %}
                         <input type="checkbox" id="print_{{ printing.id }}"
-                               name="print_{{ printing.id }}"
+                               data-id="{{ printing.id }}"
                                class="product-header__filter-content_checkbox">
                         <label for="print_{{ printing.id }}">{{ printing.name }}</label>
                     {% endfor %}
@@ -112,19 +114,19 @@
                 <h3>Свойства</h3>
                 <div class="filter__content_data_filter">
                     {% for filter in filter_option %}
-                        <input type="checkbox" id="{{ filter.filter_option__id }}"
-                               name="filter_{{ filter.filter_option__id }}"
+                        <input type="checkbox" id="filter-{{ filter.filter_option__id }}"
+                               data-id="{{ filter.filter_option__id }}"
                                class="filter__content_data_checkbox">
-                        <label for="{{ filter.filter_option__id }}">{{ filter.filter_option__name }}</label>
+                        <label for="filter-{{ filter.filter_option__id }}">{{ filter.filter_option__name }}</label>
                     {% endfor %}
                 </div>
             </div>
         </div>
         <div class="filter__btn-block">
-            <button class="btn btn__save">применить</button>
+            <button class="btn btn__save" data-url="{{ product_group.product_group_url }}">применить</button>
             <button class="btn btn__cancel">сбросить</button>
         </div>
-    </form>
+    </div>
 </details>
 {#</div>#}
 {#<menu class="submenu-products">#}
