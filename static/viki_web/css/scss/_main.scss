@@ -116,6 +116,30 @@ input[type='checkbox'] {
   border-radius: 6px;
 }
 
+.tooltip {
+  position: relative;
+  display: inline-block;
+
+  &:hover .tooltip-text {
+    visibility: visible;
+  }
+}
+
+.tooltip-text {
+  visibility: hidden;
+  font-size: 14px;
+  width: fit-content;
+  background-color: #fff;
+  text-align: center;
+  text-wrap: nowrap;
+  @include brd-standard;
+  padding: 2px 4px;
+  position: absolute;
+  z-index: 11;
+  top: -70%;
+  left: 50%;
+
+}
 
 @media (max-width: 1330px) {
   .container {
