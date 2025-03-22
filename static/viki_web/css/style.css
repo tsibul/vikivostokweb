@@ -620,6 +620,15 @@ input[type=checkbox] {
   gap: 16px;
 }
 
+.btn-multicolor {
+  width: 70%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+
 .strong {
   font-weight: 700;
 }

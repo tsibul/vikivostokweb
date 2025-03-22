@@ -39,6 +39,9 @@
                                          loading="lazy">
                                 </div>
                                 <div class="filter__content_data_color color-padding">
+                                {% if goods.goods_item.multicolor %}
+                                    <button class="btn btn__cancel btn-multicolor">сочетание цветов</button>
+                                {%  else %}
                                     {% for color in goods.colors %}
                                         <input type="checkbox"
                                                id="item-color-{{ item.item.id }}_{{ color.main_color__hex|slice:"1:" }}"
@@ -62,6 +65,8 @@
                                             ></div>
                                         </label>
                                     {% endfor %}
+                                {%  endif %}
+
                                 </div>
                                 <div>
                                     <div class="product-hor__tab-btn-block">
@@ -118,12 +123,7 @@
                                             <div>
                                                 <div>шаблоны:</div>
                                                 {% for layout in goods.print_layout %}
-                                                    <a href="
-
-
-
-
-                                                            {% static 'viki_web_cms/files/layout' %}{{ layout.layout.layout.file.name }}"
+                                                    <a href="{% static 'viki_web_cms/files/layout' %}{{ layout.layout.layout.file.name }}"
                                                        target="_blank">
                                                         <p>{{ layout.name }}</p>
                                                         <i class="fa-regular fa-folder"></i>

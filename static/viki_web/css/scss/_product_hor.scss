@@ -73,11 +73,13 @@
 
   &__tab {
     display: none;
+
     & a {
       display: flex;
       justify-content: end;
       align-items: center;
       gap: 8px;
+
       & * {
         color: $colorSecondary;
       }
@@ -111,13 +113,14 @@
     align-items: center;
     grid-template-columns: 4fr 2fr 1fr 1fr;
     gap: 8px;
-    & *{
+
+    & * {
       font-size: 13px;
     }
   }
 }
 
-.chevron-next{
+.chevron-next {
   background-color: transparent;
   display: flex;
   align-items: center;
@@ -126,11 +129,11 @@
   padding: 8px;
   cursor: pointer;
 
-  &__{
+  &__ {
     color: $colorPrimary;
   }
 
-  &:hover *{
+  &:hover * {
     font-weight: bold;
     transform: scale(1.05);
   }
@@ -164,6 +167,15 @@
   padding: 8px;
   justify-content: center;
   gap: 16px
+}
+
+.btn-multicolor {
+  width: 70%;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
 }
 
 .strong {
