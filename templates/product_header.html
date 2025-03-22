@@ -78,10 +78,13 @@
                 <h3>Цвет</h3>
                 <div class="filter__content_data_color">
                     {% for color in color_group %}
-                        <input type="checkbox" id="{{ color.hex }}" name="{{ color.id }}"
+                        <input type="checkbox" id="{{ color.hex }}"
+                               name="{{ color.id }}"
                                class="product-header__filter-content_checkbox-hidden"
+                               data-id="{{ color.id }}"
                                hidden>
-                        <label for="{{ color.hex }}" class="color-label">
+                        <label for="{{ color.hex }}"
+                               class="color-label">
                             <div class="square tooltip" style="background-color: {{ color.hex }};">
                                 <div class="tooltip-text">{{ color.name }}</div>
                             </div>

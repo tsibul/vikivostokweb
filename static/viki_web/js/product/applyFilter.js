@@ -12,6 +12,12 @@ export async function applyFilter(e) {
         return acc;
     }, {});
 
+    const allItems = document.querySelectorAll('.product-hor__frame');
+    const itemIds = [...allItems].reduce((acc, item) => {
+        acc[item.getAttribute('data-id')] = item;
+        return acc;
+    }, {});
+
     let filterIdList, printIdList, colorIdList, priceIdList;
     const filterDetails = document.querySelector(`.filter`);
     const filterInputs = checkedFilter(
@@ -36,7 +42,7 @@ export async function applyFilter(e) {
     );
     if (colorInputs.length > 0) {
         colorIdList =
-            await goodsFilterList(inputsDataId(colorInputs), Object.keys(goodsIds), postUrl, 'color')
+            await goodsFilterList(inputsDataId(colorInputs), Object.keys(itemIds), postUrl, 'color')
     }
     const priceInput = filterDetails.querySelector(`.filter .input-range`);
     if (priceInput.value <= priceInput.max - 0.1) {
@@ -44,32 +50,61 @@ export async function applyFilter(e) {
             await priceFilterList(priceInput.value, Object.keys(goodsIds), postUrl, 'price')
     }
 
-    combineFilters(filterIdList, printIdList, colorIdList, priceIdList, goodsIds, allGoods);
+    combineFilters(filterIdList, printIdList, colorIdList, priceIdList, goodsIds, allGoods, itemIds, allItems);
     document.querySelector('.filter').removeAttribute('open')
 }
 
-function combineFilters(filterIdList, printIdList, colorIdList, priceIdList, goodsIds, allGoods) {
-    let filterTemp, printTemp = null;
+function combineFilters(filterIdList, printIdList, colorIdList, priceIdList, goodsIds, allGoods, itemIds, allItems) {
+
+    let filterTemp, printTemp, colorTemp, colorItemTemp
+    const filteredGoods = [];
+    const filteredItems = []
     filterIdList ? filterTemp = filterIdList : filterTemp = Object.keys(goodsIds);
-    printIdList ? printTemp = printIdList : printTemp = Object.keys(goodsIds);
-    // if (filterIdList && printIdList) {
-    //     const filterSet = new Set(filterIdList);
-    //     goodsIdList = printIdList.filter(item => filterSet.has(item));
-    // } else if (filterIdList) {
-    //     goodsIdList = filterIdList;
-    // } else if (printIdList) {
-    //     goodsIdList = printIdList;
-    // }
-    // if (goodsIdList) {
-        [...allGoods].forEach(goods => {
-            goods.removeAttribute('style');
-        });
-        Object.keys(goodsIds).forEach(goodsKey => {
-            if (!filterTemp.includes(goodsKey) || !printTemp.includes(goodsKey)) {
-                goodsIds[goodsKey].setAttribute('style', 'display:none');
+    printTemp = printIdList ? printIdList : Object.keys(goodsIds);
+    colorTemp = colorIdList ? colorIdList['goods'] : Object.keys(goodsIds);
+    colorItemTemp = colorIdList && colorIdList['item'] ? colorIdList['item'] : Object.keys(goodsIds);
+    Object.keys(goodsIds).forEach(goodsKey => {
+        if (!filterTemp.includes(goodsKey) ||
+            !printTemp.includes(goodsKey) ||
+            !colorTemp.includes(goodsKey)
+        ) {
+            goodsIds[goodsKey].setAttribute('style', 'display:none');
+        } else {
+            goodsIds[goodsKey].removeAttribute('style');
+            filteredGoods.push(goodsIds[goodsKey]);
+        }
+    });
+    if (colorIdList) {
+        Object.keys(itemIds).forEach(itemKey => {
+            if (!colorItemTemp.includes(itemKey)) {
+                itemIds[itemKey].setAttribute('style', 'display:none');
+            } else {
+                itemIds[itemKey].removeAttribute('style');
+                filteredItems.push(itemIds[itemKey]);
             }
         });
-    // }
+        const allColors = document.querySelectorAll(`.products .color-label`);
+        [...allColors].forEach(colorLabel => {
+            colorLabel.removeAttribute('style');
+            if (!colorItemTemp.includes(colorLabel.dataset.itemId)) {
+                colorLabel.setAttribute('style', 'display:none');
+            }
+        });
+        filteredGoods.forEach(good => {
+            const insideItems = good.querySelectorAll(`.product-hor__frame`);
+            const filterInsideItems = [...insideItems].filter(insideItem => filteredItems.includes(insideItem));
+            const insideIdList = [...filterInsideItems].map(item => parseInt(item.dataset.id));
+            [...filterInsideItems].forEach((item, index) => {
+                item.querySelector(`.chevron-next`).dataset.list = JSON.stringify(insideIdList);
+                if (index === 0) {
+                    item.classList.remove('item-hidden', 'item-opaque');
+                } else {
+                    item.classList.add('item-hidden', 'item-opaque');
+                }
+            });
+        })
+    }
+
 }
 
 function checkedFilter(inputs) {
@@ -97,6 +132,7 @@ async function goodsFilterList(filterInputs, goodsIds, postUrl, filterType) {
 }
 
 async function priceFilterList(priceLimit, goodsIds, postUrl) {
+    const itemFrame = document.querySelectorAll('.product-hor__frame');
 
 }
 

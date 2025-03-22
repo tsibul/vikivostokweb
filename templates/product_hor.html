@@ -22,12 +22,13 @@
                             <div class="product-hor__frame
                                 {% if goods.id_random != item.item.id %} item-hidden item-opaque{% endif %}"
                                  data-id="{{ item.item.id }}"
-                                 data-price="{{ item.item.price }}">
+                                 data-price="{{ item.item.price }}"
+                            >
                                 <div>
                                     <div class="chevron-next"
                                          data-id="{{ item.item.id }}"
                                          data-list="{{ goods.item_id }}"
-                                         data-listInitial="{{ goods.item.id }}"
+                                         data-list-initial="{{ goods.item_id }}"
                                     >
                                         <div>следующий</div>
                                         <i class="fa-solid fa-angles-right"></i>
@@ -118,6 +119,7 @@
                                                 <div>шаблоны:</div>
                                                 {% for layout in goods.print_layout %}
                                                     <a href="
+
 
 
 
