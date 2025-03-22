@@ -3,7 +3,7 @@
 export function changeDetailTab(e) {
     const tabs = e.target.closest('.tab-btn-block');
     const tabContent = tabs.closest('.product-frame')
-        .querySelector('.product-hor__tab-content');
+        .querySelector('.tab-content');
     const contents = tabContent.querySelectorAll('.product-hor__tab');
     const newContent = [...contents].find( content => content.dataset.id === e.target.dataset.id);
     const tabBtn = tabs.querySelectorAll('.product-hor__tab-btn');
