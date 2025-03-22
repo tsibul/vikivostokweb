@@ -380,6 +380,7 @@ input[type=checkbox] {
   justify-content: end;
 }
 .filter__summary_title {
+  position: relative;
   display: flex;
   gap: 16px;
   justify-content: end;
@@ -387,7 +388,7 @@ input[type=checkbox] {
   border: 1px solid #0F4880;
   border-radius: 12px;
   border-color: transparent;
-  padding: 4px 10px;
+  padding: 4px 24px 4px 10px;
   background-color: rgba(0, 158, 163, 0.5);
 }
 .filter__content {
@@ -469,6 +470,19 @@ input[type=checkbox] {
   height: 32px;
   width: 32px;
   background-color: transparent;
+}
+
+.filter-badge {
+  position: absolute;
+  font-size: 13px;
+  right: 0;
+  top: 0;
+  background-color: #0F4880;
+  padding: 2px 6px;
+  border: 1px solid #0F4880;
+  border-radius: 8px;
+  display: none;
+  color: #F2FFFF;
 }
 
 .products {

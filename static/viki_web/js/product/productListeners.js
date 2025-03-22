@@ -6,6 +6,7 @@ import {selectNext} from "./selectNext.js";
 import {moveRange} from "./moveRange.js";
 import {clearFilter} from "./clearFilter.js";
 import {applyFilter} from "./applyFilter.js";
+import {filterBadge} from "./filterBadge.js";
 
 export async function productListeners() {
 
@@ -17,6 +18,7 @@ export async function productListeners() {
     const priceRange = document.querySelector('.filter .input-range');
     const filterSubmit = document.querySelector('.filter .btn__save');
     const filterCancel = document.querySelector('.filter .btn__cancel');
+    const filterChecks = document.querySelectorAll(`.filter input[type='checkbox']`);
 
     colorInputs.forEach(colorInput => {
         colorInput.addEventListener('change', (e) => {
@@ -40,8 +42,16 @@ export async function productListeners() {
     });
 
     priceRange.addEventListener('input', moveRange);
+    priceRange.addEventListener('input', e => {
+        filterBadge(filterChecks, priceRange);
+    });
 
     filterCancel.addEventListener('click', clearFilter);
 
     filterSubmit.addEventListener('click', await applyFilter);
+
+    filterChecks.forEach(check => {
+        check.addEventListener('change', e => {
+        filterBadge(filterChecks, priceRange);
+    });});
 }

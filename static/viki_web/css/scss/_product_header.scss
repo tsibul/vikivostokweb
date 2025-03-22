@@ -79,13 +79,14 @@
     justify-content: end;
 
     &_title {
+      position: relative;
       display: flex;
       gap: 16px;
       justify-content: end;
       align-items: center;
       @include brd-standard;
       border-color: transparent;
-      padding:  4px 10px;
+      padding:  4px 24px 4px 10px;
       background-color: rgba($colorSecondary, 0.5)
     }
   }
@@ -179,4 +180,17 @@
     width: 32px;
     background-color: transparent;
   }
+}
+
+.filter-badge{
+  position: absolute;
+  font-size: 13px;
+  right: 0;
+  top: 0;
+  background-color: $colorPrimary;
+  padding: 2px 6px;
+  border: 1px solid $colorPrimary;
+  border-radius: 8px;
+  display: none;
+  color: $colorSecondary50;
 }

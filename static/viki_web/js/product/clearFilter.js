@@ -43,5 +43,7 @@ export function clearFilter(e) {
         item.removeAttribute('style')
     });
 
-
+    const filterBadge = document.querySelector(`.filter-badge`);
+    filterBadge.removeAttribute('style');
+    filterBadge.textContent = '';
 }
