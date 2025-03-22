@@ -3,7 +3,7 @@
 
 export function changeFrameItem(colorLabel, currentItem, newItemId) {
     currentItem.querySelector(`#${colorLabel.htmlFor}`).checked = false;
-    const newItem = colorLabel.closest('.product-hor').querySelector(`div[data-id="${newItemId}"]`);
+    const newItem = colorLabel.closest('.product').querySelector(`div[data-id="${newItemId}"]`);
     const img = newItem.querySelector('img');
     if (img.complete) {
         newItem.classList.remove('item-hidden');

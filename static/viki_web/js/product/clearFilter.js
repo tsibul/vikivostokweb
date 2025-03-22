@@ -17,7 +17,7 @@ export function clearFilter(e) {
     priceRange.value = priceRange.max;
     priceRangeValue.textContent = 'до ' + priceRange.max;
     filterDetails.removeAttribute('open')
-    const allGoods = document.querySelectorAll('.product-hor');
+    const allGoods = document.querySelectorAll('.product');
     [...allGoods].forEach(goods => {
         goods.removeAttribute('style')
         const insideItems = goods.querySelectorAll('.product-frame');

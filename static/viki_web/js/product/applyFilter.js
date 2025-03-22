@@ -4,7 +4,7 @@ export async function applyFilter(e) {
     e.preventDefault()
     const postUrl = `./${e.target.dataset.url}`;
 
-    const allGoods = document.querySelectorAll('.product-hor');
+    const allGoods = document.querySelectorAll('.product');
     const goodsIds = [...allGoods].reduce((acc, item) => {
         acc[item.getAttribute('data-id')] = item;
         return acc;
