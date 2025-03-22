@@ -4,9 +4,9 @@ export function changeDetailTab(e) {
     const tabs = e.target.closest('.tab-btn-block');
     const tabContent = tabs.closest('.product-frame')
         .querySelector('.tab-content');
-    const contents = tabContent.querySelectorAll('.product-hor__tab');
+    const contents = tabContent.querySelectorAll('.tab');
     const newContent = [...contents].find( content => content.dataset.id === e.target.dataset.id);
-    const tabBtn = tabs.querySelectorAll('.product-hor__tab-btn');
+    const tabBtn = tabs.querySelectorAll('.tab-btn');
     tabBtn.forEach(btn => {
         btn.classList.remove('tab-active');
     });
