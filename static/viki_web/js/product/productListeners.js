@@ -13,8 +13,8 @@ export async function productListeners() {
     const colorInputs = document.querySelectorAll('.filter .product-header__filter-content_checkbox-hidden');
     const productColorLabels = document
         .querySelectorAll('.products label.color-label');
-    const detailTabButtons = document.querySelectorAll('.product-hor__tab-btn');
-    const chevronNext = document.querySelectorAll('.chevron-next');
+    const detailTabButtons = document.querySelectorAll('.tab-btn');
+    const chevronNext = document.querySelectorAll('.chev-next');
     const priceRange = document.querySelector('.filter .input-range');
     const filterSubmit = document.querySelector('.filter .btn__save');
     const filterCancel = document.querySelector('.filter .btn__cancel');
