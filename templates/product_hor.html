@@ -18,7 +18,7 @@
                              data-id="{{ goods.goods_item.id }}">
                         <h3>{{ goods.goods_item.name }}</h3>
                         {% for item in goods.item_list %}
-                            <div class="product-hor__frame
+                            <div class="product-hor__frame product-frame
                                 {% if goods.id_random != item.item.id %} item-hidden item-opaque{% endif %}"
                                  data-id="{{ item.item.id }}"
                                  data-goods="{{ goods.goods_item.id }}"

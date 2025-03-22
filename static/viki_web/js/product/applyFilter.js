@@ -10,7 +10,7 @@ export async function applyFilter(e) {
         return acc;
     }, {});
 
-    const allItems = document.querySelectorAll('.product-hor__frame');
+    const allItems = document.querySelectorAll('.product-frame');
     const itemIds = [...allItems].reduce((acc, item) => {
         acc[item.getAttribute('data-id')] = item;
         return acc;
@@ -98,11 +98,11 @@ function combineFilters(filterIdList, printIdList, colorIdList, priceIdList, goo
             }
         });
         filteredGoods.forEach(good => {
-            const insideItems = good.querySelectorAll(`.product-hor__frame`);
+            const insideItems = good.querySelectorAll(`.product-frame`);
             const filterInsideItems = [...insideItems].filter(insideItem => filteredItems.includes(insideItem));
             const insideIdList = [...filterInsideItems].map(item => parseInt(item.dataset.id));
             [...filterInsideItems].forEach((item, index) => {
-                item.querySelector(`.chevron-next`).dataset.list = JSON.stringify(insideIdList);
+                item.querySelector(`.chev-next`).dataset.list = JSON.stringify(insideIdList);
                 if (index === 0) {
                     item.classList.remove('item-hidden', 'item-opaque');
                 } else {

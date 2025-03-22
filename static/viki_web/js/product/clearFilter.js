@@ -20,12 +20,12 @@ export function clearFilter(e) {
     const allGoods = document.querySelectorAll('.product-hor');
     [...allGoods].forEach(goods => {
         goods.removeAttribute('style')
-        const insideItems = goods.querySelectorAll('.product-hor__frame');
+        const insideItems = goods.querySelectorAll('.product-frame');
         const rndId = Math.round(Math.random() * (insideItems.length - 1));
         [...insideItems].forEach((item, index) => {
             item.removeAttribute('style');
-            item.querySelector(`.chevron-next`).dataset.list =
-                item.querySelector(`.chevron-next`).dataset.listInitial;
+            item.querySelector(`.chev-next`).dataset.list =
+                item.querySelector(`.chev-next`).dataset.listInitial;
             if (insideItems.length > 1) {
                 if (index === rndId) {
                     item.classList.remove('item-hidden', 'item-opaque');
