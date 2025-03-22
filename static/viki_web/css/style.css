@@ -485,6 +485,122 @@ input[type=checkbox] {
   color: #F2FFFF;
 }
 
+.product-sqr {
+  border: 1px solid #0F4880;
+  border-radius: 12px;
+  width: 620px;
+  min-height: 448px;
+  padding: 32px;
+  margin: 8px 0;
+  position: relative;
+  background-color: #fff;
+}
+.product-sqr__frame {
+  position: absolute;
+  top: 42px;
+  left: 30px;
+  width: 568px;
+  min-height: 394px;
+  z-index: 3;
+  transition: all 0.4s ease;
+  opacity: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.product-sqr__img {
+  width: 568px;
+  border: 1px solid #0F4880;
+  border-radius: 12px;
+  border-color: transparent;
+  overflow: hidden;
+}
+.product-sqr__tab-btn-block {
+  margin-top: 8px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+}
+.product-sqr__tab-btn {
+  padding: 8px 8px 4px 8px;
+  border: 1px solid;
+  border-radius: 8px 8px 0 0;
+  border-color: rgba(0, 158, 163, 0.2) rgba(0, 158, 163, 0.1) transparent rgba(0, 158, 163, 0.2);
+  z-index: 1;
+  box-shadow: 4px -4px 2px 1px rgba(0, 158, 163, 0.2);
+  cursor: pointer;
+  overflow: hidden;
+  background-color: #F2FFFF;
+}
+.product-sqr__tab-content {
+  position: relative;
+  border: 1px solid rgba(0, 158, 163, 0.2);
+  border-radius: 0 12px 12px 12px;
+  height: 100px;
+  margin: -1px 0 10px 0;
+  box-shadow: 4px -4px 8px 4px rgba(0, 158, 163, 0.2);
+  overflow: auto;
+  z-index: 2;
+}
+.product-sqr__tab {
+  display: none;
+}
+.product-sqr__tab a {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  gap: 8px;
+}
+.product-sqr__tab a * {
+  color: #009EA3;
+}
+.product-sqr__tab-main_title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.product-sqr__tab-print_data {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 3fr 2fr 1fr 1fr 2fr;
+  padding: 4px 0;
+}
+.product-sqr__tab-print_data * {
+  font-size: 13px;
+}
+.product-sqr__tab-pack {
+  padding: 2px 10px;
+  display: grid;
+  align-items: center;
+  grid-template-columns: 4fr 2fr 1fr 1fr;
+  gap: 8px;
+}
+.product-sqr__tab-pack * {
+  font-size: 13px;
+}
+
+.btn-sqr {
+  width: 160px;
+  padding: 8px;
+  justify-content: center;
+  gap: 16px;
+}
+
+.chevron-sqr-next {
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: end;
+  padding: 8px;
+  cursor: pointer;
+}
+.chevron-sqr-next:hover * {
+  font-weight: bold;
+  transform: scale(1.05);
+}
+
 .products {
   margin-top: 16px;
   display: flex;
