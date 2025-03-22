@@ -15,14 +15,18 @@
             <div class="products">
                 {% for goods in goods_list %}
                     <section class="product product-hor"
-                             data-id="{{ goods.goods_item.id }}"
-                             data-price="{{ goods.price }}">
+                             data-id="{{ goods.goods_item.id }}">
                         <h3>{{ goods.goods_item.name }}</h3>
                         {% for item in goods.item_list %}
                             <div class="product-hor__frame
                                 {% if goods.id_random != item.item.id %} item-hidden item-opaque{% endif %}"
                                  data-id="{{ item.item.id }}"
-                                 data-price="{{ item.item.price }}"
+                                 data-goods="{{ goods.goods_item.id }}"
+                                 data-price="{% if item.price %}
+                                               {{ item.price }}
+                                             {% else %}
+                                               {{ goods.price }}
+                                             {% endif %}"
                             >
                                 <div>
                                     <div class="chevron-next"
@@ -39,33 +43,33 @@
                                          loading="lazy">
                                 </div>
                                 <div class="filter__content_data_color color-padding">
-                                {% if goods.goods_item.multicolor %}
-                                    <button class="btn btn__cancel btn-multicolor">сочетание цветов</button>
-                                {%  else %}
-                                    {% for color in goods.colors %}
-                                        <input type="checkbox"
-                                               id="item-color-{{ item.item.id }}_{{ color.main_color__hex|slice:"1:" }}"
-                                               name="{{ color.name }}"
-                                               class="product-header__filter-content_checkbox-hidden"
-                                               data-id="{{ item.item.id }}"
-                                                {% if  item.item.id == color.id %} checked {% endif %}
-                                               hidden>
-                                        <label for="item-color-{{ item.item.id }}_{{ color.main_color__hex|slice:"1:" }}"
-                                               class="color-label"
-                                               data-item-id="{{ color.id }}"
-                                               data-hex="{{ color.main_color__hex|slice:"1:" }}"
-                                        >
-                                            <div class="square tooltip"
-                                                 style="background-color: {{ color.main_color__hex }};">
-                                                <div class="tooltip-text">{{ color.main_color__name }}</div>
-                                            </div>
-                                            <div class="color-label__check"
-                                                    {% if item.item.id == color.id %}
-                                                 style="display:block;"  {% endif %}
-                                            ></div>
-                                        </label>
-                                    {% endfor %}
-                                {%  endif %}
+                                    {% if goods.goods_item.multicolor %}
+                                        <button class="btn btn__cancel btn-multicolor">сочетание цветов</button>
+                                    {% else %}
+                                        {% for color in goods.colors %}
+                                            <input type="checkbox"
+                                                   id="item-color-{{ item.item.id }}_{{ color.main_color__hex|slice:"1:" }}"
+                                                   name="{{ color.name }}"
+                                                   class="product-header__filter-content_checkbox-hidden"
+                                                   data-id="{{ item.item.id }}"
+                                                    {% if  item.item.id == color.id %} checked {% endif %}
+                                                   hidden>
+                                            <label for="item-color-{{ item.item.id }}_{{ color.main_color__hex|slice:"1:" }}"
+                                                   class="color-label"
+                                                   data-item-id="{{ color.id }}"
+                                                   data-hex="{{ color.main_color__hex|slice:"1:" }}"
+                                            >
+                                                <div class="square tooltip"
+                                                     style="background-color: {{ color.main_color__hex }};">
+                                                    <div class="tooltip-text">{{ color.main_color__name }}</div>
+                                                </div>
+                                                <div class="color-label__check"
+                                                        {% if item.item.id == color.id %}
+                                                     style="display:block;"  {% endif %}
+                                                ></div>
+                                            </label>
+                                        {% endfor %}
+                                    {% endif %}
 
                                 </div>
                                 <div>
@@ -123,7 +127,12 @@
                                             <div>
                                                 <div>шаблоны:</div>
                                                 {% for layout in goods.print_layout %}
-                                                    <a href="{% static 'viki_web_cms/files/layout' %}{{ layout.layout.layout.file.name }}"
+                                                    <a href="
+
+
+
+
+                                                            {% static 'viki_web_cms/files/layout' %}{{ layout.layout.layout.file.name }}"
                                                        target="_blank">
                                                         <p>{{ layout.name }}</p>
                                                         <i class="fa-regular fa-folder"></i>
