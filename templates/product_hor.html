@@ -44,7 +44,31 @@
                                 </div>
                                 <div class="filter__content_data_color color-padding">
                                     {% if goods.goods_item.multicolor %}
-                                        <button class="btn btn__cancel btn-multicolor">сочетание цветов</button>
+                                        <button class="btn btn__cancel btn-multicolor">варианты сочетаний элементов - {{ goods.item_list|length }}</button>
+                                        {% for color in goods.colors %}
+                                            <input type="checkbox"
+                                                   id="item-color-{{ item.item.id }}_{{ color.main_color__hex|slice:"1:" }}"
+                                                   name="{{ color.name }}"
+                                                   class="product-header__filter-content_checkbox-hidden"
+                                                   data-id="{{ item.item.id }}"
+                                                    {% if  item.item.id == color.id %} checked {% endif %}
+                                                   hidden>
+                                            <label hidden
+                                                   for="item-color-{{ item.item.id }}_{{ color.main_color__hex|slice:"1:" }}"
+                                                   class="color-label"
+                                                   data-item-id="{{ color.id }}"
+                                                   data-hex="{{ color.main_color__hex|slice:"1:" }}"
+                                            >
+                                                <div class="square tooltip"
+                                                     style="background-color: {{ color.main_color__hex }};">
+                                                    <div class="tooltip-text">{{ color.main_color__name }}</div>
+                                                </div>
+                                                <div class="color-label__check"
+                                                        {% if item.item.id == color.id %}
+                                                     style="display:block;"  {% endif %}
+                                                ></div>
+                                            </label>
+                                        {% endfor %}
                                     {% else %}
                                         {% for color in goods.colors %}
                                             <input type="checkbox"
@@ -88,7 +112,7 @@
                                         </button>
                                         <button class="product-hor__tab-btn tab-btn"
                                                 type="button" data-id="print-{{ item.item.id }}">
-                                            брендирование
+                                            печать
                                         </button>
                                         <button class="product-hor__tab-btn tab-btn"
                                                 type="button" data-id="pack-{{ item.item.id }}">
@@ -127,7 +151,10 @@
                                             <div>
                                                 <div>шаблоны:</div>
                                                 {% for layout in goods.print_layout %}
-                                                    <a href="{% static 'viki_web_cms/files/layout' %}{{ layout.layout.layout.file.name }}"
+                                                    <a href="
+
+
+                                                            {% static 'viki_web_cms/files/layout' %}{{ layout.layout.layout.file.name }}"
                                                        target="_blank">
                                                         <p>{{ layout.name }}</p>
                                                         <i class="fa-regular fa-folder"></i>
