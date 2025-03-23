@@ -220,6 +220,7 @@ input[type=checkbox] {
   border-radius: 12px;
   background-color: #F2FFFF;
   width: 220px;
+  padding: 8px 0;
 }
 .catalogue__item li {
   padding: 8px;
@@ -601,7 +602,7 @@ input[type=checkbox] {
 }
 .btn-sqr__block {
   display: grid;
-  grid-template-columns: 3fr 2fr;
+  grid-template-columns: 1fr 2fr;
   padding-bottom: 16px;
 }
 
