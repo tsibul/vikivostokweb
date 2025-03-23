@@ -73,6 +73,10 @@
 
   &__tab {
     display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    padding: 12px 10px;
 
     & a {
       display: flex;
@@ -146,10 +150,10 @@
 
 .tab-show {
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-  padding: 12px 10px;
+  //flex-direction: column;
+  //justify-content: space-between;
+  //height: 100%;
+  //padding: 12px 10px;
 }
 
 .item-hidden {
@@ -170,7 +174,7 @@
 }
 
 .btn-multicolor {
-  width: 70%;
+  width: 100%;
   margin: 0 auto;
   display: flex;
   align-items: center;

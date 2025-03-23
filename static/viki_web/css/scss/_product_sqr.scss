@@ -4,7 +4,7 @@
 .product-sqr {
   @include brd-standard;
   width: 620px;
-  min-height: 448px;
+  height: 470px;
   padding: 32px;
   margin: 8px 0;
   position: relative;
@@ -12,58 +12,66 @@
 
   &__frame {
     position: absolute;
-    top: 42px;
-    left: 30px;
-    width: 568px;
-    min-height: 394px;
+    top: 54px;
+    left: 10px;
+    height: 410px;
     z-index: 3;
     transition: all 0.4s ease;
     opacity: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 260px 320px;
+    gap: 10px;
   }
 
   &__img {
-    width: 568px;
+    height: 279px;
     @include brd-standard;
     border-color: transparent;
     overflow: hidden;
+    cursor: pointer;
+  }
+
+  &__info {
+    display: flex;
   }
 
   &__tab-btn-block {
-    margin-top: 8px;
     display: flex;
-    justify-content: flex-start;
-    align-items: center;
     gap: 8px;
+    flex-direction: column;
+    justify-content: flex-start;
   }
 
   &__tab-btn {
+    border-color: rgba($colorSecondary, 0.2) transparent rgba($colorSecondary, 0.1) rgba($colorSecondary, 0.2);
     padding: 8px 8px 4px 8px;
     border: 1px solid;
-    border-radius: 8px 8px 0 0;
-    border-color: rgba($colorSecondary, 0.2) rgba($colorSecondary, 0.1) transparent rgba($colorSecondary, 0.2);
+    border-radius: 8px 0 0 8px;
+    border-color: rgba(0, 158, 163, 0.2) transparent rgba(0, 158, 163, 0.1) rgba(0, 158, 163, 0.2);
     z-index: 1;
-    box-shadow: 4px -4px 2px 1px rgba($colorSecondary, 0.2);
+    box-shadow: -2px 4px 4px 1px rgba(0, 158, 163, 0.2);
     cursor: pointer;
-    overflow: hidden;
-    background-color: $colorSecondary50;
+    background-color: #F2FFFF;
   }
 
   &__tab-content {
     position: relative;
-    border: 1px solid rgba($colorSecondary, 0.2);
+    border: 1px solid rgba(0, 158, 163, 0.2);
     border-radius: 0 12px 12px 12px;
-    height: 100px;
-    margin: -1px 0 10px 0;
-    box-shadow: 4px -4px 8px 4px rgba($colorSecondary, 0.2);
-    overflow: auto;
+    margin: 0 0 0 -2px;
+    box-shadow: -2px 4px 4px 2px rgba(0, 158, 163, 0.2);
     z-index: 2;
+    width: 100%;
+    //overflow: auto;
   }
 
   &__tab {
     display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    padding: 12px 10px;
+
 
     & a {
       display: flex;
@@ -74,57 +82,72 @@
       & * {
         color: $colorSecondary;
       }
+
+      &_text {
+        word-wrap: normal;
+        hyphens: auto;
+      }
+    }
+
+    &_print-data {
+      display: none;
+      justify-content: flex-start;
+      //padding: 4px 0;
+      flex-direction: column;
+      gap: 12px;
+      padding: 8px 16px 2px 8px;
     }
   }
 
   &__tab-main {
     &_title {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 8px;
       justify-content: space-between;
     }
   }
 
   &__tab-print {
-    &_data {
-      display: grid;
-      gap: 8px;
-      grid-template-columns: 3fr 2fr 1fr 1fr 2fr;
-      padding: 4px 0;
+    &_content {
+      display: flex;
+      justify-content: space-between;
 
       & * {
         font-size: 13px;
       }
+
+    }
+
+    &_value {
+      text-align: end;
     }
   }
 
-  &__tab-pack {
-    padding: 2px 10px;
-    display: grid;
-    align-items: center;
-    grid-template-columns: 4fr 2fr 1fr 1fr;
-    gap: 8px;
-
-    & * {
-      font-size: 13px;
-    }
-  }
 }
 
 .btn-sqr {
-  width: 160px;
+  //width: 160px;
   padding: 8px;
   justify-content: center;
-  gap: 16px
+  gap: 8px;
+  align-self: end;
+  &__block{
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    padding-bottom: 16px;
+  }
 }
 
 .chevron-sqr-next {
+  width: 260px;
   background-color: transparent;
   display: flex;
   align-items: center;
   gap: 8px;
   justify-content: end;
-  padding: 8px;
+  //padding:  0 8px;
   cursor: pointer;
 
   &:hover * {
