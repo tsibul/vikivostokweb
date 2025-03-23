@@ -73,7 +73,7 @@ def create_item_list(goods_item, price_type, price_min, price_max):
             for description in article_description:
                 color = item_colors.get(color_position=description.position).color
                 color_description += (description.parts_description.name.upper() + ': ' +
-                                      color.name + '(' + color.pantone + ') ')
+                                      color.name + ' (' + color.pantone + ') ')
         price = item_price(item, price_type)
         price_min, price_max = price_min_max(price_min, price_max, price)
         item_list.append({
