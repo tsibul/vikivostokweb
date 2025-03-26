@@ -1,4 +1,5 @@
 import datetime
+import json
 import random
 
 from django.db.models import Q
@@ -6,7 +7,7 @@ from django.shortcuts import render
 
 from viki_web_cms.models import ProductGroup, Goods, CatalogueItem, ColorGroup, FilterToGoodsGroup, GoodsGroup, \
     PrintType, GoodsDescription, ArticleDescription, CatalogueItemColor, PrintOpportunity, GoodsLayout, GoodsDimensions, \
-    Packing, PriceGoodsStandard, StandardPriceType, PriceItemStandard
+    Packing, PriceGoodsStandard, StandardPriceType, PriceItemStandard, Color, GoodsOption
 
 
 def product(request, product_group_url):
@@ -29,13 +30,15 @@ def product(request, product_group_url):
         price_min, price_max = price_min_max(price_min, price_max, price)
         item_list, id_list, colors, price_min, price_max = (
             create_item_list(goods_item, price_type, price_min, price_max))
+        article_set = create_article_set(goods_item)
 
         if len(id_list) > 1:
-            id_random = id_list[round(random.random()*(len(id_list)) - 1) ]
+            id_random = id_list[round(random.random() * (len(id_list)) - 1)]
         else:
             id_random = id_list[0]
         goods_list.append({
             'goods_item': goods_item,
+            'article_set': article_set,
             'item_list': item_list,
             'item_id': id_list,
             'colors': colors,
@@ -47,6 +50,7 @@ def product(request, product_group_url):
             'packing': packing,
             'price': price,
         })
+    goods_list.sort(key=lambda x: x['price'])
     context = {
         'product_groups': product_groups,
         'product_group': product_group,
@@ -61,6 +65,7 @@ def product(request, product_group_url):
         return render(request, 'product_hor.html', context)
     else:
         return render(request, 'product_sqr.html', context)
+
 
 def create_item_list(goods_item, price_type, price_min, price_max):
     items = CatalogueItem.objects.filter(goods=goods_item, deleted=False)
@@ -89,6 +94,7 @@ def create_item_list(goods_item, price_type, price_min, price_max):
     id_list = list(items.values_list('id', flat=True))
     return item_list, id_list, colors, price_min, price_max
 
+
 def create_print_data(goods_item):
     print_opportunity = PrintOpportunity.objects.filter(deleted=False, goods=goods_item)
     print_data = []
@@ -106,6 +112,7 @@ def create_print_data(goods_item):
     print_layout = list(GoodsLayout.objects.filter(goods=goods_item, deleted=False))
     return print_data, print_layout
 
+
 def product_options(goods_group):
     print_types = PrintType.objects.filter(deleted=False).values(
         'id',
@@ -122,7 +129,8 @@ def product_options(goods_group):
     )
     return print_types, color_group, filter_option
 
-def goods_data (goods_item):
+
+def goods_data(goods_item):
     dimensions = GoodsDimensions.objects.filter(deleted=False, goods=goods_item).first()
     description = GoodsDescription.objects.filter(
         goods=goods_item, deleted=False).first()
@@ -135,6 +143,7 @@ def goods_data (goods_item):
     )
     return dimensions, goods_description, packing
 
+
 def find_price_type(request):
     user_price_type = StandardPriceType.objects.filter(deleted=False).order_by('-priority')
     if request.user.is_authenticated:
@@ -145,6 +154,7 @@ def find_price_type(request):
     else:
         price_type = user_price_type.last()
     return price_type
+
 
 def goods_price(goods_item, price_type):
     if goods_item.standard_price:
@@ -165,6 +175,7 @@ def goods_price(goods_item, price_type):
         price = 'по запросу'
     return price
 
+
 def item_price(item, price_type):
     price_obj = PriceItemStandard.objects.filter(
         Q(deleted=False) &
@@ -181,6 +192,7 @@ def item_price(item, price_type):
     price = price_obj.price if price_obj else None
     return price
 
+
 def price_min_max(price_min, price_max, price):
     if not isinstance(price, str) and price is not None:
         if price < price_min:
@@ -189,3 +201,50 @@ def price_min_max(price_min, price_max, price):
             price_max = price
     return price_min, price_max
 
+
+def create_article_set(goods_item):
+    article_set = None
+    if goods_item.multicolor:
+        main_colors = Color.objects.filter(
+            color_scheme=goods_item.color_scheme,
+            deleted=False,
+            standard=True
+        ).values(
+            'hex',
+            'name',
+            'code',
+        )
+        article_description = list(ArticleDescription.objects.filter(
+            deleted=False,
+            goods=goods_item,
+        ).order_by(
+            'position').values(
+            'position',
+            'parts_description__name',
+        ))
+        article_length = len(article_description)
+        if goods_item.goods_option_group:
+            options = list(GoodsOption.objects.filter(
+                option_group=goods_item.goods_option_group,
+                deleted=False
+            ).values(
+                'name',
+                'option_article'
+            ))
+            article_description.append({'option': list(options)})
+        if goods_item.additional_material:
+            additional_colors = Color.objects.filter(
+                color_scheme=goods_item.additional_color_scheme,
+                deleted=False
+            ).values(
+                'hex',
+                'name',
+                'code',
+            )
+            article_description[article_length - 1]['color'] = list(additional_colors)
+            article_length = article_length - 1
+        while article_length > 0:
+            article_description[article_length - 1]['color'] = list(main_colors)
+            article_length = article_length - 1
+        article_set = str(json.dumps(article_description))
+    return article_set
