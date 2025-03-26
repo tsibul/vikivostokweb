@@ -15,13 +15,20 @@
             <div class="products">
                 {% for goods in goods_list %}
                     <section class="product product-hor"
-                             data-id="{{ goods.goods_item.id }}">
+                             data-id="{{ goods.goods_item.id }}"
+                             data-goods-article="{{ goods.goods_item.article }}"
+                             data-article-length="{{ goods.goods_item.details_number }}"
+                            {% if goods.goods_item.multicolor %}
+                             data-article-set="{{ goods.article_set }}"
+                            {% endif %}
+                    >
                         <h3>{{ goods.goods_item.name }}</h3>
                         {% for item in goods.item_list %}
                             <div class="product-hor__frame product-frame
                                 {% if goods.id_random != item.item.id %} item-hidden item-opaque{% endif %}"
                                  data-id="{{ item.item.id }}"
                                  data-goods="{{ goods.goods_item.id }}"
+                                 data-article="{{ item.item.item_article }}"
                                  data-price="{% if item.price %}
                                                {{ item.price }}
                                              {% else %}
@@ -44,7 +51,8 @@
                                 </div>
                                 <div class="filter__content_data_color color-padding">
                                     {% if goods.goods_item.multicolor %}
-                                        <button class="btn btn__cancel btn-multicolor">варианты сочетаний элементов - {{ goods.item_list|length }}</button>
+                                        <button class="btn btn__cancel btn-multicolor">варианты сочетаний элементов
+                                            - {{ goods.item_list|length }}</button>
                                         {% for color in goods.colors %}
                                             <input type="checkbox"
                                                    id="item-color-{{ item.item.id }}_{{ color.main_color__hex|slice:"1:" }}"
@@ -154,6 +162,8 @@
                                                     <a href="
 
 
+
+
                                                             {% static 'viki_web_cms/files/layout' %}{{ layout.layout.layout.file.name }}"
                                                        target="_blank">
                                                         <p>{{ layout.name }}</p>
@@ -213,6 +223,7 @@
             </div>
         </div>
     </main>
+
 
 
 {% endblock %}
