@@ -60,6 +60,7 @@ def product(request, product_group_url):
         'goods_list': goods_list,
         'price_min': price_min,
         'price_max': price_max,
+        'user': request.user,
     }
     if product_group.layout.id == 1:
         return render(request, 'product_hor.html', context)

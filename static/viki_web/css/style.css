@@ -175,7 +175,7 @@ input[type=checkbox] {
 .menu__cabinet {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   cursor: pointer;
 }
 .menu__cabinet:hover {

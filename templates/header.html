@@ -54,12 +54,19 @@
             <div class="menu__right">
                 <nav class="cart tooltip">
                     <img src="{% static 'viki_web/icons/cart_menu.svg' %}"
-                                             alt="cart" class="">
+                         alt="cart" class="">
                     <div class="tooltip-text">корзина</div>
                 </nav>
-                <nav class="menu__cabinet">
+                <nav class="menu__cabinet tooltip">
                     <i class="fa-regular fa-user"></i>
-                    <div>Личный&nbsp;Кабинет</div>
+                    <div>
+                        {% if user.is_authenticated %}
+                            {{ user.first_name }} {{ user.last_name }}
+                        {% else %}
+                            Личный&nbsp;Кабинет
+                        {% endif %}
+                    </div>
+                    <div class="tooltip-text">личный кабинет</div>
                 </nav>
             </div>
         </div>
