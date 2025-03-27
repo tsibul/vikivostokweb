@@ -4,8 +4,9 @@ from django.core.cache import cache
 
 import string
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.core.mail import send_mail
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
@@ -74,3 +75,10 @@ def change_password(request):
         return render(request, "message.html", {"message": "Пароль успешно изменен"})
 
     return render(request, "change_password.html")
+
+
+def log_out(request):
+    if request.method == "POST":
+        logout(request)
+        return JsonResponse({"status": "ok"})
+    return JsonResponse({"status": "error"}, status=405)

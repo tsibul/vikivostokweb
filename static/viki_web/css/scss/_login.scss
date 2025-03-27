@@ -1,0 +1,36 @@
+@import 'vars';
+@import 'mixins';
+
+.login {
+  top: 20%;
+  left: 60%;
+  @include brd-standard;
+  box-shadow:  6px 8px 18px rgba($colorPrimary, 0.5);
+  padding: 4px;
+
+  &__body{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+
+  }
+  &__title{
+    padding: 10px 8px;
+    //min-height: 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    @include brd-standard;
+    border-color: transparent;
+    background-color: rgba($colorSecondary, 0.8);
+  }
+  &__content{
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+}

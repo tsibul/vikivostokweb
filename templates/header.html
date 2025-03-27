@@ -68,22 +68,22 @@
                             {% endif %}
                         </div>
                         <ul class="catalogue__item">
-                        <li>Заказы</li>
-                        <li>Настройка</li>
-                        <li>Реквизиты</li>
-                        <li>Выйти</li>
+                            <li>Заказы</li>
+                            <li>Настройка</li>
+                            <li>Реквизиты</li>
+                            <li class="log-logout">Выйти</li>
                         </ul>
                     {% else %}
                         <div>Личный&nbsp;Кабинет</div>
                         <ul class="catalogue__item">
-                            <li>Войти</li>
-                            <li>Зарегистрироваться</li>
+                            <li class="log-login">Войти</li>
+                            <li class="log-register">Зарегистрироваться</li>
                         </ul>
                     {% endif %}
-{#            <div class="tooltip-text">личный кабинет</div>#}
-            </nav>
+                    {#            <div class="tooltip-text">личный кабинет</div>#}
+                </nav>
+            </div>
         </div>
-    </div>
     </div>
 </menu>
 <header class="header">
@@ -103,6 +103,62 @@
         </div>
     </div>
 </header>
+<dialog class="login log-login">
+    <div class="login">
+        <div class="login__title">
+            <div>Выйти</div>
+            <div>&times;</div>
+        </div>
+        <form class="login__content">вы уверены, что хотите выйти?
+            <div class="filter__btn-block">
+                <button type="reset" class="btn btn__cancel">Закрыть</button>
+                <button type="submit" class="btn btn__save">Выйти</button>
+            </div>
+        </form>
+    </div>
+</dialog>
+<dialog class="login log-logout">
+    <div class="login__body">
+        <div class="login__title">
+            <div>Выйти</div>
+            <div>&times;</div>
+        </div>
+        <form class="login__content">вы уверены, что хотите выйти?
+            <div class="filter__btn-block">
+                <button type="reset" class="btn btn__cancel">Закрыть</button>
+                <button type="button" class="btn btn__save">Выйти</button>
+            </div>
+        </form>
+    </div>
+</dialog>
+<dialog class="login log-change-pass">
+    <div class="login__body">
+        <div class="login__title">
+            <div>Выйти</div>
+            <div>&times;</div>
+        </div>
+        <form class="login__content">вы уверены, что хотите выйти?
+            <div class="filter__btn-block">
+                <button type="reset" class="btn btn__cancel">Закрыть</button>
+                <button type="submit" class="btn btn__save">Выйти</button>
+            </div>
+        </form>
+    </div>
+</dialog>
+<dialog class="login log-register">
+    <div class="login__body">
+        <div class="login__title">
+            <div>Выйти</div>
+            <div>&times;</div>
+        </div>
+        <form class="login__content">вы уверены, что хотите выйти?
+            <div class="filter__btn-block">
+                <button type="reset" class="btn btn__cancel">Закрыть</button>
+                <button type="submit" class="btn btn__save">Выйти</button>
+            </div>
+        </form>
+    </div>
+</dialog>
 {% block content %}
 {% endblock %}
 </body>
