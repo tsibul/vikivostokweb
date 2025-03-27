@@ -30,11 +30,11 @@
                     <li class="menu__item catalogue">
                         <div>Каталог</div>
                         <ul class="catalogue__item">
-                           {% for category in categories %}
+                            {% for category in categories %}
                                 <li>
-                                <a href="products/{{ category.product_group_url }}">{{ category.name }}</a>
+                                    <a href="products/{{ category.product_group_url }}">{{ category.name }}</a>
                                 </li>
-                           {% endfor %}
+                            {% endfor %}
                         </ul>
                     </li>
                     <li class="menu__item">
@@ -51,10 +51,17 @@
                     </li>
                 </ul>
             </nav>
-            <nav class="menu__right">
-                <i class="fa-regular fa-user"></i>
-                <div>Личный&nbsp;Кабинет</div>
-            </nav>
+            <div class="menu__right">
+                <nav class="cart tooltip">
+                    <img src="{% static 'viki_web/icons/cart_menu.svg' %}"
+                                             alt="cart" class="">
+                    <div class="tooltip-text">корзина</div>
+                </nav>
+                <nav class="menu__cabinet">
+                    <i class="fa-regular fa-user"></i>
+                    <div>Личный&nbsp;Кабинет</div>
+                </nav>
+            </div>
         </div>
     </div>
 </menu>

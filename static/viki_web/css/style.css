@@ -170,14 +170,27 @@ input[type=checkbox] {
 .menu__right {
   display: flex;
   align-items: center;
+  gap: 30px;
+}
+.menu__cabinet {
+  display: flex;
+  align-items: center;
   gap: 12px;
   cursor: pointer;
 }
-.menu__right:hover {
+.menu__cabinet:hover {
   transform: scale(1.1);
 }
-.menu__right:hover div {
+.menu__cabinet:hover div {
   font-weight: 600;
+}
+
+.cart {
+  display: flex;
+  align-items: center;
+}
+.cart:hover {
+  transform: scale(1.2);
 }
 
 .header {

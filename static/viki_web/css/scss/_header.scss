@@ -42,7 +42,13 @@
     height: 40px;
   }
 
-  &__right {
+  &__right{
+    display: flex;
+    align-items: center;
+    gap: 30px;
+  }
+
+  &__cabinet {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -56,6 +62,15 @@
       font-weight: 600;
     }
   }
+}
+
+.cart{
+  display: flex;
+  align-items: center;
+  &:hover{
+          transform: scale(1.2);
+  }
+
 }
 
 .header {
