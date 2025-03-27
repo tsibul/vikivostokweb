@@ -156,13 +156,13 @@ input[type=checkbox] {
 }
 .menu__item {
   cursor: pointer;
+  padding: 16px 0;
 }
 .menu__item div, .menu__item img {
   display: inline-block;
 }
 .menu__item :hover {
-  transform: scale(1.2);
-  font-weight: 600;
+  font-weight: 800;
 }
 .menu__logo {
   height: 40px;
@@ -177,9 +177,7 @@ input[type=checkbox] {
   align-items: center;
   gap: 8px;
   cursor: pointer;
-}
-.menu__cabinet:hover {
-  transform: scale(1.1);
+  padding: 16px 0;
 }
 .menu__cabinet:hover div {
   font-weight: 600;
@@ -228,8 +226,8 @@ input[type=checkbox] {
 .catalogue__item {
   display: none;
   position: absolute;
-  top: 22px;
-  left: -16px;
+  top: 44px;
+  left: -8px;
   border: 1px solid #0F4880;
   border-radius: 12px;
   background-color: #F2FFFF;
@@ -240,11 +238,8 @@ input[type=checkbox] {
   padding: 8px;
   list-style: none;
 }
-.catalogue__item li a {
-  color: #0F4880;
-}
 .catalogue__item li:hover {
-  transform: scale(1.01);
+  transform: scale(1);
   background-color: rgba(0, 158, 163, 0.1);
 }
 .catalogue:hover .catalogue__item {

@@ -26,15 +26,16 @@
 
   &__item {
     cursor: pointer;
-    //transition: 0.4s ease transform;
+    padding: 16px 0;
 
     & div, img {
       display: inline-block;
     }
 
     :hover {
-      transform: scale(1.2);
-      font-weight: 600;
+      //transform: scale(1.2);
+      font-weight: 800;
+      //font-size: 18px;
     }
   }
 
@@ -42,7 +43,7 @@
     height: 40px;
   }
 
-  &__right{
+  &__right {
     display: flex;
     align-items: center;
     gap: 30px;
@@ -53,9 +54,10 @@
     align-items: center;
     gap: 8px;
     cursor: pointer;
+    padding: 16px 0;
 
     &:hover {
-      transform: scale(1.1);
+      //transform: scale(1.1);
     }
 
     &:hover div {
@@ -64,11 +66,12 @@
   }
 }
 
-.cart{
+.cart {
   display: flex;
   align-items: center;
-  &:hover{
-          transform: scale(1.2);
+
+  &:hover {
+    transform: scale(1.2);
   }
 
 }
@@ -113,26 +116,20 @@
   &__item {
     display: none;
     position: absolute;
-    top: 22px;
-    left: -16px;
+    top: 44px;
+    left: -8px;
     @include brd-standard;
     background-color: $colorSecondary50;
     width: 220px;
     padding: 8px 0;
-    //transform: scale(0.5);
-    //transition: transform 1s ease;
 
 
     & li {
       padding: 8px;
       list-style: none;
 
-      & a {
-        color: $colorPrimary;
-      }
-
       &:hover {
-        transform: scale(1.01);
+        transform: scale(1);
         background-color: rgba($colorSecondary, 0.1);
       }
     }

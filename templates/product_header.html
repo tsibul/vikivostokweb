@@ -61,17 +61,31 @@
                          alt="cart" class="">
                     <div class="tooltip-text">корзина</div>
                 </nav>
-                <nav class="menu__cabinet tooltip">
+                <nav class="menu__cabinet catalogue">
                     <i class="fa-regular fa-user"></i>
-                    <div>
-                        {% if user.is_authenticated %}
-                            {{ user.first_name }} {{ user.last_name }}
-                        {% else %}
-                            Личный&nbsp;Кабинет
-                        {% endif %}
-                    </div>
-                    <div class="tooltip-text">личный кабинет</div>
-                </nav>
+                    {% if user.is_authenticated %}
+                        <div>
+                            {% if user.first_name or user.last_name %}
+                                {{ user.first_name }} {{ user.last_name }}
+                            {% else %}
+                                {{ user.email }}
+                            {% endif %}
+                        </div>
+                        <ul class="catalogue__item">
+                        <li>Заказы</li>
+                        <li>Настройка</li>
+                        <li>Реквизиты</li>
+                        <li>Выйти</li>
+                        </ul>
+                    {% else %}
+                        <div>Личный&nbsp;Кабинет</div>
+                        <ul class="catalogue__item">
+                            <li>Войти</li>
+                            <li>Зарегистрироваться</li>
+                        </ul>
+                    {% endif %}
+{#            <div class="tooltip-text">личный кабинет</div>#}
+            </nav>
             </div>
         </div>
     </div>
