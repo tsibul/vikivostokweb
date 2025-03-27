@@ -20,13 +20,10 @@ config_dict = dict(config.items('LOG_PAS'))
 user = config_dict['user']
 pasw = config_dict['pass']
 sec_key = config_dict['sec_key']
+e_mail = config_dict['e_mail']
+e_mail_pass = config_dict['e_mail_pass']
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = sec_key
@@ -35,9 +32,6 @@ SECRET_KEY = sec_key
 DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'localhost:8989' ]
-
-
-# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -81,10 +75,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'vikivostokweb.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -93,10 +83,6 @@ DATABASES = {
         'PASSWORD': pasw,
     }
 }
-
-
-# Password validation
-# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -113,10 +99,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
@@ -125,17 +107,19 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
-
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
     # Дополнительные каталоги, если требуется
     # os.path.join(BASE_DIR, 'дополнительный_каталог'),
 ]
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = e_mail
+EMAIL_HOST_PASSWORD = e_mail_pass
+DEFAULT_FROM_EMAIL = 'no-reply@vikyvostok.ru'
