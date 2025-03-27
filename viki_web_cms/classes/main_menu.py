@@ -26,24 +26,6 @@ class MainMenu:
     @staticmethod
     def menu_set():
         menu_list = [
-            MainMenu('Номенклатура', str(json.dumps([
-                MenuSection('Номенклатура', [
-                    CMSSetting('Товары/артикулы', 'Goods', True),
-                ]),
-            ], default=lambda o: o.__dict__,
-                sort_keys=True)), 'Goods'),
-            MainMenu('Каталог', str(json.dumps([
-                MenuSection('Каталог', [
-                    CMSSetting('Каталог', '', True),
-                ]),
-            ], default=lambda o: o.__dict__,
-                sort_keys=True)), 'Catalogue'),
-            MainMenu('Прайс-лист', str(json.dumps([
-                MenuSection('Прайс-лист', [
-                    CMSSetting('Прайс-лист', '', True),
-                ]),
-            ], default=lambda o: o.__dict__,
-                sort_keys=True)), 'PriceList'),
             MainMenu("Настройки", str(json.dumps([
 
                 MenuSection('Цвета, материалы', [
@@ -56,7 +38,26 @@ class MainMenu:
                     CMSSetting('Группы каталога', 'ProductGroup', False ),
                     CMSSetting('Группы товара', 'GoodsGroup', False ),
                     CMSSetting('Опции товара', 'GoodsOption', False),
-                    CMSSetting('Связь товаров и опций', 'GoodsToOption', True ),
+                    CMSSetting('Группы опций товара', 'GoodsOptionGroup', False ),
+                ]),
+                MenuSection('Описания', [
+                    CMSSetting('Описание товаров', 'GoodsDescription', False),
+                    CMSSetting('Названия деталей', 'PartsDescription', False ),
+                    CMSSetting('Структура артикула', 'ArticleDescription', False ),
+                ]),
+                MenuSection('Виды цен и скидки', [
+                    CMSSetting('Прайс листы', 'Price', False),
+                    CMSSetting('Виды цен', 'StandardPriceType', False ),
+                    CMSSetting('Скидки для клиента', 'CustomerDiscount', False ),
+                    CMSSetting('Скидки от объема', 'VolumeDiscount', False),
+                    CMSSetting('Градация количества товара', 'PriceGoodsQuantity', False),
+                ]),
+                MenuSection('Техническая информация', [
+                    CMSSetting('Размеры деталей', 'GoodsDimensions', True),
+                    CMSSetting('Параметры нанесения', 'PrintData', False ),
+                    CMSSetting('Возможности нанесения', 'PrintOpportunity', False ),
+                    CMSSetting('Список шаблонов', 'PrintLayout', False),
+                    CMSSetting('Шаблоны для товара', 'GoodsLayout', False),
                 ]),
                 MenuSection('Фото товаров', [
                     CMSSetting('Фото товаров', '', True),
@@ -67,18 +68,43 @@ class MainMenu:
                 MenuSection('Нанесение', [
                     CMSSetting('Тип нанесения', 'PrintType', False),
                     CMSSetting('Место нанесения', 'PrintPlace', False),
+                    CMSSetting('Тиражи нанесения', 'PrintVolume', False),
+                    CMSSetting('Ценовые группы нанесения', 'PrintPriceGroup', False),
+                    CMSSetting('Товары в ценовых группах', 'PrintGroupToGoods', False),
                 ]),
                 MenuSection('Фильтры', [
                     CMSSetting('Фильтры', 'FilterOption', False),
                     CMSSetting('Фильтры товаров', 'FilterToGoods', False),
                     CMSSetting('Фильтры групп товаров', 'FilterToGoodsGroup', False),
                 ]),
+                MenuSection('Упаковка', [
+                    CMSSetting('Гофрокороб', 'Box', False),
+                    CMSSetting('Упаковка товара', 'Packing', False),
+                ]),
                 MenuSection('PANTONE-HEX', [
                     CMSSetting('PANTONE-HEX', 'PantoneToHex', True),
                 ]),
             ], default=lambda o: o.__dict__,
                 sort_keys=True)), 'Standard'),
-        #     MainMenu('Менеджеры', str(json.dumps([
+            MainMenu('Номенклатура', str(json.dumps([
+                MenuSection('Номенклатура', [
+                    CMSSetting('Товары/артикулы', 'Goods', True),
+                ]),
+            ], default=lambda o: o.__dict__,
+                sort_keys=True)), 'Goods'),
+            MainMenu('Каталог', str(json.dumps([
+                MenuSection('Каталог', [
+                    CMSSetting('Каталог', 'Catalogue', True),
+                ]),
+            ], default=lambda o: o.__dict__,
+                sort_keys=True)), 'Catalogue'),
+            MainMenu('Прайс-лист', str(json.dumps([
+                MenuSection('Прайс-лист', [
+                    CMSSetting('Прайс-лист от', 'Price', False),
+                ]),
+            ], default=lambda o: o.__dict__,
+                sort_keys=True)), 'PriceList'),
+            #     MainMenu('Менеджеры', str(json.dumps([
         #         MenuSection('Менеджеры', [
         #         ]),
         #     ], default=lambda o: o.__dict__,

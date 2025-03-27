@@ -3,6 +3,7 @@
 
 import {reloadContent} from "./reloadContent.js";
 import {searchStringNormalizer} from "./searchStringNormalizer.js";
+import {reloadCatalogue} from "../catalogueElement/reloadCatalogue.js";
 
 /**
  * reload content onchange deletedCheck
@@ -12,6 +13,13 @@ import {searchStringNormalizer} from "./searchStringNormalizer.js";
  */
 export async function deletedFilter(className, deletedCheck) {
     const dictionarySection = deletedCheck.closest('.dictionary-frame__header').parentElement;
-    let searchString = dictionarySection.querySelector('.dictionary-frame__input').value;
-    await reloadContent(dictionarySection, className, deletedCheck, searchStringNormalizer(searchString));
+    const searchString = dictionarySection.querySelector('.dictionary-frame__input').value;
+    const normalizedSearchString = searchStringNormalizer(searchString);
+    switch (className) {
+        case 'Catalogue':
+            await reloadCatalogue(dictionarySection, deletedCheck, normalizedSearchString);
+            break;
+        default:
+            await reloadContent(dictionarySection, className, deletedCheck, normalizedSearchString);
+    }
 }

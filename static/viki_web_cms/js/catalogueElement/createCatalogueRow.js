@@ -9,6 +9,7 @@ import {fileChange} from "./fileChange.js";
 import {cancelEdit} from "./cancelEdit.js";
 import {fieldNotFileChange} from "./fieldNotFileChange.js";
 import {deletedChange} from "./deletedChange.js";
+import {saveCatalogueItem} from "./saveCatalogueItem.js";
 
 /**
  *
@@ -27,7 +28,7 @@ export async function createCatalogueRow(item, catalogueRow) {
     itemName.value = item.name;
     itemName.name = 'name'
     itemName.classList.add('catalogue__input');
-    itemName.disabled = true;
+    itemName.readOnly = true;
     catalogueRow.appendChild(itemName);
     catalogueRow.appendChild(createCatalogueItem('text', 'item_article', item.item_article));
     const mainColor = document.createElement('div');
@@ -35,10 +36,16 @@ export async function createCatalogueRow(item, catalogueRow) {
     mainColor.textContent = item.main_color_text;
     catalogueRow.appendChild(mainColor)
     catalogueRow.appendChild(createCatalogueItem('text', 'main_color__id', item.main_color__id));
+    catalogueRow.appendChild(createCatalogueItem('number', 'goods_option__id', item.goods_option__id));
+    const optionName = document.createElement('div');
+    optionName.classList.add('catalogue__input', 'goods_option__name');
+    optionName.textContent = item.goods_option__name;
+    catalogueRow.appendChild(optionName);
     const photo = document.createElement('img');
     photo.classList.add('catalogue__img');
     photo.alt = item.item_article;
-    photo.src = 'viki_web_cms/files/item_photo/' + item.image;
+    photo.loading = 'lazy';
+    photo.src = '/static/viki_web_cms/files/item_photo/' + item.image;
     catalogueRow.appendChild(photo)
     const simpleArticle = createCatalogueItem('checkbox', 'simple_article', item.simple_article);
     if (item.id === 0) {
@@ -76,7 +83,8 @@ export async function createCatalogueRow(item, catalogueRow) {
     saveBtn.disabled = true;
     saveBtn.classList.add('tooltip', 'btn__disabled');
     saveBtn.innerHTML = '<i class="catalogue__icon fa-solid fa-check"></i>' +
-        '<span class="tooltip-text">сохранить</span>'
+        '<span class="tooltip-text">сохранить</span>';
+    saveBtn.addEventListener('click', (e) => saveCatalogueItem(e, saveBtn));
     const cancelBtn = createCancelButton('');
     cancelBtn.classList.add('tooltip', 'btn__disabled');
     cancelBtn.disabled = true;
@@ -86,10 +94,10 @@ export async function createCatalogueRow(item, catalogueRow) {
     btnBlock.appendChild(saveBtn);
     btnBlock.appendChild(cancelBtn);
     catalogueRow.appendChild(btnBlock);
-    catalogueRow.appendChild(createCatalogueItem('number', 'option__id', item.option));
-    const colors = document.createElement('div');
+    // const colors = document.createElement('div');
+    const colors = createCatalogueItem('text', 'colors', '');
     colors.hidden = true;
-    colors.classList.add('colors');
+    // colors.classList.add('colors');
     catalogueRow.appendChild(colors)
     if (item.colors) {
         createColors(item.colors, colors);

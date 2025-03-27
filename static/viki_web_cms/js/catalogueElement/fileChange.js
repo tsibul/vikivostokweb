@@ -15,12 +15,14 @@ import {createColors} from "./createColors.js";
  */
 export async function fileChange(e, fileName, goodsId, simpleArticle, photo) {
     const form = e.target.closest('form');
-    const colors = form.querySelector('.colors');
-    const option = form.querySelector('input[name="option__id"]');
+    const itemId = form.querySelector('input[name="id"]');
+    const colors = form.querySelector('input[name="colors"]');
+    const option = form.querySelector('input[name="goods_option__id"]');
     const name = form.querySelector('textarea[name="name"]');
     const itemArticle = form.querySelector('input[name="item_article"]');
     const mainColorId = form.querySelector('input[name="main_color__id"]');
     const mainColorText = form.querySelector('.main_color_text');
+    const goodsOptionName = form.querySelector('.goods_option__name');
     const btnSave = form.querySelector('.btn__save');
 
     /**
@@ -34,13 +36,15 @@ export async function fileChange(e, fileName, goodsId, simpleArticle, photo) {
         mainColorId.value = '';
         mainColorText.textContent = '';
         option.value = '';
-        colors.innerHTML = '';
+        goodsOptionName.textContent = '';
+        colors.value = '';
         btnSave.disabled = true;
         if (!btnSave.classList.contains('btn__disabled')) btnSave.classList.add('btn__disabled');
 
     }
 
-    colors.innerHTML = '';
+    // colors.innerHTML = '';
+    colors.value = ''
     option.value = '';
     const re = /(\.jpg|\.jpeg|\.png)$/i;
     if (!re.exec(e.target.value)) {
@@ -57,14 +61,15 @@ export async function fileChange(e, fileName, goodsId, simpleArticle, photo) {
         fileName.textContent = e.target.value.split("\\").pop();
         const fileNameText = fileName.textContent.split('.')[0];
         const url = jsonUrl + 'parse_file_data/' + goodsId +
-            '/' + simpleArticle + '/' + fileNameText;
+            '/' + simpleArticle + '/' + fileNameText + '/' + itemId.value;
         const parseData = await fetchJsonData(url);
         if (!parseData.error) {
             name.value = parseData.values.name;
             itemArticle.value = parseData.values.item_article;
             mainColorId.value = parseData.values.main_color__id;
             mainColorText.textContent = parseData.values.main_color_text;
-            option.value = parseData.values.option;
+            option.value = parseData.values.goods_option__id;
+            goodsOptionName.textContent = parseData.values.goods_option__name
             createColors(parseData.values.colors, colors);
             btnSave.disabled = false;
             btnSave.classList.remove('btn__disabled');

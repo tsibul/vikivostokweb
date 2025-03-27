@@ -92,6 +92,43 @@
   }
 }
 
+.catalogue {
+  position: relative;
+
+  &__item {
+    display: none;
+    position: absolute;
+    top: 22px;
+    left: -16px;
+    @include brd-standard;
+    background-color: $colorSecondary50;
+    width: 220px;
+    padding: 8px 0;
+    //transform: scale(0.5);
+    //transition: transform 1s ease;
+
+
+    & li {
+      padding: 8px;
+      list-style: none;
+
+      & a {
+        color: $colorPrimary;
+      }
+
+      &:hover {
+        transform: scale(1.01);
+        background-color: rgba($colorSecondary, 0.1);
+      }
+    }
+  }
+
+  &:hover &__item {
+    display: block;
+    transform: scale(1);
+  }
+}
+
 @media (max-width: 1360px) {
   .menu {
     &__left {

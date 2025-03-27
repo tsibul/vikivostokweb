@@ -1,9 +1,10 @@
-from django.core.files.storage import FileSystemStorage
+# from django.core.files.storage import FileSystemStorage
 from django.db import models
 
 from viki_web_cms.models import SettingsDictionary, ColorScheme, ProductGroup
 
-fs_goods = FileSystemStorage(location='viki_web_cms/files/goods')
+
+# fs_goods = FileSystemStorage(location='viki_web_cms/files/goods')
 
 
 class GoodsGroup(SettingsDictionary):
@@ -33,6 +34,21 @@ class GoodsGroup(SettingsDictionary):
         ]
 
 
+class GoodsOptionGroup(SettingsDictionary):
+    """ goods options"""
+
+    class Meta(SettingsDictionary.Meta):
+        verbose_name = 'Модификация товара'
+        verbose_name_plural = 'Модификации товаров'
+        db_table_comment = 'Goods options'
+        db_table = 'goods_option_group'
+        ordering = ['name']
+
+    @staticmethod
+    def order_default():
+        return ['name']
+
+
 class Goods(SettingsDictionary):
     """
     Goods
@@ -46,7 +62,11 @@ class Goods(SettingsDictionary):
                                                 related_name='additional_color_scheme')
     details_number = models.IntegerField(default=1)
     multicolor = models.BooleanField(default=False)
-    print_layout = models.FileField(upload_to=fs_goods, storage=fs_goods, blank=True, null=True)
+    standard_price = models.BooleanField(default=True)
+    # print_layout = models.FileField(upload_to=fs_goods, storage=fs_goods, blank=True, null=True)
+    goods_option_group = models.ForeignKey(GoodsOptionGroup, on_delete=models.SET_NULL, null=True)
+    dealer_price = models.BooleanField(default=True)
+    weight = models.FloatField(null=True, blank=True)
 
     class Meta(SettingsDictionary.Meta):
         verbose_name = 'Товар'
@@ -55,9 +75,9 @@ class Goods(SettingsDictionary):
         db_table = 'goods'
         ordering = ['article', 'name']
 
-    @property
-    def cover_url(self):
-        return f"/static/viki_web_cms/files/goods/{self.print_layout.name}" if self.print_layout else None
+    # @property
+    # def cover_url(self):
+    #     return f"/static/viki_web_cms/files/goods/{self.print_layout.name}" if self.print_layout else None
 
     @staticmethod
     def order_default():
@@ -65,13 +85,13 @@ class Goods(SettingsDictionary):
 
     @staticmethod
     def dictionary_fields():
-        return SettingsDictionary.dictionary_fields() + [
-            {
-                'field': 'article',
-                'type': 'string',
-                'label': 'артикул',
-                'null': False,
-            },
+        return [{
+            'field': 'article',
+            'type': 'string',
+            'label': 'артикул',
+            'null': False,
+        },
+        ] + SettingsDictionary.dictionary_fields() + [
             {
                 'field': 'additional_material',
                 'type': 'boolean',
@@ -106,6 +126,13 @@ class Goods(SettingsDictionary):
                 'null': True,
             },
             {
+                'field': 'goods_option_group',
+                'type': 'foreign',
+                'label': 'опция',
+                'foreignClass': 'GoodsOptionGroup',
+                'null': True,
+            },
+            {
                 'field': 'details_number',
                 'type': 'number',
                 'label': 'кол-во деталей',
@@ -117,17 +144,27 @@ class Goods(SettingsDictionary):
                 'label': 'микс',
             },
             {
-                'field': 'print_layout',
-                'type': 'file',
-                'label': 'макет нанесения',
+                'field': 'standard_price',
+                'type': 'boolean',
+                'label': 'ст. прайс',
+            },
+            {
+                'field': 'dealer_price',
+                'type': 'boolean',
+                'label': 'дил. цена',
+            },
+            {
+                'field': 'weight',
+                'type': 'float',
+                'label': 'вес, г',
                 'null': True,
             },
         ]
 
-
 class GoodsOption(SettingsDictionary):
     """ goods options"""
     option_article = models.CharField(max_length=120)
+    option_group = models.ForeignKey(GoodsOptionGroup, on_delete=models.SET_NULL, null=True)
 
     class Meta(SettingsDictionary.Meta):
         verbose_name = 'Модификация товара'
@@ -149,40 +186,12 @@ class GoodsOption(SettingsDictionary):
                 'label': 'артикул опции',
                 'null': False,
             },
-        ]
-
-
-class GoodsToOption(SettingsDictionary):
-    """ goods vs options corresponding """
-    goods = models.ForeignKey(Goods, on_delete=models.SET_NULL, null=True)
-    goods_options = models.ForeignKey(GoodsOption, on_delete=models.SET_NULL, null=True)
-
-    class Meta(SettingsDictionary.Meta):
-        verbose_name = 'Связь модификация-товар'
-        verbose_name_plural = 'Связи модификация-товар'
-        db_table_comment = 'Goods  to options'
-        db_table = 'goods_to_options'
-        ordering = ['name']
-
-    @staticmethod
-    def order_default():
-        return ['name']
-
-    @staticmethod
-    def dictionary_fields():
-        return SettingsDictionary.dictionary_fields() + [
             {
-                'field': 'goods',
+                'field': 'option_group',
                 'type': 'foreign',
-                'label': 'товар',
-                'null': False,
-                'foreignClass': 'Goods',
+                'label': 'группа опций',
+                'foreignClass': 'GoodsOptionGroup',
+                'null': True,
             },
-            {
-                'field': 'goods_options',
-                'type': 'foreign',
-                'label': 'опция',
-                'null': False,
-                'foreignClass': 'GoodsOption',
-            },
+
         ]

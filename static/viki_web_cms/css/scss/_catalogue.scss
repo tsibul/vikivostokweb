@@ -4,9 +4,28 @@
 .catalogue {
   display: grid;
   gap: 10px;
-  grid-template-columns: 0.5fr 3fr 2fr 2fr 4fr 1fr 3fr 2fr 0.95fr;
+  grid-template-columns: 0.5fr 2fr 2fr 1.5fr 1.5fr 4fr 0.5fr 3fr 2fr 0.95fr;
   align-items: center;
   padding: 4px 10px;
+
+  &__modal {
+    top: 15%;
+    left: 30%;;
+    @include brd-standard;
+    padding: 8px;
+    box-shadow: 4px 4px 6px $colorNeutral500;
+    width: 360px;
+    overflow: visible;
+
+    &_file-input {
+      position: absolute;
+      top: 0;
+      left: -116px;
+      z-index: 3;
+      padding: 6px 0;
+      width: 456px;
+    }
+  }
 
   &__top {
     height: 100%;
@@ -26,12 +45,15 @@
 
   &__content {
     overflow-y: scroll;
-    min-height: 400px;
+    height: calc(100vh - 180px);
   }
 
   &__row {
-    &:hover {
-      background-color: rgba($colorNeutral500, 0.1);
+    position: relative;
+
+    &:has(.catalogue__img:hover) {
+      //background-color: rgba($colorNeutral500, 0.1);
+      grid-template-columns: 0.5fr 6.5fr 2fr 1.5fr 1.5fr 0.5fr 3fr 2fr 0.95fr;
     }
 
     & * {
@@ -44,6 +66,7 @@
     border-color: transparent;
     background-color: $colorSecondary50;
     padding: 7px 0;
+    word-break: break-word;
   }
 
   &__check {
@@ -53,11 +76,16 @@
 
   &__img {
     max-height: 36px;
-    transition: max-height 0.2s ease;
+    max-width: 240px;
+    transition: transform 0.6s ease;
 
     &:hover {
+      position: absolute;
+      left: 30%;
       z-index: 10;
-      max-height: 108px;
+      max-height: 300px;
+      max-width: 600px;
+      transform: scale(1.1);
     }
   }
 
@@ -103,6 +131,50 @@
 
   &__icon {
     padding: 0 3px;
+  }
+}
+
+.main_color_text {
+  font-size: 14px;
+}
+
+.goods_option_text {
+  font-size: 14px;
+}
+
+.error-message {
+  color: red;
+  padding: 8px 0;
+  display: none;
+}
+
+.alert {
+  @include brd-standard;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  top: 15%;
+  max-height: 600px;
+  overflow: auto;
+  left: 30%;
+  width: 800px;
+  padding: 20px 16px 16px 16px;
+  box-shadow: 4px 4px 6px $colorNeutral500;
+
+  &__header{
+    background-color: rgba($colorSecondary, 0.5);
+    @include brd-standard;
+    border-color: transparent;
+    display: flex;
+    justify-content: space-between;
+    padding: 6px;
+  }
+
+  &__element{
+    display: grid;
+    padding: 3px;
+    grid-template-columns: repeat(3, 1fr) 2fr;
+    gap: 16px;
   }
 
 }

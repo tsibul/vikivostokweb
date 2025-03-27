@@ -1,0 +1,196 @@
+@import "vars";
+@import "mixins";
+
+.menu-product {
+  height: 60px;
+  width: 100%;
+  background-color: $colorSecondary;
+  position: fixed;
+  z-index: 10;
+}
+
+.main-btn {
+  text-align: center;
+  padding: 8px 0;
+  @include brd-standard;
+  background-color: $colorSecondary;
+  border-color: $colorPrimary;
+  //box-shadow: 4px 4px 4px 2px $colorSecondary;
+  transition: transorm 0.6s;
+  transform: scale(1);
+
+  &:hover {
+    box-shadow: none;
+    transform: scale(0.95);
+  }
+}
+
+.submenu-group {
+  margin: 12px 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 206px);
+  gap: 12px;
+
+  &__logo {
+    height: 16px;
+  }
+
+  &__item {
+    text-align: center;
+    color: $colorPrimary;
+    padding: 8px 0;
+    @include brd-standard;
+    border-color: $colorPrimary;
+    transform: scale(0.95);
+
+    &_inactive {
+      box-shadow: 4px 4px 4px 2px $colorSecondary;
+      transition: transorm 0.6s;
+      transform: scale(1);
+
+      &:hover {
+        box-shadow: none;
+        transform: scale(0.95);
+      }
+    }
+  }
+}
+
+.filter {
+  z-index: 5;
+  position: fixed;
+  top: 66px;
+  right: calc((100% - 1300px) / 2);
+  transition: max-height 0.6s ease;
+  max-height: 30px;
+  height: 100%;
+  overflow: hidden;
+
+  &:open {
+    max-height: 400px;
+    height: 100%;
+    transition: max-height 0.6s ease;
+  }
+
+  &__summary {
+    //padding: 8px 0;
+    cursor: pointer;
+    display: flex;
+    justify-content: end;
+
+    &_title {
+      position: relative;
+      display: flex;
+      gap: 16px;
+      justify-content: end;
+      align-items: center;
+      @include brd-standard;
+      border-color: transparent;
+      padding:  4px 24px 4px 10px;
+      background-color: rgba($colorSecondary, 0.5)
+    }
+  }
+
+  &__content {
+    width: 100%;
+    background-color: $colorSecondary50;
+    @include brd-standard;
+    padding: 16px;
+
+    &_data {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: 1fr 2fr;
+
+      &_color {
+        margin: 16px 0;
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      &_print {
+        margin: 16px 0;
+        display: grid;
+        grid-template-columns: 1fr 8fr;
+        gap: 6px;
+      }
+
+      &_filter {
+        display: grid;
+        align-items: center;
+        grid-template-columns: repeat(2, 1fr 9fr);
+        gap: 6px;
+        margin: 16px 0;
+      }
+
+      &_checkbox {
+        height: 20px;
+        width: 20px;
+      }
+    }
+
+  }
+
+  &__btn-block {
+    display: flex;
+    justify-content: end;
+    gap: 8px;
+  }
+  &__price-range {
+    padding: 6px;
+    display: flex;
+    justify-content: flex-start;
+    gap: 16px;
+    align-items: center;
+  }
+}
+
+.input-range{
+  color: $colorPrimary;
+  accent-color: $colorPrimary;
+  width: 70%;
+    &__value {
+      font-size: 18px;
+      //font-weight: 600;
+    }
+}
+
+.product-header {
+  width: 100%;
+  padding-top: 66px;
+  display: flex;
+  justify-content: space-between;
+}
+
+
+.color-label {
+  position: relative;
+  cursor: pointer;
+
+  &__check {
+    position: absolute;
+    display: none;
+    z-index: 5;
+    border: 2px solid $colorSecondary;
+    border-radius: 6px;
+    top: -4px;
+    left: -4px;
+    height: 32px;
+    width: 32px;
+    background-color: transparent;
+  }
+}
+
+.filter-badge{
+  position: absolute;
+  font-size: 13px;
+  right: 0;
+  top: 0;
+  background-color: $colorPrimary;
+  padding: 2px 6px;
+  border: 1px solid $colorPrimary;
+  border-radius: 8px;
+  display: none;
+  color: $colorSecondary50;
+}

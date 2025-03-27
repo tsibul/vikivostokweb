@@ -58,6 +58,11 @@
       padding: 8px;
     }
 
+    &_date {
+      @include brd-standard;
+      padding: 8px;
+    }
+
     &_checkbox {
       accent-color: $colorSecondary;
       cursor: pointer;
@@ -122,7 +127,7 @@
   }
 }
 
-.border-alert{
+.border-alert {
   border-color: red;
   border-width: 2px;
 }

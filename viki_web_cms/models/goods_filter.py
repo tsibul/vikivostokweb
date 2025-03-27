@@ -24,9 +24,24 @@ class FilterToGoods(SettingsDictionary):
         db_table_comment = 'Filter Goods'
         db_table = 'filter_goods'
 
+    def save(self, *args, **kwargs):
+        self.name = self.goods.article + ' ' + self.goods.name + ' ' + self.filter_option.name
+        super(FilterToGoods, self).save(*args, **kwargs)
+
     @staticmethod
     def dictionary_fields():
-        return SettingsDictionary.dictionary_fields() + [
+        return [
+            {
+                'field': 'name',
+                'type': 'string',
+                'label': 'название',
+                'null': True,
+            },
+            {
+                'field': 'deleted',
+                'type': 'boolean',
+                'label': 'удалено',
+            },
             {
                 'field': 'goods',
                 'type': 'foreign',
@@ -38,7 +53,7 @@ class FilterToGoods(SettingsDictionary):
                 'field': 'filter_option',
                 'type': 'foreign',
                 'label': 'фильтр',
-                'foreignClass': 'FiterOption',
+                'foreignClass': 'FilterOption',
                 'null': False
             },
         ]
@@ -55,9 +70,25 @@ class FilterToGoodsGroup(SettingsDictionary):
         db_table_comment = 'Filter Goods Group'
         db_table = 'filter_goods_group'
 
+    def save(self, *args, **kwargs):
+        self.name = self.goods_group.name + ' ' + self.filter_option.name
+        super(FilterToGoodsGroup, self).save(*args, **kwargs)
+
     @staticmethod
     def dictionary_fields():
-        return SettingsDictionary.dictionary_fields() + [
+        return [
+            {
+                'field': 'name',
+                'type': 'string',
+                'label': 'название',
+                'null': True,
+            },
+            {
+                'field': 'deleted',
+                'type': 'boolean',
+                'label': 'удалено',
+            },
+
             {
                 'field': 'goods_group',
                 'type': 'foreign',
@@ -69,7 +100,7 @@ class FilterToGoodsGroup(SettingsDictionary):
                 'field': 'filter_option',
                 'type': 'foreign',
                 'label': 'фильтр',
-                'foreignClass': 'FiterOption',
+                'foreignClass': 'FilterOption',
                 'null': False
             },
         ]

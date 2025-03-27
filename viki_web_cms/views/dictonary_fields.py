@@ -4,6 +4,7 @@ from django.http import JsonResponse
 
 from viki_web_cms import models
 from viki_web_cms.functions.reformat_field_dictionary import reformat_field_dictionary
+from viki_web_cms.functions.user_validation import user_check
 
 
 def field_names(request, class_name):
@@ -13,7 +14,7 @@ def field_names(request, class_name):
     :param class_name:
     :return:
     """
-    if not request.user.is_authenticated:
+    if user_check(request):
         return JsonResponse(None, safe=False)
     if not class_name:
         return JsonResponse(None, safe=False)
@@ -32,7 +33,7 @@ def field_values(request, class_name, deleted, first_record, search_string):
     :param search_string: filter for records
     :return:
     """
-    if not request.user.is_authenticated:
+    if user_check(request):
         return JsonResponse(None, safe=False)
     dict_model = getattr(models, class_name)
     field_list = dict_model.dictionary_fields()
@@ -75,7 +76,7 @@ def record_info(request, class_name, record_id):
     :param record_id:
     :return:
     """
-    if not request.user.is_authenticated:
+    if user_check(request):
         return JsonResponse(None, safe=False)
     dict_model = getattr(models, class_name)
     url = dict_model.storage_url()
@@ -91,7 +92,7 @@ def dropdown_list(request, class_name):
     :param class_name:
     :return:
     """
-    if not request.user.is_authenticated:
+    if user_check(request):
         return JsonResponse(None, safe=False)
     dict_model = getattr(models, class_name)
     match class_name:
@@ -103,6 +104,14 @@ def dropdown_list(request, class_name):
             option_list = (dict_model.objects.filter(deleted=False)
                            .annotate(value=Concat(F('code'), Value(' '), F('name')))
                            .values('id', 'value'))
+        case 'PrintPriceGroup':
+            option_list = (dict_model.objects.filter(deleted=False)
+                           .annotate(value=Concat(F('print_type__name'), Value(' '), F('name')))
+                           .values('id', 'value'))
+        case 'Group':
+            option_list = (dict_model.objects.filter(~Q(name='cms_staff'))
+                       .annotate(value=F('name'))
+                       .values('id', 'value'))
         case _:
             option_list = (dict_model.objects.filter(deleted=False)
                            .annotate(value=F('name'))

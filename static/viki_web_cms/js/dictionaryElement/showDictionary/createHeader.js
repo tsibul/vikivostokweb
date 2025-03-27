@@ -27,7 +27,7 @@ export function createHeader(dictionaryClass, dictionaryName, fileUpload) {
     const headerRight = document.createElement('div');
     headerRight.classList.add('dictionary-frame__header_right');
     if (fileUpload) {
-        const uploadButton = createNeutralButton('Загрузить');
+        const uploadButton = createNeutralButton('Загрузить CSV' );
         uploadButton.addEventListener('click', () => csvUpload(dictionaryClass))
         headerRight.appendChild(uploadButton);
     }

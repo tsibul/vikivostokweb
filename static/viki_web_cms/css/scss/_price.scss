@@ -1,0 +1,149 @@
+@import "vars";
+@import "mixins";
+
+.price {
+  &__modal {
+    &_date {
+      @include brd-standard;
+      padding: 6px;
+    }
+
+    &_row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 4px 0;
+    }
+
+    &_label {
+      padding: 0 6px;
+    }
+
+    &_btn {
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    &_check {
+      height: 18px;
+      width: 18px;
+      accent-color: $colorSecondary;
+    }
+
+    &_border-alert {
+      border-color: red;
+      border-width: 2px;
+    }
+  }
+}
+
+.price-header {
+  display: grid;
+  //grid-template-columns: 0.8fr 3.2fr repeat(5, 1fr) 1.3fr 1fr;
+  gap: 16px;
+  align-items: center;
+  padding: 6px 20px 6px 6px;
+
+  &__item {
+    font-weight: 700;
+  }
+}
+
+.price-content {
+  overflow: auto;
+  max-height: calc(100vh - 190px);
+
+  &__volume-header{
+    font-weight: 700;
+    padding: 16px;
+    background-color: rgba($colorNeutral500, 0.2);
+    @include brd-standard;
+    border-color: transparent;
+  }
+}
+
+.price-row {
+  display: grid;
+  //grid-template-columns: 0.8fr 3.2fr repeat(5, 1fr) 1.3fr 1fr;
+  gap: 16px;
+  align-items: center;
+  padding: 2px;
+
+  &__item {
+    @include brd-standard;
+    padding: 6px;
+    width: 100%;
+    text-align: end;
+    font-size: 16px;
+
+    &_disabled{
+      background-color: rgba($colorSecondary, 0.05);
+      //color: rgba($colorPrimary950, 0.3);
+    }
+  }
+
+  &__name {
+    padding: 6px;
+    width: 100%;
+    text-align: start;
+  }
+
+  &__item-row{
+    background-color: rgba($colorNeutral500, 0.1);
+  }
+}
+
+.price-dropdown {
+  position: relative;
+
+  &__frame {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    @include brd-standard;
+    padding: 8px;
+    background-color: #fff;
+  }
+
+  &__input {
+    font-size: 14px;
+    border: transparent;
+    width: 120px;
+
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
+.print-header{
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  gap: 16px;
+  padding: 6px;
+  @include brd-standard;
+  border-color: transparent;
+  background-color: rgba($colorSecondary, 0.05);
+}
+
+.type-table{
+  padding: 4px;
+  &__row {
+    display: grid;
+    gap: 6px;
+    align-items: center;
+    @include brd-standard;
+    padding: 3px;
+    border-color: transparent;
+  }
+  &__header{
+    background-color: rgba($colorNeutral500, 0.05);
+  }
+
+  &__input{
+    @include brd-standard;
+    padding: 6px;
+    width: 100%;
+  }
+}

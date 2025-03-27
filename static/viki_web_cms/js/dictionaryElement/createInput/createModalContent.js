@@ -10,14 +10,20 @@ import {jsonUrl} from "../../main.js";
 import {fetchJsonData} from "../../fetchJsonData.js";
 import {createFileField} from "./createFileField.js";
 import {createFieldLabel} from "./createFieldLabel.js";
+import {createFloatField} from "./createFloatField.js";
+import {createPreciseFloatField} from "./createPreciseFloatField.js";
+import {createDateField} from "./createDateField.js";
 
 const fieldCreation = {
     'string': createStringField,
     'boolean': createBooleanField,
     'number': createNumberField,
+    'float': createFloatField,
+    'precise': createPreciseFloatField,
     'foreign': createForeignField,
     'image': createImageField,
     'file': createFileField,
+    'date': createDateField,
 };
 
 /**
