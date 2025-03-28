@@ -883,7 +883,6 @@ input[type=checkbox] {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 16px;
 }
 .login__title {
   padding: 10px 8px;
@@ -896,11 +895,48 @@ input[type=checkbox] {
   background-color: rgba(0, 158, 163, 0.8);
 }
 .login__content {
-  padding: 8px;
+  padding: 0 8px;
+}
+.login__label {
+  margin-top: 8px;
+}
+.login__input {
+  border: 1px solid #0F4880;
+  border-radius: 12px;
+  padding: 10px;
+  min-width: 320px;
+}
+.login__btn-block {
+  display: flex;
+  margin-top: 16px;
+  margin-bottom: 8px;
+  gap: 12px;
+}
+.login__btn {
+  width: 100%;
+  justify-content: center;
+  padding: 10px;
+}
+.login__btn_forget {
+  margin-top: 18px;
+  background-color: rgba(74, 74, 74, 0.3);
+}
+.login__btn_forget:hover {
+  background-color: #fff;
+}
+.login__inputs {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  gap: 12px;
+}
+.login__text {
+  margin-top: 16px;
+  width: 100%;
+  text-align: center;
+}
+.login .alert {
+  color: red;
+  margin-top: 8px;
+  text-align: center;
 }
 
 /*# sourceMappingURL=style.css.map */

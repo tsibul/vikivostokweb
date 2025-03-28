@@ -12,7 +12,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 16px;
+  //gap: 16px;
 
   }
   &__title{
@@ -26,11 +26,60 @@
     background-color: rgba($colorSecondary, 0.8);
   }
   &__content{
-    padding: 8px;
+    padding: 0 8px;
+    //display: flex;
+    //flex-direction: column;
+    //justify-content: space-between;
+    //gap: 12px;
+  }
+
+  &__label{
+    margin-top: 8px;
+
+  }
+  &__input{
+    @include brd-standard;
+    padding: 10px;
+    min-width: 320px;
+  }
+
+  &__btn-block{
+        display: flex;
+    margin-top: 16px;
+    margin-bottom: 8px;
+    //justify-content: center;
+    gap: 12px;
+  }
+
+  &__btn{
+    width: 100%;
+    justify-content: center;
+    padding: 10px;
+    &_forget{
+      //@include brd-standard;
+      margin-top: 18px;
+      background-color: rgba($colorNeutral500, 0.3);
+      &:hover{
+        background-color: #fff;
+      }
+    }
+  }
+
+  &__inputs{
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    gap: 12px;
+  }
+
+  &__text{
+    margin-top: 16px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .alert{
+    color: red;
+    margin-top: 8px;
+    text-align: center;
   }
 
 }

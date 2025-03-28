@@ -5,6 +5,7 @@ import {logOut} from "./authentication/logOut.js";
 import {logInFunc} from "./authentication/logInFunc.js";
 import {changePassword} from "./authentication/changePassword.js";
 import {register} from "./authentication/register.js";
+import {modalDnD} from "./modalDnD.js";
 
 const menuLogIn = document.querySelector('nav.menu__cabinet .log-login');
 const menuLogOut = document.querySelector('nav.menu__cabinet .log-logout');
@@ -12,34 +13,38 @@ const menuRegister = document.querySelector('nav.menu__cabinet .log-register');
 const logOutDialog = document.querySelector('dialog.log-logout');
 const logOutBtn = logOutDialog.querySelector('.btn__save');
 const registerDialog = document.querySelector('dialog.log-register');
-const registerBtn = registerDialog.querySelector('.btn__save');
+const registerForm = registerDialog.querySelector('form');
 const logInDialog = document.querySelector('dialog.log-login');
-const logInBtn = logInDialog.querySelector('.btn__save');
+const logInForm = logInDialog.querySelector('form');
 const changePasswordDialog = document.querySelector('dialog.log-change-pass');
-const changePasswordBtn = changePasswordDialog.querySelector('.btn__save');
+const changePasswordForm = changePasswordDialog.querySelector('form');
 const cancelBtn = document.querySelectorAll('dialog .btn__cancel');
 const cancelTimes = [...document.querySelectorAll('dialog .login__title')]
     .map(el => el.lastElementChild);
+const allDialogInputs = document.querySelectorAll('dialog .login__input');
 
 if (menuLogIn) {
     menuLogIn.addEventListener('click', () => {
         logInDialog.showModal()
+        modalDnD(logInDialog);
     });
 }
 
 if (menuLogOut) {
     menuLogOut.addEventListener('click', () => {
         logOutDialog.showModal();
+        modalDnD(logOutDialog);
         logOutBtn.focus();
+
     });
 }
 
 if (menuRegister) {
     menuRegister.addEventListener('click', () => {
         registerDialog.showModal();
+        modalDnD(registerDialog);
     });
 }
-
 
 cancelTimes.forEach(cancelTime => {
     cancelTime.addEventListener('click', closeDialog);
@@ -51,8 +56,14 @@ cancelBtn.forEach((btn) => {
 
 logOutBtn.addEventListener('click', await logOut);
 
-logInBtn.addEventListener('submit', await logInFunc);
+logInForm.addEventListener('submit', await logInFunc);
 
-changePasswordBtn.addEventListener('submit', await changePassword);
+changePasswordForm.addEventListener('submit', await changePassword);
 
-registerBtn.addEventListener('submit', await register);
+registerForm.addEventListener('submit', await register);
+
+[...allDialogInputs].forEach(input => {
+    input.addEventListener('mousedown', e => {
+        e.target.closest('form').querySelector('.alert').textContent = '';
+    });
+});

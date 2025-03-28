@@ -11,6 +11,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
 
+
 # Генерация временного пароля
 def generate_temp_password(length=8):
     return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
@@ -42,6 +43,7 @@ def send_temp_password(request):
         return render(request, "message.html", {"message": "Временный пароль отправлен на вашу почту!"})
 
     return render(request, "send_password.html")
+
 
 def login_with_temp_password(request):
     if request.method == "POST":
@@ -82,3 +84,18 @@ def log_out(request):
         logout(request)
         return JsonResponse({"status": "ok"})
     return JsonResponse({"status": "error"}, status=405)
+
+
+def log_in(request):
+    if request.method == "POST":
+        email = request.POST['email']
+        password = request.POST['password']
+        username = User.objects.get(email=email.lower()).username
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return JsonResponse({"status": "ok"})
+        else:
+            return JsonResponse({"status": "error"}, status=405)
+    else:
+        return JsonResponse({"status": "error"}, status=405)
