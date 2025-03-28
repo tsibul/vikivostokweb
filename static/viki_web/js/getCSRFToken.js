@@ -1,5 +1,9 @@
 'use strict'
 
+/**
+ * gt csrf token from cookie
+ * @returns {*}
+ */
 export function getCSRFToken() {
     return document.cookie
         .split("; ")

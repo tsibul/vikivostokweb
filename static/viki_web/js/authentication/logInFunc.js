@@ -1,25 +1,23 @@
 'use strict'
 
-import {getCSRFToken} from "../getCSRFToken.js";
+import {sendFormData} from "./sendFormData.js";
 
-export async function logInFunc(e) {
+/**
+ * log in user
+ * @param e
+ * @param url
+ * @returns {Promise<void>}
+ */
+export async function logInFunc(e, url) {
     e.preventDefault();
     const form = e.target;
-    const formData = new FormData(form);
-    const response = await fetch('/log-in/', {
-        method: 'POST',
-        body: formData,
-        headers: {
-            "X-CSRFToken": getCSRFToken(),
-        },
-    });
-    const data = await response.json();
+    const data = await sendFormData(url, form)
     if (data.status === "ok") {
         window.history.replaceState(null, "", window.location.pathname);
         window.location.reload();
     } else {
         const alert = form.querySelector('.alert');
-        alert.textContent = 'ошибка ввода почты или пароля';
+        alert.textContent = data.message;
     }
 
 }

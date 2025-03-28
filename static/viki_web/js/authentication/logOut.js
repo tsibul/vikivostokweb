@@ -2,6 +2,11 @@
 
 import {getCSRFToken} from "../getCSRFToken.js";
 
+/**
+ * log out user
+ * @param e
+ * @returns {Promise<void>}
+ */
 export async function logOut(e) {
     e.preventDefault();
     const response = await fetch("/log-out/", {
