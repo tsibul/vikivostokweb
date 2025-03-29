@@ -3,13 +3,13 @@ from io import TextIOWrapper
 from pathlib import Path
 
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+# from django.views.decorators.csrf import csrf_exempt
 
 from viki_web_cms.functions.webp_convertor import webp_convertor
 from viki_web_cms.models import Goods, CatalogueItem, Color, GoodsOption, CatalogueItemColor
 
 
-@csrf_exempt
+# @csrf_exempt
 def catalogue_csv_load(request):
     """
     check file if csv, save data
@@ -45,7 +45,7 @@ def catalogue_csv_load(request):
         'recordErrorLength': len(record_error),
     }, safe=False)
 
-@csrf_exempt
+# @csrf_exempt
 def catalogue_files_load(request):
     """
     check file if csv, save data

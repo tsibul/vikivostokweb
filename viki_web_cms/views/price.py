@@ -5,14 +5,14 @@ from viki_web_cms import models
 from django.db.models import F, Q, OuterRef, CharField, Value, Func, Subquery
 from django.db.models.functions import Concat, Cast
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+# from django.views.decorators.csrf import csrf_exempt
 
 from viki_web_cms.functions.user_validation import user_check
 from viki_web_cms.models import Price, StandardPriceType, Goods, PriceGoodsStandard, CatalogueItem, PriceItemStandard, \
     CustomerDiscount, PriceGoodsVolume, PriceGoodsQuantity, PrintPriceGroup, PrintType, PrintVolume, PrintPrice
 
 
-@csrf_exempt
+# @csrf_exempt
 def save_new_price_date(request):
     """
 
@@ -219,7 +219,7 @@ def item_query(search_string):
     return items
 
 
-@csrf_exempt
+# @csrf_exempt
 def delete_item_price_row(request, row_id):
     """
 
@@ -367,7 +367,7 @@ def printing_price_data(request, str_price_date):
     return JsonResponse({'priceData': price_data, }, safe=False)
 
 
-@csrf_exempt
+# @csrf_exempt
 def price_list_save(request):
     """
 
@@ -447,7 +447,7 @@ def prepare_item_kwargs(item):
     return temp_item
 
 
-@csrf_exempt
+# @csrf_exempt
 def printing_price_list_save(request):
     """
 

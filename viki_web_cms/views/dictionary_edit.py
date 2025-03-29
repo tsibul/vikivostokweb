@@ -7,7 +7,7 @@ from viki_web_cms.functions.reformat_field_dictionary import reformat_field_dict
 from viki_web_cms.functions.user_validation import user_check
 
 
-@csrf_exempt
+# @csrf_exempt
 def edit_dictionary(request, class_name, element_id):
     """
 
