@@ -2,6 +2,7 @@
 
 import {jsonUrl} from "../main.js";
 import {reloadPriceList} from "./reloadPriceList.js";
+import {getCSRFToken} from "../getCSRFToken.js";
 
 /**
  * save priceList for standard prices
@@ -19,7 +20,6 @@ export async function savePriceList(e) {
     const changedFields = document
         .querySelectorAll('input.price-row__item:not(.price-row__item_disabled)');
     const inputsToSave = Array.from(changedFields);
-        // .filter(input => input.value.trim() !== '' && input.value !== '0');
     const priceListData = {'goods': [], 'item': []};
     let priceListDataItem;
     inputsToSave.forEach(input => {
@@ -31,7 +31,6 @@ export async function savePriceList(e) {
                 priceListDataItem[key] = value;
             }
         })
-        // priceListDataItem = JSON.parse(JSON.stringify(input.dataset));
         priceListDataItem['Price__price_list__id'] = Number.parseInt(priceDateId);
         priceListDataItem['price'] = Number.parseFloat(input.value);
         delete priceListDataItem['discount'];
@@ -42,13 +41,14 @@ export async function savePriceList(e) {
     fetch(saveUrl, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            "X-CSRFToken": getCSRFToken(),
         },
         body: JSON.stringify(priceListData),
     })
-    .then(res => res.json())
-    .then(data => {
-        const err = data.error;
-        if (!err) reloadPriceList()
-    });
+        .then(res => res.json())
+        .then(data => {
+            const err = data.error;
+            if (!err) reloadPriceList()
+        });
 }

@@ -7,6 +7,7 @@ import {createCancelButton} from "../createStandardElements/createCancelButton.j
 import {createSaveButton} from "../createStandardElements/createSaveButton.js";
 import {closeModal} from "../modalFunction/closeModal.js";
 import {checkUserData} from "./checkUserData.js";
+import {getCSRFToken} from "../getCSRFToken.js";
 
 export async function login() {
     const loginWindow = document.createElement('dialog');
@@ -48,6 +49,9 @@ async function sendLogin(e, log, pass, modal) {
     e.preventDefault();
     await fetch('./user_login', {
         method: 'POST',
+        headers: {
+            "X-CSRFToken": getCSRFToken(),
+        },
         body: JSON.stringify({
             'username': log,
             'password': pass,

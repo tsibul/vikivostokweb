@@ -3,6 +3,7 @@
 import {loadPriceDates} from "./priceDropdownBody.js";
 import {jsonUrl} from "../main.js";
 import {closeModal} from "../modalFunction/closeModal.js";
+import {getCSRFToken} from "../getCSRFToken.js";
 
 export async function priceDateSave(e) {
     e.preventDefault();
@@ -28,6 +29,9 @@ export async function priceDateSave(e) {
         const saveUrl = jsonUrl + 'save_new_price_date';
         await fetch(saveUrl, {
             method: 'POST',
+            headers: {
+                "X-CSRFToken": getCSRFToken(),
+            },
             body: formData,
         })
             .then(res => res.json())

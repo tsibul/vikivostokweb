@@ -6,6 +6,7 @@ import {closeModal} from "../modalFunction/closeModal.js";
 import {reloadCatalogue} from "./reloadCatalogue.js";
 import {loadCsvAlert} from "./loadCsvAlert.js";
 import {modalDnD} from "../modalFunction/modalDnD.js";
+import {getCSRFToken} from "../getCSRFToken.js";
 
 export async function csvUploadCatalogueSave(e) {
     e.preventDefault();
@@ -39,6 +40,9 @@ async function uploadCatalogueSave(e, form, formData, url, errorMessage) {
     const saveUrl = jsonUrl + url;
     await fetch(saveUrl, {
         method: 'POST',
+            headers: {
+                "X-CSRFToken": getCSRFToken(),
+            },
         body: formData,
     })
         .then(response => response.json())

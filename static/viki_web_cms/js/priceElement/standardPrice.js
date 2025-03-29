@@ -7,6 +7,7 @@ import {createSaveButton} from "../createStandardElements/createSaveButton.js";
 import {createNeutralButton} from "../createStandardElements/createNeutralButton.js";
 import {createCancelButton} from "../createStandardElements/createCancelButton.js";
 import {savePriceList} from "./savePriceList.js";
+import {getCSRFToken} from "../getCSRFToken.js";
 
 /**
  * create price-content element for standard price
@@ -136,7 +137,11 @@ function itemRowBuild(rowData, headerData, rowGrid) {
     itemBtn.addEventListener('click', async (e) => {
         e.preventDefault();
         const rowId = itemRow.querySelector('input[name="id"]').value;
-        fetch(jsonUrl + 'delete_item_price_row/' + rowId)
+        fetch(jsonUrl + 'delete_item_price_row/' + rowId, {
+            headers: {
+                "X-CSRFToken": getCSRFToken(),
+            }
+        })
             .then(res => res.json())
             .then(data => {
                 if (data) itemRow.remove();
