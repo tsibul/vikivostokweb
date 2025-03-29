@@ -1,1 +1,1 @@
-from viki_web_customer.models.customer_models import *
+# from viki_web_customer.models.customer_models import *
