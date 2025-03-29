@@ -10,15 +10,12 @@
     <link rel="icon" type="image/x-icon" href="{% static 'viki_web/icons/logo.svg' %}">
 
     {#    <script src="{% static 'production/js/dist/login.bundle.js' %}" defer type="module"></script>#}
-    <script src="{% static 'viki_web/js/login.js' %}" defer type="module"></script>
     <script src="https://kit.fontawesome.com/e2a5b405b2.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{% static 'viki_web/css/style.css' %}">
 
-    <script src="{% static 'viki_web/js/login.js' %}" defer type="module"></script>
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
     <script src="{% static 'viki_web/js/product.js' %}" defer type="module"></script>
-    {#    <script src="{% static 'production/js/dist/index.bundle.js' %}" defer type="module"></script>#}
-    {#    <script src="{% static 'viki_web/js/product.js' %}" defer type="module"></script>#}
+    <script src="{% static 'viki_web/js/login.js' %}" defer type="module"></script>
 
 </head>
 <body>
@@ -76,13 +73,13 @@
                         <li>Заказы</li>
                         <li>Настройка</li>
                         <li>Реквизиты</li>
-                        <li>Выйти</li>
+                        <li class="log-logout">Выйти</li>
                         </ul>
                     {% else %}
                         <div>Личный&nbsp;Кабинет</div>
                         <ul class="catalogue__item">
-                            <li>Войти</li>
-                            <li>Зарегистрироваться</li>
+                            <li class="log-login">Войти</li>
+                            <li class="log-register">Зарегистрироваться</li>
                         </ul>
                     {% endif %}
 {#            <div class="tooltip-text">личный кабинет</div>#}
@@ -158,6 +155,107 @@
         </div>
     </div>
 </details>
+<dialog class="login log-login">
+    <div class="login__body">
+        <div class="login__title">
+            <div>Войти</div>
+            <div>&times;</div>
+        </div>
+        <form class="login__content">
+            <div class="login__inputs">
+                <label for="login-mail" class="login__label">E-mail</label>
+                <input type="email"
+                       id="login-mail"
+                       class="login__input"
+                       name="email"
+                       required>
+                <label for="login-password" class="login__label">пароль</label>
+                <input type="password"
+                       id="login-password"
+                       class="login__input"
+                       name="password"
+                       required>
+            </div>
+            <div class="alert"></div>
+            <button type="button" class="btn login__btn login__btn_forget">
+                Восстановление пароля
+            </button>
+            <div class="login__btn-block">
+                <button type="reset" class="btn btn__cancel login__btn">Закрыть</button>
+                <button type="submit" class="btn btn__save login__btn">Войти</button>
+            </div>
+        </form>
+    </div>
+</dialog>
+<dialog class="login log-logout">
+    <div class="login__body">
+        <div class="login__title">
+            <div>Выйти</div>
+            <div>&times;</div>
+        </div>
+        <form class="login__content">
+            <div class="login__text">вы уверены, что хотите выйти?</div>
+            <div class="login__btn-block">
+                <button type="reset" class="btn btn__cancel login__btn">Закрыть</button>
+                <button type="button" class="btn btn__save login__btn">Выйти</button>
+            </div>
+        </form>
+    </div>
+</dialog>
+<dialog class="login log-register">
+    <div class="login__body">
+        <div class="login__title">
+            <div></div>
+            <div>&times;</div>
+        </div>
+        <form class="login__content">
+            <div class="login__inputs">
+                <label for="register-mail" class="login__label">E-mail</label>
+                <input type="email"
+                       id="register-mail"
+                       class="login__input"
+                       name="email"
+                       required>
+                <input type="text" hidden name="user-type" class="user-type">
+            </div>
+            <div class="alert"></div>
+            <div class="login__btn-block">
+                <button type="reset" class="btn btn__cancel login__btn">Закрыть</button>
+                <button type="submit" class="btn btn__save login__btn"></button>
+            </div>
+        </form>
+    </div>
+</dialog>
+<dialog class="login log-temporary">
+    <div class="login__body">
+        <div class="login__title">
+            <div>Введите пароль из почты</div>
+            <div>&times;</div>
+        </div>
+        <form class="login__content">
+            <div class="login__inputs">
+                <label for="temp-mail" class="login__label">E-mail</label>
+                <input type="email"
+                       id="temp-mail"
+                       class="login__input"
+                       name="email"
+                       required>
+                <label for="temp-password" class="login__label">пароль</label>
+                <input type="password"
+                       id="temp-password"
+                       class="login__input"
+                       name="password"
+                       required>
+                <input type="text" hidden name="user-type" class="user-type">
+            </div>
+            <div class="alert"></div>
+            <div class="login__btn-block">
+                <button type="reset" class="btn btn__cancel login__btn">Закрыть</button>
+                <button type="submit" class="btn btn__save login__btn">Войти</button>
+            </div>
+        </form>
+    </div>
+</dialog>
 {% block content %}
 {% endblock %}
 </body>
