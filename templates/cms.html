@@ -25,7 +25,16 @@
             <nav>
                 <ul class="menu__left">
                     <li class="menu__item">
+                        <a class="" href="/">
                         <img src="{% static 'viki_web/icons/logo.svg' %}" alt="ВикиВосток" class="menu__logo">
+                        </a>
+                    </li>
+                    <li class="menu__item tooltip">
+                        <a class="" href="{{  switch }}">
+                        <img src="{% static 'viki_web_cms/icons/switch.svg' %}" alt="switch"
+                             class="menu__logo">
+                        </a>
+                        <div class="tooltip-text" style="font-size: 12px; left: -12px; top: 32px">переключение клиенты/настройка</div>
                     </li>
                     {% for item in menu %}
                         <li class="menu__item" data-content="{{ item.item }}" data-page="{{  item.page_type }}">

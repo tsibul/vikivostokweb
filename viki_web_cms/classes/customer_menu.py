@@ -26,30 +26,32 @@ class CustomerMenu:
     @staticmethod
     def menu_set():
         menu_list = [
-            CustomerMenu("Настройки", str(json.dumps([
+            CustomerMenu("Клиенты", str(json.dumps([
 
                 CustomerSection('Компании', [
                     CustomerSetting('Клиенты', 'Customer', False),
                     CustomerSetting('Юр. лица', 'Company', False),
                     CustomerSetting('Банковские реквизиты', 'BankAccount', False),
                 ]),
-                CustomerSection('Менеджеры', [
-                    CustomerSetting('Менеджеры', '', False),
-                ]),
-
             ], default=lambda o: o.__dict__,
                 sort_keys=True)), 'Standard'),
+            CustomerMenu('Контакты', str(json.dumps([
+                CustomerSection('Контакты', [
+                    CustomerSetting('Контакты', 'Manager', True),
+                ]),
+            ], default=lambda o: o.__dict__,
+                sort_keys=True)), 'Catalogue'),
             CustomerMenu('Заказы', str(json.dumps([
                 CustomerSection('Заказы', [
                     CustomerSetting('Заказы', 'Order', False),
                 ]),
             ], default=lambda o: o.__dict__,
                 sort_keys=True)), 'Order'),
-            CustomerMenu('Каталог', str(json.dumps([
-                CustomerSection('Каталог', [
-                    CustomerSetting('Каталог', 'Catalogue', True),
+            CustomerMenu('Состав групп', str(json.dumps([
+                CustomerSection('Состав групп', [
+                    CustomerSetting('Состав групп', 'CustomerGroup', False),
                 ]),
             ], default=lambda o: o.__dict__,
-                sort_keys=True)), 'Catalogue'),
+                sort_keys=True)), 'Order'),
         ]
         return menu_list
