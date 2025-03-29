@@ -1,0 +1,125 @@
+@import "vars";
+@import "mixins";
+
+.dictionary-frame {
+  width: 100%;
+  @include brd-standard;
+  padding: 8px;
+  margin-bottom: 8px;
+  //max-height: calc(100vh - 60px);
+  min-height: 160px;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px;
+    width: 100%;
+    @include brd-standard;
+    border-color: transparent;
+    background-color: rgba($colorSecondary, 0.3);
+
+    &_left {
+      padding: 8px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    &_right {
+      padding: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+  }
+
+  &__input {
+    padding: 8px;
+    @include brd-standard;
+    width: 320px;
+  }
+
+  &__label {
+    font-size: 14px;
+    margin-right: 12px;
+    margin-left: -4px;
+    cursor: pointer;
+  }
+}
+
+.dictionary-content {
+  max-height: calc(100vh - 190px);
+  overflow: auto;
+  //position: relative;
+
+  &__header {
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  &__title {
+    //display: grid;
+    //gap: 6px;
+    //align-items: center;
+    //padding: 4px 12px 0 4px;
+    position: sticky;
+    top: 0;
+    background-color: $colorSecondary50;
+    //z-index: 3;
+
+    &_item {
+      font-weight: 600;
+      font-size: 14px;
+      text-wrap: pretty;
+      word-break: break-all;
+    }
+  }
+
+  &__rows {
+  }
+
+  &__row {
+    display: grid;
+    gap: 6px;
+    align-items: center;
+    padding: 4px 12px 2px 4px;
+
+    &:hover {
+      background-color: rgba($colorNeutral500, 0.2);
+    }
+
+    &_item {
+      font-size: 14px;
+      text-wrap: pretty;
+      word-break: break-all;
+    }
+
+    &_img {
+      height: 36px;
+      overflow: hidden;
+      content: inherit;
+      transition: 0.2s ease transform;
+      @include brd-standard;
+      border-radius: 4px;
+
+      &:hover {
+        transform: scale(3);
+      }
+    }
+  }
+
+  &__check {
+    height: 16px;
+    width: 16px;
+    accent-color: $colorPrimary;
+  }
+
+  &__square {
+    width: 14px;
+    height: 14px;
+  }
+
+}

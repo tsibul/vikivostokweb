@@ -1,0 +1,80 @@
+@import 'vars';
+@import 'mixins';
+
+.menu {
+  height: 60px;
+  width: 100%;
+  background-color: $colorSecondary;
+  position: fixed;
+  top: 0;
+  padding: 0 6px;
+  z-index: 10;
+
+  &__line {
+    display: flex;
+    justify-content: space-between;
+    height: 100%;
+  }
+
+  &__left {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    list-style: none;
+  }
+
+  &__item {
+    cursor: pointer;
+    transition: 0.4s ease transform;
+
+    &_bold {
+      font-weight: 600;
+      scale: 1.2;
+    }
+
+    & div, img {
+      display: inline-block;
+    }
+
+    &:hover {
+      transform: scale(1.1);
+      font-weight: 600;
+    }
+
+    &_bold {
+      font-weight: 600;
+      scale: 1.1;
+      &:hover {
+
+      }
+    }
+  }
+
+  &__logo {
+    height: 40px;
+  }
+
+  &__right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+
+    &:hover div {
+      font-weight: 600;
+    }
+  }
+}
+
+@media (max-width: 1360px) {
+  .menu {
+    &__left {
+      gap: 20px;
+    }
+  }
+}
