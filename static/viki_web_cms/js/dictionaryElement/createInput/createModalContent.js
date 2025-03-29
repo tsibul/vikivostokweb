@@ -13,6 +13,7 @@ import {createFieldLabel} from "./createFieldLabel.js";
 import {createFloatField} from "./createFloatField.js";
 import {createPreciseFloatField} from "./createPreciseFloatField.js";
 import {createDateField} from "./createDateField.js";
+import {createTextAreaField} from "./createTextAreaField.js";
 
 const fieldCreation = {
     'string': createStringField,
@@ -24,6 +25,7 @@ const fieldCreation = {
     'image': createImageField,
     'file': createFileField,
     'date': createDateField,
+    'textarea': createTextAreaField,
 };
 
 /**

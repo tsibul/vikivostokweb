@@ -1,6 +1,6 @@
 'use strict'
 
-import {createModalInput} from "./createModalInput.js";
+// import {createModalInput} from "./createModalInput.js";
 
 /**
  * create text input
@@ -8,7 +8,8 @@ import {createModalInput} from "./createModalInput.js";
  * @param fieldData
  */
 export function createTextAreaField(fieldData) {
-    const input = createModalInput('textarea');
+    const input = document.createElement('textarea');
+    input.classList.add('modal__content_textarea');
     input.value = fieldData.fieldValue;
     input.name = fieldData.fieldName.field;
     return input;

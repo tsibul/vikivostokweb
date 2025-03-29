@@ -60,8 +60,9 @@
 
     &_textarea {
       @include brd-standard;
-      min-height: 64px;
+      min-height: 66px;
       padding: 8px;
+      resize: vertical;
     }
 
     &_date {

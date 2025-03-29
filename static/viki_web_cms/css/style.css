@@ -436,6 +436,13 @@ body {
   border-radius: 12px;
   padding: 8px;
 }
+.modal__content_textarea {
+  border: 1px solid #0F4880;
+  border-radius: 12px;
+  min-height: 66px;
+  padding: 8px;
+  resize: vertical;
+}
 .modal__content_date {
   border: 1px solid #0F4880;
   border-radius: 12px;
