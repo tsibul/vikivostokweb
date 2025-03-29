@@ -1,12 +1,11 @@
 import json
 
 from django.contrib.auth import authenticate, login
-from django.db.models.signals import post_init
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
 
-@csrf_exempt
+# @csrf_exempt
 def userdata(request):
     user = request.user
     if not user.is_authenticated:
@@ -19,7 +18,7 @@ def userdata(request):
     return JsonResponse({'username': user_out}, safe=False)
 
 
-@csrf_exempt
+# @csrf_exempt
 def user_login(request):
     user = None
     post_data = json.loads(request.body)
