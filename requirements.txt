@@ -6,3 +6,5 @@ tzdata==2025.1
 
 django-ratelimit~=4.1.0
 pillow~=11.1.0
+requests~=2.32.3
+dadata~=24.10.0
