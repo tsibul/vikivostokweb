@@ -14,8 +14,9 @@
     @include brd-standard;
     padding: 20px;
     gap: 20px;
-    max-height: fit-content;
+    height: calc(100% - 78px);
     position: fixed;
+    overflow: auto;
   }
 
   &__right {
