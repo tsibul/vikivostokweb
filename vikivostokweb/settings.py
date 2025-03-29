@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'viki_web.apps.VikiWebConfig',
     'viki_web_cms.apps.VikiWebCmsConfig',
-    'viki_web_customer.apps.VikiWebCustomerConfig',
 ]
 
 MIDDLEWARE = [

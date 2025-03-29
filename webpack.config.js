@@ -14,17 +14,6 @@ module.exports = [
     },
     {
         entry: {
-            cms: './static/viki_web_customer/js/main.js',
-        },
-        output: {
-            filename: '[name].bundle.js',
-            path: path.resolve(__dirname, 'static/viki_web_customer/distribute'),
-            clean: true,
-        },
-        mode: "production",
-    },
-    {
-        entry: {
             login: './static/viki_web/js/login.js',
             header: './static/viki_web/js/header.js',
             product: './static/viki_web/js/product.js',
