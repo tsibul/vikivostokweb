@@ -76,7 +76,7 @@ def login_with_temp_password(request):
                 if not User.objects.filter(email=email).exists():
                     return JsonResponse({"status": "error", "message": "Пользователь не найден"})
                 user = User.objects.get(email=email)
-                user.password = temp_password
+                user.set_password(temp_password)
                 user.save()
                 login(request, user)
             cache.delete(f"temp_pass_{email}")
