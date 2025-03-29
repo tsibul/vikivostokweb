@@ -162,7 +162,7 @@ def catalogue_record(request, record_id):
     }, safe=False)
 
 
-@csrf_exempt
+# @csrf_exempt
 def save_catalogue_item(request, record_id):
     if user_check(request):
         return JsonResponse(None, safe=False)
