@@ -1,9 +1,6 @@
 import configparser
 import requests
 
-import json
-
-from django.contrib.sites import requests
 from django.db import models
 from dadata import Dadata
 
@@ -33,7 +30,7 @@ class Customer(SettingsDictionary):
             {
                 'field': 'standard_price_type',
                 'type': 'foreign',
-                'label': 'тип материала',
+                'label': 'прайс-лист',
                 'foreignClass': 'StandardPriceType',
                 'null': True,
             },
@@ -44,7 +41,7 @@ class Company(SettingsDictionary):
     """ company """
     legal = models.BooleanField(default=True)
     inn = models.CharField(max_length=12, null=False, blank=False)
-    kpp = models.CharField(max_length=8)
+    kpp = models.CharField(max_length=9)
     ogrn = models.CharField(max_length=13)
     region = models.CharField(max_length=2)
     address = models.CharField(max_length=255, null=False, blank=False)
@@ -66,16 +63,27 @@ class Company(SettingsDictionary):
         result = dadata.suggest('party', self.inn)
         company_data = result[0]
         self.name = company_data['value']
-        self.kpp = company_data['kpp']
-        self.ogrn = company_data['ogrn']
-        self.address = company_data['address']['unrestricted_value']
+        self.kpp = company_data['data']['kpp']
+        self.ogrn = company_data['data']['ogrn']
+        self.address = company_data['data']['address']['unrestricted_value']
         self.region = self.kpp[0:2]
         super(Company, self).save(*args, **kwargs)
 
 
     @staticmethod
     def dictionary_fields():
-        return SettingsDictionary.dictionary_fields() + [
+        return [
+            {
+                'field': 'name',
+                'type': 'string',
+                'label': 'название',
+                'null': True,
+            },
+            {
+                'field': 'deleted',
+                'type': 'boolean',
+                'label': 'уд.',
+            },
             {
                 'field': 'legal',
                 'type': 'boolean',
@@ -87,18 +95,18 @@ class Company(SettingsDictionary):
                 'label': 'ИНН',
                 'null': False,
             },
-            {
-                'field': 'kpp',
-                'type': 'string',
-                'label': 'КПП',
-                'null': True,
-            },
-            {
-                'field': 'ogrn',
-                'type': 'string',
-                'label': 'ОГРН',
-                'null': True,
-            },
+            # {
+            #     'field': 'kpp',
+            #     'type': 'string',
+            #     'label': 'КПП',
+            #     'null': True,
+            # },
+            # {
+            #     'field': 'ogrn',
+            #     'type': 'string',
+            #     'label': 'ОГРН',
+            #     'null': True,
+            # },
             {
                 'field': 'region',
                 'type': 'string',
@@ -106,16 +114,16 @@ class Company(SettingsDictionary):
                 'null': True,
             },
             {
+                'field': 'customer',
+                'type': 'foreign',
+                'label': 'клиент',
+                'foreignClass': 'Customer',
+                'null': True,
+            },
+            {
                 'field': 'address',
                 'type': 'textarea',
                 'label': 'адрес',
-                'null': False,
-            },
-            {
-                'field': 'customer',
-                'type': 'foreign',
-                'label': 'тип материала',
-                'foreignClass': 'Customer',
                 'null': True,
             },
         ]
@@ -125,7 +133,6 @@ class BankAccount(SettingsDictionary):
     account_no = models.CharField(max_length=20, null=False, blank=False)
     bic = models.CharField(max_length=9, null=False, blank=False)
     corr_account = models.CharField(max_length=20, null=False, blank=False)
-    bank_name = models.CharField(max_length=140, null=False, blank=False)
     city = models.CharField(max_length=140, null=False, blank=False)
     company = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True, blank=True)
 
@@ -142,14 +149,25 @@ class BankAccount(SettingsDictionary):
         if response.status_code == 200:
             data = response.json()
             self.corr_account = data['ks']
-            self.bank_name = data['name']
+            self.name = data['name'].replace('&quot;', '"')
             self.city = data['city']
             super(BankAccount, self).save(*args, **kwargs)
 
 
     @staticmethod
     def dictionary_fields():
-        return SettingsDictionary.dictionary_fields() + [
+        return [
+            {
+                'field': 'name',
+                'type': 'string',
+                'label': 'банк',
+                'null': True,
+            },
+            {
+                'field': 'deleted',
+                'type': 'boolean',
+                'label': 'уд.',
+            },
             {
                 'field': 'account_no',
                 'type': 'string',
@@ -162,24 +180,18 @@ class BankAccount(SettingsDictionary):
                 'label': 'БИК',
                 'null': False,
             },
-            {
-                'field': 'corr_account',
-                'type': 'string',
-                'label': 'кор. счет',
-                'null': False,
-            },
-            {
-                'field': 'bank_name',
-                'type': 'string',
-                'label': 'банк',
-                'null': False,
-            },
-            {
-                'field': 'city',
-                'type': 'string',
-                'label': 'город',
-                'null': False,
-            },
+            # {
+            #     'field': 'corr_account',
+            #     'type': 'string',
+            #     'label': 'кор. счет',
+            #     'null': True,
+            # },
+            # {
+            #     'field': 'city',
+            #     'type': 'string',
+            #     'label': 'город',
+            #     'null': True,
+            # },
             {
                 'field': 'company',
                 'type': 'foreign',

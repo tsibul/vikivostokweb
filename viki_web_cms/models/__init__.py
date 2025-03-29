@@ -13,3 +13,4 @@ from viki_web_cms.models.item_models import *
 from viki_web_cms.models.price_models import *
 from viki_web_cms.models.tech_data import *
 from viki_web_cms.models.packing_models import *
+from viki_web_cms.models.customer_models import *
