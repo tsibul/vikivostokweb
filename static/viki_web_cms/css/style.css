@@ -186,6 +186,7 @@ body {
   background-color: #009EA3;
   position: fixed;
   top: 0;
+  padding: 0 6px;
   z-index: 10;
 }
 .menu__line {
