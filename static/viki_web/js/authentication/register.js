@@ -2,6 +2,7 @@
 
 import {sendFormData} from "./sendFormData.js";
 import {modalDnD} from "../modalDnD.js";
+import {dialogClear} from "./dialogClear.js";
 
 /**
  * send new password to E-mail
@@ -18,10 +19,10 @@ export async function register(e) {
         logTempDialog.querySelector('#temp-mail').value =
             form.querySelector('#register-mail').value;
         logTempDialog.querySelector('#temp-password').value = null;
-        // logTempDialog.querySelector('.login__title').textContent = 'Введите пароль из почты';
         logTempDialog.querySelector('.user-type').value =
             form.querySelector('.user-type').value;
         logTempDialog.querySelector('.alert').textContent = '';
+        dialogClear(currentDialog);
         currentDialog.close()
         logTempDialog.showModal();
         logTempDialog.querySelector('#temp-mail').focus();

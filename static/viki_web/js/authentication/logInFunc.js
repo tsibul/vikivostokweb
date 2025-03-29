@@ -1,6 +1,7 @@
 'use strict'
 
 import {sendFormData} from "./sendFormData.js";
+import {dialogClear} from "./dialogClear.js";
 
 /**
  * log in user
@@ -13,6 +14,7 @@ export async function logInFunc(e, url) {
     const form = e.target;
     const data = await sendFormData(url, form)
     if (data.status === "ok") {
+        dialogClear(form);
         window.history.replaceState(null, "", window.location.pathname);
         window.location.reload();
     } else {
