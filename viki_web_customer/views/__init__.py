@@ -1,1 +1,0 @@
-from viki_web_customer.views.main_customer import *
