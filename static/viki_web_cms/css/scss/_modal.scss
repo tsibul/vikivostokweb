@@ -58,6 +58,12 @@
       padding: 8px;
     }
 
+    &_textarea {
+      @include brd-standard;
+      min-height: 64px;
+      padding: 8px;
+    }
+
     &_date {
       @include brd-standard;
       padding: 8px;
