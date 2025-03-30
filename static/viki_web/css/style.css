@@ -994,4 +994,12 @@ input[type=checkbox] {
   margin-bottom: 16px;
 }
 
+.alert-border {
+  border-color: red;
+}
+
+.alert {
+  color: red;
+}
+
 /*# sourceMappingURL=style.css.map */
