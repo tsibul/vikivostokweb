@@ -4,7 +4,7 @@ import {closeDialog} from "./authentication/closeDialog.js";
 import {logOut} from "./authentication/logOut.js";
 import {logInFunc} from "./authentication/logInFunc.js";
 import {register} from "./authentication/register.js";
-import {modalDnD} from "./modalDnD.js";
+import {modalDnD} from "./common/modalDnD.js";
 import {forgotPassword} from "./authentication/forgotPassword.js";
 
 const menuLogIn = document.querySelector('nav.menu__cabinet .log-login');

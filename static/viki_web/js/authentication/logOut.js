@@ -1,6 +1,6 @@
 'use strict'
 
-import {getCSRFToken} from "../getCSRFToken.js";
+import {getCSRFToken} from "../common/getCSRFToken.js";
 
 /**
  * log out user

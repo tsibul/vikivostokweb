@@ -1,7 +1,7 @@
 'use strict'
 
-import {sendFormData} from "./sendFormData.js";
-import {modalDnD} from "../modalDnD.js";
+import {sendFormData} from "../common/sendFormData.js";
+import {modalDnD} from "../common/modalDnD.js";
 import {dialogClear} from "./dialogClear.js";
 
 /**

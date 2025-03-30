@@ -1,6 +1,6 @@
 'use strict'
 
-import {modalDnD} from "../modalDnD.js";
+import {modalDnD} from "../common/modalDnD.js";
 
 /**
  * send new password to existing user

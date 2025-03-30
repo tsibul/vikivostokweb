@@ -1,6 +1,6 @@
 'use strict'
 
-import {getCSRFToken} from "../getCSRFToken.js";
+import {getCSRFToken} from "./getCSRFToken.js";
 
 /**
  * send form data from log modal to desired url

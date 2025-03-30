@@ -1,6 +1,6 @@
 'use strict'
 
-import {sendFormData} from "./sendFormData.js";
+import {sendFormData} from "../common/sendFormData.js";
 import {dialogClear} from "./dialogClear.js";
 
 /**
