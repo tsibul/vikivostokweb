@@ -70,10 +70,9 @@
                             {% endif %}
                         </div>
                         <ul class="catalogue__item">
-                        <li>Заказы</li>
-                        <li>Настройка</li>
-                        <li>Реквизиты</li>
-                        <li class="log-logout">Выйти</li>
+                            <li>Заказы</li>
+                            <li><a href="{% url 'viki_web:cabinet' %}">Настройка</a></li>
+                            <li class="log-logout">Выйти</li>
                         </ul>
                     {% else %}
                         <div>Личный&nbsp;Кабинет</div>
@@ -82,8 +81,7 @@
                             <li class="log-register">Зарегистрироваться</li>
                         </ul>
                     {% endif %}
-{#            <div class="tooltip-text">личный кабинет</div>#}
-            </nav>
+                </nav>
             </div>
         </div>
     </div>

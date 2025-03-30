@@ -1,0 +1,46 @@
+{% extends 'header.html' %}
+{% load static %}
+{% block content %}
+    <script src="{% static 'viki_web/js/cabinet.js' %}" defer type="module"></script>
+    <div class="container">
+        <h1>Личный кабинет</h1>
+        <section>
+            <form id="personal-data" class="personal-data">
+                <div class="personal-data__inputs">
+                    <h3>Личные данные</h3>
+                    <div class="personal-data__block">
+                        <label for="email" class="personal-data__label">E-mail</label>
+                        <input type="text" id="email" class="personal-data__input" disabled>
+                    </div>
+                    <div class="personal-data__block">
+                        <label for="first-name" class="personal-data__label">Имя</label>
+                        <input type="text" id="first-name" class="personal-data__input input-disabled">
+                    </div>
+                    <div class="personal-data__block">
+                        <label for="last-name" class="personal-data__label">Фамилия</label>
+                        <input type="text" id="last-name" class="personal-data__input input-disabled">
+                    </div>
+                    <div class="personal-data__block">
+                        <label for="price" class="personal-data__label">Прайс-лист</label>
+                        <input type="text" id="price" class="personal-data__input" disabled>
+                    </div>
+                </div>
+                <div class="personal-data__inputs">
+                    <div class="personal-data__change">
+                        <button class="btn btn__neutral personal-btn" type="button">Изменить</button>
+                    </div>
+                    <div class="personal-data__save item-hidden">
+                        <button class="btn btn__save personal-btn" type="button">Сохранить</button>
+                        <button class="btn btn__cancel personal-btn" type="button">Отменить</button>
+                    </div>
+                </div>
+            </form>
+
+        </section>
+        <section class="legal-data">
+            <h3>Реквизиты</h3>
+        </section>
+    </div>
+
+
+{% endblock %}

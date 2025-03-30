@@ -17,6 +17,7 @@ module.exports = [
             login: './static/viki_web/js/login.js',
             header: './static/viki_web/js/header.js',
             product: './static/viki_web/js/product.js',
+            cabinet: './static/viki_web/js/cabinet',
         },
         output: {
             filename: '[name].bundle.js',
