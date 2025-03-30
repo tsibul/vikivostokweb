@@ -12,4 +12,5 @@ export function cancelEdit(dataInitial, data) {
         input.disabled = true;
     });
     if (dataInitial) fillInputsWithData(dataInitial, data);
+    data.querySelector('.alert').textContent = '';
 }
