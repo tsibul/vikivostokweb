@@ -9,7 +9,7 @@ import {getCSRFToken} from "./getCSRFToken.js";
  * @returns {Promise<any>}
  */
 export async function sendFormData(url, form) {
-const formData = new FormData(form);
+    const formData = new FormData(form);
     const response = await fetch(url, {
         method: 'POST',
         body: formData,
@@ -17,5 +17,5 @@ const formData = new FormData(form);
             "X-CSRFToken": getCSRFToken(),
         },
     });
-    return  await response.json();
+    return await response.json();
 }
