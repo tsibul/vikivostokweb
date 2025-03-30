@@ -10,5 +10,5 @@ document.querySelector('li.log-logout').style.display='none'
 allInputDisabled();
 
 const personalDataInitial = await dataInitial(personalData);
-await editBtnListeners(personalData, personalDataInitial, '#first-name')
+await editBtnListeners(personalData, personalDataInitial, '#first-name', 'personal')
 

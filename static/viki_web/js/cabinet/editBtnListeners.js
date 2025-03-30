@@ -4,7 +4,7 @@ import {startEdit} from "./startEdit.js";
 import {cancelEdit} from "./cancelEdit.js";
 import {dataSave} from "./dataSave.js";
 
-export async function editBtnListeners(data, dataInitial, focusId) {
+export async function editBtnListeners(data, dataInitial, focusId, formType) {
     const dataChangeBtn = data.querySelector('.btn__neutral');
     const dataSaveBtn = data.querySelector('.btn__save');
     const dataCancelBtn = data.querySelector('.btn__cancel');
@@ -16,6 +16,6 @@ export async function editBtnListeners(data, dataInitial, focusId) {
         cancelEdit(dataInitial, data);
     });
     dataSaveBtn.addEventListener('click', async (e) => {
-        await dataSave(data);
+        await dataSave(data, formType);
     });
 }
