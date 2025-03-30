@@ -9,5 +9,5 @@ export function startEdit(data) {
     [...dataDisabled].forEach(input => {
         input.disabled = false;
     });
-
+    data.querySelector('.alert').textContent = '';
 }
