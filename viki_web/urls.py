@@ -14,4 +14,6 @@ urlpatterns = [
     path('log-in/', views.log_in, name='log-in'),
     path('cabinet/', views.cabinet, name='cabinet'),
     path('cabinet_data/', views.cabinet_data, name='cabinet_data'),
+
+    path('cabinet/save/<str:form_type>', views.cabinet_save, name='cabinet_save'),
 ]
