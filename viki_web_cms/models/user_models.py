@@ -4,7 +4,7 @@ from django.db import models
 
 class UserPhone(models.Model):
     """ user phone """
-    phone = models.CharField(max_length=14)
+    phone = models.CharField(max_length=18)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
