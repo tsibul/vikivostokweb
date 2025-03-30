@@ -1,9 +1,9 @@
-@import "../../../viki_web_cms/css/scss/vars";
-@import "../../../viki_web_cms/css/scss/mixins";
+@import "vars";
+@import "mixins";
 
 .personal-data {
   @include brd-standard;
-  padding: 40px 40px 10px 40px;
+  padding: 24px 40px 16px 40px;
   margin-top: 30px;
   display: grid;
   grid-template-columns: 3fr 1fr;
@@ -47,9 +47,9 @@
 }
 
 .legal-data {
-  margin-top: 30px;
+  margin: 30px 0;
+  padding: 24px 40px 16px 40px;
   @include brd-standard;
-  padding: 40px;
   display: flex;
 }
 
