@@ -11,6 +11,7 @@ class Customer(SettingsDictionary):
     """ customer group """
     e_mail_alias = models.CharField(max_length=255, null=True, blank=True)
     standard_price_type = models.ForeignKey(StandardPriceType, on_delete=models.SET_NULL, null=True, blank=True)
+    new = models.BooleanField(default=True)
 
     class Meta(SettingsDictionary.Meta):
         verbose_name = 'Клиент (группа)'
@@ -33,6 +34,11 @@ class Customer(SettingsDictionary):
                 'label': 'прайс-лист',
                 'foreignClass': 'StandardPriceType',
                 'null': True,
+            },
+            {
+                'field': 'new',
+                'type': 'boolean',
+                'label': 'новый',
             },
         ]
 
@@ -63,6 +69,12 @@ class Company(SettingsDictionary):
         result = dadata.suggest('party', self.inn)
         company_data = result[0]
         self.name = company_data['value']
+        if not self.customer:
+            short_name = company_data['data']['name']['full']
+            price_type = StandardPriceType.objects.all().order_by('priority')[0]
+            self.customer = Customer.objects.create(
+                name=short_name,
+                standard_price_type=price_type)
         self.kpp = company_data['data']['kpp']
         self.ogrn = company_data['data']['ogrn']
         self.address = company_data['data']['address']['unrestricted_value']
