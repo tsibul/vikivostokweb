@@ -11,5 +11,5 @@ def name_validation(name: str) -> bool:
 def phone_validation(phone: str) -> bool:
     if phone == "":
         return True
-    pattern = r'^[+()\d\s- ]{1,18}$'
+    pattern = r'^[+()\d\s-]{1,18}$'
     return bool(re.fullmatch(pattern, phone))
