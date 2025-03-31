@@ -1,6 +1,5 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from django.contrib.auth.models import Group
 
 from viki_web_cms.models import SettingsDictionary
 
@@ -8,7 +7,6 @@ from viki_web_cms.models import SettingsDictionary
 class StandardPriceType(SettingsDictionary):
     """ standard price type retail dealer etc. """
     priority = models.SmallIntegerField(default=10)
-    group = models.ForeignKey(Group, on_delete=models.PROTECT, null=True, blank=True)
 
     class Meta(SettingsDictionary.Meta):
         verbose_name = 'Тип цены'
@@ -29,13 +27,6 @@ class StandardPriceType(SettingsDictionary):
                 'type': 'number',
                 'label': 'приоритет',
                 'null': False,
-            },
-            {
-                'field': 'group',
-                'type': 'foreign',
-                'label': 'группа пользователей',
-                'null': True,
-                'foreignClass': 'Group'
             },
         ]
 
