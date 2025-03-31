@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
 from viki_web.functions.field_validation import name_validation, phone_validation
-from viki_web_cms.models import StandardPriceType, ProductGroup, UserPhone
+from viki_web_cms.models import StandardPriceType, ProductGroup, UserExtension
 
 
 @login_required
@@ -30,7 +30,7 @@ def collect_personal_data(user):
     price_data = StandardPriceType.objects.filter(group__in=user.groups.all()).first()
     price = ''
     phone = ''
-    user_phone = UserPhone.objects.filter(user=user).first()
+    user_phone = UserExtension.objects.filter(user=user).first()
     if user_phone:
         phone = user_phone.phone
     if price_data:
@@ -61,14 +61,14 @@ def cabinet_save(request, form_type):
 
 def save_personal_data(request):
     user = request.user
-    user_phone = UserPhone.objects.filter(user=user).first()
+    user_phone = UserExtension.objects.filter(user=user).first()
     if request.POST['phone']:
         if phone_validation(request.POST['phone']):
             if user_phone:
                 user_phone.phone = request.POST['phone']
                 user_phone.save()
             else:
-                UserPhone.objects.create(phone=request.POST['phone'], user=user)
+                UserExtension.objects.create(phone=request.POST['phone'], user=user)
         else:
             return JsonResponse({'status': 'error', 'message': 'Ошибка в номере телефона', 'field': 'phone'})
     if name_validation(request.POST['first_name']):
