@@ -79,6 +79,7 @@ def save_personal_data(request):
         user.last_name = request.POST['last_name']
     else:
         return JsonResponse({'status': 'error', 'message': 'Неверный формат фамилии', 'field': 'last_name'})
+    user.save()
     return JsonResponse({'status': 'ok'})
 
 
