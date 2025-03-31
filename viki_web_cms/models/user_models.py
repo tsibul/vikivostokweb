@@ -14,6 +14,10 @@ class UserExtension(models.Model):
 
     def save(self, *args, **kwargs):
         self.alias = mail_alias(self.user.email)
+        if not self.customer:
+            customer = Customer.objects.filter(alias=self.alias).first()
+            if customer:
+                self.customer = customer
         super(UserExtension, self).save(*args, **kwargs)
 
     class Meta:
