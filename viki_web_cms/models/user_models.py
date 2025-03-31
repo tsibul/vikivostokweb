@@ -1,15 +1,20 @@
 from django.contrib.auth.models import User
 from django.db import models
 
+from viki_web.functions.mail_alias import mail_alias
 from viki_web_cms.models import Customer
 
 
 class UserExtension(models.Model):
     """ user phone """
     phone = models.CharField(max_length=18)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)
     alias = models.CharField(max_length=140)
+
+    def save(self, *args, **kwargs):
+        self.alias = mail_alias(self.user.email)
+        super(UserExtension, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Доп. информация о пользователе'
