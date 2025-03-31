@@ -1,11 +1,9 @@
-from unittest import case
-
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
 from viki_web.functions.field_validation import name_validation, phone_validation
-from viki_web_cms.models import StandardPriceType, ProductGroup, UserExtension
+from viki_web_cms.models import ProductGroup, UserExtension
 
 
 @login_required
@@ -27,14 +25,13 @@ def cabinet_data(request):
 
 
 def collect_personal_data(user):
-    price_data = StandardPriceType.objects.filter(group__in=user.groups.all()).first()
+    user_extension = UserExtension.objects.filter(user=user).first()
     price = ''
+    if user_extension.customer:
+        price = user_extension.customer.standard_price_type.name
     phone = ''
-    user_phone = UserExtension.objects.filter(user=user).first()
-    if user_phone:
-        phone = user_phone.phone
-    if price_data:
-        price = price_data.name
+    if user_extension:
+        phone = user_extension.phone
     return {
         'email': user.email,
         'first_name': user.first_name,
