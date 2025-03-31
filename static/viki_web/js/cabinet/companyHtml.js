@@ -18,6 +18,12 @@ export const companyHtml = `
                             <label for="company-kpp-0" class="personal-data__label">КПП</label>
                             <input type="text" id="company-kpp-0" class="personal-data__input" disabled>
                         </div>
+                        <div class="personal-data__block">
+                            <input type="checkbox" id="vat-0"
+                                   class="input-disabled"
+                                   name="vat">
+                            <label for="vat-0" class="personal-data__label">с НДС</label>
+                        </div>
                     </form>
                     <div class="personal-data__block">
                         <label for="company-address-0" class="personal-data__label">Прайс-лист</label>
