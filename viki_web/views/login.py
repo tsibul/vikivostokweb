@@ -12,6 +12,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import make_password
 from django_ratelimit.decorators import ratelimit
 
+from viki_web_cms.models import UserExtension
+
 
 def generate_temp_password(length=12):
     """
@@ -71,6 +73,8 @@ def login_with_temp_password(request):
         if temp_password and password == temp_password:
             if user_type == "new":
                 user = User.objects.create_user(username=email, email=email, password=password)
+                user_extension = UserExtension(user=user)
+                user_extension.save()
                 login(request, user)
             elif user_type == "old":
                 if not User.objects.filter(email=email).exists():
