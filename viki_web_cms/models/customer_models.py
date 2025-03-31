@@ -12,6 +12,7 @@ class Customer(SettingsDictionary):
     e_mail_alias = models.CharField(max_length=255, null=True, blank=True)
     standard_price_type = models.ForeignKey(StandardPriceType, on_delete=models.SET_NULL, null=True, blank=True)
     new = models.BooleanField(default=True)
+    vat = models.BooleanField(default=False)
 
     class Meta(SettingsDictionary.Meta):
         verbose_name = 'Клиент (группа)'
@@ -40,6 +41,11 @@ class Customer(SettingsDictionary):
                 'type': 'boolean',
                 'label': 'новый',
             },
+            {
+                'field': 'vat',
+                'type': 'boolean',
+                'label': 'с НДС',
+            },
         ]
 
 
@@ -52,6 +58,7 @@ class Company(SettingsDictionary):
     region = models.CharField(max_length=2)
     address = models.CharField(max_length=255, null=False, blank=False)
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)
+    vat = models.BooleanField(default=False)
 
 
     class Meta(SettingsDictionary.Meta):
@@ -137,6 +144,11 @@ class Company(SettingsDictionary):
                 'type': 'textarea',
                 'label': 'адрес',
                 'null': True,
+            },
+            {
+                'field': 'vat',
+                'type': 'boolean',
+                'label': 'с НДС',
             },
         ]
 
