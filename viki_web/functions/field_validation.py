@@ -13,3 +13,11 @@ def phone_validation(phone: str) -> bool:
         return True
     pattern = r'^[+()\d\s-]{1,18}$'
     return bool(re.fullmatch(pattern, phone))
+
+
+def inn_validation(text):
+    return bool(re.fullmatch(r"\d{10}|\d{12}", text))
+
+
+def account_validation(text):
+    return bool(re.fullmatch(r"\d{20}}", text))
