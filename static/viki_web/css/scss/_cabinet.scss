@@ -1,6 +1,14 @@
 @import "vars";
 @import "mixins";
 
+.personal-btn {
+  width: 100%;
+  padding: 10px 0;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
 .personal-data {
   @include brd-standard;
   padding: 24px 40px 16px 40px;
@@ -12,7 +20,7 @@
   &__inputs {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 8px;
     width: 100%;
   }
 
@@ -36,11 +44,13 @@
   }
 
   &__change {
-    margin-top: 40px;
+    display: flex;
+    margin-top: 32px;
+    gap: 16px;
   }
 
   &__save {
-    margin-top: 40px;
+    margin-top: 32px;
     //display: flex;
     //flex-direction: column;
   }
@@ -50,23 +60,114 @@
   margin: 30px 0;
   padding: 24px 40px 16px 40px;
   @include brd-standard;
-  display: flex;
+  gap: 8px;
+
+  &__title {
+    display: grid;
+    grid-template-columns: 3fr 8px 1fr;
+    align-items: center;
+    gap: 30px;
+  }
+
+  &__change {
+    margin-top: 0;
+  }
+
+  &__block {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__inputs {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    gap: 30px;
+    margin-top: 8px;
+  }
 }
 
-.personal-btn {
+.bank {
+  cursor: pointer;
+  margin-top: 8px;
+  //@include brd-standard;
+  //padding: 16px;
+
+  &__name {
+    @include brd-standard;
+    //border-color: transparent;
+    padding: 8px;
+    font-size: 16px;
+    width: calc(100% - 46px);
+    margin-left: 30px;
+  }
+
+  &__summary {
+    display: grid;
+    grid-template-columns: 8px  3fr  1fr;
+    align-items: center;
+    gap: 30px;
+    margin-top: 16px;
+  }
+}
+
+.company {
+  cursor: pointer;
+
+  &[open] &__summary::before {
+    content: "▼"; /* Иконка открытого состояния */
+  }
+
+  &__summary {
+    display: grid;
+    grid-template-columns: 8px  3fr  1fr;
+    align-items: center;
+    gap: 30px;
+    margin-top: 16px;
+
+    &::before {
+      content: "▶"; /* Иконка закрытого состояния */
+      font-size: 14px;
+      transition: transform 0.2s;
+    }
+  }
+
+  &__data-save {
+    margin-top: 0;
+  }
+
+  &__save {
+    display: flex;
+    flex-direction: row;
+    gap: 14px;
+
+    & * {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.legal-btn {
   width: 100%;
   padding: 10px 0;
   display: flex;
   justify-content: center;
-  margin-bottom: 16px;
 }
 
-.alert-border{
+
+.alert-border {
   border-color: red;
 }
 
 .alert {
   color: red;
+}
+
+.company-alert{
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  margin-top: 24px;
 }
 
 //.input-disabled{

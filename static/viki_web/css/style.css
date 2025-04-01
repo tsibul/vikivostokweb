@@ -1,3 +1,4 @@
+@charset "UTF-8";
 * {
   padding: 0;
   margin: 0;
@@ -125,7 +126,12 @@ input[type=checkbox] {
 }
 
 .hr {
-  margin-top: 4px;
+  margin-top: 8px;
+}
+
+.check {
+  height: 20px;
+  width: 20px;
 }
 
 @media (max-width: 1330px) {
@@ -320,6 +326,155 @@ input[type=checkbox] {
 .news__title {
   font-size: 18px;
   font-weight: 800;
+}
+
+.personal-btn {
+  width: 100%;
+  padding: 10px 0;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.personal-data {
+  border: 1px solid #0F4880;
+  border-radius: 12px;
+  padding: 24px 40px 16px 40px;
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 30px;
+}
+.personal-data__inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+.personal-data__block {
+  display: grid;
+  align-items: center;
+  gap: 30px;
+  grid-template-columns: 1fr 4fr;
+  height: 40px;
+}
+.personal-data__label {
+  text-wrap: nowrap;
+}
+.personal-data__input {
+  border: 1px solid #0F4880;
+  border-radius: 12px;
+  padding: 8px;
+  font-size: 16px;
+  width: 100%;
+}
+.personal-data__change {
+  display: flex;
+  margin-top: 32px;
+  gap: 16px;
+}
+.personal-data__save {
+  margin-top: 32px;
+}
+
+.legal-data {
+  margin: 30px 0;
+  padding: 24px 40px 16px 40px;
+  border: 1px solid #0F4880;
+  border-radius: 12px;
+  gap: 8px;
+}
+.legal-data__title {
+  display: grid;
+  grid-template-columns: 3fr 8px 1fr;
+  align-items: center;
+  gap: 30px;
+}
+.legal-data__change {
+  margin-top: 0;
+}
+.legal-data__block {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.legal-data__inputs {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 30px;
+  margin-top: 8px;
+}
+
+.bank {
+  cursor: pointer;
+  margin-top: 8px;
+}
+.bank__name {
+  border: 1px solid #0F4880;
+  border-radius: 12px;
+  padding: 8px;
+  font-size: 16px;
+  width: calc(100% - 46px);
+  margin-left: 30px;
+}
+.bank__summary {
+  display: grid;
+  grid-template-columns: 8px 3fr 1fr;
+  align-items: center;
+  gap: 30px;
+  margin-top: 16px;
+}
+
+.company {
+  cursor: pointer;
+}
+.company[open] .company__summary::before {
+  content: "▼"; /* Иконка открытого состояния */
+}
+.company__summary {
+  display: grid;
+  grid-template-columns: 8px 3fr 1fr;
+  align-items: center;
+  gap: 30px;
+  margin-top: 16px;
+}
+.company__summary::before {
+  content: "▶"; /* Иконка закрытого состояния */
+  font-size: 14px;
+  transition: transform 0.2s;
+}
+.company__data-save {
+  margin-top: 0;
+}
+.company__save {
+  display: flex;
+  flex-direction: row;
+  gap: 14px;
+}
+.company__save * {
+  margin-bottom: 0;
+}
+
+.legal-btn {
+  width: 100%;
+  padding: 10px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.alert-border {
+  border-color: red;
+}
+
+.alert {
+  color: red;
+}
+
+.company-alert {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  margin-top: 24px;
 }
 
 .menu-product {
@@ -937,69 +1092,6 @@ input[type=checkbox] {
   color: red;
   margin-top: 8px;
   text-align: center;
-}
-
-.personal-data {
-  border: 1px solid #0F4880;
-  border-radius: 12px;
-  padding: 24px 40px 16px 40px;
-  margin-top: 30px;
-  display: grid;
-  grid-template-columns: 3fr 1fr;
-  gap: 30px;
-}
-.personal-data__inputs {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  width: 100%;
-}
-.personal-data__block {
-  display: grid;
-  align-items: center;
-  gap: 30px;
-  grid-template-columns: 1fr 4fr;
-  height: 40px;
-}
-.personal-data__label {
-  text-wrap: nowrap;
-}
-.personal-data__input {
-  border: 1px solid #0F4880;
-  border-radius: 12px;
-  padding: 8px;
-  font-size: 16px;
-  width: 100%;
-}
-.personal-data__change {
-  margin-top: 40px;
-}
-.personal-data__save {
-  margin-top: 40px;
-}
-
-.legal-data {
-  margin: 30px 0;
-  padding: 24px 40px 16px 40px;
-  border: 1px solid #0F4880;
-  border-radius: 12px;
-  display: flex;
-}
-
-.personal-btn {
-  width: 100%;
-  padding: 10px 0;
-  display: flex;
-  justify-content: center;
-  margin-bottom: 16px;
-}
-
-.alert-border {
-  border-color: red;
-}
-
-.alert {
-  color: red;
 }
 
 /*# sourceMappingURL=style.css.map */
