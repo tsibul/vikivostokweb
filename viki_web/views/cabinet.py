@@ -2,8 +2,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
-from viki_web.functions.field_validation import name_validation, phone_validation
-from viki_web_cms.models import ProductGroup, UserExtension
+from viki_web.functions.field_validation import name_validation, phone_validation, inn_validation
+from viki_web_cms.models import ProductGroup, UserExtension, Company, BankAccount
 
 
 @login_required
@@ -18,10 +18,46 @@ def cabinet_data(request):
     user = request.user
     if user.is_authenticated:
         personal_data = collect_personal_data(user)
-        context = {'personalData': personal_data}
+        legal_data = {}
+        user_extension = UserExtension.objects.filter(user=user).first()
+        if user_extension:
+            if user_extension.customer:
+                legal_data = collect_legal_data(user_extension.customer)
+        context = {'personalData': personal_data, 'legalData': legal_data}
         return JsonResponse({'status': 'ok', 'data': context})
     else:
         return redirect('main')
+
+
+def collect_legal_data(customer):
+    company_list = list(Company.objects.filter(
+        customer=customer,
+        deleted=False).order_by(
+        'name').values(
+        'id',
+        'name',
+        'inn',
+        'kpp',
+        'vat',
+        'address',
+    ))
+    for company in company_list:
+        company['bank'] = collect_bank_data(company['id'])
+    return company_list
+
+
+def collect_bank_data(company_id):
+    return list(BankAccount.objects.filter(
+        deleted=False,
+        company__id=company_id).values(
+        'id',
+        'name',
+        'account_no',
+        'bic',
+        'corr_account',
+        'city',
+    ))
+
 
 
 def collect_personal_data(user):
@@ -81,7 +117,21 @@ def save_personal_data(request):
 
 
 def save_company_data(request):
-    return JsonResponse({'status': 'ok'})
+    company_id = request.POST['id']
+    company = Company.objects.get(id=company_id)
+    counter = 0
+    if request.POST['vat']  and not company.vat:
+        company.vat = True
+        counter = counter + 1
+    if not inn_validation(request.POST['inn']):
+        return JsonResponse({'status': 'error', 'message': 'Неверный ИНН', 'field': 'inn'})
+    if request.POST['inn'] != company.inn:
+        company.inn = request.POST['inn']
+        counter = counter + 1
+        if counter:
+            return JsonResponse({'status': 'ok'})
+    return JsonResponse({'status': 'error', 'message': 'Ничего не поменялось', 'field': 'inn'})
+
 
 
 def save_bank_data(request):
