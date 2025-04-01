@@ -10,6 +10,8 @@ export function cancelEdit(dataInitial, data) {
     const dataDisabled = data.querySelectorAll('.input-disabled');
     [...dataDisabled].forEach(input => {
         input.disabled = true;
+        input.classList.remove('alert-border')
+
     });
     if (dataInitial) fillInputsWithData(dataInitial, data);
     data.querySelector('.alert').textContent = '';

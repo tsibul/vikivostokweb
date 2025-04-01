@@ -10,29 +10,39 @@
                     <h3>Личные данные</h3>
                     <div class="personal-data__block">
                         <label for="email" class="personal-data__label">E-mail</label>
-                        <input type="text" id="email" class="personal-data__input" disabled>
+                        <input type="text"
+                               id="email"
+                               class="personal-data__input"
+                               data-name="email"
+                               disabled>
                     </div>
                     <div class="personal-data__block">
                         <label for="first_name" class="personal-data__label">Имя</label>
                         <input type="text" id="first_name"
                                class="personal-data__input input-disabled"
-                               name="first_name">
+                               name="first_name"
+                               data-name="first_name">
                     </div>
                     <div class="personal-data__block">
                         <label for="last_name" class="personal-data__label">Фамилия</label>
                         <input type="text" id="last_name"
                                class="personal-data__input input-disabled"
-                               name="last_name">
+                               name="last_name"
+                               data-name="last_name">
                     </div>
                     <div class="personal-data__block">
                         <label for="phone" class="personal-data__label">Телефон</label>
                         <input type="text" id="phone"
                                class="personal-data__input input-disabled"
-                               name="phone">
+                               name="phone"
+                               data-name="phone">
                     </div>
                     <div class="personal-data__block">
                         <label for="price" class="personal-data__label">Прайс-лист</label>
-                        <input type="text" id="price" class="personal-data__input" disabled>
+                        <input type="text" id="price"
+                               class="personal-data__input"
+                               data-name="price"
+                               disabled>
                     </div>
                 </div>
                 <div class="personal-data__inputs">
@@ -48,6 +58,11 @@
             </form>
         </section>
         <section class="legal-data">
+            <div class="legal-data__title">
+                <h3>Реквизиты</h3>
+                <div></div>
+                <button class="btn btn__cancel legal-btn" type="button">Добавить</button>
+            </div>
         </section>
     </div>
 
