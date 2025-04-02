@@ -1,4 +1,5 @@
 import re
+import requests
 
 
 def name_validation(name: str) -> bool:
@@ -21,3 +22,29 @@ def inn_validation(text):
 
 def account_validation(text):
     return bool(re.fullmatch(r"\d{20}}", text))
+
+
+def bic_validation(bic):
+    """
+    Валидация БИК (Банковский Идентификационный Код)
+    БИК состоит из 9 цифр
+    Возвращает:
+    - False если БИК невалидный
+    - dict с данными банка если БИК валидный
+    """
+    if not bic or not re.match(r'^[0-9]{9}$', bic):
+        return False
+        
+    url = f"https://bik-info.ru/api.html?type=json&bik={bic}"
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            data = response.json()
+            if data.get('name') and data.get('ks') and data.get('city'):
+                return {
+                    'name': data['name'].replace('&quot;', '"'),
+                    'corr_account': data['ks'],
+                    'city': data['city']
+                }
+    except (requests.RequestException, ValueError):
+        return False
