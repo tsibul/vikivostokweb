@@ -61,10 +61,103 @@
             <div class="legal-data__title">
                 <h3>Реквизиты</h3>
                 <div></div>
-                <button class="btn btn__cancel legal-btn" type="button">Добавить</button>
+                <button class="btn btn__cancel legal-btn" type="button" id="new-company">Добавить</button>
             </div>
         </section>
     </div>
-
-
+    <dialog class="company-dialog" id="company-dialog">
+        <div class="login__title"><p>Проверить ИНН</p><p></p></div>
+        <form class="company-dialog__line">
+            <div class="company-dialog__block">
+                <label for="company-dialog-inn" class="company-dialog__label">
+                    Введите ИНН
+                </label>
+                <input type="text"
+                       id="company-dialog-inn"
+                       class="company-dialog__input"
+                       name="inn">
+            </div>
+            <div class="company-dialog__block">
+                <button class="btn btn__cancel" type="reset">Закрыть</button>
+                <button class="btn btn__save" type="submit">Проверить</button>
+            </div>
+        </form>
+        <div class="alert company-alert"></div>
+    </dialog>
+    <dialog class="company-dialog" id="company-dialog-save">
+        <div class="login__title"><p>Сохранить компанию</p><p></p></div>
+        <form>
+            <input type="hidden" name="short_name">
+            <div class="company-dialog__block">
+                <label for="company-dialog-save-name" class="company-dialog__label">
+                    Название
+                </label>
+                <input type="text"
+                       id="company-dialog-save-name"
+                       class="company-dialog__text"
+                       name="name"
+                       disabled
+                >
+            </div>
+            <div class="company-dialog__line">
+                <div class="company-dialog__block">
+                    <label for="company-dialog-save-inn" class="company-dialog__label">
+                        ИНН
+                    </label>
+                    <input type="text"
+                           id="company-dialog-save-inn"
+                           class="company-dialog__input"
+                           name="inn"
+                           disabled
+                    >
+                </div>
+                <div class="company-dialog__block">
+                    <label for="company-dialog-save-kpp" class="company-dialog__label">
+                        КПП
+                    </label>
+                    <input type="text"
+                           id="company-dialog-save-kpp"
+                           class="company-dialog__input"
+                           name="kpp"
+                           disabled
+                    >
+                </div>
+                <div class="company-dialog__block">
+                    <label for="company-dialog-save-ogrn" class="company-dialog__label">
+                        ОГРН
+                    </label>
+                    <input type="text"
+                           id="company-dialog-save-ogrn"
+                           class="company-dialog__input"
+                           name="ogrn"
+                           disabled
+                    >
+                </div>
+            </div>
+            <div class="company-dialog__block">
+                <label for="company-dialog-save-address" class="company-dialog__label">
+                    Адрес
+                </label>
+                <input type="text"
+                       id="company-dialog-save-address"
+                       class="company-dialog__text"
+                       name="address"
+                       disabled
+                >
+            </div>
+            <div class="company-dialog__block">
+                <input type="checkbox" 
+                       id="company-dialog-save-vat" 
+                       class="company-dialog__checkbox"
+                       name="vat">
+                <label for="company-dialog-save-vat" class="company-dialog__label">
+                    с НДС
+                </label>
+            </div>
+            <div class="company-dialog__btn-block">
+                <button class="btn btn__cancel legal-btn" type="reset">Закрыть</button>
+                <button class="btn btn__save legal-btn" type="submit">Подтвердить</button>
+            </div>
+        </form>
+    </dialog>
 {% endblock %}

@@ -16,4 +16,6 @@ urlpatterns = [
     path('cabinet_data/', views.cabinet_data, name='cabinet_data'),
 
     path('cabinet/save/<str:form_type>', views.cabinet_save, name='cabinet_save'),
+    path('save_new_company/', views.save_new_company, name='save_new_company'),
+    path('check_company/', views.company_create, name='check_company'),
 ]
