@@ -67,7 +67,7 @@ export const companyHtml = `
                         <div class="legal-data__title">
                             <h4>Банковские реквизиты</h4>
                             <div></div>
-                            <button class="btn btn__cancel legal-btn" type="button">Добавить</button>
+                            <button class="btn btn__cancel legal-btn" type="button" id="new-bank">Добавить</button>
                         </div>
                         <div id="company-bank-0"></div>
                     </div>
