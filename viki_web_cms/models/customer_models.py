@@ -1,10 +1,8 @@
-import configparser
-import requests
-
 from django.db import models
-from dadata import Dadata
 
+from viki_web_cms.functions.dadata_parse_inn import dadata_parse_inn
 from viki_web_cms.models import SettingsDictionary, StandardPriceType
+from viki_web.functions.field_validation import bic_validation
 
 
 class Customer(SettingsDictionary):
@@ -68,25 +66,23 @@ class Company(SettingsDictionary):
         db_table = 'company'
 
     def save(self, *args, **kwargs):
-        config = configparser.RawConfigParser()
-        config.read('config.cfg')
-        config_dict = dict(config.items('LOG_PAS'))
-        token = config_dict['dadata_token']
-        dadata = Dadata(token)
-        result = dadata.suggest('party', self.inn)
-        company_data = result[0]
-        self.name = company_data['value']
-        if not self.customer:
-            short_name = company_data['data']['name']['full']
-            price_type = StandardPriceType.objects.all().order_by('priority')[0]
-            self.customer = Customer.objects.create(
-                name=short_name,
-                standard_price_type=price_type)
-        self.kpp = company_data['data']['kpp']
-        self.ogrn = company_data['data']['ogrn']
-        self.address = company_data['data']['address']['unrestricted_value']
-        self.region = self.kpp[0:2]
-        super(Company, self).save(*args, **kwargs)
+        result = dadata_parse_inn(self.inn)
+        if result['errors']:
+            return result
+        else:
+            company_data = result['result']
+            self.name = company_data['value']
+            if not self.customer_id:
+                short_name = company_data['data']['name']['full']
+                price_type = StandardPriceType.objects.all().order_by('priority')[0]
+                self.customer = Customer.objects.create(
+                    name=short_name,
+                    standard_price_type=price_type)
+            self.kpp = company_data['data']['kpp']
+            self.ogrn = company_data['data']['ogrn']
+            self.address = company_data['data']['address']['unrestricted_value']
+            self.region = self.kpp[0:2]
+            super(Company, self).save(*args, **kwargs)
 
 
     @staticmethod
@@ -168,14 +164,14 @@ class BankAccount(SettingsDictionary):
         db_table = 'bank_account'
 
     def save(self, *args, **kwargs):
-        url = f"https://bik-info.ru/api.html?type=json&bik={self.bic}"
-        response = requests.get(url)
-        if response.status_code == 200:
-            data = response.json()
-            self.corr_account = data['ks']
-            self.name = data['name'].replace('&quot;', '"')
-            self.city = data['city']
-            super(BankAccount, self).save(*args, **kwargs)
+        validation_result = bic_validation(self.bic)
+        if not validation_result:
+            return {'errors': ['bic'], 'status': 'error', 'message': 'Неверный формат БИК или банк не найден'}
+            
+        self.name = validation_result['name']
+        self.corr_account = validation_result['corr_account']
+        self.city = validation_result['city']
+        super(BankAccount, self).save(*args, **kwargs)
 
 
     @staticmethod
