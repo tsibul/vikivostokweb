@@ -13,7 +13,7 @@ export const companyHtml = `
                         <div class="personal-data__change legal-data__change">
                                     <button class="btn btn__neutral legal-btn"
                                             type="button"
-                                            data-id="company-0">Изменить
+                                            data-id="company-0">Изменить НДС
                                     </button>
                         </div>
                         <div class="personal-data__save company__data-save item-hidden">
@@ -36,9 +36,10 @@ export const companyHtml = `
                             <div class="personal-data__block">
                                 <label for="inn-0" class="personal-data__label">ИНН</label>
                                 <input type="text" id="inn-0"
-                                       class="personal-data__input input-disabled"
+                                       class="personal-data__input"
                                        name="inn"
-                                       data-name="inn">
+                                       data-name="inn"
+                                       disabled>
                             </div>
                             <div class="personal-data__block">
                                 <label for="company-kpp-0" class="personal-data__label">КПП</label>
