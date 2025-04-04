@@ -1,5 +1,4 @@
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
 
 from viki_web_cms import models
 from viki_web_cms.functions.field_validation import goods_validation, dictionary_fields_validation, color_validation
@@ -7,7 +6,6 @@ from viki_web_cms.functions.reformat_field_dictionary import reformat_field_dict
 from viki_web_cms.functions.user_validation import user_check
 
 
-# @csrf_exempt
 def edit_dictionary(request, class_name, element_id):
     """
 
