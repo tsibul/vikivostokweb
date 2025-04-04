@@ -1,5 +1,14 @@
+/**
+ * @fileoverview Module for starting legal data editing
+ * @module cabinet/startLegalEdit
+ */
+
 'use strict';
 
+/**
+ * Enables editing of legal data by showing save controls and enabling inputs
+ * @param {HTMLElement} data - Element containing the form with legal data
+ */
 export function startLegalEdit(data) {
     const dataChange = data.querySelector('.personal-data__change');
     const dataSave = data.querySelector('.personal-data__save');

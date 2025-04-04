@@ -1,8 +1,17 @@
+/**
+ * @fileoverview Module for handling simple product constructor functionality
+ * @module constructor/openSimpleConstructor
+ */
+
 'use strict'
 
 import {closeConstructor} from "./closeConstructor.js";
 import {applyConstructor} from "./applyConstructor.js";
 
+/**
+ * Opens a simple constructor dialog for product customization
+ * @param {Event} e - Click event on the product element
+ */
 export function openSimpleConstructor(e) {
     let optionSection, sectionTitle, section;
     const goodsItem = e.target.closest('.product');
@@ -59,6 +68,13 @@ export function openSimpleConstructor(e) {
     modal.showModal();
 }
 
+/**
+ * Creates color selection block in the constructor
+ * @param {Object} element - Color data object
+ * @param {HTMLElement} optionSection - Container for color options
+ * @param {string} itemId - Product ID
+ * @param {HTMLElement} modal - Constructor dialog element
+ */
 function createColorBlock(element, optionSection, itemId, modal) {
     element['color'].forEach((color) => {
         const colorInput = document.createElement('input');
@@ -91,6 +107,12 @@ function createColorBlock(element, optionSection, itemId, modal) {
     });
 }
 
+/**
+ * Creates option selection block in the constructor
+ * @param {Object} element - Option data object
+ * @param {HTMLElement} optionSection - Container for option elements
+ * @param {HTMLElement} modal - Constructor dialog element
+ */
 function createOptionBlock(element, optionSection, modal) {
     element['option'].forEach((option) => {
         const optionElement = document.createElement('div');

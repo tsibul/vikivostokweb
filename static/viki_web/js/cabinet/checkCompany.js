@@ -1,9 +1,20 @@
+/**
+ * @fileoverview Module for validating company data
+ * @module cabinet/checkCompany
+ */
+
 'use strict';
 
 import {sendFormData} from "../common/sendFormData.js";
 import {companySaveDialog} from "../cabinet.js";
 import {modalDnD} from "../common/modalDnD.js";
 
+/**
+ * Validates company data before saving
+ * @param {Event} e - Form submit event
+ * @param {HTMLElement} dialog - Dialog form element
+ * @returns {Promise<void>}
+ */
 export async function checkCompany(e, dialog){
     e.preventDefault();
     const dialogForm = dialog.querySelector('form');

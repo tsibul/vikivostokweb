@@ -1,8 +1,13 @@
+/**
+ * @fileoverview Module for implementing drag and drop functionality for modal windows
+ * @module common/modalDnD
+ */
+
 'use strict'
 
 /**
- * DnD for modal window
- * @param modal
+ * Implements drag and drop functionality for modal windows
+ * @param {HTMLElement} modal - Modal window element to make draggable
  */
 export function modalDnD(modal) {
     let offsetX, offsetY, isDragging = false;

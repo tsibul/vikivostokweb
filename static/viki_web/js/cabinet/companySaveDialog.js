@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Module for handling company save dialog functionality
+ * @module cabinet/companySaveDialog
+ */
+
 'use strict';
 
 /**

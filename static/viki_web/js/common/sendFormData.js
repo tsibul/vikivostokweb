@@ -1,12 +1,17 @@
+/**
+ * @fileoverview Module for sending form data to server endpoints
+ * @module common/sendFormData
+ */
+
 'use strict'
 
 import {getCSRFToken} from "./getCSRFToken.js";
 
 /**
- * send form data from log modal to desired url
- * @param url
- * @param form
- * @returns {Promise<any>}
+ * Sends form data to the specified URL endpoint
+ * @param {string} url - Target endpoint URL
+ * @param {HTMLFormElement} form - Form element containing data to send
+ * @returns {Promise<Object>} Server response data
  */
 export async function sendFormData(url, form) {
     const formData = new FormData(form);

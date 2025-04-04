@@ -1,10 +1,15 @@
+/**
+ * @fileoverview Module for handling user logout functionality
+ * @module authentication/logOut
+ */
+
 'use strict'
 
 import {getCSRFToken} from "../common/getCSRFToken.js";
 
 /**
- * log out user
- * @param e
+ * Logs out the current user and reloads the page
+ * @param {Event} e - Click event on the logout button
  * @returns {Promise<void>}
  */
 export async function logOut(e) {

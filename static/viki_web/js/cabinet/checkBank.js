@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Module for validating bank account details
+ * @module cabinet/checkBank
+ */
+
 'use strict';
 
 import {sendFormData} from "../common/sendFormData.js";

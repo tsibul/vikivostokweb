@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Module for initializing product-related event listeners
+ * @module product/productListeners
+ */
+
 'use strict'
 
 import {selectItemColor} from "./selectItemColor.js";
@@ -9,6 +14,10 @@ import {applyFilter} from "./applyFilter.js";
 import {filterBadge} from "./filterBadge.js";
 import {openSimpleConstructor} from "../constructor/openSimpleConstructor.js";
 
+/**
+ * Initializes all product-related event listeners
+ * @returns {Promise<void>}
+ */
 export async function productListeners() {
 
     const colorInputs = document.querySelectorAll('.filter .product-header__filter-content_checkbox-hidden');

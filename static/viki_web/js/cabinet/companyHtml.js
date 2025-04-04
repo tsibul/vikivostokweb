@@ -1,5 +1,14 @@
+/**
+ * @fileoverview Module containing HTML templates for company and bank details
+ * @module cabinet/companyHtml
+ */
+
 'use strict';
 
+/**
+ * HTML template for company details section
+ * @type {string}
+ */
 export const companyHtml = `
             <details class="company" id="company-detail-0">
                 <summary class="company__summary">
@@ -76,6 +85,10 @@ export const companyHtml = `
             </details>
 `
 
+/**
+ * HTML template for bank details section
+ * @type {string}
+ */
 export const bankHtml = `
                     <hr class="hr">
                     <details class="bank " id="bank-0">

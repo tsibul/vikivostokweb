@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Module for handling user registration functionality
+ * @module authentication/register
+ */
+
 'use strict'
 
 import {sendFormData} from "../common/sendFormData.js";
@@ -5,8 +10,8 @@ import {modalDnD} from "../common/modalDnD.js";
 import {dialogClear} from "./dialogClear.js";
 
 /**
- * send new password to E-mail
- * @param e
+ * Registers a new user and sends password to their email
+ * @param {Event} e - Form submit event
  * @returns {Promise<void>}
  */
 export async function register(e) {

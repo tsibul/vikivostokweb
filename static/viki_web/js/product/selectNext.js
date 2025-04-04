@@ -1,7 +1,16 @@
+/**
+ * @fileoverview Module for handling next item selection in product gallery
+ * @module product/selectNext
+ */
+
 'use strict'
 
 import {changeFrameItem} from "./changeFrameItem.js";
 
+/**
+ * Selects the next item in the product gallery
+ * @param {Event} e - Click event on the next button
+ */
 export function selectNext(e) {
     const idList = JSON.parse(this.dataset.list);
     const currentItem = this.closest('.product-frame');

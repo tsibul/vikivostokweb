@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Module for creating and initializing legal data sections
+ * @module cabinet/createLegalData
+ */
+
 'use strict';
 
 import {bankHtml, companyHtml} from "./companyHtml.js";
@@ -5,6 +10,11 @@ import {startLegalEdit} from "./startLegalEdit.js";
 import {cancelLegalEdit} from "./cancelLegalEdit.js";
 import {dataLegalSave} from "./dataLegalSave.js";
 
+/**
+ * Creates and initializes legal data sections for companies and their bank details
+ * @param {Array<Object>} data - Array of company objects with their data
+ * @param {HTMLElement} section - Parent section element where to insert the data
+ */
 export function createLegalData(data, section) {
     if (data.length) {
         data.forEach(company => {

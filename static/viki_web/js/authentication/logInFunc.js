@@ -1,12 +1,17 @@
+/**
+ * @fileoverview Module for handling user login functionality
+ * @module authentication/logInFunc
+ */
+
 'use strict'
 
 import {sendFormData} from "../common/sendFormData.js";
 import {dialogClear} from "./dialogClear.js";
 
 /**
- * log in user
- * @param e
- * @param url
+ * Authenticates user and handles login process
+ * @param {Event} e - Form submit event
+ * @param {string} url - Login endpoint URL
  * @returns {Promise<void>}
  */
 export async function logInFunc(e, url) {

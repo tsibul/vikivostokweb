@@ -1,5 +1,14 @@
+/**
+ * @fileoverview Module for clearing product filters
+ * @module product/clearFilter
+ */
+
 'use strict'
 
+/**
+ * Clears all product filters and resets the product display
+ * @param {Event} e - Click event on the clear filter button
+ */
 export function clearFilter(e) {
     const inputs = document
         .querySelectorAll(`.filter input[type="checkbox"]`);
