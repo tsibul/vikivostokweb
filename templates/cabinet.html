@@ -66,7 +66,8 @@
         </section>
     </div>
     <dialog class="company-dialog" id="company-dialog">
-        <div class="login__title"><p>Проверить ИНН</p><p></p></div>
+        <div class="login__title"><p>Проверить ИНН</p>
+            <p></p></div>
         <form class="company-dialog__line">
             <div class="company-dialog__block">
                 <label for="company-dialog-inn" class="company-dialog__label">
@@ -74,7 +75,7 @@
                 </label>
                 <input type="text"
                        id="company-dialog-inn"
-                       class="company-dialog__input"
+                       class="company-dialog__input company-dialog__input_frame"
                        name="inn">
             </div>
             <div class="company-dialog__block">
@@ -85,7 +86,8 @@
         <div class="alert company-alert"></div>
     </dialog>
     <dialog class="company-dialog" id="company-dialog-save">
-        <div class="login__title"><p>Сохранить компанию</p><p></p></div>
+        <div class="login__title"><p>Сохранить компанию</p>
+            <p></p></div>
         <form>
             <input type="hidden" name="short_name">
             <div class="company-dialog__block">
@@ -96,7 +98,7 @@
                        id="company-dialog-save-name"
                        class="company-dialog__text"
                        name="name"
-                       disabled
+                       readonly
                 >
             </div>
             <div class="company-dialog__line">
@@ -108,7 +110,7 @@
                            id="company-dialog-save-inn"
                            class="company-dialog__input"
                            name="inn"
-                           disabled
+                           readonly
                     >
                 </div>
                 <div class="company-dialog__block">
@@ -119,7 +121,7 @@
                            id="company-dialog-save-kpp"
                            class="company-dialog__input"
                            name="kpp"
-                           disabled
+                           readonly
                     >
                 </div>
                 <div class="company-dialog__block">
@@ -130,8 +132,17 @@
                            id="company-dialog-save-ogrn"
                            class="company-dialog__input"
                            name="ogrn"
-                           disabled
+                           readonly
                     >
+                </div>
+                <div class="company-dialog__block">
+                    <input type="checkbox"
+                           id="company-dialog-save-vat"
+                           class="company-dialog__checkbox"
+                           name="vat">
+                    <label for="company-dialog-save-vat" class="company-dialog__label">
+                        с НДС
+                    </label>
                 </div>
             </div>
             <div class="company-dialog__block">
@@ -142,22 +153,111 @@
                        id="company-dialog-save-address"
                        class="company-dialog__text"
                        name="address"
-                       disabled
+                       readonly
                 >
-            </div>
-            <div class="company-dialog__block">
-                <input type="checkbox" 
-                       id="company-dialog-save-vat" 
-                       class="company-dialog__checkbox"
-                       name="vat">
-                <label for="company-dialog-save-vat" class="company-dialog__label">
-                    с НДС
-                </label>
             </div>
             <div class="company-dialog__btn-block">
                 <button class="btn btn__cancel legal-btn" type="reset">Закрыть</button>
                 <button class="btn btn__save legal-btn" type="submit">Подтвердить</button>
             </div>
         </form>
+    </dialog>
+    <dialog class="company-dialog" id="bank-dialog">
+        <div class="login__title"><p>Проверить реквизиты</p>
+            <p></p></div>
+        <form class="company-dialog__line">
+            <div class="company-dialog__block">
+                <label for="bank-dialog-account" class="company-dialog__label">
+                    Расчетный счет
+                </label>
+                <input type="text"
+                       id="bank-dialog-account"
+                       class="company-dialog__input company-dialog__input_frame company-dialog__input_long"
+                       name="account_no">
+            </div>
+            <div class="company-dialog__block">
+                <label for="bank-dialog-bic" class="company-dialog__label">
+                    БИК
+                </label>
+                <input type="text"
+                       id="bank-dialog-bic"
+                       class="company-dialog__input company-dialog__input_frame"
+                       name="bic">
+            </div>
+            <div class="company-dialog__block">
+                <button class="btn btn__cancel" type="reset">Закрыть</button>
+                <button class="btn btn__save" type="submit">Проверить</button>
+            </div>
+        </form>
+        <div class="alert company-alert"></div>
+    </dialog>
+
+    <dialog class="company-dialog" id="bank-dialog-save">
+        <div class="login__title"><p>Сохранить реквизиты</p>
+            <p></p></div>
+        <form>
+            <input type="hidden" name="company_id">
+            <div class="company-dialog__block">
+                <label for="bank-dialog-save-name" class="company-dialog__label">
+                    Название банка
+                </label>
+                <input type="text"
+                       id="bank-dialog-save-name"
+                       class="company-dialog__text"
+                       name="name"
+                       readonly>
+            </div>
+            <div class="company-dialog__line">
+                <div class="company-dialog__block">
+                    <label for="bank-dialog-save-bic" class="company-dialog__label">
+                        БИК
+                    </label>
+                    <input type="text"
+                           id="bank-dialog-save-bic"
+                           class="company-dialog__input"
+                           name="bic"
+                           readonly>
+                </div>
+                <div class="company-dialog__block">
+                    <label for="bank-dialog-save-city" class="company-dialog__label">
+                        Город
+                    </label>
+                    <input type="text"
+                           id="bank-dialog-save-city"
+                           class="company-dialog__input"
+                           name="city"
+                           readonly>
+                </div>
+            </div>
+            <div class="company-dialog__line">
+                <div class="company-dialog__block">
+                    <label for="bank-dialog-save-account" class="company-dialog__label">
+                        Расчетный счет
+                    </label>
+                    <input type="text"
+                           id="bank-dialog-save-account"
+                           class="company-dialog__input  company-dialog__input_long"
+                           name="account_no"
+                           readonly>
+                </div>
+            </div>
+            <div class="company-dialog__line">
+                <div class="company-dialog__block">
+                    <label for="bank-dialog-save-corr" class="company-dialog__label">
+                        Корр. счет
+                    </label>
+                    <input type="text"
+                           id="bank-dialog-save-corr"
+                           class="company-dialog__input  company-dialog__input_long"
+                           name="corr_account"
+                           readonly>
+                </div>
+            </div>
+            <div class="company-dialog__btn-block">
+                <button class="btn btn__cancel legal-btn" type="reset">Закрыть</button>
+                <button class="btn btn__save legal-btn" type="submit">Подтвердить</button>
+            </div>
+        </form>
+        <div class="alert company-alert"></div>
     </dialog>
 {% endblock %}
