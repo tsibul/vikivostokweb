@@ -44,7 +44,7 @@ export function createLegalData(data, section) {
                         cancelLegalEdit(bank, bankBlock);
                     });
                     bankBlock.querySelector('button.btn__save').addEventListener('click', async () => {
-                        await dataLegalSave(bank, bankBlock);
+                        await dataLegalSave(bankBlock, 'bank');
                     });
                     const bankInputs = bankBlock.querySelectorAll('input');
                     [...bankInputs].forEach(input => {
