@@ -1,5 +1,15 @@
+/**
+ * @fileoverview Module for applying product filters
+ * @module product/applyFilter
+ */
+
 'use strict'
 
+/**
+ * Applies selected filters to products
+ * @param {Event} e - Submit event from the filter form
+ * @returns {Promise<void>}
+ */
 export async function applyFilter(e) {
     e.preventDefault()
     const postUrl = `./${e.target.dataset.url}`;
@@ -52,6 +62,17 @@ export async function applyFilter(e) {
     document.querySelector('.filter').removeAttribute('open')
 }
 
+/**
+ * Combines multiple filter results and updates product display
+ * @param {Array<string>} filterIdList - List of IDs from filter filter
+ * @param {Array<string>} printIdList - List of IDs from print filter
+ * @param {Object} colorIdList - Object containing lists of IDs from color filter
+ * @param {Object} priceIdList - Object containing lists of IDs from price filter
+ * @param {Object} goodsIds - Map of product IDs to elements
+ * @param {NodeList} allGoods - All product elements
+ * @param {Object} itemIds - Map of item IDs to elements
+ * @param {NodeList} allItems - All item elements
+ */
 function combineFilters(filterIdList, printIdList, colorIdList, priceIdList, goodsIds, allGoods, itemIds, allItems) {
 
     let filterTemp, printTemp, colorTemp, priceTemp, colorItemTemp, priceItemTemp;
@@ -114,14 +135,32 @@ function combineFilters(filterIdList, printIdList, colorIdList, priceIdList, goo
 
 }
 
+/**
+ * Filters input elements to get only checked ones
+ * @param {NodeList} inputs - List of input elements
+ * @returns {Array<HTMLInputElement>} Array of checked input elements
+ */
 function checkedFilter(inputs) {
     return [...inputs].filter(filterInput => filterInput.checked);
 }
 
+/**
+ * Extracts data-id attributes from input elements
+ * @param {Array<HTMLInputElement>} inputs - List of input elements
+ * @returns {Array<string>} Array of data-id values
+ */
 function inputsDataId(inputs) {
     return [...inputs].map(item => item.getAttribute('data-id'));
 }
 
+/**
+ * Fetches filtered product IDs from server
+ * @param {Array<string>} filterInputs - List of filter IDs
+ * @param {Array<string>} goodsIds - List of product IDs
+ * @param {string} postUrl - URL for the filter request
+ * @param {string} filterType - Type of filter being applied
+ * @returns {Promise<Array<string>>} List of filtered product IDs
+ */
 async function goodsFilterList(filterInputs, goodsIds, postUrl, filterType) {
     const url = postUrl + '/' + filterType;
     const response = await fetch(url, {
@@ -138,6 +177,12 @@ async function goodsFilterList(filterInputs, goodsIds, postUrl, filterType) {
     return data['idList'];
 }
 
+/**
+ * Filters items based on price limit
+ * @param {string} priceLimit - Maximum price value
+ * @param {NodeList} allItems - All item elements
+ * @returns {Object} Object containing lists of filtered goods and items
+ */
 function priceFilterList(priceLimit, allItems) {
     const goodsList = [];
     const itemList = [];

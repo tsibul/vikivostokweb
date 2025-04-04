@@ -1,5 +1,14 @@
+/**
+ * @fileoverview Module for handling product detail tab switching
+ * @module product/changeDetailTab
+ */
+
 'use strict'
 
+/**
+ * Switches between product detail tabs
+ * @param {Event} e - Click event on the tab button
+ */
 export function changeDetailTab(e) {
     const tabs = e.target.closest('.tab-btn-block');
     const tabContent = tabs.closest('.product-frame')

@@ -1,5 +1,16 @@
+/**
+ * @fileoverview Module for applying constructor changes to the product
+ * @module constructor/applyConstructor
+ */
+
 'use strict'
 
+/**
+ * Applies selected constructor options to the product
+ * @param {HTMLElement} modal - Constructor dialog element
+ * @param {HTMLElement} goodsItem - Product container element
+ * @param {HTMLElement} currentFrame - Current product frame element
+ */
 export function applyConstructor(modal, goodsItem, currentFrame) {
     // e.preventDefault()
     const form = modal.querySelector('form');

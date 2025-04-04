@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Main cabinet module that handles company and bank data management
+ * @module cabinet
+ */
+
 'use strict';
 
 import {allInputDisabled} from "./cabinet/allInputDisabled.js";
@@ -10,12 +15,46 @@ import {modalDnD} from "./common/modalDnD.js";
 import {checkBank} from './cabinet/checkBank.js';
 import {saveBank} from './cabinet/saveBank.js';
 
+/**
+ * Collection of all disabled input elements in the form
+ * @type {NodeList}
+ */
 const allInputs = document.querySelectorAll('input.input-disabled');
+
+/**
+ * Personal data section element
+ * @type {HTMLElement}
+ */
 const personalData = document.querySelector('.personal-data');
+
+/**
+ * Legal data section element
+ * @type {HTMLElement}
+ */
 const legalData = document.querySelector('.legal-data');
+
+/**
+ * Company dialog modal element
+ * @type {HTMLElement}
+ */
 export const companyDialog = document.querySelector('#company-dialog');
+
+/**
+ * Company save dialog modal element
+ * @type {HTMLElement}
+ */
 export const companySaveDialog = document.querySelector('#company-dialog-save');
+
+/**
+ * Bank dialog modal element
+ * @type {HTMLElement}
+ */
 export const bankDialog = document.querySelector('#bank-dialog');
+
+/**
+ * Bank save dialog modal element
+ * @type {HTMLElement}
+ */
 export const bankSaveDialog = document.querySelector('#bank-dialog-save');
 
 document.querySelector('li.log-logout').style.display='none'

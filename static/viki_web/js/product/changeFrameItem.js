@@ -1,6 +1,16 @@
+/**
+ * @fileoverview Module for changing product frame display
+ * @module product/changeFrameItem
+ */
+
 'use strict'
 
-
+/**
+ * Changes the displayed product frame with animation
+ * @param {HTMLElement} colorLabel - Color label element that was clicked
+ * @param {HTMLElement} currentItem - Currently displayed product frame
+ * @param {string} newItemId - ID of the new product frame to display
+ */
 export function changeFrameItem(colorLabel, currentItem, newItemId) {
     currentItem.querySelector(`#${colorLabel.htmlFor}`).checked = false;
     const newItem = colorLabel.closest('.product').querySelector(`div[data-id="${newItemId}"]`);
