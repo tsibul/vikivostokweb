@@ -18,4 +18,6 @@ urlpatterns = [
     path('cabinet/save/<str:form_type>', views.cabinet_save, name='cabinet_save'),
     path('save_new_company/', views.save_new_company, name='save_new_company'),
     path('check_company/', views.company_create, name='check_company'),
+    path('check_bank/', views.check_bank, name='check_bank'),
+    path('save_bank_account/', views.save_bank_account, name='save_bank_account'),
 ]
