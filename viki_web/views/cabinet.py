@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
-from viki_web.functions.field_validation import name_validation, phone_validation, inn_validation
+from viki_web.functions.field_validation import name_validation, phone_validation, inn_validation, bic_validation
 from viki_web_cms.functions.dadata_parse_inn import dadata_parse_inn
 from viki_web_cms.models import ProductGroup, UserExtension, Company, BankAccount, StandardPriceType, Customer
 
@@ -57,6 +57,7 @@ def collect_bank_data(company_id):
         'bic',
         'corr_account',
         'city',
+        'company_id'
     ))
 
 
@@ -117,26 +118,20 @@ def save_personal_data(request):
 
 
 def save_company_data(request):
-    company_id = request.POST['id']
-    company = Company.objects.get(id=company_id)
-    counter = 0
-    if request.POST['vat'] and not company.vat:
-        company.vat = True
-        counter = counter + 1
-    if not inn_validation(request.POST['inn']):
-        return JsonResponse({'status': 'error', 'message': 'Неверный ИНН', 'field': 'inn'})
-    if request.POST['inn'] != company.inn:
-        company.inn = request.POST['inn']
-        counter = counter + 1
-        if counter:
-            result = company.save()
-            if isinstance(result, dict) and result.get('errors'):
-                return JsonResponse(result)
-            return JsonResponse({'status': 'ok'})
-    return JsonResponse({'status': 'error', 'message': 'Ничего не поменялось', 'field': 'inn'})
+    if not request.user.is_authenticated:
+        return JsonResponse({'status': 'error', 'message': 'Пользователь не авторизован'})   
+    company = Company.objects.get(id=request.POST['id'])
+    
+    # Process company data changes
+    new_vat = request.POST['vat'] == 'on'
+    if new_vat != company.vat:
+        Company.objects.filter(id=company.id).update(vat=new_vat)
+        return JsonResponse({'status': 'ok'})
+    return JsonResponse({'status': 'error', 'message': 'Ничего не поменялось', 'field': 'vat'})
 
 
 def save_bank_data(request):
+    BankAccount.objects.filter(id=request.POST['id'], deleted=False).update(deleted=True)
     return JsonResponse({'status': 'ok'})
 
 
@@ -153,7 +148,7 @@ def company_create(request):
         return JsonResponse({'status': 'error', 'message': 'Ошибка ввода ИНН'})
     
     # Проверяем существующую компанию
-    company_base = Company.objects.filter(inn=inn).first()
+    company_base = Company.objects.filter(inn=inn, deleted=False).first()
     if not company_base:
         # Получаем данные через DaData
         result = dadata_parse_inn(inn)
@@ -199,7 +194,7 @@ def save_new_company(request):
     
     try:
         # Проверяем существующую компанию
-        company_base = Company.objects.filter(inn=request.POST['inn']).first()
+        company_base = Company.objects.filter(inn=request.POST['inn'], deleted=False).first()
         
         # Получаем user_extension
         user_extension = UserExtension.objects.filter(user=user).first()
@@ -266,7 +261,7 @@ def save_new_company(request):
                 kpp=request.POST['kpp'],
                 ogrn=request.POST['ogrn'],
                 address=request.POST['address'],
-                region=request.POST['region'],
+                region=request.POST['kpp'][0:2],
                 vat=request.POST.get('vat') == 'on',
                 customer=customer
             )
@@ -275,3 +270,84 @@ def save_new_company(request):
             
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)})
+
+
+def check_bank(request):
+    user = request.user
+    if not user.is_authenticated:
+        return JsonResponse({'status': 'error', 'message': 'Ошибка авторизации'})
+    
+    if request.method != 'POST':
+        return JsonResponse({'status': 'error', 'message': 'Ошибка запроса'})
+    
+    try:
+        # Проверяем существующий счет
+        bank_account = BankAccount.objects.filter(
+            account_no=request.POST['account_no'],
+            bic=request.POST['bic'],
+            deleted=False,
+        ).first()
+        
+        if bank_account:
+            # Счет уже существует
+            return JsonResponse({'status': 'error', 'message': 'Этот счет уже используется'})
+        
+        # Валидируем БИК
+        validation_result = bic_validation(request.POST['bic'])
+        if not validation_result:
+            return JsonResponse({'status': 'error', 'message': 'Неверный формат БИК или банк не найден'})
+        
+        return JsonResponse({
+            'status': 'ok',
+            'bank': {
+                'name': validation_result['name'],
+                'account_no': request.POST['account_no'],
+                'bic': request.POST['bic'],
+                'corr_account': validation_result['corr_account'],
+                'city': validation_result['city']
+            }
+        })
+            
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)})
+
+
+def save_bank_account(request):
+    user = request.user
+    if not user.is_authenticated:
+        return JsonResponse({'status': 'error', 'message': 'Ошибка авторизации'})
+    
+    if request.method != 'POST':
+        return JsonResponse({'status': 'error', 'message': 'Ошибка запроса'})
+    
+    try:
+        # Проверяем существующий счет
+        bank_account = BankAccount.objects.filter(
+            account_no=request.POST['account_no'],
+            bic=request.POST['bic'],
+            deleted=False,
+        ).first()
+        
+        if bank_account:
+            # Счет уже существует
+            return JsonResponse({'status': 'error', 'message': 'Этот счет уже используется'})
+        
+        # Получаем компанию
+        company = Company.objects.get(pk=request.POST['company_id'])
+        
+        # Создаем новый счет
+        BankAccount.objects.create(
+            name=request.POST['name'],
+            account_no=request.POST['account_no'],
+            bic=request.POST['bic'],
+            corr_account=request.POST['corr_account'],
+            city=request.POST['city'],
+            company=company
+        )
+        
+        return JsonResponse({'status': 'ok'})
+            
+    except Company.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'Компания не найдена'})
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': 'ошибка в поле' + str(e)})
