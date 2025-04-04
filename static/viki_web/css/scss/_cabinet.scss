@@ -182,6 +182,14 @@
     padding: 8px;
     font-size: 16px;
     font-weight: 600;
+
+    &_frame {
+      border-color: $colorPrimary;
+    }
+
+    &_long{
+      min-width: 240px;
+    }
   }
 
   &__text {
