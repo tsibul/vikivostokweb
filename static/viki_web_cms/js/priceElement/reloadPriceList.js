@@ -1,7 +1,17 @@
+/**
+ * @fileoverview Module for reloading price list content
+ * @module priceElement/reloadPriceList
+ */
+
 'use strict'
 
 import {createPriceContent} from "./createPriceContent.js";
 
+/**
+ * Reloads price list content with current filters
+ * @param {Event} [e] - Optional event object
+ * @returns {Promise<void>}
+ */
 export async function reloadPriceList(e) {
     const content = document.querySelector('.content');
     const dictionaryHeaderRight = content.querySelector('.dictionary-frame__header_right');

@@ -1,13 +1,17 @@
-'use strict'
+/**
+ * @fileoverview Module for clearing search filters
+ * @module dictionaryElement/clearSearchFilter
+ */
 
+'use strict'
 
 import {reloadContent} from "./reloadContent.js";
 import {reloadCatalogue} from "../catalogueElement/reloadCatalogue.js";
 
 /**
- * clear searchString on click and remove search results
- * @param button
- * @param className
+ * Clears search string and removes search results
+ * @param {HTMLButtonElement} button - Clear button element
+ * @param {string} className - Class name of the dictionary section
  * @returns {Promise<void>}
  */
 export async function clearSearchFilter(button, className) {

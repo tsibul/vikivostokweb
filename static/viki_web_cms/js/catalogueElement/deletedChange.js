@@ -1,10 +1,15 @@
+/**
+ * @fileoverview Module for handling deleted status changes in catalogue
+ * @module catalogueElement/deletedChange
+ */
+
 'use strict'
 
 /**
- *
- * @param e
+ * Handles change in deleted status of catalogue item
+ * @param {Event} e - Checkbox change event
  */
-export function deletedChange (e) {
+export function deletedChange(e) {
     const form = e.target.closest('form');
     if (form.querySelector('textarea').value) {
         const btnSave = form.querySelector('.btn__save');

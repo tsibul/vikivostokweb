@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Module for handling price dropdown functionality
+ * @module priceElement/priceDropdownBody
+ */
+
 'use strict';
 
 import {jsonUrl} from "../main.js";
@@ -6,8 +11,8 @@ import {createDropDownListItem} from "../dropDown/createDropDown.js";
 
 
 /**
- *
- * @returns {Promise<HTMLDivElement>}
+ * Creates a price dropdown element by fetching price data
+ * @returns {Promise<HTMLDivElement>} Price dropdown element
  */
 export async function createPriceDropdown() {
     const priceDataUrl = jsonUrl + 'dropdown_list/Price';
@@ -17,11 +22,11 @@ export async function createPriceDropdown() {
 
 
 /**
- *
- * @param priceData
- * @param dropdownUl
- * @param dropDownInput
- * @param hiddenInput
+ * Loads price dates into the dropdown list
+ * @param {Array<Object>} priceData - Array of price data objects
+ * @param {HTMLUListElement} dropdownUl - Dropdown list element
+ * @param {HTMLInputElement} dropDownInput - Dropdown input element
+ * @param {HTMLInputElement} hiddenInput - Hidden input element for storing selected ID
  */
 export function loadPriceDates(priceData, dropdownUl, dropDownInput, hiddenInput) {
     dropdownUl.innerHTML = ''
@@ -33,9 +38,9 @@ export function loadPriceDates(priceData, dropdownUl, dropDownInput, hiddenInput
 }
 
 /**
- *
- * @param priceData
- * @returns {HTMLDivElement}
+ * Creates the main price dropdown body element
+ * @param {Array<Object>} priceData - Array of price data objects
+ * @returns {HTMLDivElement} Complete price dropdown element
  */
 export function priceDropdownBody(priceData) {
     const dropdown = document.createElement('div');

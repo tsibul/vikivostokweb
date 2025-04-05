@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Module for handling file changes in catalogue items
+ * @module catalogueElement/fileChange
+ */
+
 'use strict'
 
 import {jsonUrl} from "../main.js";
@@ -5,12 +10,12 @@ import {fetchJsonData} from "../fetchJsonData.js";
 import {createColors} from "./createColors.js";
 
 /**
- *
- * @param e
- * @param fileName
- * @param goodsId
- * @param simpleArticle
- * @param photo
+ * Handles file change event for catalogue item
+ * @param {Event} e - File input change event
+ * @param {HTMLElement} fileName - Element to display file name
+ * @param {string} goodsId - ID of the goods item
+ * @param {string} simpleArticle - Simple article number
+ * @param {HTMLImageElement} photo - Image element to display the photo
  * @returns {Promise<void>}
  */
 export async function fileChange(e, fileName, goodsId, simpleArticle, photo) {
@@ -26,7 +31,7 @@ export async function fileChange(e, fileName, goodsId, simpleArticle, photo) {
     const btnSave = form.querySelector('.btn__save');
 
     /**
-     *
+     * Clears form data and resets UI elements
      */
     function clearData() {
         fileName.textContent = '';
@@ -40,7 +45,6 @@ export async function fileChange(e, fileName, goodsId, simpleArticle, photo) {
         colors.value = '';
         btnSave.disabled = true;
         if (!btnSave.classList.contains('btn__disabled')) btnSave.classList.add('btn__disabled');
-
     }
 
     // colors.innerHTML = '';

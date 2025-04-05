@@ -1,8 +1,13 @@
+/**
+ * @fileoverview Module for retrieving CSRF token from cookies
+ * @module getCSRFToken
+ */
+
 'use strict'
 
 /**
- * gt csrf token from cookie
- * @returns {*}
+ * Retrieves CSRF token from document cookies
+ * @returns {string|undefined} CSRF token value or undefined if not found
  */
 export function getCSRFToken() {
     return document.cookie

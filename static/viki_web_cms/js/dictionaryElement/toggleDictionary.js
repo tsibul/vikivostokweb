@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Module for toggling dictionary visibility
+ * @module dictionaryElement/toggleDictionary
+ */
+
 import {toggleActive} from "./toggleActive.js";
 import {createDictionaryFrame} from "./showDictionary/createDictionaryFrame.js";
 import {createDictionaryContent} from "./showDictionary/createDictionaryContent.js";
@@ -6,13 +11,13 @@ import {getFieldStructure} from "./getFieldStructure.js";
 
 
 /**
- * create dictionary section if not exist, toggle visibility if exist
- * toggle active on element & parent section
- * @param divElement menu element click
- * @param divElementClass dictionary class corresponding to element
- * @param divElementUpload if possible to upload file with data
- * @param details parent menu section of clicked element
- * @param childList clicked element siblings
+ * Creates dictionary section if it doesn't exist, toggles visibility if it does
+ * Toggles active state on element and parent section
+ * @param {HTMLDivElement} divElement - Menu element that was clicked
+ * @param {string} divElementClass - Dictionary class corresponding to element
+ * @param {boolean} divElementUpload - Whether file upload is possible
+ * @param {HTMLDetailsElement} details - Parent menu section of clicked element
+ * @param {HTMLCollection} childList - Siblings of clicked element
  * @returns {Promise<void>}
  */
 export async function toggleDictionary(divElement, divElementClass, divElementUpload, details, childList) {

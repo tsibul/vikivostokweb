@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Module for creating catalogue row elements
+ * @module catalogueElement/createCatalogueRow
+ */
+
 'use strict'
 
 import {createDropDown} from "../dropDown/createDropDown.js";
@@ -12,9 +17,9 @@ import {deletedChange} from "./deletedChange.js";
 import {saveCatalogueItem} from "./saveCatalogueItem.js";
 
 /**
- *
- * @param item
- * @param catalogueRow
+ * Creates a catalogue row with all necessary elements
+ * @param {Object} item - Catalogue item data
+ * @param {HTMLFormElement} catalogueRow - Form element to populate
  * @returns {Promise<void>}
  */
 export async function createCatalogueRow(item, catalogueRow) {

@@ -1,9 +1,19 @@
+/**
+ * @fileoverview Module for saving printing price list changes
+ * @module priceElement/savePrintingPriceList
+ */
+
 'use strict'
 
 import {jsonUrl} from "../main.js";
 import {reloadPriceList} from "./reloadPriceList.js";
 import {getCSRFToken} from "../getCSRFToken.js";
 
+/**
+ * Saves changes to printing price list
+ * @param {Event} e - Event object from the save action
+ * @returns {Promise<void>}
+ */
 export async function savePrintingPriceList(e) {
     const content = document.querySelector('.content');
     const priceDateId = content

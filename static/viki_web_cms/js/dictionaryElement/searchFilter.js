@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Module for handling search filtering
+ * @module dictionaryElement/searchFilter
+ */
+
 'use strict'
 
 import {reloadContent} from "./reloadContent.js";
@@ -5,9 +10,9 @@ import {searchStringNormalizer} from "./searchStringNormalizer.js";
 import {reloadCatalogue} from "../catalogueElement/reloadCatalogue.js";
 
 /**
- * reload dictionary content onclick search button
- * @param button search button
- * @param className
+ * Reloads dictionary content when search button is clicked
+ * @param {HTMLButtonElement} button - Search button element
+ * @param {string} className - Class name of the dictionary section
  * @returns {Promise<void>}
  */
 export async function searchFilter(button, className) {

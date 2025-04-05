@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Module for creating dropdown elements
+ * @module dropDown/createDropDown
+ */
+
 'use strict'
 
 import {createModalInput} from "../dictionaryElement/createInput/createModalInput.js";
@@ -5,11 +10,11 @@ import {fetchJsonData} from "../fetchJsonData.js";
 import {jsonUrl} from "../main.js";
 
 /**
- * create dropdown
- * @param className
- * @param itemValue
- * @param blankField
- * @returns {Promise<void>}
+ * Creates a dropdown element with search functionality
+ * @param {string} className - Class name for the dropdown
+ * @param {string} [itemValue] - Initial selected value
+ * @param {boolean} [blankField] - Whether to allow blank field
+ * @returns {Promise<HTMLDivElement>} Created dropdown element
  */
 export async function createDropDown(className, itemValue, blankField) {
     const dropdown = document.createElement('div');
@@ -51,12 +56,12 @@ export async function createDropDown(className, itemValue, blankField) {
 }
 
 /**
- * create list of foreign values
- * @param dropdownValues
- * @param dropdownUl
- * @param dropDownInput
- * @param hiddenInput
- * @param blankField
+ * Creates list items for dropdown
+ * @param {Array<Object>} dropdownValues - Array of dropdown values
+ * @param {HTMLUListElement} dropdownUl - Dropdown list element
+ * @param {HTMLInputElement} dropDownInput - Input element
+ * @param {HTMLInputElement} hiddenInput - Hidden input element
+ * @param {boolean} [blankField] - Whether to allow blank field
  */
 function createForeignList(dropdownValues, dropdownUl, dropDownInput, hiddenInput, blankField) {
     if (blankField) {
@@ -68,11 +73,11 @@ function createForeignList(dropdownValues, dropdownUl, dropDownInput, hiddenInpu
 }
 
 /**
- *
- * @param item
- * @param dropdownUl
- * @param dropDownInput
- * @param hiddenInput
+ * Creates a single dropdown list item
+ * @param {Object} item - Item data
+ * @param {HTMLUListElement} dropdownUl - Dropdown list element
+ * @param {HTMLInputElement} dropDownInput - Input element
+ * @param {HTMLInputElement} hiddenInput - Hidden input element
  */
 export function createDropDownListItem(item, dropdownUl, dropDownInput, hiddenInput) {
     const dropDownListItem = document.createElement('li');

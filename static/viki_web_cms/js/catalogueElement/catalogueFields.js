@@ -1,8 +1,19 @@
+/**
+ * @fileoverview Module containing field definitions for catalogue items
+ * @module catalogueElement/catalogueFields
+ */
+
 'use strict'
 
 /**
- * field parameters for catalogue
- * @type {[{field: string, type: string, label: string},{field: string, type: string, label: string, null: boolean},{field: string, type: string, label: string, null: boolean},{field: string, type: string, label: string, foreignClass: string, null: boolean},{field: string, type: string, label: string, url: string, null: boolean},null,null,null]}
+ * Field parameters for catalogue items
+ * @type {Array<Object>} Array of field configuration objects
+ * @property {string} field - Field name
+ * @property {string} type - Field type (boolean, string, foreign, img)
+ * @property {string} label - Display label for the field
+ * @property {boolean} [null] - Whether the field can be null
+ * @property {string} [foreignClass] - Class name for foreign key fields
+ * @property {string} [url] - URL prefix for image fields
  */
 export const catalogueFields = [
     {

@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Module for creating new price date functionality
+ * @module priceElement/newPriceDate
+ */
+
 'use strict'
 
 import {closeModal} from "../modalFunction/closeModal.js";
@@ -6,6 +11,11 @@ import {createSaveButton} from "../createStandardElements/createSaveButton.js";
 import {priceDateSave} from "./priceDateSave.js";
 import {modalDnD} from "../modalFunction/modalDnD.js";
 
+/**
+ * Creates and displays a modal window for adding a new price date
+ * @param {Event} e - Event object from the click event
+ * @returns {Promise<void>}
+ */
 export async function newPriceDate(e) {
     const service = document.querySelector('.service')
     const modalWindow = document.createElement("dialog");

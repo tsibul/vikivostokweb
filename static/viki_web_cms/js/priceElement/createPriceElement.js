@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Module for creating and managing price elements
+ * @module priceElement/createPriceElement
+ */
+
 'use strict'
 
 import {reloadPriceList} from "./reloadPriceList.js";
@@ -9,9 +14,9 @@ import {createCancelButton} from "../createStandardElements/createCancelButton.j
 import {createSaveButton} from "../createStandardElements/createSaveButton.js";
 
 /**
- * create total price how you see it
- * @param className
- * @returns {Promise<HTMLDivElement>}
+ * Creates the main price element interface with dropdowns and content
+ * @param {string} className - CSS class name for the price element
+ * @returns {Promise<HTMLDivElement>} Complete price element with all components
  */
 export async function createPriceElement(className) {
     const dictionaryHeaderLeft = document.querySelector('.dictionary-frame__header_left');

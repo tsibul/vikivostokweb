@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Module for handling printing price list functionality
+ * @module priceElement/printingPrice
+ */
+
 'use strict'
 
 import {jsonUrl} from "../main.js";
@@ -6,6 +11,12 @@ import {createSaveButton} from "../createStandardElements/createSaveButton.js";
 import {fetchJsonData} from "../fetchJsonData.js";
 import {savePrintingPriceList} from "./savePrintingPriceList.js";
 
+/**
+ * Creates price content element for printing price list
+ * @param {string} priceDate - Price list date identifier
+ * @param {string} [searchString] - Optional search string for filtering
+ * @returns {Promise<{form: HTMLDivElement, header: HTMLElement}>} Object containing form and header elements
+ */
 export async function printingPrice(priceDate, searchString) {
     const dictionaryHeaderRight = document.querySelector('.dictionary-frame__header_right');
     const searchInput = dictionaryHeaderRight.querySelector('.dictionary-frame__input');
@@ -37,7 +48,10 @@ export async function printingPrice(priceDate, searchString) {
     return {'form': priceForm, 'header': priceHeader};
 }
 
-
+/**
+ * Builds header section for printing price list
+ * @returns {Promise<HTMLDivElement>} Header element
+ */
 async function buildPriceHeader() {
     const priceHeader = document.createElement('div');
     priceHeader.classList.add('print-header');
@@ -49,7 +63,12 @@ async function buildPriceHeader() {
     return priceHeader;
 }
 
-
+/**
+ * Builds table header for a specific print type
+ * @param {Object} printType - Print type data
+ * @param {string} rowGrid - CSS grid template columns definition
+ * @returns {HTMLDivElement} Table header element
+ */
 function buildTableHeader(printType, rowGrid) {
     let titleItem
     const tableHeader = document.createElement('div');
@@ -66,6 +85,13 @@ function buildTableHeader(printType, rowGrid) {
     return tableHeader;
 }
 
+/**
+ * Builds table row for a print group
+ * @param {Object} group - Print group data
+ * @param {string} rowGrid - CSS grid template columns definition
+ * @param {Array<Object>} volumes - Array of volume data
+ * @returns {HTMLDivElement} Table row element
+ */
 function buildTableRow(group, rowGrid, volumes) {
             const tableRow = document.createElement('div');
             tableRow.classList.add('type-table__row');
@@ -80,7 +106,12 @@ function buildTableRow(group, rowGrid, volumes) {
             return tableRow;
 }
 
-
+/**
+ * Builds input element for a specific price in the table
+ * @param {Object} group - Print group data
+ * @param {Object} volume - Volume data
+ * @returns {HTMLInputElement} Input element for price
+ */
 function buildRowItem(group,volume) {
     const rowItem = document.createElement('input');
     rowItem.type = 'number';

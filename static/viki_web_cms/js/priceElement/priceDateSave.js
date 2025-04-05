@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Module for saving new price date
+ * @module priceElement/priceDateSave
+ */
+
 'use strict'
 
 import {loadPriceDates} from "./priceDropdownBody.js";
@@ -5,6 +10,11 @@ import {jsonUrl} from "../main.js";
 import {closeModal} from "../modalFunction/closeModal.js";
 import {getCSRFToken} from "../getCSRFToken.js";
 
+/**
+ * Saves new price date and updates the price list
+ * @param {Event} e - Submit event from the price date form
+ * @returns {Promise<void>}
+ */
 export async function priceDateSave(e) {
     e.preventDefault();
     const form = e.target.closest('form');

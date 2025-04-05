@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Module for saving standard price list changes
+ * @module priceElement/savePriceList
+ */
+
 'use strict'
 
 import {jsonUrl} from "../main.js";
@@ -5,8 +10,8 @@ import {reloadPriceList} from "./reloadPriceList.js";
 import {getCSRFToken} from "../getCSRFToken.js";
 
 /**
- * save priceList for standard prices
- * @param e
+ * Saves changes to standard price list
+ * @param {Event} e - Event object from the save action
  * @returns {Promise<void>}
  */
 export async function savePriceList(e) {

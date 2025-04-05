@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Module for handling catalogue upload functionality
+ * @module catalogueElement/uploadCatalogueSave
+ */
+
 'use strict'
 
 import {searchStringNormalizer} from "../dictionaryElement/searchStringNormalizer.js";
@@ -8,6 +13,11 @@ import {loadCsvAlert} from "./loadCsvAlert.js";
 import {modalDnD} from "../modalFunction/modalDnD.js";
 import {getCSRFToken} from "../getCSRFToken.js";
 
+/**
+ * Handles CSV file upload for catalogue
+ * @param {Event} e - Event object from the form submission
+ * @returns {Promise<void>}
+ */
 export async function csvUploadCatalogueSave(e) {
     e.preventDefault();
     const form = e.target.closest('form');
@@ -23,6 +33,11 @@ export async function csvUploadCatalogueSave(e) {
     }
 }
 
+/**
+ * Handles multiple files upload for catalogue
+ * @param {Event} e - Event object from the form submission
+ * @returns {Promise<void>}
+ */
 export async function filesUploadCatalogueSave(e) {
     e.preventDefault();
     const form = e.target.closest('form');
@@ -31,6 +46,15 @@ export async function filesUploadCatalogueSave(e) {
     await uploadCatalogueSave(e, form, formData, 'catalogue_files_load', errorMessage);
 }
 
+/**
+ * Common function for handling catalogue uploads
+ * @param {Event} e - Event object from the form submission
+ * @param {HTMLFormElement} form - Form element containing the upload data
+ * @param {FormData} formData - Form data to be sent
+ * @param {string} url - API endpoint URL
+ * @param {HTMLElement} errorMessage - Element to display error messages
+ * @returns {Promise<void>}
+ */
 async function uploadCatalogueSave(e, form, formData, url, errorMessage) {
     const section = document.querySelector('.content')
     const searchString = section.querySelector('.dictionary-frame__input');

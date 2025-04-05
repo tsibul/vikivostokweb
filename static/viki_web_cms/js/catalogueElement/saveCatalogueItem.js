@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Module for saving catalogue item data
+ * @module catalogueElement/saveCatalogueItem
+ */
+
 'use strict'
 
 import {jsonUrl} from "../main.js";
@@ -5,9 +10,9 @@ import {fetchJsonData} from "../fetchJsonData.js";
 import {getCSRFToken} from "../getCSRFToken.js";
 
 /**
- *
- * @param e
- * @param btn
+ * Saves catalogue item data to the server
+ * @param {Event} e - Event object from the form submission
+ * @param {HTMLButtonElement} btn - Save button element
  * @returns {Promise<void>}
  */
 export async function saveCatalogueItem(e, btn) {

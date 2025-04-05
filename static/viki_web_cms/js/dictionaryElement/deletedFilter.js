@@ -1,14 +1,18 @@
-'use strict';
+/**
+ * @fileoverview Module for handling deleted items filtering
+ * @module dictionaryElement/deletedFilter
+ */
 
+'use strict';
 
 import {reloadContent} from "./reloadContent.js";
 import {searchStringNormalizer} from "./searchStringNormalizer.js";
 import {reloadCatalogue} from "../catalogueElement/reloadCatalogue.js";
 
 /**
- * reload content onchange deletedCheck
- * @param className className for selected dictionary
- * @param deletedCheck checked element
+ * Reloads content when deleted items filter is changed
+ * @param {string} className - Class name for selected dictionary
+ * @param {HTMLInputElement} deletedCheck - Checkbox element for deleted items filter
  * @returns {Promise<void>}
  */
 export async function deletedFilter(className, deletedCheck) {
