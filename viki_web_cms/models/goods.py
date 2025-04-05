@@ -63,10 +63,10 @@ class Goods(SettingsDictionary):
     details_number = models.IntegerField(default=1)
     multicolor = models.BooleanField(default=False)
     standard_price = models.BooleanField(default=True)
-    # print_layout = models.FileField(upload_to=fs_goods, storage=fs_goods, blank=True, null=True)
     goods_option_group = models.ForeignKey(GoodsOptionGroup, on_delete=models.SET_NULL, null=True)
     dealer_price = models.BooleanField(default=True)
     weight = models.FloatField(null=True, blank=True)
+    new = models.BooleanField(default=False)
 
     class Meta(SettingsDictionary.Meta):
         verbose_name = 'Товар'
@@ -85,13 +85,19 @@ class Goods(SettingsDictionary):
 
     @staticmethod
     def dictionary_fields():
-        return [{
-            'field': 'article',
-            'type': 'string',
-            'label': 'артикул',
-            'null': False,
-        },
+        return [
+            {
+                'field': 'article',
+                'type': 'string',
+                'label': 'артикул',
+                'null': False,
+            },
         ] + SettingsDictionary.dictionary_fields() + [
+            {
+                'field': 'new',
+                'type': 'boolean',
+                'label': 'новый',
+            },
             {
                 'field': 'additional_material',
                 'type': 'boolean',
@@ -160,6 +166,7 @@ class Goods(SettingsDictionary):
                 'null': True,
             },
         ]
+
 
 class GoodsOption(SettingsDictionary):
     """ goods options"""

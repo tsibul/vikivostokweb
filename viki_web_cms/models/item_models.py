@@ -15,6 +15,7 @@ class CatalogueItem(SettingsDictionary):
     image = models.FileField(storage=fs_item_photo, null=True, blank=True)
     simple_article = models.BooleanField(default=True)
     goods_option = models.ForeignKey(GoodsOption, on_delete=models.SET_NULL, null=True, blank=True)
+    new = models.BooleanField(default=False)
 
     # def save(self, *args, **kwargs):
     #     image_name = self.image.name.split('.')[0]
@@ -121,6 +122,11 @@ class CatalogueItem(SettingsDictionary):
                 'label': 'фото',
                 'url': '/static/viki_web_cms/files/item_photo/',
                 'null': True,
+            },
+            {
+                'field': 'new',
+                'type': 'boolean',
+                'label': 'новый',
             },
             {
                 'field': 'simple_article',
