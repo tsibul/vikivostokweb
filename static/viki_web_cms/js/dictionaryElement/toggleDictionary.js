@@ -16,15 +16,16 @@ import {getFieldStructure} from "./getFieldStructure.js";
  * @param {HTMLDivElement} divElement - Menu element that was clicked
  * @param {string} divElementClass - Dictionary class corresponding to element
  * @param {boolean} divElementUpload - Whether file upload is possible
+ * @param {boolean} divElementNew - Whether new item is possible
  * @param {HTMLDetailsElement} details - Parent menu section of clicked element
  * @param {HTMLCollection} childList - Siblings of clicked element
  * @returns {Promise<void>}
  */
-export async function toggleDictionary(divElement, divElementClass, divElementUpload, details, childList) {
+export async function toggleDictionary(divElement, divElementClass, divElementUpload, divElementNew, details, childList) {
     divElement.classList.toggle('text-active');
     if (!document.getElementById(divElementClass)) {
         const contentRight = document.querySelector('.content__right');
-        const dictionaryFrame = await createDictionaryFrame(divElementClass, divElement.textContent, divElementUpload);
+        const dictionaryFrame = await createDictionaryFrame(divElementClass, divElement.textContent, divElementUpload, divElementNew);
         const titleObject = await getFieldStructure(divElementClass);
         const rowGrid = gridDictionaryStyle(titleObject);
         const dictionaryContent = await createDictionaryContent(divElementClass, rowGrid, 0, 'None');

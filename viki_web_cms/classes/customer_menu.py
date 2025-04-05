@@ -1,10 +1,11 @@
 import json
 
 class CustomerSetting:
-    def __init__(self, setting: str, setting_class: str, upload: bool):
+    def __init__(self, setting: str, setting_class: str, upload: bool, new: bool):
         self.setting = setting
         self.setting_class = setting_class
         self.upload = upload
+        self.new = new
 
     @staticmethod
     def cms_set(setting):
@@ -29,29 +30,29 @@ class CustomerMenu:
             CustomerMenu("Клиенты", str(json.dumps([
 
                 CustomerSection('Компании', [
-                    CustomerSetting('Клиенты', 'Customer', False),
-                    CustomerSetting('Юр. лица', 'Company', False),
-                    CustomerSetting('Банковские реквизиты', 'BankAccount', False),
+                    CustomerSetting('Клиенты', 'Customer', False, True),
+                    CustomerSetting('Юр. лица', 'Company', False, True),
+                    CustomerSetting('Банковские реквизиты', 'BankAccount', False, False),
                 ]),
             ], default=lambda o: o.__dict__,
                 sort_keys=True)), 'Standard'),
             CustomerMenu('Контакты', str(json.dumps([
                 CustomerSection('Контакты', [
-                    CustomerSetting('Контакты', 'Manager', True),
+                    CustomerSetting('Контакты', 'Manager', True, True),
                 ]),
             ], default=lambda o: o.__dict__,
-                sort_keys=True)), 'Catalogue'),
+                sort_keys=True)), 'Contact'),
             CustomerMenu('Заказы', str(json.dumps([
                 CustomerSection('Заказы', [
-                    CustomerSetting('Заказы', 'Order', False),
+                    CustomerSetting('Заказы', 'Order', False, True),
                 ]),
             ], default=lambda o: o.__dict__,
                 sort_keys=True)), 'Order'),
             CustomerMenu('Состав групп', str(json.dumps([
                 CustomerSection('Состав групп', [
-                    CustomerSetting('Состав групп', 'CustomerGroup', False),
+                    CustomerSetting('Состав групп', 'CustomerGroup', False, True),
                 ]),
             ], default=lambda o: o.__dict__,
-                sort_keys=True)), 'Order'),
+                sort_keys=True)), 'Group'),
         ]
         return menu_list

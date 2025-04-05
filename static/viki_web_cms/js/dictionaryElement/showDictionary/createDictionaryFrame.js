@@ -9,13 +9,14 @@ import {gridDictionaryStyle} from "./gridDictonaryStyle.js";
  * @param dictionaryClass class selected
  * @param dictionaryName class name for header
  * @param fileUpload if upload needed
+ * @param itemNew if new item checkbox needed
  * @returns {HTMLElement}
  */
-export async function createDictionaryFrame(dictionaryClass, dictionaryName, fileUpload) {
+export async function createDictionaryFrame(dictionaryClass, dictionaryName, fileUpload, itemNew) {
     const outputFrame = document.createElement('section');
     outputFrame.classList.add('dictionary-frame');
     outputFrame.id = dictionaryClass;
-    const frameHeader = createHeader(dictionaryClass, dictionaryName, fileUpload);
+    const frameHeader = createHeader(dictionaryClass, dictionaryName, fileUpload, itemNew);
     outputFrame.appendChild(frameHeader);
     return outputFrame;
 }
