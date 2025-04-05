@@ -18,8 +18,10 @@ export async function scrollRecords(e) {
     const firstRecord = currentRecord.dataset.lastId;
     const content = currentRecord.closest('.content');
     const searchString = content.querySelector('.dictionary-frame__input').value;
-    const deletedCheck = content.querySelector('.check');
+    const deletedCheck = content.querySelector('.check-deleted');
+    const newCheck = content.querySelector('.check-new');
     const catalogueContent= content.querySelector('.catalogue__content');
-    await createCatalogueContent(catalogueContent, deletedCheck.checked ? 1 :0, firstRecord,
+    await createCatalogueContent(catalogueContent, deletedCheck.checked ? 1 :0,
+        newCheck.checked ? 1 :0, firstRecord,
         searchStringNormalizer(searchString), 0);
 }

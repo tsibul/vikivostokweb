@@ -59,7 +59,8 @@ async function uploadCatalogueSave(e, form, formData, url, errorMessage) {
     const section = document.querySelector('.content')
     const searchString = section.querySelector('.dictionary-frame__input');
     const searchValue = searchStringNormalizer(searchString.value);
-    const deletedCheck = section.querySelector('.check');
+    const deletedCheck = section.querySelector('.check-deleted');
+    const newCheck = section.querySelector('.check-new');
     const modal = e.target.closest('dialog');
     const saveUrl = jsonUrl + url;
     await fetch(saveUrl, {
@@ -77,7 +78,8 @@ async function uploadCatalogueSave(e, form, formData, url, errorMessage) {
                 errorMessage.textContent = postData.error;
             } else {
                 closeModal(modal);
-                reloadCatalogue(section, deletedCheck.checked ? 1 : 0, searchValue);
+                reloadCatalogue(section, deletedCheck,
+                    newCheck, searchValue);
                 const alert = loadCsvAlert(postData);
                 document.querySelector('.service').appendChild(alert);
                 alert.showModal();

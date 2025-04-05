@@ -29,25 +29,27 @@ export function createHeader(dictionaryClass, dictionaryName, fileUpload, itemNe
     const headerRight = document.createElement('div');
     headerRight.classList.add('dictionary-frame__header_right');
     if (fileUpload) {
-        const uploadButton = createNeutralButton('Загрузить CSV' );
+        const uploadButton = createNeutralButton('Загрузить CSV');
         uploadButton.addEventListener('click', () => csvUpload(dictionaryClass))
         headerRight.appendChild(uploadButton);
     }
-    if (itemNew){
-    const newCheck = createCheckbox(false);
-    newCheck.id = dictionaryClass + '-new';
-    newCheck.addEventListener('change', () => newFilter(dictionaryClass, newCheck))
-    headerRight.appendChild(newCheck);
-    const newLabel = document.createElement('label');
-    newLabel.htmlFor = dictionaryClass + '-new';
-    newLabel.classList.add('dictionary-frame__label');
-    newLabel.textContent = 'только новые';
-    headerRight.appendChild(newLabel);
+    if (itemNew) {
+        const newCheck = createCheckbox(false);
+        newCheck.id = dictionaryClass + '-new';
+        newCheck.addEventListener('change', () => newFilter(dictionaryClass, newCheck))
+        newCheck.classList.add('check-new');
+        headerRight.appendChild(newCheck);
+        const newLabel = document.createElement('label');
+        newLabel.htmlFor = dictionaryClass + '-new';
+        newLabel.classList.add('dictionary-frame__label');
+        newLabel.textContent = 'только новые';
+        headerRight.appendChild(newLabel);
 
     }
     const deletedCheck = createCheckbox(true);
     deletedCheck.id = dictionaryClass + '-deleted';
     deletedCheck.addEventListener('change', () => deletedFilter(dictionaryClass, deletedCheck))
+    deletedCheck.classList.add('check-deleted');
     headerRight.appendChild(deletedCheck);
     const checkLabel = document.createElement('label');
     checkLabel.htmlFor = dictionaryClass + '-deleted';

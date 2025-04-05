@@ -11,9 +11,10 @@ from viki_web_cms.functions.webp_convertor import webp_convertor
 from viki_web_cms.models import CatalogueItem, Goods, Color, CatalogueItemColor, GoodsOption
 
 
-def catalogue_data(request, deleted, first_record, search_string, order):
+def catalogue_data(request, deleted, new_item, first_record, search_string, order):
     """
 
+    :param new_item:
     :param request:
     :param deleted:
     :param first_record:

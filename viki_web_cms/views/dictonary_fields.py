@@ -23,9 +23,10 @@ def field_names(request, class_name):
     return JsonResponse(dict_fields, safe=False)
 
 
-def field_values(request, class_name, deleted, first_record, search_string):
+def field_values(request, class_name, deleted, new_item, first_record, search_string):
     """
     return dictionary fields with parameters (field_params) and values (values) for requested class
+    :param new_item:
     :param request:
     :param class_name: requested class
     :param deleted: filter if deleted True

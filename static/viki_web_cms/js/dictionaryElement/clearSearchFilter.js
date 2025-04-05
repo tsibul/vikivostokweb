@@ -17,12 +17,13 @@ import {reloadCatalogue} from "../catalogueElement/reloadCatalogue.js";
 export async function clearSearchFilter(button, className) {
     const dictionarySection = button.closest('.dictionary-frame__header').parentElement;
     dictionarySection.querySelector('.dictionary-frame__input').value = '';
-    const deletedCheck = dictionarySection.querySelector('.check');
+    const deletedCheck = dictionarySection.querySelector('.check-deleted');
+    const newCheck = dictionarySection.querySelector('.check-new');
     switch (className) {
         case 'Catalogue':
-            await reloadCatalogue(dictionarySection, deletedCheck, 'None');
+            await reloadCatalogue(dictionarySection, deletedCheck, newCheck, 'None');
             break;
         default:
-            await reloadContent(dictionarySection, className, deletedCheck, 'None');
+            await reloadContent(dictionarySection, className, deletedCheck, newCheck, 'None');
     }
 }

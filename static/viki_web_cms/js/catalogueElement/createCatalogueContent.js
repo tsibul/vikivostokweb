@@ -14,13 +14,17 @@ import {scrollRecords} from "./scrollRecords.js";
  * Creates catalogue content with rows of items
  * @param {HTMLDivElement} catalogueContent - Container for catalogue rows
  * @param {number} deletedCheck - Flag for filtering deleted items (0: not deleted, 1: deleted)
+ * @param {number }newCheck - - Flag for filtering new items (0: all, 1: only new)
  * @param {number} firstRecord - ID of the first record to display
  * @param {string} searchString - Search string for filtering content
  * @param {number} order - Order parameter for sorting
  * @returns {Promise<void>}
  */
-export async function createCatalogueContent(catalogueContent, deletedCheck, firstRecord, searchString, order) {
-    const url = jsonUrl + 'catalogue_data/' + deletedCheck + '/' + firstRecord + '/'
+export async function createCatalogueContent(catalogueContent,
+                                             deletedCheck, newCheck,
+                                             firstRecord, searchString,
+                                             order) {
+    const url = jsonUrl + 'catalogue_data/' + deletedCheck + '/' + newCheck + '/' + firstRecord + '/'
         + searchString + '/' + order;
     const jsonData = await fetchJsonData(url);
     const itemData = jsonData.values;

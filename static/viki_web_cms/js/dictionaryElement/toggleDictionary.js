@@ -28,7 +28,7 @@ export async function toggleDictionary(divElement, divElementClass, divElementUp
         const dictionaryFrame = await createDictionaryFrame(divElementClass, divElement.textContent, divElementUpload, divElementNew);
         const titleObject = await getFieldStructure(divElementClass);
         const rowGrid = gridDictionaryStyle(titleObject);
-        const dictionaryContent = await createDictionaryContent(divElementClass, rowGrid, 0, 'None');
+        const dictionaryContent = await createDictionaryContent(divElementClass, rowGrid, 0, 0, 'None');
         dictionaryFrame.appendChild(dictionaryContent);
         contentRight.appendChild(dictionaryFrame);
     } else {
