@@ -218,7 +218,7 @@
                                                  alt="cart" class="">
                                         </button>
                                         <a class="btn-hor"
-                                           href="{% url 'viki_web:product_detail' goods.goods_item.id %}">
+                                           href="{% url 'viki_web:product_detail' goods.eng_name %}?id={{ goods.goods_item.id }}">
                                             <button
                                                     class="btn btn__cancel btn-sqr">
                                                 <div>
