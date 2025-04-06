@@ -934,6 +934,10 @@ input[type=checkbox] {
 .product-hor__tab-print_data * {
   font-size: 13px;
 }
+.product-hor__btn-block {
+  display: flex;
+  gap: 16px;
+}
 .product-hor__tab-pack {
   padding: 2px 10px;
   display: grid;
@@ -981,10 +985,8 @@ input[type=checkbox] {
 }
 
 .btn-hor {
-  width: 160px;
-  padding: 8px;
+  width: 100%;
   justify-content: center;
-  gap: 16px;
 }
 
 .btn-multicolor {

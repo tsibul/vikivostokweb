@@ -110,6 +110,10 @@
       }
     }
   }
+  &__btn-block{
+    display: flex;
+    gap: 16px;
+  }
 
   &__tab-pack {
     padding: 2px 10px;
@@ -167,10 +171,10 @@
 }
 
 .btn-hor {
-  width: 160px;
-  padding: 8px;
+  width: 100%;
+  //padding: 8px;
   justify-content: center;
-  gap: 16px
+  //gap: 16px
 }
 
 .btn-multicolor {

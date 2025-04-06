@@ -164,6 +164,7 @@
 
 
 
+
                                                             {% static 'viki_web_cms/files/layout' %}{{ layout.layout.layout.file.name }}"
                                                        target="_blank">
                                                         <p>{{ layout.name }}</p>
@@ -208,13 +209,25 @@
                                             {% endfor %}
                                         </div>
                                     </div>
-                                    <button class="btn btn__save btn-hor">
-                                        <div>
-                                            В корзину&nbsp;
-                                        </div>
-                                        <img src="{% static 'viki_web/icons/cart.svg' %}"
-                                             alt="cart" class="">
-                                    </button>
+                                    <div class="product-hor__btn-block ">
+                                        <button class="btn btn__save btn-hor ">
+                                            <div>
+                                                В корзину&nbsp;
+                                            </div>
+                                            <img src="{% static 'viki_web/icons/cart.svg' %}"
+                                                 alt="cart" class="">
+                                        </button>
+                                        <a class="btn-hor"
+                                           href="{% url 'viki_web:product_detail' goods.goods_item.id %}">
+                                            <button
+                                                    class="btn btn__cancel btn-sqr">
+                                                <div>
+                                                    Подробнее&nbsp;
+                                                </div>
+                                                <i class="fa-solid fa-arrow-right"></i>
+                                            </button>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         {% endfor %}
@@ -223,7 +236,4 @@
             </div>
         </div>
     </main>
-
-
-
 {% endblock %}
