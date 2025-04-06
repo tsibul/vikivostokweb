@@ -20,4 +20,5 @@ urlpatterns = [
     path('check_company/', views.company_create, name='check_company'),
     path('check_bank/', views.check_bank, name='check_bank'),
     path('save_bank_account/', views.save_bank_account, name='save_bank_account'),
+    path('product/<str:product_name>', views.product_detail, name='product_detail'),
 ]
