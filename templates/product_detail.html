@@ -1,0 +1,148 @@
+{% extends 'header.html' %}
+{% load static %}
+{% block content %}
+    <main>
+        <div class="container">
+            <div class="detail-page">
+                <section class="detail-page__section"
+                         data-id="1"
+                         data-goods-article="ART-001"
+                         data-article-length="6"
+                         data-article-set="SET-001"
+                >
+                    <div class="detail-page__content">
+                        <div class="detail-page__gallery">
+                            <div class="detail-page__main-image">
+                                <img src="{% static 'viki_web/icons/logo.svg' %}"
+                                     alt="Основное изображение"
+                                     loading="lazy">
+                            </div>
+                            <div class="detail-page__thumbnails">
+                                <div class="detail-page__thumbnail">
+                                    <img src="{% static 'viki_web/icons/logo.svg' %}"
+                                         alt="Дополнительное изображение 1"
+                                         loading="lazy">
+                                </div>
+                                <div class="detail-page__thumbnail">
+                                    <img src="{% static 'viki_web/icons/logo.svg' %}"
+                                         alt="Дополнительное изображение 2"
+                                         loading="lazy">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="detail-page__info">
+                            <h1 class="">Название товара</h1>
+                            <div class="detail-page__article">
+                                <h3>Артикул: ART-001</h3>
+                                <h3 class="strong">Цена: 1000 руб.</h3>
+                            </div>
+                            <div class="detail-page__description">
+                                Описание товара. Здесь может быть подробное описание характеристик и особенностей товара.
+                            </div>
+                            <div class="detail-page__colors">
+                                <div class="detail-page__color-picker">
+                                    <div class="square tooltip" style="background-color: #FF0000;">
+                                        <div class="tooltip-text">Красный</div>
+                                    </div>
+                                    <div class="square tooltip" style="background-color: #00FF00;">
+                                        <div class="tooltip-text">Зеленый</div>
+                                    </div>
+                                    <div class="square tooltip" style="background-color: #0000FF;">
+                                        <div class="tooltip-text">Синий</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn btn__save btn-sqr">
+                                <div>В корзину&nbsp;</div>
+                                <img src="{% static 'viki_web/icons/cart.svg' %}" alt="cart">
+                            </button>
+                            <div class="detail-page__tabs">
+                                <div class="detail-page__tab">
+                                    <h3>Техническая информация</h3>
+                                    <div>
+                                        размеры: 100x200x50 мм, вес: 500г
+                                    </div>
+                                    <div>
+                                        <div>шаблоны:</div>
+                                        <a href="#" target="_blank">
+                                            <p>Шаблон 1</p>
+                                            <i class="fa-regular fa-folder"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="detail-page__tab">
+                                    <h3>Печать</h3>
+                                    <div class="detail-page__print-data">
+                                        <div>Шелкография</div>
+                                        <div>Передняя часть</div>
+                                        <div>1</div>
+                                        <div>4</div>
+                                        <div>50x50 мм</div>
+                                    </div>
+                                </div>
+                                <div class="detail-page__tab">
+                                    <h3>Упаковка</h3>
+                                    <div class="detail-page__pack-data">
+                                        <div>Коробка</div>
+                                        <div>10</div>
+                                        <div>5</div>
+                                        <div>0.1</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="detail-page__related">
+                    <h3>Похожие товары</h3>
+                    <div class="detail-page__related_list">
+                        <a href="#" class="detail-page__related_item">
+                            <img src="{% static 'viki_web/icons/logo.svg' %}" alt="Похожий товар 1">
+                            <div class="detail-page__related_info">
+                                <h4>Название похожего товара</h4>
+                                <p>Артикул: SIM-001</p>
+                                <p class="strong">Цена: 1200 руб.</p>
+                            </div>
+                        </a>
+                        <a href="#" class="detail-page__related_item">
+                            <img src="{% static 'viki_web/icons/logo.svg' %}" alt="Похожий товар 2">
+                            <div class="detail-page__related_info">
+                                <h4>Название похожего товара</h4>
+                                <p>Артикул: SIM-002</p>
+                                <p class="strong">Цена: 1500 руб.</p>
+                            </div>
+                        </a>
+                    </div>
+                </section>
+
+                <section class="detail-page__related">
+                    <h3>Сопутствующие товары</h3>
+                    <div class="detail-page__related_list">
+                        <a href="#" class="detail-page__related_item">
+                            <img src="{% static 'viki_web/icons/logo.svg' %}" alt="Сопутствующий товар 1">
+                            <div class="detail-page__related_info">
+                                <h4>Название сопутствующего товара</h4>
+                                <p>Артикул: REL-001</p>
+                                <p class="strong">Цена: 800 руб.</p>
+                            </div>
+                        </a>
+                        <a href="#" class="detail-page__related_item">
+                            <img src="{% static 'viki_web/icons/logo.svg' %}" alt="Сопутствующий товар 2">
+                            <div class="detail-page__related_info">
+                                <h4>Название сопутствующего товара</h4>
+                                <p>Артикул: REL-002</p>
+                                <p class="strong">Цена: 600 руб.</p>
+                            </div>
+                        </a>
+                    </div>
+                </section>
+
+{#                <a href="{% url 'viki_web:products' category.product_group_url %}" class="detail-page__category">#}
+{#                    <i class="icon icon__arrow-left"></i>#}
+{#                    <span>Вернуться в категорию</span>#}
+{#                </a>#}
+            </div>
+        </div>
+    </main>
+{% endblock %} 
