@@ -224,7 +224,16 @@
 
                                 </div>
                                 <div class="btn-sqr__block">
-                                    <div></div>
+                                    <a href="{% url 'viki_web:product_detail' goods.goods_item.id %}">
+                                        <button
+                                                class="btn btn__cancel btn-sqr">
+                                            <div>
+                                                Подробнее&nbsp;
+                                            </div>
+                                            <i class="fa-solid fa-arrow-right"></i>
+                                        </button>
+                                    </a>
+                                    <a href="#">
                                     <button class="btn btn__save btn-sqr">
                                         <div>
                                             В корзину&nbsp;
@@ -232,9 +241,9 @@
                                         <img src="{% static 'viki_web/icons/cart.svg' %}"
                                              alt="cart" class="">
                                     </button>
+                                    </a>
                                 </div>
-
-                            </div>
+                                </div>
                         {% endfor %}
                     </section>
                 {% endfor %}

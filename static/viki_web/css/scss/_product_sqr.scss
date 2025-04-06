@@ -128,15 +128,17 @@
 }
 
 .btn-sqr {
-  //width: 160px;
+  width: 100%;
   padding: 8px;
   justify-content: center;
   gap: 8px;
-  align-self: end;
   &__block{
-    display: grid;
-    grid-template-columns: 1fr 2fr;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
     padding-bottom: 16px;
+    width: 67%;
+    margin-left: 33%;
   }
 }
 
