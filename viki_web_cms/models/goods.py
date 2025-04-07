@@ -1,5 +1,7 @@
 # from django.core.files.storage import FileSystemStorage
 from django.db import models
+from django.http import JsonResponse
+from transliterate import translit
 
 from viki_web_cms.models import SettingsDictionary, ColorScheme, ProductGroup
 
@@ -67,6 +69,7 @@ class Goods(SettingsDictionary):
     dealer_price = models.BooleanField(default=True)
     weight = models.FloatField(null=True, blank=True)
     new = models.BooleanField(default=False)
+    slug = models.SlugField(null=True, blank=True)
 
     class Meta(SettingsDictionary.Meta):
         verbose_name = 'Товар'
@@ -75,9 +78,13 @@ class Goods(SettingsDictionary):
         db_table = 'goods'
         ordering = ['article', 'name']
 
-    # @property
-    # def cover_url(self):
-    #     return f"/static/viki_web_cms/files/goods/{self.print_layout.name}" if self.print_layout else None
+    def save(self, *args, **kwargs):
+        self.slug = translit(self.name.lower(), 'ru', reversed=True).replace(' ', '-')
+        slug_old = Goods.objects.filter(slug=self.slug, deleted=False).first()
+        if slug_old:
+            return {'errors': ['name']}
+        super(Goods, self).save(*args, **kwargs)
+
 
     @staticmethod
     def order_default():
