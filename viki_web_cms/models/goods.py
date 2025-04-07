@@ -69,7 +69,7 @@ class Goods(SettingsDictionary):
     dealer_price = models.BooleanField(default=True)
     weight = models.FloatField(null=True, blank=True)
     new = models.BooleanField(default=False)
-    slug = models.SlugField(null=True, blank=True)
+    slug = models.SlugField(unique=True, null=False, blank=False)
 
     class Meta(SettingsDictionary.Meta):
         verbose_name = 'Товар'
