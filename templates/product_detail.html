@@ -1,6 +1,7 @@
 {% extends 'header.html' %}
 {% load static %}
 {% block content %}
+    <script src="{% static 'viki_web/js/product_detail.js' %}" defer type="module"></script>
     <main>
         <div class="container">
             <div class="detail-page">
@@ -22,9 +23,18 @@
                                          data-color="{{ item.item.main_color.id }}"
                                          data-article="{{ item.item.item_article }}"
                                          data-price="{{ item.price }}"
+                                         data-goods-price="{{ goods.price }}"
                                          data-color-description="{{ item.color_description }}"
                                     >
                                 {% endfor %}
+                                <button class="detail-page__nav-button detail-page__nav-button--prev tooltip">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                    <div class="tooltip-text tooltip-prev">предыдущий</div>
+                                </button>
+                                <button class="detail-page__nav-button detail-page__nav-button--next tooltip">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                    <div class="tooltip-text tooltip-next">следующий</div>
+                                </button>
                             </div>
                             <div class="detail-page__thumbnails">
                                 <div class="detail-page__thumbnail">
@@ -43,10 +53,10 @@
                             <h1 class="">{{ goods.goods_item.name }}</h1>
                             <div class="detail-page__article">
                                 <h3>Артикул: {{ goods.random_item.item.item_article }}</h3>
-                                <h3 class="strong">Цена: {% if goods.random_item.price %}{{ goods.random_item.price }}{% else %}{{ goods.price }}{% endif %} руб.</h3>
-                                {% if goods.random_item.color_description %}
-                                    <div>{{ goods.random_item.color_description|safe }}</div>
-                                {% endif %}
+                                <h3 class="strong">Цена:
+                                    {% if goods.random_item.price %}{{ goods.random_item.price }}{% else %}
+                                        {{ goods.price }}{% endif %} руб.</h3>
+                                <div class="detail-page__color-description">{{ goods.random_item.color_description|safe }}</div>
                             </div>
                             <div class="detail-page__description">
                                 <h3>Описание товара</h3>

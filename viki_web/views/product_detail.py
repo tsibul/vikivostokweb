@@ -31,6 +31,9 @@ def product_detail(request, product_name):
 
     # Выбираем случайный ID из списка
     id_random = id_list[round(random.random() * (len(id_list)) - 1)] if len(id_list) > 1 else id_list[0]
+    
+    # Находим item с id_random с помощью функции next()
+    random_item = next((item for item in item_list if item['item'].id == id_random), None)
 
     context = {
         'categories': product_groups,
@@ -39,6 +42,7 @@ def product_detail(request, product_name):
             'goods_item': goods,
             'item_list': item_list,
             'id_random': id_random,
+            'random_item': random_item,
             'price': price,
             'goods_description': goods_description,
             'dimensions': str(dimensions),
