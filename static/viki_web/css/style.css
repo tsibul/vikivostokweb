@@ -1164,7 +1164,7 @@ input[type=checkbox] {
 }
 .detail-page__content {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 3fr 5fr;
   gap: 2rem;
 }
 .detail-page__gallery {
@@ -1179,7 +1179,7 @@ input[type=checkbox] {
   border-radius: 12px;
   aspect-ratio: 1;
   width: 100%;
-  max-width: 600px;
+  max-width: 460px;
   background-color: #fff;
 }
 .detail-page__main-image img {
@@ -1192,7 +1192,7 @@ input[type=checkbox] {
   transition: all 0.4s ease;
 }
 .detail-page__color-description {
-  min-height: 60px;
+  min-height: 40px;
 }
 .detail-page__nav-button {
   position: absolute;
@@ -1245,7 +1245,7 @@ input[type=checkbox] {
 .detail-page__info {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 .detail-page__article {
   display: flex;

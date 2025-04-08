@@ -16,7 +16,7 @@
 
   &__content {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 3fr 5fr;
     gap: 2rem;
   }
 
@@ -32,7 +32,7 @@
     @include brd-standard;
     aspect-ratio: 1;
     width: 100%;
-    max-width: 600px;
+    max-width: 460px;
     background-color: #fff;
 
     img {
@@ -46,7 +46,7 @@
   }
 
   &__color-description{
-    min-height: 60px;
+    min-height: 40px;
   }
 
 
@@ -107,7 +107,7 @@
   &__info {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1rem;
   }
 
   &__article {
