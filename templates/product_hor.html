@@ -15,7 +15,6 @@
             <div class="products">
                 {% for goods in goods_list %}
                     <section class="product product-hor"
-                             data-id="{{ goods.goods_item.id }}"
                              data-goods-article="{{ goods.goods_item.article }}"
                              data-article-length="{{ goods.goods_item.details_number }}"
                             {% if goods.goods_item.multicolor %}
@@ -23,31 +22,53 @@
                             {% endif %}
                     >
                         <h3>{{ goods.goods_item.name }}</h3>
-                        {% for item in goods.item_list %}
-                            <div class="product-hor__frame product-frame
+                        <div class="product-hor__frame product-frame">
+                            <div class="chevron-next chev-next"
+                                    {#                                 data-id="{{ goods.random_item.item.id }}"#}
+                                 data-list="{{ goods.item_id }}"
+                                 data-list-initial="{{ goods.item_id }}"
+                            >
+                                <div>следующий</div>
+                                <i class="fa-solid fa-angles-right"></i>
+                            </div>
+                            {% for item in goods.item_list %}
+                                <div class="product-hor__image-frame
                                 {% if goods.id_random != item.item.id %} item-hidden item-opaque{% endif %}"
-                                 data-id="{{ item.item.id }}"
-                                 data-goods="{{ goods.goods_item.id }}"
-                                 data-article="{{ item.item.item_article }}"
-                                 data-price="{% if item.price %}
+                                     data-id="{{ item.item.id }}"
+                                     data-goods="{{ goods.goods_item.id }}"
+                                     data-article="{{ item.item.item_article }}"
+                                     data-description="{{ item.color_description }}"
+                                     data-price="{% if item.price %}
                                                {{ item.price }}
                                              {% else %}
                                                {{ goods.price }}
                                              {% endif %}"
-                            >
-                                <div>
-                                    <div class="chevron-next chev-next"
-                                         data-id="{{ item.item.id }}"
-                                         data-list="{{ goods.item_id }}"
-                                         data-list-initial="{{ goods.item_id }}"
-                                    >
-                                        <div>следующий</div>
-                                        <i class="fa-solid fa-angles-right"></i>
+                                >
+                                    <div>
+                                        <img class="product-hor__img"
+                                             src="/static/viki_web_cms/files/item_photo/{{ item.item.image }}"
+                                             alt="{{ item.item.item_article }}"
+                                             loading="lazy">
                                     </div>
-                                    <img class="product-hor__img"
-                                         src="/static/viki_web_cms/files/item_photo/{{ item.item.image }}"
-                                         alt="{{ item.item.image_article }}"
-                                         loading="lazy">
+                                </div>
+                            {% endfor %}
+                            <div>
+                                <div class="product-hor__color-description">
+                                    {{ goods.random_item.color_description }}
+                                </div>
+                                <div class="product-hor__tab-main_title">
+                                    <h4>Артикул: <strong
+                                            class="strong article">{{ goods.random_item.item.item_article }}</strong>
+                                    </h4>
+                                    <h4 class="">Цена:
+                                        <span class="strong price">
+                                        {% if goods.random_item.price %}
+                                            {{ goods.random_item.price }}
+                                        {% else %}
+                                            {{ goods.price }}
+                                        {% endif %}
+                                    </span>
+                                    </h4>
                                 </div>
                                 <div class="filter__content_data_color color-padding">
                                     {% if goods.goods_item.multicolor %}
@@ -79,38 +100,35 @@
                                         {% endfor %}
                                     {% else %}
                                         {% for color in goods.colors %}
-                                            <input type="checkbox"
-                                                   id="item-color-{{ item.item.id }}_{{ color.main_color__hex|slice:"1:" }}"
-                                                   name="{{ color.name }}"
+                                            <input type="radio"
+                                                   id="item-color-{{ color.id }}_{{ color.main_color__hex|slice:"1:" }}"
+                                                   name="color-picker"
                                                    class="product-header__filter-content_checkbox-hidden"
-                                                   data-id="{{ item.item.id }}"
-                                                    {% if  item.item.id == color.id %} checked {% endif %}
+                                                   data-id="{{ color.id }}"
+                                                    {% if  goods.id_random == color.id %} checked {% endif %}
                                                    hidden>
-                                            <label for="item-color-{{ item.item.id }}_{{ color.main_color__hex|slice:"1:" }}"
+                                            <label for="item-color-{{ color.id }}_{{ color.main_color__hex|slice:"1:" }}"
                                                    class="color-label"
-                                                   data-item-id="{{ color.id }}"
+                                                   data-id="{{ color.id }}"
                                                    data-hex="{{ color.main_color__hex|slice:"1:" }}"
                                             >
                                                 <div class="square tooltip"
+                                                     data-id="{{ color.id }}"
                                                      style="background-color: {{ color.main_color__hex }};">
                                                     <div class="tooltip-text">{{ color.main_color__name }}</div>
                                                 </div>
                                                 <div class="color-label__check"
-                                                        {% if item.item.id == color.id %}
+                                                     data-id="{{ color.id }}"
+                                                        {% if goods.id_random == color.id %}
                                                      style="display:block;"  {% endif %}
                                                 ></div>
                                             </label>
                                         {% endfor %}
                                     {% endif %}
-
                                 </div>
                                 <div>
                                     <div class="product-hor__tab-btn-block tab-btn-block">
                                         <button class="product-hor__tab-btn tab-btn tab-active"
-                                                type="button" data-id="main-{{ item.item.id }}">
-                                            основное
-                                        </button>
-                                        <button class="product-hor__tab-btn tab-btn"
                                                 type="button" data-id="description-{{ item.item.id }}">
                                             описание
                                         </button>
@@ -126,26 +144,9 @@
                                                 type="button" data-id="pack-{{ item.item.id }}">
                                             упаковка
                                         </button>
-
                                     </div>
                                     <div class="product-hor__tab-content tab-content">
-                                        <div class="product-hor__tab  tab tab-show"
-                                             data-id="main-{{ item.item.id }}">
-                                            <div>
-                                                {{ item.color_description }}
-                                            </div>
-                                            <div class="product-hor__tab-main_title">
-                                                <h4>Артикул: {{ item.item.item_article }}</h4>
-                                                <h4 class="strong">Цена:
-                                                    {% if item.price %}
-                                                        {{ item.price }}
-                                                    {% else %}
-                                                        {{ goods.price }}
-                                                    {% endif %}
-                                                </h4>
-                                            </div>
-                                        </div>
-                                        <div class="product-hor__tab tab"
+                                        <div class="product-hor__tab tab tab-show"
                                              data-id="description-{{ item.item.id }}">
                                             <article>
                                                 {{ goods.goods_description }}
@@ -159,13 +160,8 @@
                                             <div>
                                                 <div>шаблоны:</div>
                                                 {% for layout in goods.print_layout %}
-                                                    <a href="
-
-
-
-
-
-                                                            {% static 'viki_web_cms/files/layout' %}{{ layout.layout.layout.file.name }}"
+                                                    <a href="{% static 'viki_web_cms/files/layout' %}
+                                                        {{ layout.layout.layout.file.name }}"
                                                        target="_blank">
                                                         <p>{{ layout.name }}</p>
                                                         <i class="fa-regular fa-folder"></i>
@@ -230,7 +226,7 @@
                                     </div>
                                 </div>
                             </div>
-                        {% endfor %}
+                            {#                            {% endfor %}#}
                     </section>
                 {% endfor %}
             </div>

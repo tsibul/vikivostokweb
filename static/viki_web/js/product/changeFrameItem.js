@@ -12,8 +12,10 @@
  * @param {string} newItemId - ID of the new product frame to display
  */
 export function changeFrameItem(colorLabel, currentItem, newItemId) {
-    currentItem.querySelector(`#${colorLabel.htmlFor}`).checked = false;
-    const newItem = colorLabel.closest('.product').querySelector(`div[data-id="${newItemId}"]`);
+    const newItem = colorLabel.closest('.product')
+        .querySelector(`div.product-hor__image-frame[data-id="${newItemId}"]`);
+    colorLabel.closest('.color-padding')
+        .querySelector(`input[id="${colorLabel.htmlFor}"]`).checked = true;
     const img = newItem.querySelector('img');
     if (img.complete) {
         newItem.classList.remove('item-hidden');
@@ -23,7 +25,7 @@ export function changeFrameItem(colorLabel, currentItem, newItemId) {
         currentItem.classList.add('item-opaque');
         setTimeout(() => {
             currentItem.classList.add('item-hidden')
-        }, 600);
+        }, 400);
     } else {
         img.removeAttribute('loading');
         img.addEventListener('load', () => {
@@ -37,9 +39,11 @@ export function changeFrameItem(colorLabel, currentItem, newItemId) {
             }, 400);
         });
     }
-    const colorCode = colorLabel.dataset.hex;
-    const newLabel = newItem.querySelector(`label[data-hex="${colorCode}"]`);
-    newLabel.querySelector('.color-label__check').style.display = 'block';
-    const newCheck = newItem.querySelector(`#${newLabel.htmlFor}`);
-    newCheck.checked = true;
+    const article = newItem.dataset.article;
+    const price = newItem.dataset.price;
+    const description = newItem.dataset.description;
+    const frame = colorLabel.closest('.product');
+    frame.querySelector('.product-hor__color-description').textContent = description;
+    frame.querySelector('.price').textContent = price;
+    frame.querySelector('.article').textContent = article;
 }
