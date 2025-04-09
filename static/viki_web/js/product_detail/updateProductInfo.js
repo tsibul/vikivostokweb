@@ -32,4 +32,13 @@ export function updateProductInfo(image) {
     // Update color description
     const colorDescriptionContainer = document.querySelector('.detail-page__color-description');
     colorDescriptionContainer.textContent = colorDescription;
-} 
+
+    const colorPickerContainer = document.querySelector('.detail-page__color-picker');
+    const colorPickerAll = colorPickerContainer.querySelectorAll(`div.color-label__check`);
+    [...colorPickerAll].forEach(color => {
+        color.removeAttribute('style');
+    })
+    const newColorChosen =
+        colorPickerContainer.querySelector(`div.color-label__check[data-id="${image.dataset.id}"]`);
+    newColorChosen.style.display = 'block'
+}

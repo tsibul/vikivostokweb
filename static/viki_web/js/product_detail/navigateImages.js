@@ -1,4 +1,5 @@
-import { updateProductInfo } from './updateProductInfo.js';
+import {updateProductInfo} from './updateProductInfo.js';
+import {switchImage} from "./switchImage.js";
 
 /**
  * Switches images in the specified direction
@@ -23,14 +24,7 @@ export function navigateImages(direction) {
         newIndex = currentIndex < images.length - 1 ? currentIndex + 1 : 0;
     }
 
-    images[newIndex].classList.remove('item-hidden');
-    setTimeout(() => {
-        currentImage.classList.add('item-opaque');
-        images[newIndex].classList.remove('item-opaque');
-    }, 1);
-    setTimeout(() => {
-        currentImage.classList.add('item-hidden')
-    }, 200);
+    switchImage(currentImage, images[newIndex]);
 
     // Update product information
     updateProductInfo(images[newIndex]);

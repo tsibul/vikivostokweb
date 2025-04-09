@@ -6,8 +6,9 @@
 'use strict';
 
 import { initImageNavigation } from './initImageNavigation.js';
+import {initColorNavigation} from "./initColorNavigation.js";
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize image navigation
     initImageNavigation();
+    initColorNavigation();
 }); 

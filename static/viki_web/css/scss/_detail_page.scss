@@ -45,7 +45,7 @@
     }
   }
 
-  &__color-description{
+  &__color-description {
     min-height: 40px;
   }
 
@@ -199,16 +199,29 @@
   }
 }
 
-.tooltip-prev{
+.tooltip-prev {
   top: -12px;
   left: 16px;
   border-color: transparent;
   background-color: transparent;
 }
 
-.tooltip-next{
+.tooltip-next {
   top: -12px;
   left: -66px;
   border-color: transparent;
   background-color: transparent;
+}
+
+.detail-show {
+  display: flex;
+  padding: 8px 0 16px 0;
+
+  & * {
+    grid-template-columns: 3fr repeat(4, 1fr);
+    gap: 1rem;
+    font-size: 15px;
+    padding: 2px 0;
+    //text-align: end;
+  }
 }

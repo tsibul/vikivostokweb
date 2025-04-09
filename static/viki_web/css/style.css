@@ -1332,4 +1332,15 @@ input[type=checkbox] {
   background-color: transparent;
 }
 
+.detail-show {
+  display: flex;
+  padding: 8px 0 16px 0;
+}
+.detail-show * {
+  grid-template-columns: 3fr repeat(4, 1fr);
+  gap: 1rem;
+  font-size: 15px;
+  padding: 2px 0;
+}
+
 /*# sourceMappingURL=style.css.map */

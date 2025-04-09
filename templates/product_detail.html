@@ -5,12 +5,7 @@
     <main>
         <div class="container">
             <div class="detail-page">
-                <section class="detail-page__section"
-                         data-id="1"
-                         data-goods-article="ART-001"
-                         data-article-length="6"
-                         data-article-set="SET-001"
-                >
+                <section class="detail-page__section">
                     <div class="detail-page__content">
                         <div class="detail-page__gallery">
                             <div class="detail-page__main-image">
@@ -62,17 +57,63 @@
                                 <h3>Описание товара</h3>
                                 <div>{{ goods.goods_description|safe }}</div>
                             </div>
-                            <div class="">
+                            <div class="detail-page__color-picker">
                                 <div class="filter__content_data_color">
-                                    <div class="square tooltip" style="background-color: #FF0000;">
-                                        <div class="tooltip-text">Красный</div>
-                                    </div>
-                                    <div class="square tooltip" style="background-color: #00FF00;">
-                                        <div class="tooltip-text">Зеленый</div>
-                                    </div>
-                                    <div class="square tooltip" style="background-color: #0000FF;">
-                                        <div class="tooltip-text">Синий</div>
-                                    </div>
+                                    {% if goods.goods_item.multicolor %}
+                                        <button class="btn btn__cancel btn-multicolor">варианты сочетаний элементов
+                                            - {{ goods.item_list|length }}</button>
+                                        {% for color in goods.colors %}
+                                            <input type="checkbox"
+                                                   id="item-color-{{ item.item.id }}_{{ color.main_color__hex|slice:"1:" }}"
+                                                   name="{{ color.name }}"
+                                                   class="product-header__filter-content_checkbox-hidden"
+                                                   data-id="{{ item.item.id }}"
+                                                    {% if  item.item.id == color.id %} checked {% endif %}
+                                                   hidden>
+                                            <label hidden
+                                                   for="item-color-{{ item.item.id }}_{{ color.main_color__hex|slice:"1:" }}"
+                                                   class="color-label"
+                                                   data-item-id="{{ color.id }}"
+                                                   data-hex="{{ color.main_color__hex|slice:"1:" }}"
+                                            >
+                                                <div class="square tooltip"
+                                                     style="background-color: {{ color.main_color__hex }};">
+                                                    <div class="tooltip-text">{{ color.main_color__name }}</div>
+                                                </div>
+                                                <div class="color-label__check"
+                                                        {% if item.item.id == color.id %}
+                                                     style="display:block;"  {% endif %}
+                                                ></div>
+                                            </label>
+                                        {% endfor %}
+                                    {% else %}
+                                        {% for color in goods.colors %}
+                                            <input type="radio"
+                                                   id="item-color-{{ item.item.id }}_{{ color.main_color__hex|slice:"1:" }}"
+                                                   name="color-picker"
+                                                   class="standard-color-radio"
+                                                   data-id="{{ color.id }}"
+                                                   value="{{ color.id }}"
+                                                    {% if  item.item.id == color.id %} checked {% endif %}
+                                                   hidden>
+                                            <label for="item-color-{{ item.item.id }}_{{ color.main_color__hex|slice:"1:" }}"
+                                                   class="color-label"
+                                                   data-item-id="{{ color.id }}"
+                                                   data-hex="{{ color.main_color__hex|slice:"1:" }}"
+                                            >
+                                                <div class="square tooltip"
+                                                     style="background-color: {{ color.main_color__hex }};">
+                                                    <div class="tooltip-text">{{ color.main_color__name }}</div>
+                                                </div>
+                                                <div class="color-label__check"
+                                                     data-id="{{ color.id }}"
+                                                        {% if goods.id_random == color.id %}
+                                                     style="display:block;"  {% endif %}
+                                                ></div>
+                                            </label>
+                                        {% endfor %}
+                                    {% endif %}
+
                                 </div>
                             </div>
                             <button class="btn btn__save btn-sqr">
@@ -82,34 +123,62 @@
                             <div class="detail-page__tabs">
                                 <div class="detail-page__tab">
                                     <h3>Техническая информация</h3>
-                                    <div>
-                                        размеры: 100x200x50 мм, вес: 500г
+                                    <div class="product-hor__tab tab detail-show">
+                                        <div>
+                                            размеры: {{ goods.dimensions }},&nbsp;&nbsp;вес: {{ goods.goods_item.weight }}г
+                                        </div>
+                                        <div>
+                                            <div>шаблоны:</div>
+                                            {% for layout in goods.print_layout %}
+                                                <a href="{% static 'viki_web_cms/files/layout' %}
+                                                       {{ layout.layout.layout.file.name }}"
+                                                   target="_blank">
+                                                    <p>{{ layout.name }}</p>
+                                                    <i class="fa-regular fa-folder"></i>
+                                                </a>
+                                            {% endfor %}
+                                        </div>
                                     </div>
-                                    <div>
-                                        <div>шаблоны:</div>
-                                        <a href="#" target="_blank">
-                                            <p>Шаблон 1</p>
-                                            <i class="fa-regular fa-folder"></i>
-                                        </a>
-                                    </div>
+
                                 </div>
                                 <div class="detail-page__tab">
                                     <h3>Печать</h3>
-                                    <div class="detail-page__print-data">
-                                        <div>Шелкография</div>
-                                        <div>Передняя часть</div>
-                                        <div>1</div>
-                                        <div>4</div>
-                                        <div>50x50 мм</div>
+                                    <div class="product-hor__tab tab detail-show"
+                                         data-id="print-{{ item.item.id }}">
+                                        <div class="product-hor__tab-print_data">
+                                            <div>тип</div>
+                                            <div>место</div>
+                                            <div>кол-во мест нанесения</div>
+                                            <div>кол-во цветов</div>
+                                            <div>размер</div>
+                                        </div>
+                                        {% for print in goods.print_data %}
+                                            <div class="product-hor__tab-print_data">
+                                                <div>{{ print.print_type }}</div>
+                                                <div>{{ print.print_place }}</div>
+                                                <div>{{ print.place_quantity }}</div>
+                                                <div>{{ print.color_quantity }}</div>
+                                                <div>{{ print.dimensions }}</div>
+                                            </div>{% endfor %}
                                     </div>
                                 </div>
                                 <div class="detail-page__tab">
                                     <h3>Упаковка</h3>
-                                    <div class="detail-page__pack-data">
-                                        <div>Коробка</div>
-                                        <div>10</div>
-                                        <div>5</div>
-                                        <div>0.1</div>
+                                    <div class="product-hor__tab tab detail-show">
+                                        <div class="product-hor__tab-pack">
+                                            <div>упаковка</div>
+                                            <div>штук в упаковке</div>
+                                            <div>вес, кг</div>
+                                            <div>объем, м3</div>
+                                        </div>
+                                        {% for pack in goods.packing %}
+                                            <div class="product-hor__tab-pack">
+                                                <div>{{ pack.box__name }}</div>
+                                                <div>{{ pack.quantity_in }}</div>
+                                                <div>{{ pack.box_weight }}</div>
+                                                <div>{{ pack.box__volume }}</div>
+                                            </div>
+                                        {% endfor %}
                                     </div>
                                 </div>
                             </div>
