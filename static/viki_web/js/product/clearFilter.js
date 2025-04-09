@@ -29,12 +29,14 @@ export function clearFilter(e) {
     const allGoods = document.querySelectorAll('.product');
     [...allGoods].forEach(goods => {
         goods.removeAttribute('style')
-        const insideItems = goods.querySelectorAll('.product-frame');
+        const insideItems = goods.querySelectorAll('.product-hor__image-frame');
         const rndId = Math.round(Math.random() * (insideItems.length - 1));
+        goods.querySelector(`.chev-next`).dataset.list =
+            goods.querySelector(`.chev-next`).dataset.listInitial;
         [...insideItems].forEach((item, index) => {
             item.removeAttribute('style');
-            item.querySelector(`.chev-next`).dataset.list =
-                item.querySelector(`.chev-next`).dataset.listInitial;
+            // item.querySelector(`.chev-next`).dataset.list =
+            //     item.querySelector(`.chev-next`).dataset.listInitial;
             if (insideItems.length > 1) {
                 if (index === rndId) {
                     item.classList.remove('item-hidden', 'item-opaque');

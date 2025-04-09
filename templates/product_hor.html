@@ -15,6 +15,7 @@
             <div class="products">
                 {% for goods in goods_list %}
                     <section class="product product-hor"
+                             data-id="{{ goods.goods_item.id }}"
                              data-goods-article="{{ goods.goods_item.article }}"
                              data-article-length="{{ goods.goods_item.details_number }}"
                             {% if goods.goods_item.multicolor %}

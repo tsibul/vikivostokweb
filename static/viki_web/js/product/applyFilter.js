@@ -20,7 +20,7 @@ export async function applyFilter(e) {
         return acc;
     }, {});
 
-    const allItems = document.querySelectorAll('.product-frame');
+    const allItems = document.querySelectorAll('.product-hor__image-frame');
     const itemIds = [...allItems].reduce((acc, item) => {
         acc[item.getAttribute('data-id')] = item;
         return acc;
@@ -112,18 +112,19 @@ function combineFilters(filterIdList, printIdList, colorIdList, priceIdList, goo
         const allColors = document.querySelectorAll(`.products .color-label`);
         [...allColors].forEach(colorLabel => {
             colorLabel.removeAttribute('style');
-            if (!colorItemTemp.includes(colorLabel.dataset.itemId)
-            || !priceItemTemp.includes(colorLabel.dataset.itemId)
+            if (!colorItemTemp.includes(colorLabel.dataset.id)
+                || !priceItemTemp.includes(colorLabel.dataset.id)
             ) {
                 colorLabel.setAttribute('style', 'display:none');
             }
         });
         filteredGoods.forEach(good => {
-            const insideItems = good.querySelectorAll(`.product-frame`);
+            const insideItems = good.querySelectorAll(`.product-hor__image-frame`);
             const filterInsideItems = [...insideItems].filter(insideItem => filteredItems.includes(insideItem));
             const insideIdList = [...filterInsideItems].map(item => parseInt(item.dataset.id));
+            good.querySelector(`.chev-next`).dataset.list = JSON.stringify(insideIdList);
             [...filterInsideItems].forEach((item, index) => {
-                item.querySelector(`.chev-next`).dataset.list = JSON.stringify(insideIdList);
+                // item.querySelector(`.chev-next`).dataset.list = JSON.stringify(insideIdList);
                 if (index === 0) {
                     item.classList.remove('item-hidden', 'item-opaque');
                 } else {
