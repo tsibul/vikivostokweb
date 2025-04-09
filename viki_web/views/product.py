@@ -36,11 +36,14 @@ def product(request, product_group_url):
             id_random = id_list[round(random.random() * (len(id_list)) - 1)]
         else:
             id_random = id_list[0]
+        random_item = next((item for item in item_list if item['item'].id == id_random), None)
+
         goods_list.append({
             'goods_item': goods_item,
             'article_set': article_set,
             'item_list': item_list,
             'item_id': id_list,
+            'random_item': random_item,
             'colors': colors,
             'id_random': id_random,
             'goods_description': goods_description,
