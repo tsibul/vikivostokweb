@@ -36,7 +36,6 @@
                                                {{ goods.price }}
                                              {% endif %}"
                                 >
-                                    {#                                    <div>#}
                                     <img class="product-sqr__img"
                                          src="/static/viki_web_cms/files/item_photo/{{ item.item.image }}"
                                          alt="{{ item.item.image_article }}"
@@ -44,7 +43,6 @@
                                 </div>
                             {% endfor %}
                             <div class="chevron-sqr-next chev-next"
-                                    {#                                             data-id="{{ goods.item.id }}"#}
                                  data-list="{{ goods.item_id }}"
                                  data-list-initial="{{ goods.item_id }}"
                             >
@@ -73,10 +71,6 @@
                                         </button>
                                     </div>
                                     <div class="product-sqr__tab-content tab-content">
-                                        {#                                    <div class="product-sqr__tab  tab tab-show"#}
-                                        {#                                         data-id="main-{{ item.item.id }}">#}
-                                        {##}
-                                        {#                                    </div>#}
                                         <div class="product-sqr__tab tab tab-show"
                                              data-id="description-{{ item.item.id }}">
                                             <article class="product-sqr__tab_text">
@@ -191,7 +185,7 @@
                                            class="color-label"
                                            data-id="{{ color.id }}"
                                            data-hex="{{ color.main_color__hex|slice:"1:" }}"
-                                           {% if  goods.goods_item.multicolor %} hidden {% endif %}>
+                                            {% if  goods.goods_item.multicolor %} hidden {% endif %}>
                                         <div class="square tooltip"
                                              data-id="{{ color.id }}"
                                              style="background-color: {{ color.main_color__hex }};">
