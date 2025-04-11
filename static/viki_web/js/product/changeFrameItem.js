@@ -17,18 +17,8 @@ export function changeFrameItem(colorLabel, currentItem, newItemId) {
     colorLabel.closest('.color-padding')
         .querySelector(`input[id="${colorLabel.htmlFor}"]`).checked = true;
     const img = newItem.querySelector('img');
-    if (img.complete) {
-        newItem.classList.remove('item-hidden');
-        setTimeout(() => {
-            newItem.classList.remove('item-opaque')
-        }, 1);
-        currentItem.classList.add('item-opaque');
-        setTimeout(() => {
-            currentItem.classList.add('item-hidden')
-        }, 400);
-    } else {
-        img.removeAttribute('loading');
-        img.addEventListener('load', () => {
+    if(newItem !== currentItem) {
+        if (img.complete) {
             newItem.classList.remove('item-hidden');
             setTimeout(() => {
                 newItem.classList.remove('item-opaque')
@@ -37,13 +27,25 @@ export function changeFrameItem(colorLabel, currentItem, newItemId) {
             setTimeout(() => {
                 currentItem.classList.add('item-hidden')
             }, 400);
-        });
+        } else {
+            img.removeAttribute('loading');
+            img.addEventListener('load', () => {
+                newItem.classList.remove('item-hidden');
+                setTimeout(() => {
+                    newItem.classList.remove('item-opaque')
+                }, 1);
+                currentItem.classList.add('item-opaque');
+                setTimeout(() => {
+                    currentItem.classList.add('item-hidden')
+                }, 400);
+            });
+        }
+        const article = newItem.dataset.article;
+        const price = newItem.dataset.price;
+        const description = newItem.dataset.description;
+        const frame = colorLabel.closest('.product');
+        frame.querySelector('.product-hor__color-description').textContent = description;
+        frame.querySelector('.price').textContent = price;
+        frame.querySelector('.article').textContent = article;
     }
-    const article = newItem.dataset.article;
-    const price = newItem.dataset.price;
-    const description = newItem.dataset.description;
-    const frame = colorLabel.closest('.product');
-    frame.querySelector('.product-hor__color-description').textContent = description;
-    frame.querySelector('.price').textContent = price;
-    frame.querySelector('.article').textContent = article;
 }

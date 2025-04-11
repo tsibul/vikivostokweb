@@ -30,23 +30,25 @@ export function clearFilter(e) {
     [...allGoods].forEach(goods => {
         goods.removeAttribute('style')
         const insideItems = goods.querySelectorAll('.product-hor__image-frame');
+        const insideIdList = [...insideItems].map(item => parseInt(item.dataset.id));
         const rndId = Math.round(Math.random() * (insideItems.length - 1));
         goods.querySelector(`.chev-next`).dataset.list =
             goods.querySelector(`.chev-next`).dataset.listInitial;
         [...insideItems].forEach((item, index) => {
             item.removeAttribute('style');
-            // item.querySelector(`.chev-next`).dataset.list =
-            //     item.querySelector(`.chev-next`).dataset.listInitial;
-            if (insideItems.length > 1) {
-                if (index === rndId) {
-                    item.classList.remove('item-hidden', 'item-opaque');
-                } else {
-                    item.classList.add('item-hidden', 'item-opaque');
-                }
-            } else {
-                item.classList.remove('item-hidden', 'item-opaque');
-            }
+            // if (insideItems.length > 1) {
+            //     if (index === rndId) {
+            //         item.classList.remove('item-hidden', 'item-opaque');
+            //     } else {
+            //         item.classList.add('item-hidden', 'item-opaque');
+            //     }
+            // } else {
+            //     item.classList.remove('item-hidden', 'item-opaque');
+            // }
         });
+        const label = goods.querySelector(`.color-padding label.color-label[data-id="${insideIdList[rndId]}"]`);
+        label.click();
+
     });
 
     const allColors = document.querySelectorAll(`.products .color-label`);

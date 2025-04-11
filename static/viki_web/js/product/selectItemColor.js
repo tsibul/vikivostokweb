@@ -13,7 +13,7 @@ import {changeFrameItem} from "./changeFrameItem.js";
  */
 export function selectItemColor(e) {
     const labelCheck = this.querySelector('.color-label__check');
-    const imageItems = this.closest('.product-frame')
+    const imageItems = this.closest('.product')
         .querySelectorAll(`div.product-hor__image-frame`);
     const currentItem = [...imageItems].find(elem => !elem.classList.contains('item-hidden'));
     if (labelCheck.style.display === '') {

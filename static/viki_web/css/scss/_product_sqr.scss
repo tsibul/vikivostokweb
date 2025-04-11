@@ -3,23 +3,24 @@
 
 .product-sqr {
   @include brd-standard;
-  width: 620px;
-  height: 470px;
-  padding: 32px;
+  //width: 620px;
+  //height: 470px;
+  padding: 24px;
   margin: 8px 0;
   position: relative;
   background-color: #fff;
 
   &__frame {
-    position: absolute;
-    top: 54px;
-    left: 10px;
-    height: 410px;
+    position: relative;
+    margin-top: 8px;
+    //top: 54px;
+    //left: 10px;
+    //height: 410px;
     z-index: 3;
     transition: all 0.4s ease;
     opacity: 1;
     display: grid;
-    grid-template-columns: 260px 320px;
+    grid-template-columns: 268px 320px;
     gap: 10px;
   }
 
@@ -33,6 +34,8 @@
 
   &__info {
     display: flex;
+    height: 240px;
+    margin-bottom: 8px;
   }
 
   &__tab-btn-block {
@@ -143,6 +146,7 @@
 }
 
 .chevron-sqr-next {
+  position: absolute;
   width: 260px;
   background-color: transparent;
   display: flex;

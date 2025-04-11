@@ -72,6 +72,32 @@
                                     </h4>
                                 </div>
                                 <div class="filter__content_data_color color-padding">
+                                    {% for color in goods.colors %}
+                                        <input type="radio"
+                                               id="item-color-{{ color.id }}_{{ color.main_color__hex|slice:"1:" }}"
+                                               name="color-picker"
+                                               class="product-header__filter-content_checkbox-hidden"
+                                               data-id="{{ color.id }}"
+                                                {% if  goods.id_random == color.id %} checked {% endif %}
+                                               hidden>
+                                        <label for="item-color-{{ color.id }}_{{ color.main_color__hex|slice:"1:" }}"
+                                               class="color-label"
+                                               data-id="{{ color.id }}"
+                                               data-hex="{{ color.main_color__hex|slice:"1:" }}"
+                                                {% if goods.goods_item.multicolor %} hidden {% endif %}
+                                        >
+                                            <div class="square tooltip"
+                                                 data-id="{{ color.id }}"
+                                                 style="background-color: {{ color.main_color__hex }};">
+                                                <div class="tooltip-text">{{ color.main_color__name }}</div>
+                                            </div>
+                                            <div class="color-label__check"
+                                                 data-id="{{ color.id }}"
+                                                    {% if goods.id_random == color.id %}
+                                                 style="display:block;"  {% endif %}
+                                            ></div>
+                                        </label>
+                                    {% endfor %}
                                     {% if goods.goods_item.multicolor %}
                                         <button class="btn btn__cancel btn-multicolor">варианты сочетаний элементов
                                             - {{ goods.item_list|length }}</button>
@@ -95,32 +121,6 @@
                                                 </div>
                                                 <div class="color-label__check"
                                                         {% if item.item.id == color.id %}
-                                                     style="display:block;"  {% endif %}
-                                                ></div>
-                                            </label>
-                                        {% endfor %}
-                                    {% else %}
-                                        {% for color in goods.colors %}
-                                            <input type="radio"
-                                                   id="item-color-{{ color.id }}_{{ color.main_color__hex|slice:"1:" }}"
-                                                   name="color-picker"
-                                                   class="product-header__filter-content_checkbox-hidden"
-                                                   data-id="{{ color.id }}"
-                                                    {% if  goods.id_random == color.id %} checked {% endif %}
-                                                   hidden>
-                                            <label for="item-color-{{ color.id }}_{{ color.main_color__hex|slice:"1:" }}"
-                                                   class="color-label"
-                                                   data-id="{{ color.id }}"
-                                                   data-hex="{{ color.main_color__hex|slice:"1:" }}"
-                                            >
-                                                <div class="square tooltip"
-                                                     data-id="{{ color.id }}"
-                                                     style="background-color: {{ color.main_color__hex }};">
-                                                    <div class="tooltip-text">{{ color.main_color__name }}</div>
-                                                </div>
-                                                <div class="color-label__check"
-                                                     data-id="{{ color.id }}"
-                                                        {% if goods.id_random == color.id %}
                                                      style="display:block;"  {% endif %}
                                                 ></div>
                                             </label>

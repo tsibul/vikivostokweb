@@ -123,14 +123,18 @@ function combineFilters(filterIdList, printIdList, colorIdList, priceIdList, goo
             const filterInsideItems = [...insideItems].filter(insideItem => filteredItems.includes(insideItem));
             const insideIdList = [...filterInsideItems].map(item => parseInt(item.dataset.id));
             good.querySelector(`.chev-next`).dataset.list = JSON.stringify(insideIdList);
-            [...filterInsideItems].forEach((item, index) => {
-                // item.querySelector(`.chev-next`).dataset.list = JSON.stringify(insideIdList);
-                if (index === 0) {
-                    item.classList.remove('item-hidden', 'item-opaque');
-                } else {
-                    item.classList.add('item-hidden', 'item-opaque');
-                }
-            });
+            // [...filterInsideItems].forEach((item, index) => {
+            //     // item.querySelector(`.chev-next`).dataset.list = JSON.stringify(insideIdList);
+            //     if (index === 0) {
+            //         item.classList.remove('item-hidden', 'item-opaque');
+            //     } else {
+            //         item.classList.add('item-hidden', 'item-opaque');
+            //     }
+            // });
+
+            const rndId = insideIdList.length > 1 ? Math.round(Math.random() * (insideItems.length - 1)) : 0;
+            const label = good.querySelector(`.color-padding label.color-label[data-id="${insideIdList[rndId]}"]`);
+            label.click()
         });
     }
 
