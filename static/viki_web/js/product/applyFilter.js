@@ -132,7 +132,7 @@ function combineFilters(filterIdList, printIdList, colorIdList, priceIdList, goo
             //     }
             // });
 
-            const rndId = insideIdList.length > 1 ? Math.round(Math.random() * (insideItems.length - 1)) : 0;
+            const rndId = insideIdList.length > 1 ? Math.round(Math.random() * (insideIdList.length - 1)) : 0;
             const label = good.querySelector(`.color-padding label.color-label[data-id="${insideIdList[rndId]}"]`);
             label.click()
         });
