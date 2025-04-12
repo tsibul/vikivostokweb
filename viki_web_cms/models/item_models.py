@@ -146,7 +146,18 @@ class CatalogueItemPhoto(SettingsDictionary):
 
     @staticmethod
     def dictionary_fields():
-        return SettingsDictionary.dictionary_fields() + [
+        return [
+            {
+                'field': 'deleted',
+                'type': 'boolean',
+                'label': 'удалено',
+            },
+            {
+                'field': 'add_photo',
+                'type': 'string',
+                'label': 'название',
+                'null': False,
+            },
             {
                 'field': 'add_photo',
                 'type': 'file',
