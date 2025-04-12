@@ -65,6 +65,14 @@ class ProductGroup(SettingsDictionary):
             },
             {
                 'field': 'cover',
+                'type': 'file',
+                'label': 'обложка',
+                'url': '/static/viki_web_cms/files/cover/',
+                'null': False,
+            },
+            {
+                'field': 'cover_photo',
+                'property_off' : 'cover',
                 'type': 'image',
                 'label': 'обложка',
                 'url': '/static/viki_web_cms/files/cover/',
