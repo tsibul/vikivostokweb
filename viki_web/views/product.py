@@ -83,6 +83,9 @@ def create_item_list(goods_item, price_type, price_min, price_max):
                 color = item_colors.get(color_position=description.position).color
                 color_description += (description.parts_description.name.upper() + ': ' +
                                       color.name + ' (' + color.pantone + ') ')
+            if goods_item.goods_option_group:
+                option = item.goods_option.name
+                color_description += goods_item.goods_option_group.name.upper() + ': ' + option
         price = item_price(item, price_type)
         price_min, price_max = price_min_max(price_min, price_max, price)
         item_list.append({

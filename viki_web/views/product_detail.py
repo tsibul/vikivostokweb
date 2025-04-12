@@ -69,6 +69,9 @@ def create_item_list_details(goods_item, price_type):
                 color = item_colors.get(color_position=description.position).color
                 color_description += (description.parts_description.name.upper() + ': ' +
                                       color.name + ' (' + color.pantone + ') ')
+            if goods_item.goods_option_group:
+                option = item.goods_option.name
+                color_description += goods_item.goods_option_group.name.upper() + ': ' + option
         additional_photo = list(CatalogueItemPhoto.objects.filter(item=item, deleted=False).values('add_photo'))
         price = item_price(item, price_type)
         item_list.append({
