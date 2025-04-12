@@ -242,7 +242,7 @@ class GoodsSimilar(SettingsDictionary):
             },
             {
                 'field': 'deleted',
-                'type': 'string',
+                'type': 'boolean',
                 'label': 'удалено',
             },
             {
@@ -294,7 +294,7 @@ class GoodsRelated(SettingsDictionary):
             },
             {
                 'field': 'deleted',
-                'type': 'string',
+                'type': 'boolean',
                 'label': 'удалено',
             },
             {
