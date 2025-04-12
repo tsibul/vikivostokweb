@@ -41,7 +41,7 @@ class MainMenu:
                     CMSSetting('Опции товара', 'GoodsOption', False, False),
                     CMSSetting('Группы опций товара', 'GoodsOptionGroup', False, False ),
                     CMSSetting('Похожие товары', 'GoodsSimilar', False, False),
-                    CMSSetting('Сопутствующие товары', 'SimilarRelated', False, False),
+                    CMSSetting('Сопутствующие товары', 'GoodsRelated', False, False),
                 ]),
                 MenuSection('Описания', [
                     CMSSetting('Описание товаров', 'GoodsDescription', False, False),
