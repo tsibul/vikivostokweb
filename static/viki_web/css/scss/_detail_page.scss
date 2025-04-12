@@ -31,6 +31,7 @@
     //position: relative;
     overflow: hidden;
     @include brd-standard;
+    border-color: transparent;
     aspect-ratio: 1;
     width: 100%;
     max-width: 460px;
@@ -187,9 +188,10 @@
       gap: 1rem;
       padding: 1rem;
       @include brd-standard;
+      border-color: transparent;
       text-decoration: none;
       transition: transform 0.3s ease;
-      background-color: $colorSecondary50;
+      background-color: #fff;
 
       &:hover {
         transform: scale(1.05);
@@ -199,8 +201,8 @@
         width: 100%;
         aspect-ratio: 1;
         object-fit: contain;
-        @include brd-standard;
-        background-color: $colorSecondary50;
+        //@include brd-standard;
+        //background-color: $colorSecondary50;
       }
     }
 

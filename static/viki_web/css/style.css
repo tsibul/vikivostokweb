@@ -1189,6 +1189,7 @@ input[type=checkbox] {
   overflow: hidden;
   border: 1px solid #0F4880;
   border-radius: 12px;
+  border-color: transparent;
   aspect-ratio: 1;
   width: 100%;
   max-width: 460px;
@@ -1316,9 +1317,10 @@ input[type=checkbox] {
   padding: 1rem;
   border: 1px solid #0F4880;
   border-radius: 12px;
+  border-color: transparent;
   text-decoration: none;
   transition: transform 0.3s ease;
-  background-color: #F2FFFF;
+  background-color: #fff;
 }
 .detail-page__related_item:hover {
   transform: scale(1.05);
@@ -1327,9 +1329,6 @@ input[type=checkbox] {
   width: 100%;
   aspect-ratio: 1;
   object-fit: contain;
-  border: 1px solid #0F4880;
-  border-radius: 12px;
-  background-color: #F2FFFF;
 }
 .detail-page__related_info {
   display: flex;
