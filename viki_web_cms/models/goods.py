@@ -209,3 +209,106 @@ class GoodsOption(SettingsDictionary):
             },
 
         ]
+
+
+class GoodsSimilar(SettingsDictionary):
+    """ similar goods """
+    main_goods = models.ForeignKey(Goods, on_delete=models.CASCADE, related_name='main_similar')
+    similar_goods = models.ForeignKey(Goods, on_delete=models.CASCADE, related_name='similar')
+
+    class Meta(SettingsDictionary.Meta):
+        verbose_name = 'Похожий товар'
+        verbose_name_plural = 'Похожие товары'
+        db_table_comment = 'Similar goods'
+        db_table = 'similar_goods'
+        ordering = ['main_goods__article', 'main_goods__name']
+
+    def save(self, *args, **kwargs):
+        self.name = self.main_goods.article + '_' + self.similar_goods.article
+        super(GoodsSimilar, self).save(*args, **kwargs)
+
+    @staticmethod
+    def order_default():
+        return ['main_goods__article', 'main_goods__name']
+
+    @staticmethod
+    def dictionary_fields():
+        return [
+            {
+                'field': 'name',
+                'type': 'string',
+                'label': 'название',
+                'null': True,
+            },
+            {
+                'field': 'deleted',
+                'type': 'string',
+                'label': 'удалено',
+            },
+            {
+                'field': 'main_goods',
+                'type': 'foreign',
+                'label': 'основной товар',
+                'foreignClass': 'Goods',
+                'null': False,
+            },
+            {
+                'field': 'similar_goods',
+                'type': 'foreign',
+                'label': 'похожий товар',
+                'foreignClass': 'Goods',
+                'null': False,
+            },
+
+        ]
+
+
+class GoodsRelated(SettingsDictionary):
+    """ related goods """
+    main_goods = models.ForeignKey(Goods, on_delete=models.CASCADE, related_name='main_related')
+    related_goods = models.ForeignKey(Goods, on_delete=models.CASCADE, related_name='related')
+
+    class Meta(SettingsDictionary.Meta):
+        verbose_name = 'Сопутствующий товар'
+        verbose_name_plural = 'Сопутствующие товары'
+        db_table_comment = 'Related goods'
+        db_table = 'related_goods'
+        ordering = ['main_goods__article', 'main_goods__name']
+
+    def save(self, *args, **kwargs):
+        self.name = self.main_goods.article + '_' + self.related_goods.article
+        super(GoodsRelated, self).save(*args, **kwargs)
+
+    @staticmethod
+    def order_default():
+        return ['main_goods__article', 'main_goods__name']
+
+    @staticmethod
+    def dictionary_fields():
+        return [
+            {
+                'field': 'name',
+                'type': 'string',
+                'label': 'название',
+                'null': True,
+            },
+            {
+                'field': 'deleted',
+                'type': 'string',
+                'label': 'удалено',
+            },
+            {
+                'field': 'main_goods',
+                'type': 'foreign',
+                'label': 'основной товар',
+                'foreignClass': 'Goods',
+                'null': False,
+            },
+            {
+                'field': 'related_goods',
+                'type': 'foreign',
+                'label': 'сопутствующий товар',
+                'foreignClass': 'Goods',
+                'null': False,
+            },
+        ]
