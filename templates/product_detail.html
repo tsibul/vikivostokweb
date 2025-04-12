@@ -190,44 +190,30 @@
                 <section class="detail-page__related">
                     <h3>Похожие товары</h3>
                     <div class="detail-page__related_list">
-                        <a href="#" class="detail-page__related_item">
-                            <img src="{% static 'viki_web/icons/logo.svg' %}" alt="Похожий товар 1">
+                        {% for similar in similar_goods %}
+                        <a href="{% url 'viki_web:product_detail' similar.slug %}" class="detail-page__related_item">
+                            <img src="{% static 'viki_web_cms/files/item_photo/' %}{{ similar.image }}" alt="Похожий товар">
                             <div class="detail-page__related_info">
-                                <h4>Название похожего товара</h4>
-                                <p>Артикул: SIM-001</p>
-                                <p class="strong">Цена: 1200 руб.</p>
+                                <h4>{{ similar.name}}</h4>
+                                <p class="strong">Цена: {{ similar.price }}руб.</p>
                             </div>
                         </a>
-                        <a href="#" class="detail-page__related_item">
-                            <img src="{% static 'viki_web/icons/logo.svg' %}" alt="Похожий товар 2">
-                            <div class="detail-page__similar-info">
-                                <h5>Название похожего товара</h5>
-                                <p>Артикул: SIM-002</p>
-                                <p class="strong">Цена: 1500 руб.</p>
-                            </div>
-                        </a>
+                        {% endfor %}
                     </div>
                 </section>
 
                 <section class="detail-page__related">
                     <h3>Сопутствующие товары</h3>
                     <div class="detail-page__related_list">
-                        <a href="#" class="detail-page__related_item">
-                            <img src="{% static 'viki_web/icons/logo.svg' %}" alt="Сопутствующий товар 1">
+                        {% for similar in related_goods %}
+                        <a href="{% url 'viki_web:product_detail' similar.slug %}" class="detail-page__related_item">
+                            <img src="{% static 'viki_web_cms/files/item_photo/' %}{{ similar.image }}" alt="Сопутствующий товар">
                             <div class="detail-page__related_info">
-                                <h4>Название сопутствующего товара</h4>
-                                <p>Артикул: REL-001</p>
-                                <p class="strong">Цена: 800 руб.</p>
+                                <h4>{{ similar.name}}</h4>
+                                <p class="strong">Цена: {{ similar.price }}руб.</p>
                             </div>
                         </a>
-                        <a href="#" class="detail-page__related_item">
-                            <img src="{% static 'viki_web/icons/logo.svg' %}" alt="Сопутствующий товар 2">
-                            <div class="detail-page__related_info">
-                                <h4>Название сопутствующего товара</h4>
-                                <p>Артикул: REL-002</p>
-                                <p class="strong">Цена: 600 руб.</p>
-                            </div>
-                        </a>
+                        {% endfor %}
                     </div>
                 </section>
 

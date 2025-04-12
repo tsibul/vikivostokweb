@@ -1,8 +1,12 @@
 import random
 
+from django.db.models import F
 from django.shortcuts import render, get_object_or_404
-from viki_web_cms.models.goods import Goods
-from viki_web_cms.models import ProductGroup, CatalogueItemColor, ArticleDescription, CatalogueItem, CatalogueItemPhoto
+
+from viki_web.views import goods_filter_request
+from viki_web_cms.models.goods import Goods, GoodsSimilar
+from viki_web_cms.models import ProductGroup, CatalogueItemColor, ArticleDescription, CatalogueItem, CatalogueItemPhoto, \
+    GoodsRelated
 
 from viki_web.views.product import goods_data, create_print_data, goods_price, create_article_set, find_price_type, \
     item_price
@@ -31,9 +35,11 @@ def product_detail(request, product_name):
 
     # Выбираем случайный ID из списка
     id_random = id_list[round(random.random() * (len(id_list)) - 1)] if len(id_list) > 1 else id_list[0]
-    
+
     # Находим item с id_random с помощью функции next()
     random_item = next((item for item in item_list if item['item'].id == id_random), None)
+
+    similar_goods, related_goods = similar_related_goods(request, goods)
 
     context = {
         'categories': product_groups,
@@ -52,7 +58,9 @@ def product_detail(request, product_name):
             'packing': packing,
             'article_set': article_set,
             'multicolor': goods.multicolor
-        }
+        },
+        'similar_goods': similar_goods,
+        'related_goods': related_goods,
     }
     return render(request, 'product_detail.html', context)
 
@@ -87,3 +95,25 @@ def create_item_list_details(goods_item, price_type):
     )
     id_list = list(items.values_list('id', flat=True))
     return item_list, id_list, colors
+
+
+def similar_related_goods(request, goods_item):
+    similar = GoodsSimilar.objects.filter(main_goods=goods_item, deleted=False)
+    similar_goods = []
+    for goods in similar:
+        price_type = find_price_type(request)
+        price = goods_price(goods.similar_goods, price_type)
+        catalogue_item = CatalogueItem.objects.filter(goods=goods.similar_goods, deleted=False).order_by('?').first()
+        if catalogue_item:
+            similar_goods.append({'price': price, 'image': catalogue_item.image, 'name': goods.similar_goods.name,
+                                  'slug': goods.similar_goods.slug})
+    related = GoodsRelated.objects.filter(main_goods=goods_item, deleted=False)
+    related_goods = []
+    for goods in related:
+        price_type = find_price_type(request)
+        price = goods_price(goods.related_goods, price_type)
+        catalogue_item = CatalogueItem.objects.filter(goods=goods.related_goods, deleted=False).order_by('?').first()
+        if catalogue_item:
+            related_goods.append({'price': price, 'image': catalogue_item.image, 'name': goods.related_goods.name,
+                                  'slug': goods.related_goods.slug})
+    return similar_goods, related_goods
