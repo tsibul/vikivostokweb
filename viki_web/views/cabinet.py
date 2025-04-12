@@ -64,8 +64,10 @@ def collect_bank_data(company_id):
 def collect_personal_data(user):
     user_extension = UserExtension.objects.filter(user=user).first()
     price = ''
+    customer_name = ''
     if user_extension.customer:
         price = user_extension.customer.standard_price_type.name
+        customer_name = user_extension.customer.name
     phone = ''
     if user_extension:
         phone = user_extension.phone
@@ -75,6 +77,7 @@ def collect_personal_data(user):
         'last_name': user.last_name,
         'price': price,
         'phone': phone,
+        'customer': customer_name,
     }
 
 
