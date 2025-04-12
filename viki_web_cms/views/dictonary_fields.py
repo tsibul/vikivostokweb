@@ -63,6 +63,7 @@ def field_values(request, class_name, deleted, new_item, first_record, search_st
         else:
             field_values_request = dict_model.objects.filter(query).order_by(*order)[
                                    first_record: first_record + 20]
+    field_values_request = add_annotations_for_properties(field_values_request, field_list)
     field_params = reformat_field_dictionary(class_name)
     values = list(field_values_request.values(*fields_out))
     context = {'field_params': field_params, 'values': values}
@@ -118,3 +119,15 @@ def dropdown_list(request, class_name):
                            .annotate(value=F('name'))
                            .values('id', 'value'))
     return JsonResponse(list(option_list), safe=False)
+
+
+def add_annotations_for_properties(queryset, field_list):
+    annotations = {}
+
+    for field in field_list:
+        if 'property_off' in field :
+            annotations[field['field']] = F(field['property_off'])
+    if annotations:
+        queryset = queryset.annotate(**annotations)
+
+    return queryset

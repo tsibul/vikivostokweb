@@ -49,8 +49,16 @@ export async function createModalContent(modal, className, elementId) {
             'url': recordInfo.url
         }
         if (elementId !== '0') {
-            field.type !== 'foreign' ? fieldData.fieldValue = recordInfo.record[field.field]
-                : fieldData.fieldValue = recordInfo.record[field.field + '_id']
+            if (field.type !== 'foreign') {
+                if (!field.property_off) {
+                    fieldData.fieldValue = recordInfo.record[field.field];
+                } else {
+                    fieldData.fieldValue = recordInfo.record[field.property_off];
+                    // fieldData.fieldValue = recordInfo.record[field.property_off];
+                }
+            } else {
+                fieldData.fieldValue = recordInfo.record[field.field + '_id'];
+            }
         }
         modalContent.appendChild(createFieldLabel(field))
         tmpField = await fieldCreation[field.type](fieldData);

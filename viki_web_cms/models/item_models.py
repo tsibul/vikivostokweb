@@ -124,7 +124,6 @@ class CatalogueItemColor(SettingsDictionary):
 
 class CatalogueItemPhoto(SettingsDictionary):
     """ catalogue item  color"""
-    # color_position = models.IntegerField(validators=[MinValueValidator(2), MaxValueValidator(9)])
     add_photo = models.FileField(storage=fs_item_add_photo, null=True, blank=True)
     item = models.ForeignKey(CatalogueItem, on_delete=models.CASCADE)
 
@@ -143,6 +142,10 @@ class CatalogueItemPhoto(SettingsDictionary):
     @staticmethod
     def order_default():
         return ['item__item_article']
+
+    @staticmethod
+    def storage_url():
+        return '/static/viki_web_cms/files/item_add_photo/'
 
     @staticmethod
     def dictionary_fields():
@@ -166,10 +169,20 @@ class CatalogueItemPhoto(SettingsDictionary):
                 'null': False,
             },
             {
+                'field': 'photo',
+                'property_off': 'add_photo',
+                'type': 'image',
+                'label': 'фото',
+                'null': True,
+                'url': '/static/viki_web_cms/files/item_add_photo/',
+
+            },
+            {
                 'field': 'add_photo',
                 'type': 'file',
                 'label': 'фото',
                 'null': False,
+                'url': '/static/viki_web_cms/files/item_add_photo/',
             },
         ]
 
