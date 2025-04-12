@@ -1235,14 +1235,22 @@ input[type=checkbox] {
 .detail-page__thumbnails {
   display: flex;
   gap: 1rem;
+  flex-wrap: wrap;
 }
 .detail-page__thumbnail {
   position: relative;
   overflow: hidden;
   border: 1px solid #0F4880;
   border-radius: 12px;
+  border-color: transparent;
   height: 100px;
   width: 100px;
+  transition: all 0.2s ease;
+}
+.detail-page__thumbnail:hover {
+  z-index: 6;
+  transform: scale(3);
+  border-width: 3px;
 }
 .detail-page__thumbnail img {
   width: 100%;
@@ -1250,11 +1258,9 @@ input[type=checkbox] {
   object-fit: contain;
   border: 1px solid #0F4880;
   border-radius: 12px;
-  border-color: transparent;
-  transition: transform 0.3s ease;
 }
-.detail-page__thumbnail img:hover {
-  transform: scale(1.05);
+.detail-page__thumbnail:hover img {
+  border-color: rgba(15, 72, 128, 0.1);
 }
 .detail-page__info {
   display: flex;

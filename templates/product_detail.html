@@ -33,14 +33,16 @@
                             </div>
                             <div class="detail-page__thumbnails">
                                 {% for item in goods.item_list %}
-                                    <div class="detail-page__thumbnail
+                                    {% for photo in item.additional_photo %}
+                                        <div class="detail-page__thumbnail
                                          {% if item.item.id != goods.id_random %}item-hidden item-opaque{% endif %}"
-                                         data-id="{{ item.item.id }}"
-                                    >
-                                        <img src="{% static 'viki_web/icons/logo.svg' %}"
-                                             alt="Дополнительное изображение 1"
-                                             loading="lazy">
-                                    </div>
+                                             data-id="{{ item.item.id }}"
+                                        >
+                                            <img src="{% static 'viki_web_cms/files/item_add_photo/' %}{{ photo.add_photo }}"
+                                                 alt="Дополнительное изображение"
+                                                 loading="lazy">
+                                        </div>
+                                    {% endfor %}
                                 {% endfor %}
                             </div>
                         </div>
@@ -113,7 +115,6 @@
                                             </label>
                                         {% endfor %}
                                     {% endif %}
-
                                 </div>
                             </div>
                             <button class="btn btn__save btn-sqr">
