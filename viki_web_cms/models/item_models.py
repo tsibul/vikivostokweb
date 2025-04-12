@@ -133,7 +133,7 @@ class CatalogueItemPhoto(SettingsDictionary):
         verbose_name_plural = 'Дополнительные фото'
         db_table_comment = 'Catalogue Item Photo'
         db_table = 'catalogue_item_photo'
-        ordering = ['item__goods__article', 'item__goods__name']
+        ordering = ['item__item_article']
 
     def save(self, *args, **kwargs):
         if not self.name:
@@ -142,33 +142,33 @@ class CatalogueItemPhoto(SettingsDictionary):
 
     @staticmethod
     def order_default():
-        return ['item__goods__article', 'item__goods__name']
+        return ['item__item_article']
 
     @staticmethod
     def dictionary_fields():
         return [
+            {
+                'field': 'name',
+                'type': 'string',
+                'label': 'название',
+                'null': True,
+            },
             {
                 'field': 'deleted',
                 'type': 'boolean',
                 'label': 'удалено',
             },
             {
-                'field': 'add_photo',
-                'type': 'string',
-                'label': 'название',
-                'null': True,
+                'field': 'item',
+                'type': 'foreign',
+                'label': 'товар',
+                'foreignClass': 'CatalogueItem',
+                'null': False,
             },
             {
                 'field': 'add_photo',
                 'type': 'file',
                 'label': 'фото',
-                'null': False,
-            },
-            {
-                'field': 'item',
-                'type': 'foreign',
-                'label': 'товар',
-                'foreignClass': 'CatalogueItem',
                 'null': False,
             },
         ]
