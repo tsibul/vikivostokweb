@@ -249,7 +249,7 @@ body {
 .content__left {
   display: flex;
   flex-direction: column;
-  width: 16%;
+  width: 14vw;
   border: 1px solid #0F4880;
   border-radius: 12px;
   padding: 20px;
@@ -261,7 +261,7 @@ body {
 .content__right {
   display: flex;
   flex-direction: column;
-  margin-left: calc(16% + 14px);
+  margin-left: calc(14vw + 14px);
   width: 100%;
 }
 
