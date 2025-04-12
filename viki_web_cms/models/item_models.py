@@ -156,7 +156,7 @@ class CatalogueItemPhoto(SettingsDictionary):
                 'field': 'add_photo',
                 'type': 'string',
                 'label': 'название',
-                'null': False,
+                'null': True,
             },
             {
                 'field': 'add_photo',
