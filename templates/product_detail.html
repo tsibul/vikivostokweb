@@ -8,6 +8,14 @@
                 <section class="detail-page__section">
                     <div class="detail-page__content">
                         <div class="detail-page__gallery">
+                            <button class="detail-page__nav-button detail-page__nav-button--prev tooltip">
+                                <i class="fa-solid fa-chevron-left"></i>
+                                <div class="tooltip-text tooltip-prev">предыдущий</div>
+                            </button>
+                            <button class="detail-page__nav-button detail-page__nav-button--next tooltip">
+                                <i class="fa-solid fa-chevron-right"></i>
+                                <div class="tooltip-text tooltip-next">следующий</div>
+                            </button>
                             <div class="detail-page__main-image">
                                 {% for item in goods.item_list %}
                                     <img src="{% static 'viki_web_cms/files/item_photo/' %}{{ item.item.image }}"
@@ -22,14 +30,6 @@
                                          data-color-description="{{ item.color_description }}"
                                     >
                                 {% endfor %}
-                                <button class="detail-page__nav-button detail-page__nav-button--prev tooltip">
-                                    <i class="fa-solid fa-chevron-left"></i>
-                                    <div class="tooltip-text tooltip-prev">предыдущий</div>
-                                </button>
-                                <button class="detail-page__nav-button detail-page__nav-button--next tooltip">
-                                    <i class="fa-solid fa-chevron-right"></i>
-                                    <div class="tooltip-text tooltip-next">следующий</div>
-                                </button>
                             </div>
                             <div class="detail-page__thumbnails">
                                 <div class="detail-page__thumbnail">

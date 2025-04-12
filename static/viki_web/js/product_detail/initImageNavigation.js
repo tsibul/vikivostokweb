@@ -4,7 +4,7 @@ import { navigateImages } from './navigateImages.js';
  * Initializes image navigation for product detail page
  */
 export function initImageNavigation() {
-    const mainImageContainer = document.querySelector('.detail-page__main-image');
+    const mainImageContainer = document.querySelector('.detail-page__gallery');
     if (!mainImageContainer) return;
 
     const images = mainImageContainer.querySelectorAll('img');
