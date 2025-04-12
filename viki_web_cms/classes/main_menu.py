@@ -61,7 +61,7 @@ class MainMenu:
                     CMSSetting('Шаблоны для товара', 'GoodsLayout', False, False ),
                 ]),
                 MenuSection('Фото товаров', [
-                    CMSSetting('Фото товаров', '', True, False),
+                    CMSSetting('Доп. фото товаров', 'CatalogueItemPhoto', False, False),
                 ]),
                 MenuSection('Отображение', [
                     CMSSetting('Интерфейс товара', 'LayoutType', False, False),
