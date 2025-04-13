@@ -25,7 +25,7 @@
                         <h3>{{ goods.goods_item.name }}</h3>
                         <div class="product-sqr__frame product-frame">
                             {% for item in goods.item_list %}
-                                <div class="product-hor__image-frame
+                                <div class="product-hor__image-frame product-sqr__image-frame
                                 {% if goods.id_random != item.item.id %} item-hidden item-opaque{% endif %}"
                                      data-id="{{ item.item.id }}"
                                      data-goods="{{ goods.goods_item.id }}"

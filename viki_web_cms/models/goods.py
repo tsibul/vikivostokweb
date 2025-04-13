@@ -81,7 +81,7 @@ class Goods(SettingsDictionary):
     def save(self, *args, **kwargs):
         self.slug = translit(self.name.lower(), 'ru', reversed=True).replace(' ', '-')
         slug_old = Goods.objects.filter(slug=self.slug, deleted=False).first()
-        if slug_old:
+        if slug_old and slug_old.id != self.id:
             return {'errors': ['name']}
         super(Goods, self).save(*args, **kwargs)
 

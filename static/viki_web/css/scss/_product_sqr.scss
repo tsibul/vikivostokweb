@@ -13,9 +13,6 @@
   &__frame {
     position: relative;
     margin-top: 8px;
-    //top: 54px;
-    //left: 10px;
-    //height: 410px;
     z-index: 3;
     transition: all 0.4s ease;
     opacity: 1;
@@ -24,12 +21,20 @@
     gap: 10px;
   }
 
+  &__image-frame{
+    height: 280px;
+    width: 280px;
+  }
+
   &__img {
-    height: 279px;
+    //height: 279px;
     @include brd-standard;
     border-color: transparent;
-    overflow: hidden;
+    //overflow: hidden;
     cursor: pointer;
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
   }
 
   &__info {
