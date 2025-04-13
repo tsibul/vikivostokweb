@@ -7,7 +7,8 @@ from django.shortcuts import render
 
 from viki_web_cms.models import ProductGroup, Goods, CatalogueItem, ColorGroup, FilterToGoodsGroup, GoodsGroup, \
     PrintType, GoodsDescription, ArticleDescription, CatalogueItemColor, PrintOpportunity, GoodsLayout, GoodsDimensions, \
-    Packing, PriceGoodsStandard, StandardPriceType, PriceItemStandard, Color, GoodsOption, UserExtension
+    Packing, PriceGoodsStandard, StandardPriceType, PriceItemStandard, Color, GoodsOption, UserExtension, \
+    PriceGoodsVolume, PriceGoodsQuantity
 
 
 def product(request, product_group_url):
@@ -26,7 +27,7 @@ def product(request, product_group_url):
     for goods_item in goods:
         dimensions, goods_description, packing = goods_data(goods_item)
         print_data, print_layout = create_print_data(goods_item)
-        price = goods_price(goods_item, price_type)
+        price, price_volume = goods_price(goods_item, price_type)
         price_min, price_max = price_min_max(price_min, price_max, price)
         item_list, id_list, colors, price_min, price_max = (
             create_item_list(goods_item, price_type, price_min, price_max))
@@ -52,6 +53,7 @@ def product(request, product_group_url):
             'dimensions': str(dimensions),
             'packing': packing,
             'price': price,
+            'price_volume': price_volume,
         })
     goods_list.sort(key=lambda x: x['price'])
     context = {
@@ -181,9 +183,25 @@ def goods_price(goods_item, price_type):
             '-price_list__price_list_date'
         ).first()
         price = price_obj.price if price_obj else 'по запросу'
+        price_volume = False
     else:
-        price = 'по запросу'
-    return price
+        minimum_price = PriceGoodsQuantity.objects.filter(deleted=False).order_by('-quantity').first()
+        price_obj = PriceGoodsVolume.objects.filter(
+            Q(deleted=False) &
+            Q(goods=goods_item) &
+            Q(
+                Q(price_list__promotion_price=True) &
+                Q(price_list__promotion_end_date__gte=datetime.date.today()) |
+                Q(price_list__promotion_price=False)
+            ) &
+            Q(price_type=price_type),
+            Q(price_volume=minimum_price),
+        ).order_by(
+            '-price_list__price_list_date'
+        ).first()
+        price = price_obj.price if price_obj else 'по запросу'
+        price_volume = True
+    return price, price_volume
 
 
 def item_price(item, price_type):

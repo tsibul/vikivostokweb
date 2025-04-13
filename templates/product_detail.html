@@ -50,7 +50,7 @@
                             <h1 class="">{{ goods.goods_item.name }}</h1>
                             <div class="detail-page__article">
                                 <h3>Артикул: {{ goods.random_item.item.item_article }}</h3>
-                                <h3 class="strong">Цена:
+                                <h3 class="strong">Цена{% if goods.price_volume %} от{%  endif %}:
                                     {% if goods.random_item.price %}{{ goods.random_item.price }}{% else %}
                                         {{ goods.price }}{% endif %} руб.</h3>
                                 <div class="detail-page__color-description">{{ goods.random_item.color_description|safe }}</div>
@@ -210,17 +210,12 @@
                             <img src="{% static 'viki_web_cms/files/item_photo/' %}{{ similar.image }}" alt="Сопутствующий товар">
                             <div class="detail-page__related_info">
                                 <h4>{{ similar.name}}</h4>
-                                <p class="strong">Цена: {{ similar.price }}руб.</p>
+                                <p class="strong">Цена{% if similar.price_volume %} от{% endif %}: {{ similar.price }}руб.</p>
                             </div>
                         </a>
                         {% endfor %}
                     </div>
                 </section>
-
-                {#                <a href="{% url 'viki_web:products' category.product_group_url %}" class="detail-page__category">#}
-                {#                    <i class="icon icon__arrow-left"></i>#}
-                {#                    <span>Вернуться в категорию</span>#}
-                {#                </a>#}
             </div>
         </div>
     </main>

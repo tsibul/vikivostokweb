@@ -60,7 +60,7 @@
                                     <h4>Артикул: <strong
                                             class="strong article">{{ goods.random_item.item.item_article }}</strong>
                                     </h4>
-                                    <h4 class="">Цена:
+                                    <h4 class="">Цена{% if goods.price_volume %} от{%  endif %}:
                                         <span class="strong price">
                                         {% if goods.random_item.price %}
                                             {{ goods.random_item.price }}

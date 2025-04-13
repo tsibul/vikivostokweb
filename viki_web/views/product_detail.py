@@ -25,7 +25,7 @@ def product_detail(request, product_name):
     # Получаем данные о товаре
     dimensions, goods_description, packing = goods_data(goods)
     print_data, print_layout = create_print_data(goods)
-    price = goods_price(goods, price_type)
+    price, price_volume = goods_price(goods, price_type)
 
     # Получаем варианты товара, цвета и цены
     item_list, id_list, colors = create_item_list_details(goods, price_type)
@@ -50,6 +50,7 @@ def product_detail(request, product_name):
             'id_random': id_random,
             'random_item': random_item,
             'price': price,
+            'price_volume': price_volume,
             'goods_description': goods_description,
             'dimensions': str(dimensions),
             'colors': colors,
@@ -102,18 +103,27 @@ def similar_related_goods(request, goods_item):
     similar_goods = []
     for goods in similar:
         price_type = find_price_type(request)
-        price = goods_price(goods.similar_goods, price_type)
+        price, price_volume = goods_price(goods.similar_goods, price_type)
         catalogue_item = CatalogueItem.objects.filter(goods=goods.similar_goods, deleted=False).order_by('?').first()
         if catalogue_item:
-            similar_goods.append({'price': price, 'image': catalogue_item.image, 'name': goods.similar_goods.name,
-                                  'slug': goods.similar_goods.slug})
+            similar_goods.append({
+                'price': price,
+                'image': catalogue_item.image,
+                'name': goods.similar_goods.name,
+                'slug': goods.similar_goods.slug,
+                'price_volume': price_volume,
+            })
     related = GoodsRelated.objects.filter(main_goods=goods_item, deleted=False)
     related_goods = []
     for goods in related:
         price_type = find_price_type(request)
-        price = goods_price(goods.related_goods, price_type)
+        price, price_volume = goods_price(goods.related_goods, price_type)
         catalogue_item = CatalogueItem.objects.filter(goods=goods.related_goods, deleted=False).order_by('?').first()
         if catalogue_item:
-            related_goods.append({'price': price, 'image': catalogue_item.image, 'name': goods.related_goods.name,
-                                  'slug': goods.related_goods.slug})
+            related_goods.append({
+                'price': price,
+                'image': catalogue_item.image,
+                'name': goods.related_goods.name,
+                'price_volume': price_volume,
+                'slug': goods.related_goods.slug})
     return similar_goods, related_goods
