@@ -10,11 +10,11 @@ def index(request):
     new_items = []
     for item in new_items_request:
         price_type = find_price_type(request)
-        price = goods_price(item, price_type)
+        price, price_volume = goods_price(item, price_type)
         catalogue_item = CatalogueItem.objects.filter(goods=item, deleted=False).order_by('?').first()
         if catalogue_item:
             new_items.append({'price': price, 'image': catalogue_item.image, 'name': item.name,
-                                  'slug': item.slug})
+                                  'slug': item.slug, 'price_volume': price_volume})
 
     context = {'categories': categories, 'user': request.user, 'new_items': new_items}
     return render(request, 'index.html', context)

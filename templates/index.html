@@ -34,7 +34,7 @@
                 </div>
                     <div class="news__label">
                         <h4 class="news__title">{{ item.name }}</h4>
-                        <h4 class="news__price">Цена:&nbsp;{{ item.price }}</h4>
+                        <h4 class="news__price">Цена{% if item.price_volume %} от{%  endif %}:&nbsp;{{ item.price }}</h4>
                         <div class="news__text"></div>
                     </div>
                 </a>
