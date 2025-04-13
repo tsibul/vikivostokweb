@@ -320,8 +320,20 @@ input[type=checkbox] {
   width: 100%;
   border: 1px solid #0F4880;
   border-radius: 12px;
+  border-color: transparent;
   z-index: -3;
   overflow: hidden;
+}
+.news__img_frame {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  background-color: #fff;
+  border: 1px solid #0F4880;
+  border-radius: 12px;
+  border-color: transparent;
+  z-index: -4;
 }
 .news__title {
   font-size: 18px;
@@ -723,13 +735,18 @@ input[type=checkbox] {
   grid-template-columns: 268px 320px;
   gap: 10px;
 }
+.product-sqr__image-frame {
+  height: 280px;
+  width: 280px;
+}
 .product-sqr__img {
-  height: 279px;
   border: 1px solid #0F4880;
   border-radius: 12px;
   border-color: transparent;
-  overflow: hidden;
   cursor: pointer;
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
 }
 .product-sqr__info {
   display: flex;

@@ -27,22 +27,18 @@
         <div class="container">
             <h2>Новинки</h2>
             <section class="category">
-                <div class="news__item">
-                    <img src="{% static 'viki_web/images/recess_bw.jpg' %}" alt="reChess" class="news__img">
+                {%  for item in new_items %}
+                <a class="news__item" href="{% url 'viki_web:product_detail' item.slug %}">
+                <div class="news__img_frame">
+                    <img src="{% static 'viki_web_cms/files/item_photo/' %}{{ item.image }}" alt="{{ item.name }}" class="news__img">
+                </div>
                     <div class="news__label">
-                        <h4 class="news__title">Шахматы&nbsp;reChess</h4>
-                        <h4 class="news__price">6&nbsp;000&nbsp;р.</h4>
+                        <h4 class="news__title">{{ item.name }}</h4>
+                        <h4 class="news__price">Цена:&nbsp;{{ item.price }}</h4>
                         <div class="news__text"></div>
                     </div>
-                </div>
-                <div class="news__item">
-                    <img src="{% static 'viki_web/images/horeca_cover.jpg' %}" alt="reChess" class="news__img">
-                    <div class="news__label">
-                        <h4 class="news__title">Хэнгер 210*110 мм</h4>
-                        <h4 class="news__price">94&nbsp;р.</h4>
-                        <div class="news__text"></div>
-                    </div>
-                </div>
+                </a>
+                {% endfor %}
             </section>
         </div>
         <div class="container">

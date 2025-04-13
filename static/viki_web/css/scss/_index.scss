@@ -61,17 +61,30 @@
     cursor: pointer;
     @include brd-standard;
     transition: 0.2s ease-in-out transform, 0.2s ease-in-out background-color;
-    &:hover{
+
+    &:hover {
       transform: scale(1.05);
       //background-color: rgba($colorPrimary, 0.2);
     }
   }
 
-  &__img{
+  &__img {
     width: 100%;
     @include brd-standard;
+    border-color: transparent;
     z-index: -3;
     overflow: hidden;
+
+    &_frame {
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      background-color: #fff;
+      @include brd-standard;
+      border-color: transparent;
+      z-index: -4;
+    }
   }
 
   &__title {
