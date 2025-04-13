@@ -1,0 +1,76 @@
+@import "vars";
+@import "mixins";
+
+.layout {
+  width: 100%;
+  @include brd-standard;
+  margin-bottom: 16px;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    @include brd-standard;
+    border-color: transparent;
+  }
+
+  &__header-left {
+  }
+
+  &__header-right {
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  &__input {
+    padding: 8px;
+    @include brd-standard;
+    width: 320px;
+  }
+}
+
+.layout-content {
+  max-height: calc(100vh - 190px);
+  overflow: auto;
+
+  &__header {
+    font-size: 18px;
+  }
+
+  &__title {
+
+    &_item {
+    }
+  }
+
+  &__rows {
+  }
+
+  &__row {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+    align-items: center;
+    padding: 4px 0;
+
+    &:hover {
+      background-color: rgba($colorNeutral500, 0.2);
+    }
+
+    &_item {
+      //font-size: 14px;
+    }
+
+    &_file {
+      cursor: pointer;
+      color: $colorSecondary;
+      & i {
+        color: $colorSecondary;
+      }
+    }
+  }
+}

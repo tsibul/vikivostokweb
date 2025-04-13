@@ -1,0 +1,39 @@
+{% extends 'header.html' %}
+{% load static %}
+{% block content %}
+    <script src="{% static 'viki_web/js/layout.js' %}" defer type="module"></script>
+    <div class="container">
+        <section>
+            <div class="layout__header">
+                <h1 class="layout__header-left">Шаблоны нанесения</h1>
+                <form class="layout__header-right" action="{% url 'viki_web:layout' %}" method="post">
+                    {% csrf_token %}
+                    <i class="fa fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                    <input class="layout__input" type="text" placeholder="поиск..." name="search">
+                    <button type="submit" class="btn btn__save">Поиск</button>
+                    <a href="" class="btn btn__cancel">Очистить</a>
+                </form>
+            </div>
+            <div class="layout-content">
+                <div class="layout-content__row">
+                    <div class="layout-content__title_item">название</div>
+                    {#                    <div class="layout-content__title_item">товар</div>#}
+                    <div class="layout-content__title_item">шаблон (pdf) </div>
+                </div>
+                <hr class="hr">
+                <div class="layout-content__rows">
+                    {% for layout in layouts %}
+                        <div class="layout-content__row">
+                            <div class="layout-content__row_item">{{ layout.name }}</div>
+                            {#                        <div class="layout-content__row_item">{{ layout.goods__name}}</div>#}
+                            <a class="layout-content__row_file" href="{%  static 'viki_web_cms/files/layout/' %}{{ layout.layout.layout.url }}" target="_blank">
+                                <i class="fa-regular fa-folder"></i>
+                                {{ layout.layout.name }}
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}

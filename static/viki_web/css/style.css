@@ -1379,4 +1379,58 @@ input[type=checkbox] {
   padding: 2px 0;
 }
 
+.layout {
+  width: 100%;
+  border: 1px solid #0F4880;
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+.layout__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  border: 1px solid #0F4880;
+  border-radius: 12px;
+  border-color: transparent;
+}
+.layout__header-right {
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.layout__input {
+  padding: 8px;
+  border: 1px solid #0F4880;
+  border-radius: 12px;
+  width: 320px;
+}
+
+.layout-content {
+  max-height: calc(100vh - 190px);
+  overflow: auto;
+}
+.layout-content__header {
+  font-size: 18px;
+}
+.layout-content__row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 30px;
+  align-items: center;
+  padding: 4px 0;
+}
+.layout-content__row:hover {
+  background-color: rgba(74, 74, 74, 0.2);
+}
+.layout-content__row_file {
+  cursor: pointer;
+  color: #009EA3;
+}
+.layout-content__row_file i {
+  color: #009EA3;
+}
+
 /*# sourceMappingURL=style.css.map */
