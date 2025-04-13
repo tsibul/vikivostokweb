@@ -1,4 +1,3 @@
-from django.db.models import Q
 from django.shortcuts import render
 
 from viki_web_cms.models import GoodsLayout, ProductGroup
