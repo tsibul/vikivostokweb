@@ -156,8 +156,6 @@ def goods_data(goods_item):
 def find_price_type(request):
     user_price_type = StandardPriceType.objects.filter(deleted=False).order_by('-priority')
     if request.user.is_authenticated:
-        # user_group_names = request.user.groups.values_list('name', flat=True)
-        # price_type = user_price_type.filter(group__name__in=user_group_names).first()
         user_extension = UserExtension.objects.filter(user=request.user).first()
         if user_extension.customer:
             price_type = user_extension.customer.standard_price_type

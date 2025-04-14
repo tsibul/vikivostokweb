@@ -21,6 +21,6 @@ urlpatterns = [
     path('check_bank/', views.check_bank, name='check_bank'),
     path('save_bank_account/', views.save_bank_account, name='save_bank_account'),
     path('product/<str:product_name>', views.product_detail, name='product_detail'),
-
     path('shablon', views.layout, name='layout' ),
+    path('price', views.price, name='price'),
 ]

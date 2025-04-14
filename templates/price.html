@@ -1,0 +1,108 @@
+{% extends 'header.html' %}
+{% load static %}
+{% block content %}
+    <script src="{% static 'viki_web/js/layout.js' %}" defer type="module"></script>
+    <div class="container">
+        <div class="layout__header">
+            <h1 class="layout__header-left">Прайс</h1>
+            <form class="layout__header-right" action="{% url 'viki_web:price' %}" method="post">
+                {% csrf_token %}
+                <i class="fa fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                <input class="layout__input" type="text" placeholder="поиск..." name="search">
+                <button type="submit" class="btn btn__save">Поиск</button>
+                <a href=""><button class="btn btn__cancel">Сбросить</button></a>
+            </form>
+        </div>
+        <section class="">
+            <h3 class="layout-content__title_item strong">Стандартные цены</h3>
+            <div class="price-content__row">
+                <div class="layout-content__title_item">артикул</div>
+                <div class="layout-content__title_item">группа</div>
+                <div class="layout-content__title_item">название</div>
+                {% if price_length > 1 %}
+                    <div class="price-content__item">стандартная цена</div>
+                {% else %}
+                    <div></div>
+                {% endif %}
+                <div class="price-content__item">ваша цена</div>
+            </div>
+            <hr class="">
+            <div class="layout-content__rows">
+                {% for record in standard_prices %}
+                    <div class="price-content__row">
+                        <div class="layout-content__row_item">{{ record.article }}</div>
+                        <div class="layout-content__row_item">{{ record.group }}</div>
+                        <div class="layout-content__row_item">{{ record.goods }}</div>
+                        {% if price_length == 1 %}
+                            <div></div>
+                        {% endif %}
+                        {% for price in record.price %}
+                            <div class="price-content__item">{{ price }}</div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+        <hr class="hr">
+        <br>
+        <section class="">
+            <h3 class="layout-content__title_item strong">Цены от количества</h3>
+            {% for volume in volume_prices %}
+                <div class="price-content__row">
+                    <div class="layout-content__title_item strong">{{ volume.quantity }}</div>
+                    <div class="layout-content__title_item">группа</div>
+                    <div class="layout-content__title_item">название</div>
+                    {% if price_length > 1 %}
+                        <div class="price-content__item">стандартная цена</div>
+                    {% else %}
+                        <div></div>
+                    {% endif %}
+                    <div class="price-content__item">ваша цена</div>
+                </div>
+                <hr class="">
+                <div class="layout-content__rows">
+                    {% for record in volume.goods %}
+                        <div class="price-content__row">
+                            <div class="layout-content__row_item">{{ record.article }}</div>
+                            <div class="layout-content__row_item">{{ record.group }}</div>
+                            <div class="layout-content__row_item">{{ record.goods }}</div>
+                            {% if price_length == 1 %}
+                                <div></div>
+                            {% endif %}
+                            {% for price in record.price %}
+                                <div class="price-content__item">{{ price }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                    <hr class="hr">
+                </div>
+            {% endfor %}
+        </section>
+        <br>
+        <section class="">
+            <h3 class="layout-content__title_item strong">Брендирование</h3>
+            {% for print in print_price %}
+                <div class="print-price__row"
+                     style="grid-template-columns: 1.5fr repeat({{ print.print_volume_length }}, 1fr)">
+                    <div class="layout-content__title_item strong">{{ print.name }}</div>
+                    {% for quantity in print.print_volume_data %}
+                        <div class="price-content__item">до&nbsp;{{ quantity.quantity }}шт</div>
+                    {% endfor %}
+                </div>
+                <hr class="">
+                <div class="print-price__row">
+                    {% for record in print.print_groups %}
+                        <div class="price-content__row"
+                             style="grid-template-columns: 2fr repeat({{ print.print_volume_length }}, 1fr)">
+                            <div class="layout-content__row_item">{{ record.print_price_group__name }}</div>
+                            {% for price in record.prices %}
+                                <div class="price-content__item">{{ price.price }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                    <hr class="hr">
+                </div>
+            {% endfor %}
+        </section>
+    </div>
+{% endblock %}

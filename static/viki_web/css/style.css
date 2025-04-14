@@ -1433,4 +1433,26 @@ input[type=checkbox] {
   color: #009EA3;
 }
 
+.price-content__row {
+  display: grid;
+  grid-template-columns: 1fr 2fr 4fr 100px 100px;
+  gap: 30px;
+  align-items: center;
+  padding: 4px 0;
+}
+.price-content__row:hover {
+  background-color: rgba(74, 74, 74, 0.2);
+}
+.price-content__item {
+  text-align: end;
+}
+
+.print-price__row {
+  display: grid;
+  gap: 8px;
+}
+.print-price__row * {
+  font-size: 14px;
+}
+
 /*# sourceMappingURL=style.css.map */

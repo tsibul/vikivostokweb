@@ -1,0 +1,35 @@
+@import "vars";
+@import "mixins";
+
+.price-content {
+  //position: sticky;
+  &__row {
+    display: grid;
+    grid-template-columns: 1fr 2fr 4fr 100px 100px;
+    gap: 30px;
+    align-items: center;
+    padding: 4px 0;
+
+    &:hover {
+      background-color: rgba($colorNeutral500, 0.2);
+    }
+  }
+
+  &__rows{
+    //overflow-Y: hidden;
+    //max-height: calc(100vh - 220px);
+  }
+  &__item{
+    text-align: end;
+  }
+}
+
+.print-price{
+  &__row{
+    display: grid;
+    gap: 8px;
+    & *{
+      font-size: 14px;
+    }
+  }
+}
