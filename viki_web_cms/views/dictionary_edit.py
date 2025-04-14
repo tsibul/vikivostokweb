@@ -4,6 +4,7 @@ from viki_web_cms import models
 from viki_web_cms.functions.field_validation import goods_validation, dictionary_fields_validation, color_validation
 from viki_web_cms.functions.reformat_field_dictionary import reformat_field_dictionary
 from viki_web_cms.functions.user_validation import user_check
+from viki_web_cms.views import add_annotations_for_properties
 
 
 def edit_dictionary(request, class_name, element_id):
@@ -33,13 +34,14 @@ def edit_dictionary(request, class_name, element_id):
     for field in field_list:
         current_field = field['field'] + '__name' if field['type'] == 'foreign' else field['field']
         fields_out.append(current_field)
-        if field['type'] == 'boolean':
-            post_data[current_field] = current_field in post_data
-        elif field['type'] == 'file':
-            post_data[current_field] = request.FILES.get(current_field)
-        elif field['type'] in ['number', 'float', 'precise']:
-            if current_field in post_data == '':
-                post_data[current_field] = 0
+        if not 'property_off' in field:
+            if field['type'] == 'boolean':
+                post_data[current_field] = current_field in post_data
+            elif field['type'] == 'file':
+                post_data[current_field] = request.FILES.get(current_field)
+            elif field['type'] in ['number', 'float', 'precise']:
+                if current_field in post_data == '':
+                    post_data[current_field] = 0
     if element_id == 0:
         new_item = dict_model(**post_data)
         response = new_item.save()
@@ -53,7 +55,8 @@ def edit_dictionary(request, class_name, element_id):
         response = dict_element.save()
         if isinstance(response, dict) and 'errors' in response:
             return JsonResponse({'errors': response['errors']}, safe=False)
-    editing_item = dict_model.objects.filter(pk=element_id)
+    editing_item_request = dict_model.objects.filter(pk=element_id)
+    editing_item = add_annotations_for_properties(editing_item_request, field_list)
     record = editing_item.values(*fields_out)
     return JsonResponse({'errors': None, 'values': record[0], 'params': params}, safe=False)
 
