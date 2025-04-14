@@ -239,6 +239,7 @@ input[type=checkbox] {
   background-color: #F2FFFF;
   width: 220px;
   padding: 8px 0;
+  z-index: 7;
 }
 .catalogue__item li {
   padding: 8px;
