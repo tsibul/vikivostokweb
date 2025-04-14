@@ -9,7 +9,8 @@ fs_product_group = FileSystemStorage(location='viki_web_cms/files/cover')
 class ProductGroup(SettingsDictionary):
     """ navigation sections"""
     second_name = models.CharField(max_length=120, blank=True, null=True)
-    cover = models.FileField(upload_to=fs_product_group, storage=fs_product_group, blank=True, null=True)
+    short_name = models.CharField(max_length=120, blank=True, null=True)
+    cover = models.FileField(storage=fs_product_group, blank=True, null=True)
     product_group_url = models.CharField(max_length=60)
     layout = models.ForeignKey(LayoutType, blank=True, null=True, on_delete=models.SET_NULL)
     priority = models.IntegerField(blank=True, null=True)
@@ -42,6 +43,12 @@ class ProductGroup(SettingsDictionary):
                 'field': 'second_name',
                 'type': 'string',
                 'label': 'пояснение',
+                'null': True,
+            },
+            {
+                'field': 'short_name',
+                'type': 'string',
+                'label': 'имя в меню',
                 'null': True,
             },
             {
