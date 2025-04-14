@@ -195,6 +195,7 @@
 
       &:hover {
         transform: scale(1.05);
+        border: 1px $colorSecondary solid;
       }
 
       & img {

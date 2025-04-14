@@ -1341,6 +1341,7 @@ input[type=checkbox] {
 }
 .detail-page__related_item:hover {
   transform: scale(1.05);
+  border: 1px #009EA3 solid;
 }
 .detail-page__related_item img {
   width: 100%;
