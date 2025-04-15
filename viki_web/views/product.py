@@ -18,6 +18,14 @@ def product(request, product_group_url):
         product_group=product_group, deleted=False,
         catalogueitem__isnull=False
     ).distinct()
+    context = product_context(request, goods, product_groups, product_group)
+    if product_group.layout.id == 1:
+        return render(request, 'product_hor.html', context)
+    else:
+        return render(request, 'product_sqr.html', context)
+
+
+def product_context(request, goods, product_groups, product_group):
     goods_group = GoodsGroup.objects.filter(deleted=False, goods__in=goods)
     print_types, color_group, filter_option = product_options(goods_group)
     price_type = find_price_type(request)
@@ -55,6 +63,8 @@ def product(request, product_group_url):
             'price': price,
             'price_volume': price_volume,
         })
+    if not product_group:
+        product_group = {'name': 'Каталог', 'product_group_url': 'catalogue'}
     goods_list.sort(key=lambda x: x['price'])
     context = {
         'product_groups': product_groups,
@@ -67,10 +77,7 @@ def product(request, product_group_url):
         'price_max': price_max,
         'user': request.user,
     }
-    if product_group.layout.id == 1:
-        return render(request, 'product_hor.html', context)
-    else:
-        return render(request, 'product_sqr.html', context)
+    return context
 
 
 def create_item_list(goods_item, price_type, price_min, price_max):
