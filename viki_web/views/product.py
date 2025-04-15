@@ -27,6 +27,7 @@ def product(request, product_group_url):
 
 def product_context(request, goods, product_groups, product_group):
     goods_group = GoodsGroup.objects.filter(deleted=False, goods__in=goods)
+    goods_groups = GoodsGroup.objects.filter(deleted=False)
     print_types, color_group, filter_option = product_options(goods_group)
     price_type = find_price_type(request)
 
@@ -63,12 +64,13 @@ def product_context(request, goods, product_groups, product_group):
             'price': price,
             'price_volume': price_volume,
         })
-    if not product_group:
-        product_group = {'name': 'Каталог', 'product_group_url': 'catalogue'}
+    # if not product_group:
+    #     product_group = {'name': 'Каталог', 'product_group_url': 'catalogue'}
     goods_list.sort(key=lambda x: x['price'])
     context = {
         'product_groups': product_groups,
         'product_group': product_group,
+        'goods_groups': goods_groups,
         'color_group': color_group,
         'filter_option': filter_option,
         'print_types': print_types,
