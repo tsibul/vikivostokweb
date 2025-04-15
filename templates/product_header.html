@@ -148,7 +148,7 @@
             <ul class="menu-items__items">
                 {% for category in product_groups %}
                     <li class="menu-items__item">
-                        <a href="{{ category.product_group_url }}">{{ category.short_name }}</a>
+                        <a href="{%  url 'viki_web:products'  category.product_group_url %}">{{ category.short_name }}</a>
                     </li>
                 {% endfor %}
             </ul>
