@@ -21,39 +21,27 @@
 <body>
 <menu class="menu-product">
     <div class="container">
-        <div class="menu__line">
-            <nav>
-                <ul class="menu__left">
-                    <li class="menu__item">
-                        <a href="/">
-                            <img src="{% static 'viki_web/icons/logo.svg' %}" alt="ВикиВосток" class="menu__logo">
-                        </a></li>
-                    <li class="menu__item catalogue">
-                        <div>Каталог</div>
-                        <ul class="catalogue__item">
-                            {% for category in product_groups %}
-                                <li>
-                                    <a href="{{ category.product_group_url }}">{{ category.name }}</a>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    </li>
-                    <li class="menu__item">
-                        <a href="{% url 'viki_web:price' %}">Прайс</a>
-                    </li>
-                    <li class="menu__item">
-                        <a href="{% url 'viki_web:layout' %}">Шаблоны</a>
-                    </li>
-                    <li class="menu__item">
-                        <div>О компании</div>
-                    </li>
-                    <li class="menu__item">
-                        <div>Контакты</div>
-                    </li>
-                </ul>
-            </nav>
-            {#            <div class="menu__line">#}
+        <nav class="menu__line">
+            {#            <nav>#}
+            <ul class="menu__left">
+                <li class="menu__item">
+                    <a href="/">
+                        <i class="fa-solid fa-house"></i>
+                        Главная
+                    </a></li>
+                <li class="menu__item">
+                </li>
+            </ul>
             <div class="menu__right">
+                <form class="layout__header-right" action="{% url 'viki_web:catalogue' %}" method="post">
+                    {% csrf_token %}
+                    <i class="fa fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                    <input class="layout__input" type="text" placeholder="поиск..." name="search">
+                    <button type="submit" class="btn btn__save">Поиск</button>
+                    <a href="">
+                        <button class="btn btn__neutral">Сбросить</button>
+                    </a>
+                </form>
                 <nav class="cart tooltip">
                     <img src="{% static 'viki_web/icons/cart_menu.svg' %}"
                          alt="cart" class="">
@@ -83,76 +71,91 @@
                     {% endif %}
                 </nav>
             </div>
-        </div>
+        </nav>
     </div>
 </menu>
-<details class="filter">
-    <summary class="filter__summary">
-        <div class="filter__summary_title">
-            <h4>Фильтры</h4>
-            <i class="fa-solid fa-list-check"></i>
-            <div class="filter-badge"></div>
-        </div>
-    </summary>
-    <div class="filter__content">
-        <div class="filter__content_data">
-            <div>
-                <h3>Цвет</h3>
-                <div class="filter__content_data_color">
-                    {% for color in color_group %}
-                        <input type="checkbox" id="{{ color.hex }}"
-                               name="{{ color.id }}"
-                               class="product-header__filter-content_checkbox-hidden"
-                               data-id="{{ color.id }}"
-                               hidden>
-                        <label for="{{ color.hex }}"
-                               class="color-label">
-                            <div class="square tooltip" style="background-color: {{ color.hex }};">
-                                <div class="tooltip-text">{{ color.name }}</div>
+<menu class="menu-items">
+    <div class="container">
+        <nav class="menu__line">
+            <details class="filter">
+                <summary class="filter__summary">
+                    <div class="filter__summary_title">
+                        <h4>Фильтры</h4>
+                        <i class="fa-solid fa-list-check"></i>
+                        <div class="filter-badge"></div>
+                    </div>
+                </summary>
+                <div class="filter__content">
+                    <div class="filter__content_data">
+                        <div>
+                            <h3>Цвет</h3>
+                            <div class="filter__content_data_color">
+                                {% for color in color_group %}
+                                    <input type="checkbox" id="{{ color.hex }}"
+                                           name="{{ color.id }}"
+                                           class="product-header__filter-content_checkbox-hidden"
+                                           data-id="{{ color.id }}"
+                                           hidden>
+                                    <label for="{{ color.hex }}"
+                                           class="color-label">
+                                        <div class="square tooltip" style="background-color: {{ color.hex }};">
+                                            <div class="tooltip-text">{{ color.name }}</div>
+                                        </div>
+                                        <div class="color-label__check"></div>
+                                    </label>
+                                {% endfor %}
                             </div>
-                            <div class="color-label__check"></div>
-                        </label>
-                    {% endfor %}
+                            <h3>Брендирование</h3>
+                            <div class="filter__content_data_print">
+                                {% for printing in print_types %}
+                                    <input type="checkbox" id="print_{{ printing.id }}"
+                                           data-id="{{ printing.id }}"
+                                           class="product-header__filter-content_checkbox">
+                                    <label for="print_{{ printing.id }}">{{ printing.name }}</label>
+                                {% endfor %}
+                            </div>
+                            <h3><label for="price-range">Цена</label></h3>
+                            <div class="filter__price-range">
+                                <input id="price-range"
+                                       type="range" class="input-range"
+                                       min="{{ price_min }}"
+                                       max="{{ price_max }}"
+                                       step="0.1"
+                                       value="{{ price_max }}"
+                                       name="price_range">
+                                <div class="input-range__value">до&nbsp;{{ price_max }}</div>
+                            </div>
+                        </div>
+                        <div>
+                            <h3>Свойства</h3>
+                            <div class="filter__content_data_filter">
+                                {% for filter in filter_option %}
+                                    <input type="checkbox" id="filter-{{ filter.filter_option__id }}"
+                                           data-id="{{ filter.filter_option__id }}"
+                                           class="filter__content_data_checkbox">
+                                    <label for="filter-{{ filter.filter_option__id }}">{{ filter.filter_option__name }}</label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="filter__btn-block">
+                        <button class="btn btn__save" data-url="{{ product_group.product_group_url }}">применить
+                        </button>
+                        <button class="btn btn__cancel">сбросить</button>
+                    </div>
                 </div>
-                <h3>Брендирование</h3>
-                <div class="filter__content_data_print">
-                    {% for printing in print_types %}
-                        <input type="checkbox" id="print_{{ printing.id }}"
-                               data-id="{{ printing.id }}"
-                               class="product-header__filter-content_checkbox">
-                        <label for="print_{{ printing.id }}">{{ printing.name }}</label>
-                    {% endfor %}
-                </div>
-                <h3><label for="price-range">Цена</label></h3>
-                <div class="filter__price-range">
-                    <input id="price-range"
-                           type="range" class="input-range"
-                           min="{{ price_min }}"
-                           max="{{ price_max }}"
-                           step="0.1"
-                           value="{{ price_max }}"
-                           name="price_range">
-                    <div class="input-range__value">до&nbsp;{{ price_max }}</div>
-                </div>
-            </div>
-            <div>
-                <h3>Свойства</h3>
-                <div class="filter__content_data_filter">
-                    {% for filter in filter_option %}
-                        <input type="checkbox" id="filter-{{ filter.filter_option__id }}"
-                               data-id="{{ filter.filter_option__id }}"
-                               class="filter__content_data_checkbox">
-                        <label for="filter-{{ filter.filter_option__id }}">{{ filter.filter_option__name }}</label>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-        <div class="filter__btn-block">
-            <button class="btn btn__save" data-url="{{ product_group.product_group_url }}">применить</button>
-            <button class="btn btn__cancel">сбросить</button>
-        </div>
+            </details>
+            <ul class="menu-items__items">
+                {% for category in product_groups %}
+                    <li class="menu-items__item">
+                        <a href="{{ category.product_group_url }}">{{ category.short_name }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+
+        </nav>
     </div>
-</details>
+</menu>
 <dialog class="login log-login">
     <div class="login__body">
         <div class="login__title">
