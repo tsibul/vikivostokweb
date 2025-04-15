@@ -5,8 +5,8 @@ app_name = 'viki_web'
 urlpatterns = [
     path('', views.index, name='main'),
     path('products/<str:product_group_url>', views.product, name='products'),
-    path('products/<str:product_group_url>/<str:filter_type>', views.product_filter, name='product_filter'),
-
+    path('filter/<str:filter_type>', views.product_filter, name='product_filter'),
+    path('goods_group/<str:url>', views.goods_group_page, name='goods_group'),
     path('send-password/', views.send_temp_password, name='send_temp_password'),
     path('log-temp/', views.login_with_temp_password, name='login-temp'),
     path('change-password/', views.change_password, name='change_password'),

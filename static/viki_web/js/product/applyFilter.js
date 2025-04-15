@@ -12,7 +12,8 @@
  */
 export async function applyFilter(e) {
     e.preventDefault()
-    const postUrl = `./${e.target.dataset.url}`;
+    // const postUrl = `./${e.target.dataset.url}`;
+    const postUrl = `/filter`;
 
     const allGoods = document.querySelectorAll('.product');
     const goodsIds = [...allGoods].reduce((acc, item) => {
