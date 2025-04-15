@@ -9,7 +9,7 @@ from viki_web_cms.models import Goods, FilterToGoods, PrintOpportunity, ColorGro
 
 
 @csrf_exempt
-def product_filter(request, product_group_url, filter_type):
+def product_filter(request, filter_type):
     request_data = json.loads(request.body)
     goods_id_list = request_data.get('goods_id')
     filter_id_list = request_data.get('filter_id')
