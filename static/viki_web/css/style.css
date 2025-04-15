@@ -858,6 +858,25 @@ input[type=checkbox] {
   transform: scale(1.05);
 }
 
+.goods-group {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+.goods-group__item {
+  border: 1px solid #0F4880;
+  border-radius: 12px;
+  display: inline-block;
+  width: 100%;
+  padding: 24px;
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+.goods-group__item:hover {
+  transform: scale(1.05);
+}
+
 .products {
   margin-top: 16px;
   display: flex;
