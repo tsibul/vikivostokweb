@@ -15,7 +15,6 @@
 }
 
 h2 {
-  //padding-left: 30px;
   font-weight: 700;
   font-size: 26px;
 }
@@ -27,6 +26,10 @@ body {
 
 a {
   text-decoration: none;
+}
+
+ul {
+  list-style: none
 }
 
 input[type='checkbox'] {
@@ -84,7 +87,6 @@ input[type='checkbox'] {
     }
 
     &:hover * {
-      //background-color: $colorSecondary50;
       color: $colorSecondary500;
     }
   }

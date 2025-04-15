@@ -21,7 +21,6 @@
     display: flex;
     align-items: center;
     gap: 30px;
-    list-style: none;
   }
 
   &__item {
@@ -33,9 +32,7 @@
     }
 
     :hover {
-      //transform: scale(1.2);
       font-weight: 800;
-      //font-size: 18px;
     }
   }
 
@@ -57,7 +54,6 @@
     padding: 16px 0;
 
     &:hover {
-      //transform: scale(1.1);
     }
 
     &:hover div {
@@ -122,11 +118,10 @@
     background-color: $colorSecondary50;
     width: 220px;
     padding: 8px 0;
-    z-index: 7;
+    z-index: 9;
 
     & li {
       padding: 8px;
-      list-style: none;
 
       &:hover {
         transform: scale(1);
