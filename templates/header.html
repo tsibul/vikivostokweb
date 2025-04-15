@@ -27,15 +27,8 @@
                         <a href="/">
                             <img src="{% static 'viki_web/icons/logo.svg' %}" alt="ВикиВосток" class="menu__logo">
                         </a></li>
-                    <li class="menu__item catalogue">
-                        <div>Каталог</div>
-                        <ul class="catalogue__item">
-                            {% for category in categories %}
-                                <li class="catalogue__li">
-                                    <a href="{%  url 'viki_web:products' category.product_group_url %}"><p>{{ category.name }}</p></a>
-                                </li>
-                            {% endfor %}
-                        </ul>
+                    <li class="menu__item">
+                        <a href="{% url 'viki_web:catalogue' %}">Каталог</a>
                     </li>
                     <li class="menu__item">
                         <a href="{% url 'viki_web:price' %}">Прайс</a>
