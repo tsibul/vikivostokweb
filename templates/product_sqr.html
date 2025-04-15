@@ -5,7 +5,13 @@
         <header class="product-header">
             <div class="product-header__title">
                 <h1>{{ product_group.name }}</h1>
-                <h3>{{ product_group.second_name }}</h3>
+                <h3>
+                    {% if search %}
+                        (поиск "{{ search }}")
+                    {% else %}
+                        {{ product_group.second_name }}
+                    {% endif %}
+                </h3>
             </div>
         </header>
     </div>
@@ -151,7 +157,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="product-sqr__tab_text product-hor__color-description">
+                                <div class="product-sqr__tab_text  product-hor__color-description product-hor__color-description_big">
                                     {{ goods.random_item.color_description }}
                                 </div>
                             </div>
@@ -163,7 +169,7 @@
                                         {{ goods.random_item.item.item_article }}
                                     </strong>
                                 </h4>
-                                <h4>Цена{% if goods.price_volume %} от{%  endif %}:
+                                <h4>Цена{% if goods.price_volume %} от{% endif %}:
                                     <span class="strong price">
                                     {% if goods.random_item.price %}
                                         {{ goods.random_item.price }}
