@@ -2,67 +2,56 @@
 @import "mixins";
 
 .menu-product {
-  height: 60px;
+  height: 48px;
   width: 100%;
   background-color: $colorSecondary;
   position: fixed;
   z-index: 10;
 }
 
-.main-btn {
-  text-align: center;
-  padding: 8px 0;
-  @include brd-standard;
-  background-color: $colorSecondary;
-  border-color: $colorPrimary;
-  //box-shadow: 4px 4px 4px 2px $colorSecondary;
-  transition: transorm 0.6s;
-  transform: scale(1);
+.menu-items {
+  //height: 48px;
+  width: 100%;
+  background-color: $colorPrimary;
+  top: 48px;
+  position: fixed;
+  z-index: 7;
+  height: 80px;
 
-  &:hover {
-    box-shadow: none;
-    transform: scale(0.95);
-  }
-}
-
-.submenu-group {
-  margin: 12px 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, 206px);
-  gap: 12px;
-
-  &__logo {
-    height: 16px;
+  &__items {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    //gap: 30px;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 90%;
   }
 
   &__item {
-    text-align: center;
-    color: $colorPrimary;
-    padding: 8px 0;
-    @include brd-standard;
-    border-color: $colorPrimary;
-    transform: scale(0.95);
+    width: 200px;
 
-    &_inactive {
-      box-shadow: 4px 4px 4px 2px $colorSecondary;
-      transition: transorm 0.6s;
-      transform: scale(1);
+    a {
+      display: inline-block;
+      padding: 8px;
+      text-wrap: nowrap;
+      color: $colorSecondary50;
+    }
 
-      &:hover {
-        box-shadow: none;
-        transform: scale(0.95);
-      }
+    &:hover a {
+      transform: scale(1.05);
     }
   }
 }
 
+
+
 .filter {
   z-index: 5;
   position: fixed;
-  top: 66px;
-  right: calc((100% - 1300px) / 2);
+  top: 70px;
+  right: calc((100% - 1280px) / 2);
   transition: max-height 0.6s ease;
-  max-height: 30px;
+  max-height: 40px;
   height: 100%;
   overflow: hidden;
 
@@ -86,8 +75,12 @@
       align-items: center;
       @include brd-standard;
       border-color: transparent;
-      padding:  4px 24px 4px 10px;
-      background-color: rgba($colorSecondary, 0.5)
+      padding: 8px 24px 8px 10px;
+      background-color: rgba($colorSecondary, 1);
+
+      & * {
+        color: $colorSecondary50;
+      }
     }
   }
 
@@ -137,6 +130,7 @@
     justify-content: end;
     gap: 8px;
   }
+
   &__price-range {
     padding: 6px;
     display: flex;
@@ -146,19 +140,20 @@
   }
 }
 
-.input-range{
+.input-range {
   color: $colorPrimary;
   accent-color: $colorPrimary;
   width: 70%;
-    &__value {
-      font-size: 18px;
-      //font-weight: 600;
-    }
+
+  &__value {
+    font-size: 18px;
+    //font-weight: 600;
+  }
 }
 
 .product-header {
   width: 100%;
-  padding-top: 66px;
+  padding-top: 140px;
   display: flex;
   justify-content: space-between;
 }
@@ -182,7 +177,7 @@
   }
 }
 
-.filter-badge{
+.filter-badge {
   position: absolute;
   font-size: 13px;
   right: 0;
@@ -193,4 +188,20 @@
   border-radius: 8px;
   display: none;
   color: $colorSecondary50;
+}
+
+.catalogue-product {
+  position: relative;
+
+  &__item {
+    //position: absolute;
+    display: none;
+    background-color: $colorSecondary50;
+  }
+
+  &:hover &__item {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+  }
+
 }
