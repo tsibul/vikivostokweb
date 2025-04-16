@@ -9,26 +9,25 @@
                 <form class="layout__header-right" action="{% url 'viki_web:layout' %}" method="post">
                     {% csrf_token %}
                     <i class="fa fa-solid fa-magnifying-glass" aria-hidden="true"></i>
-                    <input class="layout__input" type="text" placeholder="поиск..." name="search">
+                    <input class="layout__input" type="text" placeholder="Поиск шаблона..." name="search">
                     <button type="submit" class="btn btn__save">Поиск</button>
-                    <a href=""><button class="btn btn__cancel">Сбросить</button></a>
+                    <a href="{% url 'viki_web:layout' %}"><button type="button" class="btn btn__cancel">Сбросить</button></a>
                 </form>
             </div>
             <div class="layout-content">
+                <div class="layout-content__header">Доступные шаблоны</div>
                 <div class="layout-content__row">
-                    <div class="layout-content__title_item">название</div>
-                    {#                    <div class="layout-content__title_item">товар</div>#}
-                    <div class="layout-content__title_item">шаблон (pdf) </div>
+                    <div class="layout-content__title_item">Название шаблона</div>
+                    <div class="layout-content__title_item">Файл шаблона</div>
                 </div>
                 <hr class="hr">
                 <div class="layout-content__rows">
                     {% for layout in layouts %}
                         <div class="layout-content__row">
                             <div class="layout-content__row_item">{{ layout.name }}</div>
-                            {#                        <div class="layout-content__row_item">{{ layout.goods__name}}</div>#}
                             <a class="layout-content__row_file" href="{%  static 'viki_web_cms/files/layout/' %}{{ layout.layout.layout.url }}" target="_blank">
-                                <i class="fa-regular fa-folder"></i>
-                                {{ layout.layout.name }}
+                                <i class="fa-regular fa-file-pdf"></i>
+                                Открыть шаблон
                             </a>
                         </div>
                     {% endfor %}
