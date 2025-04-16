@@ -150,9 +150,10 @@ input[type=checkbox] {
   width: 100%;
   background-color: #009EA3;
   position: sticky;
-  margin-top: 150px;
+  margin-top: 180px;
   top: 0;
   z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 .menu__line {
   display: flex;
@@ -168,15 +169,33 @@ input[type=checkbox] {
 .menu__item {
   cursor: pointer;
   padding: 16px 0;
+  position: relative;
 }
-.menu__item div, .menu__item img {
+.menu__item a, .menu__item div {
   display: inline-block;
+  position: relative;
+  transition: all 0.2s ease;
+  color: #F2FFFF;
 }
-.menu__item :hover {
-  font-weight: 800;
+.menu__item a::after, .menu__item div::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -3px;
+  left: 0;
+  background-color: #F2FFFF;
+  transition: width 0.3s ease;
+}
+.menu__item:hover a::after, .menu__item:hover div::after {
+  width: 100%;
 }
 .menu__logo {
   height: 40px;
+  transition: transform 0.2s ease;
+}
+.menu__logo:hover {
+  transform: scale(1.05);
 }
 .menu__right {
   display: flex;
@@ -189,27 +208,64 @@ input[type=checkbox] {
   gap: 8px;
   cursor: pointer;
   padding: 16px 0;
+  position: relative;
 }
-.menu__cabinet:hover div {
-  font-weight: 600;
+.menu__cabinet i {
+  color: #F2FFFF;
+}
+.menu__cabinet div {
+  color: #F2FFFF;
+  position: relative;
+}
+.menu__cabinet div::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -3px;
+  left: 0;
+  background-color: #F2FFFF;
+  transition: width 0.3s ease;
+}
+.menu__cabinet:hover div::after {
+  width: 100%;
 }
 
 .cart {
   display: flex;
   align-items: center;
 }
-.cart:hover {
-  transform: scale(1.2);
+.cart a {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.cart a::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -3px;
+  left: 0;
+  background-color: #F2FFFF;
+  transition: width 0.3s ease;
+}
+.cart a img {
+  filter: brightness(0) invert(1);
+}
+.cart:hover a::after {
+  width: 100%;
 }
 
 .header {
   background-color: #0F4880;
+  margin-bottom: 60px;
 }
 .header__line {
-  height: 240px;
+  height: 270px;
   display: flex;
   justify-content: space-between;
-  margin: -210px 0 30px 0;
+  margin: -240px 0 0 0;
 }
 .header__left {
   color: #F2FFFF;
@@ -223,12 +279,26 @@ input[type=checkbox] {
   align-items: center;
   gap: 8px;
   text-decoration: none;
+  margin-top: 15px;
+  margin-bottom: 60px;
+  padding: 6px 12px;
+  background-color: rgba(0, 158, 163, 0.2);
+  border-radius: 20px;
+  transition: background-color 0.2s ease;
+  width: fit-content;
+}
+.header__social:hover {
+  background-color: rgba(0, 158, 163, 0.3);
 }
 .header__social_item {
   color: #F2FFFF;
 }
 .header__right img {
   height: 100%;
+  transition: opacity 0.2s ease;
+}
+.header__right img:hover {
+  opacity: 0.95;
 }
 
 .catalogue {
@@ -245,19 +315,30 @@ input[type=checkbox] {
   width: 220px;
   padding: 8px 0;
   z-index: 9;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 .catalogue__item li {
   padding: 8px;
+  transition: background-color 0.2s ease;
 }
 .catalogue__item li:hover {
-  transform: scale(1);
   background-color: rgba(0, 158, 163, 0.1);
 }
 .catalogue:hover .catalogue__item {
   display: block;
-  transform: scale(1);
+  animation: fadeIn 0.2s ease-out;
 }
 
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 @media (max-width: 1360px) {
   .menu__left {
     gap: 20px;
@@ -576,6 +657,7 @@ input[type=checkbox] {
 }
 .menu-product .menu__left .menu__item a i {
   font-size: 18px;
+  color: #F2FFFF;
 }
 .menu-product .menu__right {
   display: flex;
@@ -616,7 +698,7 @@ input[type=checkbox] {
   top: 60px;
   position: fixed;
   z-index: 7;
-  height: 70px;
+  height: 80px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.06);
 }
 .menu-items .menu__line {
@@ -631,6 +713,7 @@ input[type=checkbox] {
   align-items: center;
   flex-wrap: wrap;
   width: 90%;
+  margin-left: -16px;
 }
 .menu-items__item {
   position: relative;

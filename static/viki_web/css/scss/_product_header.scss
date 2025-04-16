@@ -35,6 +35,7 @@
       
       i {
         font-size: 18px;
+        color: $colorSecondary50;
       }
     }
   }
@@ -84,7 +85,7 @@
   top: 60px;
   position: fixed;
   z-index: 7;
-  height: 70px;
+  height: 80px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.06);
 
   .menu__line {
@@ -100,6 +101,7 @@
     align-items: center;
     flex-wrap: wrap;
     width: 90%;
+    margin-left: -16px;
   }
 
   &__item {
