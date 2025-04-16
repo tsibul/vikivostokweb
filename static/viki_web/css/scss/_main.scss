@@ -63,7 +63,7 @@ input[type='checkbox'] {
     }
 
     &:hover {
-      background-color: $colorSecondary50;
+      background-color: transparent;
       color: $colorPrimary950;
     }
 
@@ -84,7 +84,7 @@ input[type='checkbox'] {
     }
 
     &:hover {
-      background-color: $colorSecondary50;
+      background-color: transparent;
       color: $colorSecondary500;
     }
 
@@ -107,7 +107,7 @@ input[type='checkbox'] {
     color: $colorSecondary50;
 
     &:hover {
-      background-color: $colorSecondary50;
+      background-color: transparent;
       color: $colorNeutral500;
     }
   }
