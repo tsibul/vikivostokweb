@@ -50,6 +50,8 @@ input[type='checkbox'] {
   cursor: pointer;
   display: flex;
   align-items: center;
+  justify-content: center;
+  text-align: center;
 
   &__save {
     background-color: $colorPrimary500;
