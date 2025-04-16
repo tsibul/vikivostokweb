@@ -20,7 +20,7 @@ export async function checkCompany(e, dialog){
     const dialogForm = dialog.querySelector('form');
     const response = await sendFormData('/check_company/', dialogForm);
     if (response.status === 'ok') {
-        const dialogInputs = companySaveDialog.querySelectorAll('input');
+        const dialogInputs = companySaveDialog.querySelectorAll('input, textarea');
         [...dialogInputs].forEach(input => {
             if (input.type === 'checkbox') {
                 input.checked = response.company[input.name];
