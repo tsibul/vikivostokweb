@@ -43,9 +43,11 @@
                     </a>
                 </form>
                 <nav class="cart tooltip">
-                    <img src="{% static 'viki_web/icons/cart_menu.svg' %}"
-                         alt="cart" class="">
-                    <div class="tooltip-text">корзина</div>
+                    <a href="{% url 'viki_web:cart' %}">
+                        <img src="{% static 'viki_web/icons/cart_menu.svg' %}"
+                             alt="cart" class="">
+                        <div class="tooltip-text">корзина</div>
+                    </a>
                 </nav>
                 <nav class="menu__cabinet catalogue">
                     <i class="fa-regular fa-user"></i>
@@ -148,7 +150,7 @@
             <ul class="menu-items__items">
                 {% for category in product_groups %}
                     <li class="menu-items__item">
-                        <a href="{%  url 'viki_web:products'  category.product_group_url %}">{{ category.short_name }}</a>
+                        <a href="{% url 'viki_web:products'  category.product_group_url %}">{{ category.short_name }}</a>
                     </li>
                 {% endfor %}
             </ul>

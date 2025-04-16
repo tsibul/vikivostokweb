@@ -24,4 +24,5 @@ urlpatterns = [
     path('products/', views.catalogue_search, name='catalogue'),
     path('shablon', views.layout, name='layout' ),
     path('price', views.price, name='price'),
+    path('cart', views.cart, name='cart'),
 ]

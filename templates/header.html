@@ -46,9 +46,11 @@
             </nav>
             <div class="menu__right">
                 <nav class="cart tooltip">
+                    <a href="{% url 'viki_web:cart' %}">
                     <img src="{% static 'viki_web/icons/cart_menu.svg' %}"
                          alt="cart" class="">
                     <div class="tooltip-text">корзина</div>
+                    </a>
                 </nav>
                 <nav class="menu__cabinet catalogue">
                     <i class="fa-regular fa-user"></i>

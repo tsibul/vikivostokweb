@@ -7,3 +7,4 @@ from viki_web.views.index import *
 from viki_web.views.layout import *
 from viki_web.views.price import *
 from viki_web.views.catalogue import *
+from viki_web.views.cart import *

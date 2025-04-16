@@ -1,0 +1,378 @@
+{% extends 'header.html' %}
+{% load static %}
+{% block content %}
+    <script src="{% static 'viki_web/js/layout.js' %}" defer type="module"></script>
+    <script src="{% static 'viki_web/js/cart.js' %}" defer type="module"></script>
+
+    <main>
+        <div class="container">
+            <h1 class="cart-page__title">Корзина</h1>
+            
+            <div class="cart-page">
+                <!-- Cart items -->
+                <div class="cart-page__items">
+                    <!-- Cart item 1 -->
+                    <div class="cart-item">
+                        <div class="cart-item__image">
+                            <img src="{% static 'viki_web/icons/logo.svg' %}" alt="Товар 1">
+                        </div>
+                        <div class="cart-item__info">
+                            <h3 class="cart-item__name">Ручка металлическая Premium</h3>
+                            <p class="cart-item__article">Артикул: PEN-001</p>
+                            <p class="cart-item__description">КОРПУС: Синий (PANTONE 286C) ДЕТАЛИ: Серебро</p>
+                        </div>
+                        <div class="cart-item__price">
+                            <p class="cart-item__price-single">1,200 руб.</p>
+                        </div>
+                        <div class="cart-item__quantity">
+                            <button class="cart-item__quantity-btn cart-item__quantity-decrease">-</button>
+                            <input type="number" class="cart-item__quantity-input" value="2" min="1">
+                            <button class="cart-item__quantity-btn cart-item__quantity-increase">+</button>
+                        </div>
+                        <div class="cart-item__total">
+                            <p class="cart-item__total-price">2,400 руб.</p>
+                        </div>
+                        <div class="cart-item__actions">
+                            <button class="cart-item__remove">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Branding section -->
+                        <div class="cart-item__branding">
+                            <div class="branding-header">
+                                <h4>Брендирование</h4>
+                                <button class="branding-add-btn" data-item="PEN-001">+ Добавить</button>
+                            </div>
+                            
+                            <div class="branding-items">
+                                <div class="branding-item">
+                                    <div class="branding-item__row">
+                                        <div class="branding-field branding-field-type">
+                                            <select class="branding-type">
+                                                <option value="laser">Лазерная гравировка</option>
+                                                <option value="uv">УФ-печать</option>
+                                                <option value="tampo">Тампопечать</option>
+                                            </select>
+                                        </div>
+                                        <div class="branding-field branding-field-location">
+                                            <select class="branding-location">
+                                                <option value="barrel">Корпус</option>
+                                                <option value="cap">Колпачок</option>
+                                                <option value="clip">Клип</option>
+                                            </select>
+                                        </div>
+                                        <div class="branding-field branding-field-colors">
+                                            <select class="branding-colors">
+                                                <option value="1">1 цвет</option>
+                                                <option value="2">2 цвета</option>
+                                                <option value="3">3 цвета</option>
+                                                <option value="4">4 цвета</option>
+                                            </select>
+                                        </div>
+                                        <div class="branding-field branding-checkbox">
+                                            <input type="checkbox" id="second-pass-1" class="branding-second-pass">
+                                            <label for="second-pass-1">2й проход</label>
+                                        </div>
+                                        <div class="branding-field branding-field-price">
+                                            <input type="number" class="branding-price" value="500" min="0">
+                                            <span>руб.</span>
+                                        </div>
+                                        <div class="branding-field branding-field-total">
+                                            <span class="branding-total-price">1,000 руб.</span>
+                                        </div>
+                                        <div class="branding-field branding-field-actions">
+                                            <button class="branding-remove-btn"><i class="fa-solid fa-trash"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="branding-subtotal">
+                                <span>Итого за нанесение:</span>
+                                <span class="branding-subtotal-price">1,000 руб.</span>
+                            </div>
+                        </div>
+                        <div class="cart-item__final-total">
+                            <span>Итого за товар с нанесением:</span>
+                            <span class="cart-item__final-total-price">3,400 руб.</span>
+                        </div>
+                    </div>
+
+                    <!-- Cart item 2 -->
+                    <div class="cart-item">
+                        <div class="cart-item__image">
+                            <img src="{% static 'viki_web/icons/logo.svg' %}" alt="Товар 2">
+                        </div>
+                        <div class="cart-item__info">
+                            <h3 class="cart-item__name">Блокнот корпоративный</h3>
+                            <p class="cart-item__article">Артикул: NB-345</p>
+                            <p class="cart-item__description">ОБЛОЖКА: Красный (PANTONE 186C) СПИРАЛЬ: Серебро</p>
+                        </div>
+                        <div class="cart-item__price">
+                            <p class="cart-item__price-single">800 руб.</p>
+                        </div>
+                        <div class="cart-item__quantity">
+                            <button class="cart-item__quantity-btn cart-item__quantity-decrease">-</button>
+                            <input type="number" class="cart-item__quantity-input" value="3" min="1">
+                            <button class="cart-item__quantity-btn cart-item__quantity-increase">+</button>
+                        </div>
+                        <div class="cart-item__total">
+                            <p class="cart-item__total-price">2,400 руб.</p>
+                        </div>
+                        <div class="cart-item__actions">
+                            <button class="cart-item__remove">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Branding section -->
+                        <div class="cart-item__branding">
+                            <div class="branding-header">
+                                <h4>Брендирование</h4>
+                                <button class="branding-add-btn" data-item="NB-345">+ Добавить</button>
+                            </div>
+                            
+                            <div class="branding-items">
+                                <div class="branding-item">
+                                    <div class="branding-item__row">
+                                        <div class="branding-field branding-field-type">
+                                            <select class="branding-type">
+                                                <option value="offset">Офсетная печать</option>
+                                                <option value="digital">Цифровая печать</option>
+                                                <option value="emboss">Тиснение</option>
+                                            </select>
+                                        </div>
+                                        <div class="branding-field branding-field-location">
+                                            <select class="branding-location">
+                                                <option value="cover">Обложка</option>
+                                                <option value="back">Задняя сторона</option>
+                                                <option value="pages">Блок страниц</option>
+                                            </select>
+                                        </div>
+                                        <div class="branding-field branding-field-colors">
+                                            <select class="branding-colors">
+                                                <option value="1">1 цвет</option>
+                                                <option value="2">2 цвета</option>
+                                                <option value="3">3 цвета</option>
+                                                <option value="4">4 цвета</option>
+                                            </select>
+                                        </div>
+                                        <div class="branding-field branding-checkbox">
+                                            <input type="checkbox" id="second-pass-2" class="branding-second-pass">
+                                            <label for="second-pass-2">2й проход</label>
+                                        </div>
+                                        <div class="branding-field branding-field-price">
+                                            <input type="number" class="branding-price" value="800" min="0">
+                                            <span>руб.</span>
+                                        </div>
+                                        <div class="branding-field branding-field-total">
+                                            <span class="branding-total-price">2,400 руб.</span>
+                                        </div>
+                                        <div class="branding-field branding-field-actions">
+                                            <button class="branding-remove-btn"><i class="fa-solid fa-trash"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="branding-subtotal">
+                                <span>Итого за нанесение:</span>
+                                <span class="branding-subtotal-price">2,400 руб.</span>
+                            </div>
+                        </div>
+                        <div class="cart-item__final-total">
+                            <span>Итого за товар с нанесением:</span>
+                            <span class="cart-item__final-total-price">4,800 руб.</span>
+                        </div>
+                    </div>
+
+                    <!-- Cart item 3 -->
+                    <div class="cart-item">
+                        <div class="cart-item__image">
+                            <img src="{% static 'viki_web/icons/logo.svg' %}" alt="Товар 3">
+                        </div>
+                        <div class="cart-item__info">
+                            <h3 class="cart-item__name">Кружка керамическая</h3>
+                            <p class="cart-item__article">Артикул: MUG-102</p>
+                            <p class="cart-item__description">ОСНОВА: Зеленый (PANTONE 354C) РУЧКА: Белый</p>
+                        </div>
+                        <div class="cart-item__price">
+                            <p class="cart-item__price-single">550 руб.</p>
+                        </div>
+                        <div class="cart-item__quantity">
+                            <button class="cart-item__quantity-btn cart-item__quantity-decrease">-</button>
+                            <input type="number" class="cart-item__quantity-input" value="5" min="1">
+                            <button class="cart-item__quantity-btn cart-item__quantity-increase">+</button>
+                        </div>
+                        <div class="cart-item__total">
+                            <p class="cart-item__total-price">2,750 руб.</p>
+                        </div>
+                        <div class="cart-item__actions">
+                            <button class="cart-item__remove">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                        
+                        <!-- Branding section -->
+                        <div class="cart-item__branding">
+                            <div class="branding-header">
+                                <h4>Брендирование</h4>
+                                <button class="branding-add-btn" data-item="MUG-102">+ Добавить</button>
+                            </div>
+                            
+                            <div class="branding-items">
+                                <div class="branding-item">
+                                    <div class="branding-item__row">
+                                        <div class="branding-field branding-field-type">
+                                            <select class="branding-type">
+                                                <option value="sublimation">Сублимация</option>
+                                                <option value="decal">Деколь</option>
+                                                <option value="uv">УФ-печать</option>
+                                            </select>
+                                        </div>
+                                        <div class="branding-field branding-field-location">
+                                            <select class="branding-location">
+                                                <option value="front">Лицевая сторона</option>
+                                                <option value="back">Обратная сторона</option>
+                                                <option value="handle">Ручка</option>
+                                            </select>
+                                        </div>
+                                        <div class="branding-field branding-field-colors">
+                                            <select class="branding-colors">
+                                                <option value="1">1 цвет</option>
+                                                <option value="2">2 цвета</option>
+                                                <option value="3">3 цвета</option>
+                                                <option value="4">4 цвета</option>
+                                                <option value="full">Полноцвет</option>
+                                            </select>
+                                        </div>
+                                        <div class="branding-field branding-checkbox">
+                                            <input type="checkbox" id="second-pass-3" class="branding-second-pass">
+                                            <label for="second-pass-3">2й проход</label>
+                                        </div>
+                                        <div class="branding-field branding-field-price">
+                                            <input type="number" class="branding-price" value="350" min="0">
+                                            <span>руб.</span>
+                                        </div>
+                                        <div class="branding-field branding-field-total">
+                                            <span class="branding-total-price">1,750 руб.</span>
+                                        </div>
+                                        <div class="branding-field branding-field-actions">
+                                            <button class="branding-remove-btn"><i class="fa-solid fa-trash"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="branding-subtotal">
+                                <span>Итого за нанесение:</span>
+                                <span class="branding-subtotal-price">1,750 руб.</span>
+                            </div>
+                        </div>
+                        <div class="cart-item__final-total">
+                            <span>Итого за товар с нанесением:</span>
+                            <span class="cart-item__final-total-price">4,500 руб.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cart summary -->
+                <div class="cart-summary">
+                    <div class="cart-summary__info">
+                        <p class="cart-summary__items">Товаров в корзине: <span>3</span></p>
+                        <p class="cart-summary__subtotal">Стоимость товаров: <span>7,550 руб.</span></p>
+                        <p class="cart-summary__branding-total">Стоимость нанесения: <span>5,150 руб.</span></p>
+                        <p class="cart-summary__total">Итого: <span>12,700 руб.</span></p>
+                    </div>
+                    <div class="cart-summary__actions">
+                        <button class="btn btn__cancel cart-summary__continue">Продолжить покупки</button>
+                        <button class="btn btn__save cart-summary__checkout">Оформить заказ</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Empty cart message -->
+            <div class="cart-empty">
+                <div class="cart-empty__icon">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                </div>
+                <h2 class="cart-empty__title">Ваша корзина пуста</h2>
+                <p class="cart-empty__text">Добавьте товары в корзину, чтобы оформить заказ</p>
+                <a href="/" class="btn btn__save cart-empty__button">Перейти к каталогу</a>
+            </div>
+
+            <!-- Секция "Вы смотрели" -->
+            <section class="cart-page__recently-viewed">
+                <h3>Вы смотрели</h3>
+                <div class="recently-viewed">
+                    <div class="recently-viewed__items">
+                        <div class="recently-viewed__item">
+                            <div class="recently-viewed__img">
+                                <img src="/static/viki_web/img/pen1.jpg" alt="Ручка Parker">
+                            </div>
+                            <div class="recently-viewed__info">
+                                <div class="recently-viewed__name">Ручка Parker Jotter</div>
+                                <div class="recently-viewed__article">Артикул: PEN001</div>
+                                <div class="recently-viewed__description">Стильная шариковая ручка с синими чернилами. Корпус из нержавеющей стали.</div>
+                                <div class="recently-viewed__price"><span>Цена:</span> 350 руб.</div>
+                                <div class="recently-viewed__colors">
+                                    <div class="square blue color-active">
+                                        <span class="tooltip-text">Синий</span>
+                                    </div>
+                                    <div class="square red">
+                                        <span class="tooltip-text">Красный</span>
+                                    </div>
+                                    <div class="square black">
+                                        <span class="tooltip-text">Черный</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="recently-viewed__cart-btn btn btn__save"><i class="fa-solid fa-cart-shopping"></i>&nbsp; В корзину</button>
+                        </div>
+                        <div class="recently-viewed__item">
+                            <div class="recently-viewed__img">
+                                <img src="/static/viki_web/img/notebook1.jpg" alt="Блокнот Moleskine">
+                            </div>
+                            <div class="recently-viewed__info">
+                                <div class="recently-viewed__name">Блокнот Moleskine</div>
+                                <div class="recently-viewed__article">Артикул: NB002</div>
+                                <div class="recently-viewed__description">Профессиональный блокнот в твердой обложке. 240 страниц, бумага плотностью 80 г/м².</div>
+                                <div class="recently-viewed__price"><span>Цена:</span> 950 руб.</div>
+                                <div class="recently-viewed__colors">
+                                    <div class="square green color-active">
+                                        <span class="tooltip-text">Зеленый</span>
+                                    </div>
+                                    <div class="square orange">
+                                        <span class="tooltip-text">Оранжевый</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="recently-viewed__cart-btn btn btn__save"><i class="fa-solid fa-cart-shopping"></i>&nbsp; В корзину</button>
+                        </div>
+                        <div class="recently-viewed__item">
+                            <div class="recently-viewed__img">
+                                <img src="/static/viki_web/img/mug1.jpg" alt="Кружка керамическая">
+                            </div>
+                            <div class="recently-viewed__info">
+                                <div class="recently-viewed__name">Кружка керамическая</div>
+                                <div class="recently-viewed__article">Артикул: MUG003</div>
+                                <div class="recently-viewed__description">Керамическая кружка объемом 350 мл. Подходит для горячих и холодных напитков.</div>
+                                <div class="recently-viewed__price"><span>Цена:</span> 250 руб.</div>
+                                <div class="recently-viewed__colors">
+                                    <div class="square white color-active">
+                                        <span class="tooltip-text">Белый</span>
+                                    </div>
+                                    <div class="square yellow">
+                                        <span class="tooltip-text">Желтый</span>
+                                    </div>
+                                    <div class="square purple">
+                                        <span class="tooltip-text">Фиолетовый</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="recently-viewed__cart-btn btn btn__save"><i class="fa-solid fa-cart-shopping"></i>&nbsp; В корзину</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+{% endblock %}
