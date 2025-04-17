@@ -7,11 +7,14 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
+  gap: 16px;
 }
 
 
 .product-hor {
   @include brd-standard;
+  border-color: transparent;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   width: 620px;
   min-height: 448px;
   padding: 32px 24px 16px 24px;
@@ -34,7 +37,7 @@
     min-height: 40px;
     margin-bottom: 16px;
 
-    &_big{
+    &_big {
       min-height: 58px;
     }
 
@@ -66,21 +69,23 @@
     padding: 8px 8px 4px 8px;
     border: 1px solid;
     border-radius: 8px 8px 0 0;
-    border-color: rgba($colorSecondary, 0.2) rgba($colorSecondary, 0.1) transparent rgba($colorSecondary, 0.2);
+    border-color: rgba($colorNeutral500, 0.08) rgba($colorNeutral500, 0.08) transparent rgba($colorNeutral500, 0.08);
     z-index: 1;
-    box-shadow: 4px -4px 2px 1px rgba($colorSecondary, 0.2);
+      //box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.08);
+
+    box-shadow: 2px -2px 2px 1px rgba($colorNeutral500, 0.08);
     cursor: pointer;
     overflow: hidden;
-    background-color: $colorSecondary50;
+    background-color:  rgba($colorNeutral500, 0.08);
   }
 
   &__tab-content {
     position: relative;
-    border: 1px solid rgba($colorSecondary, 0.2);
+    border: 1px solid rgba($colorNeutral500, 0.08);
     border-radius: 0 12px 12px 12px;
     height: 100px;
     margin: -1px 0 10px 0;
-    box-shadow: 4px -4px 8px 4px rgba($colorSecondary, 0.2);
+    box-shadow: 2px -2px 8px 4px rgba($colorNeutral500, 0.08);
     overflow: auto;
     z-index: 2;
   }

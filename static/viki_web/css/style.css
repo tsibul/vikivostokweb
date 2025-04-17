@@ -1021,7 +1021,7 @@ dialog.company-dialog textarea {
 .filter {
   z-index: 5;
   position: fixed;
-  top: 70px;
+  top: 80px;
   right: calc((100% - 1280px) / 2);
   transition: max-height 0.6s ease;
   max-height: 40px;
@@ -1312,11 +1312,14 @@ dialog.company-dialog textarea {
 .goods-group__item {
   border: 1px solid #0F4880;
   border-radius: 6px;
+  border-color: transparent;
+  background-color: #fff;
   display: inline-block;
   width: 100%;
   padding: 24px;
   text-align: center;
   transition: transform 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 .goods-group__item:hover {
   transform: scale(1.05);
@@ -1328,11 +1331,14 @@ dialog.company-dialog textarea {
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
+  gap: 16px;
 }
 
 .product-hor {
   border: 1px solid #0F4880;
   border-radius: 6px;
+  border-color: transparent;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   width: 620px;
   min-height: 448px;
   padding: 32px 24px 16px 24px;
@@ -1381,20 +1387,20 @@ dialog.company-dialog textarea {
   padding: 8px 8px 4px 8px;
   border: 1px solid;
   border-radius: 8px 8px 0 0;
-  border-color: rgba(0, 158, 163, 0.2) rgba(0, 158, 163, 0.1) transparent rgba(0, 158, 163, 0.2);
+  border-color: rgba(74, 74, 74, 0.08) rgba(74, 74, 74, 0.08) transparent rgba(74, 74, 74, 0.08);
   z-index: 1;
-  box-shadow: 4px -4px 2px 1px rgba(0, 158, 163, 0.2);
+  box-shadow: 2px -2px 2px 1px rgba(74, 74, 74, 0.08);
   cursor: pointer;
   overflow: hidden;
-  background-color: #F2FFFF;
+  background-color: rgba(74, 74, 74, 0.08);
 }
 .product-hor__tab-content {
   position: relative;
-  border: 1px solid rgba(0, 158, 163, 0.2);
+  border: 1px solid rgba(74, 74, 74, 0.08);
   border-radius: 0 12px 12px 12px;
   height: 100px;
   margin: -1px 0 10px 0;
-  box-shadow: 4px -4px 8px 4px rgba(0, 158, 163, 0.2);
+  box-shadow: 2px -2px 8px 4px rgba(74, 74, 74, 0.08);
   overflow: auto;
   z-index: 2;
 }
