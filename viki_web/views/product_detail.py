@@ -1,3 +1,4 @@
+import json
 import random
 
 from django.shortcuts import render, get_object_or_404
@@ -39,8 +40,30 @@ def product_detail(request, product_name):
 
     similar_goods, related_goods = similar_related_goods(request, goods)
 
+    item_dict = []
+    for item_el in item_list:
+        item_dict.append(catalogue_item_to_dict(item_el))
+
+    goods_dict = {
+        'goods_item': {
+            'id': goods.id,
+            'name': goods.name,
+            'details_number': goods.details_number,
+            'article': goods.article,
+        },
+        'item_list': item_dict,
+        'id_random': id_random,
+        'random_item': catalogue_item_to_dict(random_item),
+        'price': price,
+        'price_volume': price_volume,
+        'goods_description': goods_description,
+        'colors': list(colors),
+        'article_set': article_set,
+        'multicolor': goods.multicolor
+    }
+
     context = {
-        # 'categories': product_groups,
+        'data': json.dumps(goods_dict),
         'product_group': product_group,
         'product_groups': product_groups,
         'goods': {
@@ -63,6 +86,19 @@ def product_detail(request, product_name):
         'related_goods': related_goods,
     }
     return render(request, 'product_detail.html', context)
+
+
+def catalogue_item_to_dict(item_el):
+    return {
+        'color_description': item_el['color_description'],
+        'price': item_el['price'] if 'price' in item_el else None,
+        'item': {
+            'id': item_el['item'].id,
+            'name': item_el['item'].name,
+            'item_article': item_el['item'].item_article,
+            'image': item_el['item'].image.name,
+        }
+    }
 
 
 def create_item_list_details(goods_item, price_type):
