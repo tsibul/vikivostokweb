@@ -1,7 +1,7 @@
 {% extends 'header.html' %}
 {% load static %}
 {% block content %}
-    <script src="{% static 'viki_web/js/layout.js' %}" defer type="module"></script>
+{#    <script src="{% static 'viki_web/js/layout.js' %}" defer type="module"></script>#}
     <script src="{% static 'viki_web/js/cart.js' %}" defer type="module"></script>
 
     <main>
@@ -304,72 +304,7 @@
                 <h3 class="section-title">Вы смотрели</h3>
                 <div class="recently-viewed">
                     <div class="recently-viewed__items">
-                        <div class="recently-viewed__item">
-                            <div class="recently-viewed__img">
-                                <img src="/static/viki_web/img/pen1.jpg" alt="Ручка Parker">
-                            </div>
-                            <div class="recently-viewed__info">
-                                <div class="recently-viewed__name">Ручка Parker Jotter</div>
-                                <div class="recently-viewed__article">Артикул: PEN001</div>
-                                <div class="recently-viewed__description">Стильная шариковая ручка с синими чернилами. Корпус из нержавеющей стали.</div>
-                                <div class="recently-viewed__price"><span>Цена:</span> 350 руб.</div>
-                                <div class="recently-viewed__colors">
-                                    <div class="square blue color-active">
-                                        <span class="tooltip-text">Синий</span>
-                                    </div>
-                                    <div class="square red">
-                                        <span class="tooltip-text">Красный</span>
-                                    </div>
-                                    <div class="square black">
-                                        <span class="tooltip-text">Черный</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <button class="recently-viewed__cart-btn btn btn__save"><i class="fa-solid fa-cart-shopping"></i>&nbsp; В корзину</button>
-                        </div>
-                        <div class="recently-viewed__item">
-                            <div class="recently-viewed__img">
-                                <img src="/static/viki_web/img/notebook1.jpg" alt="Блокнот Moleskine">
-                            </div>
-                            <div class="recently-viewed__info">
-                                <div class="recently-viewed__name">Блокнот Moleskine</div>
-                                <div class="recently-viewed__article">Артикул: NB002</div>
-                                <div class="recently-viewed__description">Профессиональный блокнот в твердой обложке. 240 страниц, бумага плотностью 80 г/м².</div>
-                                <div class="recently-viewed__price"><span>Цена:</span> 950 руб.</div>
-                                <div class="recently-viewed__colors">
-                                    <div class="square green color-active">
-                                        <span class="tooltip-text">Зеленый</span>
-                                    </div>
-                                    <div class="square orange">
-                                        <span class="tooltip-text">Оранжевый</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <button class="recently-viewed__cart-btn btn btn__save"><i class="fa-solid fa-cart-shopping"></i>&nbsp; В корзину</button>
-                        </div>
-                        <div class="recently-viewed__item">
-                            <div class="recently-viewed__img">
-                                <img src="/static/viki_web/img/mug1.jpg" alt="Кружка керамическая">
-                            </div>
-                            <div class="recently-viewed__info">
-                                <div class="recently-viewed__name">Кружка керамическая</div>
-                                <div class="recently-viewed__article">Артикул: MUG003</div>
-                                <div class="recently-viewed__description">Керамическая кружка объемом 350 мл. Подходит для горячих и холодных напитков.</div>
-                                <div class="recently-viewed__price"><span>Цена:</span> 250 руб.</div>
-                                <div class="recently-viewed__colors">
-                                    <div class="square white color-active">
-                                        <span class="tooltip-text">Белый</span>
-                                    </div>
-                                    <div class="square yellow">
-                                        <span class="tooltip-text">Желтый</span>
-                                    </div>
-                                    <div class="square purple">
-                                        <span class="tooltip-text">Фиолетовый</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <button class="recently-viewed__cart-btn btn btn__save"><i class="fa-solid fa-cart-shopping"></i>&nbsp; В корзину</button>
-                        </div>
+                        <!-- Items will be populated dynamically from localStorage -->
                     </div>
                 </div>
             </section>

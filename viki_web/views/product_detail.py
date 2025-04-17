@@ -50,6 +50,7 @@ def product_detail(request, product_name):
             'name': goods.name,
             'details_number': goods.details_number,
             'article': goods.article,
+            'slug': goods.slug,
         },
         'item_list': item_dict,
         'id_random': id_random,

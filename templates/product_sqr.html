@@ -4,8 +4,8 @@
     <div class="container">
         <header class="product-header">
             <div class="product-header__title">
-                <h1>{{ product_group.name }}</h1>
-                <h3>
+                <h1 class="section-title">{{ product_group.name }}</h1>
+                <h3 class="product-header__subtitle">
                     {% if search %}
                         (поиск "{{ search }}")
                     {% else %}
@@ -258,14 +258,26 @@
         </div>
     </main>
     <section>
-    <div class="container">
-        <div class="goods-group">
-            {% for group in goods_groups %}
-                <a class="goods-group__item" href="{% url 'viki_web:goods_group' group.goods_group_url %}">{{ group.name }}</a>
-            {% endfor %}
+        <div class="container">
+            <div class="goods-group">
+                {% for group in goods_groups %}
+                    <a class="goods-group__item"
+                       href="{% url 'viki_web:goods_group' group.goods_group_url %}">{{ group.name }}</a>
+                {% endfor %}
+            </div>
         </div>
-    </div>
     </section>
+    <div class="container">
+    <section class="cart-page__recently-viewed">
+
+        <h3 class="section-title">Вы смотрели</h3>
+        <div class="recently-viewed">
+            <div class="recently-viewed__items">
+                <!-- Items will be populated dynamically from localStorage -->
+            </div>
+        </div>
+    </section>
+    </div>
 
 
 {% endblock %}

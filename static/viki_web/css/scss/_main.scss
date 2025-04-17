@@ -140,11 +140,10 @@ input[type='checkbox'] {
   @include brd-standard;
   padding: 2px 4px;
   position: absolute;
-  z-index: 8;
+  z-index: 20;
   top: -95%;
   left: 50%;
   overflow: visible;
-
 }
 
 .hr {

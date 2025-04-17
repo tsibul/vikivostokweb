@@ -234,9 +234,13 @@
 
 .product-header {
   width: 100%;
-  padding-top: 140px;
+  padding-top: 156px;
   display: flex;
   justify-content: space-between;
+
+  &__subtitle{
+    margin: -0.5rem 0 1.5rem 0;
+  }
 }
 
 .color-label {

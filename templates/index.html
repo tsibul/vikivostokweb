@@ -31,19 +31,21 @@
             <div class="container">
                 <h2 class="section-title">Новинки</h2>
                 <div class="section-description">
-{#                    <p>Представляем вашему вниманию последние новинки нашего каталога. Мы постоянно обновляем ассортимент, чтобы предложить вам самые современные и качественные товары.</p>#}
-{#                    <p>Каждая новинка проходит тщательный контроль качества и соответствует всем стандартам. Ознакомьтесь с нашими новыми поступлениями и выберите то, что подходит именно вам.</p>#}
+                    {#                    <p>Представляем вашему вниманию последние новинки нашего каталога. Мы постоянно обновляем ассортимент, чтобы предложить вам самые современные и качественные товары.</p>#}
+                    {#                    <p>Каждая новинка проходит тщательный контроль качества и соответствует всем стандартам. Ознакомьтесь с нашими новыми поступлениями и выберите то, что подходит именно вам.</p>#}
                 </div>
                 <div class="category">
                     {% for item in new_items %}
                         <a href="{% url 'viki_web:product_detail' item.slug %}" class="news__item">
                             <div class="news__img_frame">
-                                <img src="{% static 'viki_web_cms/files/item_photo/' %}{{ item.image }}" alt="{{ item.name }}" class="news__img">
+                                <img src="{% static 'viki_web_cms/files/item_photo/' %}{{ item.image }}"
+                                     alt="{{ item.name }}" class="news__img">
                             </div>
                             <div class="news__label">
                                 <h4 class="news__title">{{ item.name }}</h4>
                                 <div class="news__text">{{ item.description }}</div>
-                                <p class="news__price">Цена{% if item.price_volume %} от{% endif %}:&nbsp;{{ item.price }}</p>
+                                <p class="news__price">Цена{% if item.price_volume %} от{% endif %}
+                                    :&nbsp;{{ item.price }}</p>
                             </div>
                         </a>
                     {% endfor %}
@@ -54,9 +56,9 @@
         <section class="content-section">
             <div class="container">
                 <h2 class="section-title">Новости</h2>
-{#                <div class="section-description">#}
-{#                    <p>Следите за последними новостями нашей компании. Здесь вы найдете информацию о важных событиях, новых коллекциях и специальных предложениях.</p>#}
-{#                </div>#}
+                {#                <div class="section-description">#}
+                {#                    <p>Следите за последними новостями нашей компании. Здесь вы найдете информацию о важных событиях, новых коллекциях и специальных предложениях.</p>#}
+                {#                </div>#}
                 <div class="category">
                     <div class="news__item">
                         <div class="news__img_frame">
@@ -64,12 +66,24 @@
                         </div>
                         <div class="news__label">
                             <h4 class="news__title">Шахматы&nbsp;reChess</h4>
-                            <div class="news__text">Инновационный дизайн и высокое качество материалов. Узнайте больше о нашей новой коллекции.</div>
+                            <div class="news__text">Инновационный дизайн и высокое качество материалов. Узнайте больше о
+                                нашей новой коллекции.
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
+        <div class="container">
+            <section class="cart-page__recently-viewed">
+                <h3 class="section-title">Вы смотрели</h3>
+                <div class="recently-viewed">
+                    <div class="recently-viewed__items">
+                        <!-- Items will be populated dynamically from localStorage -->
+                    </div>
+                </div>
+            </section>
+        </div>
     </main>
 
 

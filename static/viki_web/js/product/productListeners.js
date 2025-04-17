@@ -13,6 +13,7 @@ import {clearFilter} from "./clearFilter.js";
 import {applyFilter} from "./applyFilter.js";
 import {filterBadge} from "./filterBadge.js";
 import {openSimpleConstructor} from "../constructor/openSimpleConstructor.js";
+import RecentlyViewed from "../recentGoods.js";
 
 /**
  * Initializes all product-related event listeners
@@ -20,53 +21,62 @@ import {openSimpleConstructor} from "../constructor/openSimpleConstructor.js";
  */
 export async function productListeners() {
 
-    const colorInputs = document.querySelectorAll('.filter .product-header__filter-content_checkbox-hidden');
-    const productColorLabels = document
-        .querySelectorAll('.products label.color-label');
-    const detailTabButtons = document.querySelectorAll('.tab-btn');
-    const chevronNext = document.querySelectorAll('.chev-next');
-    const priceRange = document.querySelector('.filter .input-range');
-    const filterSubmit = document.querySelector('.filter .btn__save');
-    const filterCancel = document.querySelector('.filter .btn__cancel');
-    const filterChecks = document.querySelectorAll(`.filter input[type='checkbox']`);
-    const btnMulticolor = document.querySelectorAll('.btn-multicolor');
+    document.addEventListener("DOMContentLoaded", async () => {
 
-    colorInputs.forEach(colorInput => {
-        colorInput.addEventListener('change', (e) => {
-            const label = document
-                .querySelector(`label[for="${colorInput.id}"]`)
-                .querySelector('.color-label__check');
-            colorInput.checked ? label.style.display = 'block' : label.removeAttribute('style');
+        const colorInputs = document.querySelectorAll('.filter .product-header__filter-content_checkbox-hidden');
+        const productColorLabels = document
+            .querySelectorAll('.products label.color-label');
+        const detailTabButtons = document.querySelectorAll('.tab-btn');
+        const chevronNext = document.querySelectorAll('.chev-next');
+        const priceRange = document.querySelector('.filter .input-range');
+        const filterSubmit = document.querySelector('.filter .btn__save');
+        const filterCancel = document.querySelector('.filter .btn__cancel');
+        const filterChecks = document.querySelectorAll(`.filter input[type='checkbox']`);
+        const btnMulticolor = document.querySelectorAll('.btn-multicolor');
+
+        colorInputs.forEach(colorInput => {
+            colorInput.addEventListener('change', (e) => {
+                const label = document
+                    .querySelector(`label[for="${colorInput.id}"]`)
+                    .querySelector('.color-label__check');
+                colorInput.checked ? label.style.display = 'block' : label.removeAttribute('style');
+            });
         });
-    });
 
-    productColorLabels.forEach(colorLabel => {
-        colorLabel.addEventListener('click', selectItemColor);
-    });
+        productColorLabels.forEach(colorLabel => {
+            colorLabel.addEventListener('click', selectItemColor);
+        });
 
-    detailTabButtons.forEach(tab => {
-        tab.addEventListener('click', changeDetailTab);
-    })
+        detailTabButtons.forEach(tab => {
+            tab.addEventListener('click', changeDetailTab);
+        })
 
-    chevronNext.forEach(chev => {
-        chev.addEventListener('click', selectNext);
-    });
+        chevronNext.forEach(chev => {
+            chev.addEventListener('click', selectNext);
+        });
 
-    priceRange.addEventListener('input', moveRange);
-    priceRange.addEventListener('input', e => {
-        filterBadge(filterChecks, priceRange);
-    });
+        priceRange.addEventListener('input', moveRange);
+        priceRange.addEventListener('input', e => {
+            filterBadge(filterChecks, priceRange);
+        });
 
-    filterCancel.addEventListener('click', clearFilter);
+        filterCancel.addEventListener('click', clearFilter);
 
-    filterSubmit.addEventListener('click', await applyFilter);
+        filterSubmit.addEventListener('click', await applyFilter);
 
-    filterChecks.forEach(check => {
-        check.addEventListener('change', e => {
-        filterBadge(filterChecks, priceRange);
-    });});
+        filterChecks.forEach(check => {
+            check.addEventListener('change', e => {
+                filterBadge(filterChecks, priceRange);
+            });
+        });
 
-    btnMulticolor.forEach(btn => {
-        btn.addEventListener('click', openSimpleConstructor);
+        btnMulticolor.forEach(btn => {
+            btn.addEventListener('click', openSimpleConstructor);
+        });
+
+        // Initialize recently viewed section if it exists
+        if (document.querySelector('.recently-viewed__items')) {
+            RecentlyViewed.init();
+        }
     });
 }

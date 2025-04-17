@@ -38,7 +38,8 @@
                                          {% if item.item.id != goods.id_random %}item-hidden item-opaque{% endif %}"
                                              data-id="{{ item.item.id }}"
                                         >
-                                            <img src="{% static 'viki_web_cms/files/item_add_photo/' %}{{ photo.add_photo }}"
+                                            <img src="
+                                                    {% static 'viki_web_cms/files/item_add_photo/' %}{{ photo.add_photo }}"
                                                  alt="Дополнительное изображение"
                                                  loading="lazy">
                                         </div>
@@ -50,7 +51,7 @@
                             <h1 class="">{{ goods.goods_item.name }}</h1>
                             <div class="detail-page__article">
                                 <h3>Артикул: {{ goods.random_item.item.item_article }}</h3>
-                                <h3 class="strong">Цена{% if goods.price_volume %} от{%  endif %}:
+                                <h3 class="strong">Цена{% if goods.price_volume %} от{% endif %}:
                                     {% if goods.random_item.price %}{{ goods.random_item.price }}{% else %}
                                         {{ goods.price }}{% endif %} руб.</h3>
                                 <div class="detail-page__color-description">{{ goods.random_item.color_description|safe }}</div>
@@ -191,13 +192,15 @@
                     <h3 class="section-title">Похожие товары</h3>
                     <div class="detail-page__related_list">
                         {% for similar in similar_goods %}
-                        <a href="{% url 'viki_web:product_detail' similar.slug %}" class="detail-page__related_item">
-                            <img src="{% static 'viki_web_cms/files/item_photo/' %}{{ similar.image }}" alt="Похожий товар">
-                            <div class="detail-page__related_info">
-                                <h4>{{ similar.name}}</h4>
-                                <p class="strong">Цена: {{ similar.price }}руб.</p>
-                            </div>
-                        </a>
+                            <a href="{% url 'viki_web:product_detail' similar.slug %}"
+                               class="detail-page__related_item">
+                                <img src="{% static 'viki_web_cms/files/item_photo/' %}{{ similar.image }}"
+                                     alt="Похожий товар">
+                                <div class="detail-page__related_info">
+                                    <h4>{{ similar.name }}</h4>
+                                    <p class="strong">Цена: {{ similar.price }}руб.</p>
+                                </div>
+                            </a>
                         {% endfor %}
                     </div>
                 </section>
@@ -206,16 +209,30 @@
                     <h3 class="section-title">Сопутствующие товары</h3>
                     <div class="detail-page__related_list">
                         {% for similar in related_goods %}
-                        <a href="{% url 'viki_web:product_detail' similar.slug %}" class="detail-page__related_item">
-                            <img src="{% static 'viki_web_cms/files/item_photo/' %}{{ similar.image }}" alt="Сопутствующий товар">
-                            <div class="detail-page__related_info">
-                                <h4>{{ similar.name}}</h4>
-                                <p class="strong">Цена{% if similar.price_volume %} от{% endif %}: {{ similar.price }}руб.</p>
-                            </div>
-                        </a>
+                            <a href="{% url 'viki_web:product_detail' similar.slug %}"
+                               class="detail-page__related_item">
+                                <img src="{% static 'viki_web_cms/files/item_photo/' %}{{ similar.image }}"
+                                     alt="Сопутствующий товар">
+                                <div class="detail-page__related_info">
+                                    <h4>{{ similar.name }}</h4>
+                                    <p class="strong">Цена{% if similar.price_volume %} от{% endif %}
+                                        : {{ similar.price }}руб.</p>
+                                </div>
+                            </a>
                         {% endfor %}
                     </div>
                 </section>
+
+                <section class="cart-page__recently-viewed">
+
+                    <h3 class="section-title">Вы смотрели</h3>
+                    <div class="recently-viewed">
+                        <div class="recently-viewed__items">
+                            <!-- Items will be populated dynamically from localStorage -->
+                        </div>
+                    </div>
+                </section>
+
             </div>
         </div>
     </main>

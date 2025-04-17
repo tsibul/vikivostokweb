@@ -1,6 +1,6 @@
 'use strict';
 
-import CartAlert from './cart_alert.js';
+import RecentlyViewed from './recentGoods.js';
 
 /**
  * Инициализация функций корзины при загрузке документа
@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initCartQuantity();
     initCartItemRemove();
     initBranding();
-    initRecentlyViewed();
+    RecentlyViewed.init();
 });
 
 /**
@@ -409,55 +409,4 @@ function createBrandingItem(itemArticle, index) {
     `;
     
     return div;
-}
-
-// Функционал блока "Вы смотрели"
-function initRecentlyViewed() {
-  // Обработчики для элементов выбора цвета
-  const colorSquares = document.querySelectorAll('.recently-viewed__colors .square');
-  
-  if (colorSquares.length === 0) return;
-  
-  // Обработчики для выбора цвета
-  colorSquares.forEach(square => {
-    square.addEventListener('click', function() {
-      // Убираем активный класс у всех квадратов в этой группе цветов
-      const parentColors = this.closest('.recently-viewed__colors');
-      const siblings = parentColors.querySelectorAll('.square');
-      
-      siblings.forEach(sibling => {
-        sibling.classList.remove('color-active');
-      });
-      
-      // Добавляем активный класс нажатому квадрату
-      this.classList.add('color-active');
-    });
-  });
-  
-  // Обработчики для кнопок "В корзину"
-  const addToCartButtons = document.querySelectorAll('.recently-viewed__cart-btn');
-  
-  addToCartButtons.forEach(btn => {
-    btn.addEventListener('click', function() {
-      const item = this.closest('.recently-viewed__item');
-      const name = item.querySelector('.recently-viewed__name').textContent;
-      const article = item.querySelector('.recently-viewed__article').textContent.replace('Артикул: ', '');
-      const selectedColor = item.querySelector('.square.color-active');
-      
-      if (selectedColor) {
-        const colorName = selectedColor.querySelector('.tooltip-text').textContent;
-        
-        // Показываем модальное окно подтверждения
-        const product = { name, article, color: colorName };
-        
-        CartAlert.showAddToCartModal(product, function(product) {
-          // Callback при подтверждении
-          console.log(`Товар "${product.name}" (${product.article}, цвет: ${product.color}) добавлен в корзину`);
-          
-          // Показываем уведомление об успешном добавлении
-          CartAlert.showSuccessMessage(product);
-        });
-      }
-    });
-  });
 }

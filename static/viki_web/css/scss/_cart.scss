@@ -599,7 +599,8 @@
     flex-direction: column;
     border-radius: 8px;
     padding: 1.25rem;
-    border: 1px solid $colorPrimary;
+    @include brd-standard;
+    border-color: transparent;
     background-color: #fff;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
     height: 100%;
@@ -615,11 +616,43 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    position: relative;
     
     img {
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
+    }
+  }
+  
+  &__nav-button {
+    position: absolute;
+    top: 5px;
+    width: 26px;
+    height: 26px;
+    background-color: rgba(255, 255, 255, 0.7);
+    color: $colorPrimary;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    font-size: 12px;
+    
+    &:hover {
+      background-color: $colorSecondary50;
+      color: $colorPrimary;
+    }
+    
+    &--prev {
+      left: 5px;
+    }
+    
+    &--next {
+      right: 5px;
     }
   }
   
@@ -681,17 +714,24 @@
   &__colors {
     display: flex;
     gap: 0.5rem;
-    margin-bottom: 0.75rem;
-    padding-top: 0.5rem;
+    margin-bottom: 0.5rem;
+    padding-top: 0.25rem;
     border-top: 1px solid $colorSecondary50;
     flex-wrap: wrap;
-    max-height: 4.5rem;
-    overflow-y: auto;
+
+    .square-small {
+      width: 18px;
+      height: 18px;
+      min-width: 18px;
+      border-radius: 4px;
+      z-index: 9;
+    }
   }
   
   &__cart-btn {
     width: 100%;
     margin-top: auto;
+    margin-bottom: 0.25rem;
   }
   
   @media (max-width: 768px) {

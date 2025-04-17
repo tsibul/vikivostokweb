@@ -125,7 +125,7 @@ input[type=checkbox] {
   border-radius: 6px;
   padding: 2px 4px;
   position: absolute;
-  z-index: 8;
+  z-index: 20;
   top: -95%;
   left: 50%;
   overflow: visible;
@@ -1115,9 +1115,12 @@ dialog.company-dialog textarea {
 
 .product-header {
   width: 100%;
-  padding-top: 140px;
+  padding-top: 156px;
   display: flex;
   justify-content: space-between;
+}
+.product-header__subtitle {
+  margin: -0.5rem 0 1.5rem 0;
 }
 
 .color-label {
@@ -2618,6 +2621,8 @@ dialog.company-dialog textarea {
   border-radius: 8px;
   padding: 1.25rem;
   border: 1px solid #0F4880;
+  border-radius: 6px;
+  border-color: transparent;
   background-color: #fff;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   height: 100%;
@@ -2632,11 +2637,39 @@ dialog.company-dialog textarea {
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 .recently-viewed__img img {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
+}
+.recently-viewed__nav-button {
+  position: absolute;
+  top: 5px;
+  width: 26px;
+  height: 26px;
+  background-color: rgba(255, 255, 255, 0.7);
+  color: #0F4880;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  font-size: 12px;
+}
+.recently-viewed__nav-button:hover {
+  background-color: #F2FFFF;
+  color: #0F4880;
+}
+.recently-viewed__nav-button--prev {
+  left: 5px;
+}
+.recently-viewed__nav-button--next {
+  right: 5px;
 }
 .recently-viewed__info {
   display: flex;
@@ -2689,16 +2722,22 @@ dialog.company-dialog textarea {
 .recently-viewed__colors {
   display: flex;
   gap: 0.5rem;
-  margin-bottom: 0.75rem;
-  padding-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  padding-top: 0.25rem;
   border-top: 1px solid #F2FFFF;
   flex-wrap: wrap;
-  max-height: 4.5rem;
-  overflow-y: auto;
+}
+.recently-viewed__colors .square-small {
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  border-radius: 4px;
+  z-index: 9;
 }
 .recently-viewed__cart-btn {
   width: 100%;
   margin-top: auto;
+  margin-bottom: 0.25rem;
 }
 @media (max-width: 768px) {
   .recently-viewed__img {
