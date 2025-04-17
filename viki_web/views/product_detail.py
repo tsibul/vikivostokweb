@@ -1,9 +1,7 @@
 import random
 
-from django.db.models import F
 from django.shortcuts import render, get_object_or_404
 
-from viki_web.views import goods_filter_request
 from viki_web_cms.models.goods import Goods, GoodsSimilar
 from viki_web_cms.models import ProductGroup, CatalogueItemColor, ArticleDescription, CatalogueItem, CatalogueItemPhoto, \
     GoodsRelated
@@ -42,8 +40,9 @@ def product_detail(request, product_name):
     similar_goods, related_goods = similar_related_goods(request, goods)
 
     context = {
-        'categories': product_groups,
+        # 'categories': product_groups,
         'product_group': product_group,
+        'product_groups': product_groups,
         'goods': {
             'goods_item': goods,
             'item_list': item_list,
