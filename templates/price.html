@@ -4,7 +4,7 @@
     <script src="{% static 'viki_web/js/layout.js' %}" defer type="module"></script>
     <div class="container">
         <div class="layout__header">
-            <h1 class="layout__header-left">Прайс-лист</h1>
+            <h1 class="section-title">Прайс-лист</h1>
             <form class="layout__header-right" action="{% url 'viki_web:price' %}" method="post">
                 {% csrf_token %}
                 <i class="fa fa-solid fa-magnifying-glass" aria-hidden="true"></i>

@@ -1,4 +1,4 @@
-{% extends 'header.html' %}
+{% extends 'product_header.html' %}
 {% load static %}
 {% block content %}
     <script src="{% static 'viki_web/js/product_detail.js' %}" defer type="module"></script>
@@ -188,7 +188,7 @@
                 </section>
 
                 <section class="detail-page__related">
-                    <h3>Похожие товары</h3>
+                    <h3 class="section-title">Похожие товары</h3>
                     <div class="detail-page__related_list">
                         {% for similar in similar_goods %}
                         <a href="{% url 'viki_web:product_detail' similar.slug %}" class="detail-page__related_item">
@@ -203,7 +203,7 @@
                 </section>
 
                 <section class="detail-page__related">
-                    <h3>Сопутствующие товары</h3>
+                    <h3 class="section-title">Сопутствующие товары</h3>
                     <div class="detail-page__related_list">
                         {% for similar in related_goods %}
                         <a href="{% url 'viki_web:product_detail' similar.slug %}" class="detail-page__related_item">

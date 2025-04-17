@@ -1651,7 +1651,7 @@ dialog.company-dialog textarea {
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  padding: 2rem;
+  padding: 170px 0 2rem 0;
   background-color: #F2FFFF;
 }
 .detail-page__section {
@@ -1806,10 +1806,10 @@ dialog.company-dialog textarea {
   text-decoration: none;
   transition: transform 0.3s ease;
   background-color: #fff;
+  box-shadow: 0 4px 20px rgba(15, 72, 128, 0.1);
 }
 .detail-page__related_item:hover {
   transform: scale(1.05);
-  border: 1px #009EA3 solid;
 }
 .detail-page__related_item img {
   width: 100%;
@@ -2584,8 +2584,7 @@ dialog.company-dialog textarea {
 }
 /* Блок "Вы смотрели" */
 .recently-viewed {
-  margin-top: 2rem;
-  padding: 1.5rem 0;
+  margin-top: 1.5rem;
   border-radius: 8px;
 }
 .recently-viewed__title {
