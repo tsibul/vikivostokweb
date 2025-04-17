@@ -1327,7 +1327,7 @@ dialog.company-dialog textarea {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
 }
 
 .product-hor {
