@@ -3,6 +3,8 @@
 
 .product-sqr {
   @include brd-standard;
+  border-color: transparent;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   max-width: 646px;
   //height: 470px;
   padding: 24px;
@@ -51,23 +53,22 @@
   }
 
   &__tab-btn {
-    border-color: rgba($colorSecondary, 0.2) transparent rgba($colorSecondary, 0.1) rgba($colorSecondary, 0.2);
     padding: 8px 8px 4px 8px;
     border: 1px solid;
+    border-color: rgba($colorNeutral500, 0.08) transparent rgba($colorNeutral500, 0.08) rgba($colorNeutral500, 0.08);
     border-radius: 8px 0 0 8px;
-    border-color: rgba(0, 158, 163, 0.2) transparent rgba(0, 158, 163, 0.1) rgba(0, 158, 163, 0.2);
     z-index: 1;
-    box-shadow: -2px 4px 4px 1px rgba(0, 158, 163, 0.2);
+    box-shadow: -2px 4px 4px 1px rgba($colorNeutral500, 0.08);
     cursor: pointer;
-    background-color: #F2FFFF;
+    background-color: rgba($colorNeutral500, 0.08);
   }
 
   &__tab-content {
     position: relative;
-    border: 1px solid rgba(0, 158, 163, 0.2);
+    border: 1px solid rgba($colorNeutral500, 0.08);
     border-radius: 0 12px 12px 12px;
     margin: 0 0 0 -2px;
-    box-shadow: -2px 4px 4px 2px rgba(0, 158, 163, 0.2);
+    box-shadow: -2px 4px 4px 2px rgba($colorNeutral500, 0.08);
     z-index: 2;
     width: 100%;
     //overflow: auto;
@@ -173,6 +174,7 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 30px;
+
   &__item {
     @include brd-standard;
     border-color: transparent;
