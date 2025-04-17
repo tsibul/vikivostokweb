@@ -2620,6 +2620,7 @@ dialog.company-dialog textarea {
   border: 1px solid #0F4880;
   background-color: #fff;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  height: 100%;
 }
 .recently-viewed__img {
   width: 100%;
@@ -2640,7 +2641,7 @@ dialog.company-dialog textarea {
 .recently-viewed__info {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.25rem;
   margin-bottom: 0.75rem;
   flex-grow: 1;
 }
@@ -2653,6 +2654,7 @@ dialog.company-dialog textarea {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  min-height: 1rem;
 }
 .recently-viewed__article {
   font-size: 0.8rem;
@@ -2663,11 +2665,17 @@ dialog.company-dialog textarea {
   font-size: 0.75rem;
   color: #0F4880;
   margin: 0;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  min-height: 3.3rem;
+  line-height: 1.4;
 }
 .recently-viewed__price {
   font-size: 0.9rem;
   color: #0F4880;
-  margin: 0.5rem 0 0 0;
+  margin: 0.25rem 0 0 0;
   font-weight: 600;
   display: flex;
   justify-content: space-between;
@@ -2684,6 +2692,9 @@ dialog.company-dialog textarea {
   margin-bottom: 0.75rem;
   padding-top: 0.5rem;
   border-top: 1px solid #F2FFFF;
+  flex-wrap: wrap;
+  max-height: 4.5rem;
+  overflow-y: auto;
 }
 .recently-viewed__cart-btn {
   width: 100%;
@@ -2693,10 +2704,17 @@ dialog.company-dialog textarea {
   .recently-viewed__img {
     height: 160px;
   }
+  .recently-viewed__description {
+    min-height: auto;
+    -webkit-line-clamp: 4;
+  }
 }
 @media (max-width: 576px) {
   .recently-viewed__article, .recently-viewed__description {
     font-size: 0.7rem;
+  }
+  .recently-viewed__name {
+    min-height: auto;
   }
 }
 
