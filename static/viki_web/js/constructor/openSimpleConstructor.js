@@ -16,8 +16,28 @@ export function openSimpleConstructor(e) {
     let optionSection, sectionTitle, section;
     const goodsItem = e.target.closest('.product');
     const currentFrame = e.target.closest('.product-frame');
-    const itemId = currentFrame.dataset.id;
-    const colorSet = JSON.parse(goodsItem.dataset.articleSet);
+    
+    // Get visible image frame ID
+    let itemId;
+    const visibleImageFrame = goodsItem.querySelector('.product-hor__image-frame:not(.item-hidden)') || 
+                             goodsItem.querySelector('.product-sqr__image-frame:not(.item-hidden)');
+    
+    if (visibleImageFrame) {
+        itemId = visibleImageFrame.dataset.id;
+    }
+    
+    // Fix: Use the correct attribute name - data-article-set in HTML becomes articleSet in dataset
+    const articleSetAttr = goodsItem.getAttribute('data-article-set');
+    
+    if (!itemId || !articleSetAttr) {
+        console.error('Constructor error: Missing required data attributes', {
+            itemId,
+            articleSetAttr
+        });
+        return;
+    }
+
+    const colorSet = JSON.parse(articleSetAttr);
     const modal = document.createElement('dialog');
     modal.classList.add('simple-constructor');
     const modalItems = document.createElement('form');
