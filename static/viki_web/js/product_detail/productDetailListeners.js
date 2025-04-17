@@ -13,10 +13,14 @@ import RecentlyViewed from '../recentGoods.js';
 document.addEventListener('DOMContentLoaded', () => {
     initImageNavigation();
     initColorNavigation();
-    initRecentlyViewedStorage();
-
+    
     // Initialize recently viewed section if it exists
     if (document.querySelector('.recently-viewed__items')) {
         RecentlyViewed.init();
     }
+});
+
+// Save recently viewed product when user leaves the page
+window.addEventListener('beforeunload', () => {
+    initRecentlyViewedStorage();
 });
