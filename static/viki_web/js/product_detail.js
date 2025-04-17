@@ -8,3 +8,5 @@
 // Import from modular version
 import './product_detail/productDetailListeners.js';
 
+
+
