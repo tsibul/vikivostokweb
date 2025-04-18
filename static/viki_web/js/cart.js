@@ -2,6 +2,9 @@
 
 import RecentlyViewed from './recentGoods.js';
 
+// Кэш для хранения возможностей печати товаров
+const printOpportunitiesCache = new Map();
+
 /**
  * Инициализация функций корзины при загрузке документа
  */
@@ -323,55 +326,205 @@ function formatPrice(price) {
  * Инициализация функций управления брендированием
  */
 function initBranding() {
-    // Инициализация цен нанесения
+    // Загрузка данных о возможностях печати для всех товаров в корзине
     const cartItems = document.querySelectorAll('.cart-item');
+    const goodsIdsToFetch = new Set();
+    
     cartItems.forEach(item => {
-        updateBrandingPrices(item);
+        const addBrandingBtn = item.querySelector('.branding-add-btn');
+        if (addBrandingBtn && addBrandingBtn.dataset.goodsId) {
+            const goodsId = addBrandingBtn.dataset.goodsId;
+            goodsIdsToFetch.add(goodsId);
+        }
+    });
+    
+    // Загружаем данные о печати для всех товаров в корзине
+    Promise.all(
+        Array.from(goodsIdsToFetch).map(goodsId => 
+            fetchPrintOpportunities(goodsId)
+        )
+    ).then(() => {
+        // Проверяем доступность нанесений и управляем кнопками
+        cartItems.forEach(item => {
+            const addBrandingBtn = item.querySelector('.branding-add-btn');
+            if (addBrandingBtn && addBrandingBtn.dataset.goodsId) {
+                const goodsId = addBrandingBtn.dataset.goodsId;
+                const opportunities = printOpportunitiesCache.get(goodsId) || [];
+                
+                // Блокируем кнопку только если нет возможностей печати
+                if (!opportunities || opportunities.length === 0) {
+                    addBrandingBtn.disabled = true;
+                    addBrandingBtn.title = 'Нет данных о возможностях нанесения для этого товара';
+                    addBrandingBtn.classList.add('disabled');
+                } else {
+                    // Проверяем доступность мест для нанесения
+                    const brandingContainer = item.querySelector('.branding-items');
+                    checkAndUpdateAddBrandingButton(addBrandingBtn, goodsId, brandingContainer);
+                }
+            }
+            
+            // Инициализация цен нанесения
+            updateBrandingPrices(item);
+            
+            // Получаем стоимость товаров
+            const itemTotalInput = item.querySelector('.cart-item__total-price-input');
+            let itemTotal = 0;
+            
+            if (itemTotalInput) {
+                itemTotal = parseFloat(itemTotalInput.value);
+            } else {
+                // Для обратной совместимости проверяем старый формат
+                const itemTotalText = item.querySelector('.cart-item__total-price')?.textContent;
+                if (itemTotalText) {
+                    itemTotal = parseFloat(itemTotalText.replace(/[^\d.]/g, '').replace(',', '.'));
+                }
+            }
+            
+            // Обновляем итоговую стоимость товара с нанесением
+            updateItemFinalTotal(item, itemTotal);
+        });
         
-        // Получаем стоимость товаров
-        const itemTotalInput = item.querySelector('.cart-item__total-price-input');
-        let itemTotal = 0;
+        // Добавление нового брендирования
+        const addBrandingButtons = document.querySelectorAll('.branding-add-btn:not([disabled])');
+        addBrandingButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const itemArticle = this.dataset.item;
+                const goodsId = this.dataset.goodsId;
+                const brandingContainer = this.closest('.cart-item__branding').querySelector('.branding-items');
+                const brandingCount = brandingContainer.querySelectorAll('.branding-item').length;
+                
+                // Создаем новый элемент брендирования с учетом ограничений
+                const newBrandingItem = createBrandingItem(itemArticle, goodsId, brandingCount + 1, brandingContainer);
+                
+                // Проверяем, есть ли доступные места для нанесения
+                const typeSelect = newBrandingItem.querySelector('.branding-type');
+                const locationSelect = newBrandingItem.querySelector('.branding-location');
+                
+                if (!locationSelect || locationSelect.options.length === 0) {
+                    // Если нет доступных мест, не добавляем элемент и блокируем кнопку
+                    this.disabled = true;
+                    this.title = 'Достигнут лимит для всех мест нанесения';
+                    this.classList.add('disabled');
+                    return;
+                }
+                
+                brandingContainer.appendChild(newBrandingItem);
+                
+                // Инициализируем обработчики для нового элемента
+                initBrandingItemHandlers(newBrandingItem);
+                
+                // Обновляем стоимость
+                updateItemTotal(this.closest('.cart-item'));
+                updateCartSummary();
+                
+                // Проверка на возможность добавления еще одного нанесения
+                checkAndUpdateAddBrandingButton(this, goodsId, brandingContainer);
+                
+                // Обновляем данные в localStorage
+                updateCartBrandingInLocalStorage(this.closest('.cart-item'));
+            });
+        });
         
-        if (itemTotalInput) {
-            itemTotal = parseFloat(itemTotalInput.value);
-        } else {
-            // Для обратной совместимости проверяем старый формат
-            const itemTotalText = item.querySelector('.cart-item__total-price')?.textContent;
-            if (itemTotalText) {
-                itemTotal = parseFloat(itemTotalText.replace(/[^\d.]/g, '').replace(',', '.'));
+        // Инициализация обработчиков для существующих элементов брендирования
+        const brandingItems = document.querySelectorAll('.branding-item');
+        brandingItems.forEach(item => {
+            initBrandingItemHandlers(item);
+        });
+    });
+}
+
+/**
+ * Проверяет возможность добавления еще одного нанесения и обновляет состояние кнопки
+ * @param {HTMLElement} addButton - Кнопка добавления нанесения
+ * @param {string} goodsId - ID товара
+ * @param {HTMLElement} brandingContainer - Контейнер с брендированиями
+ */
+function checkAndUpdateAddBrandingButton(addButton, goodsId, brandingContainer) {
+    const opportunities = printOpportunitiesCache.get(goodsId) || [];
+    
+    // Если нет данных о возможностях печати, блокируем кнопку
+    if (!opportunities || opportunities.length === 0) {
+        addButton.disabled = true;
+        addButton.title = 'Нет данных о возможностях нанесения для этого товара';
+        addButton.classList.add('disabled');
+        return;
+    }
+    
+    // Получаем информацию о текущих нанесениях
+    const brandingByTypeAndPlace = getBrandingCountByTypeAndPlace(brandingContainer);
+    
+    // Проверяем, есть ли хотя бы одна доступная комбинация типа и места нанесения
+    let hasAvailablePlace = false;
+    
+    for (const typeId of new Set(opportunities.map(op => op.print_type_id))) {
+        const placesForType = opportunities.filter(op => op.print_type_id == typeId);
+        
+        for (const place of placesForType) {
+            const key = typeId + '-' + place.print_place_id;
+            const currentCount = brandingByTypeAndPlace.get(key) || 0;
+            
+            if (currentCount < place.place_quantity) {
+                hasAvailablePlace = true;
+                break;
             }
         }
         
-        // Обновляем итоговую стоимость товара с нанесением
-        updateItemFinalTotal(item, itemTotal);
-    });
+        if (hasAvailablePlace) break;
+    }
     
-    // Добавление нового брендирования
-    const addBrandingButtons = document.querySelectorAll('.branding-add-btn');
-    addBrandingButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const itemArticle = this.dataset.item;
-            const brandingContainer = this.closest('.cart-item__branding').querySelector('.branding-items');
-            const brandingCount = brandingContainer.querySelectorAll('.branding-item').length;
-            
-            // Создаем новый элемент брендирования
-            const newBrandingItem = createBrandingItem(itemArticle, brandingCount + 1);
-            brandingContainer.appendChild(newBrandingItem);
-            
-            // Инициализируем обработчики для нового элемента
-            initBrandingItemHandlers(newBrandingItem);
-            
-            // Обновляем стоимость
-            updateItemTotal(this.closest('.cart-item'));
-            updateCartSummary();
-        });
-    });
+    // Обновляем состояние кнопки
+    if (!hasAvailablePlace) {
+        addButton.disabled = true;
+        addButton.title = 'Достигнут лимит для всех мест нанесения';
+        addButton.classList.add('disabled');
+    } else {
+        addButton.disabled = false;
+        addButton.title = '';
+        addButton.classList.remove('disabled');
+    }
+}
+
+/**
+ * Обновляет данные о брендировании в localStorage
+ * @param {HTMLElement} cartItem - Элемент товара в корзине
+ */
+function updateCartBrandingInLocalStorage(cartItem) {
+    const removeButton = cartItem.querySelector('.cart-item__remove');
+    if (!removeButton || !removeButton.dataset.id) return;
     
-    // Инициализация обработчиков для существующих элементов брендирования
-    const brandingItems = document.querySelectorAll('.branding-item');
+    const itemId = removeButton.dataset.id;
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const itemIndex = cart.findIndex(item => item.id == itemId);
+    
+    if (itemIndex === -1) return;
+    
+    // Собираем данные о нанесениях
+    const brandingItems = cartItem.querySelectorAll('.branding-item');
+    const brandings = [];
+    
     brandingItems.forEach(item => {
-        initBrandingItemHandlers(item);
+        const typeSelect = item.querySelector('.branding-type');
+        const locationSelect = item.querySelector('.branding-location');
+        const colorsSelect = item.querySelector('.branding-colors');
+        const secondPassCheckbox = item.querySelector('.branding-second-pass');
+        const priceInput = item.querySelector('.branding-price');
+        
+        if (typeSelect && locationSelect && colorsSelect && priceInput) {
+            brandings.push({
+                type: typeSelect.options[typeSelect.selectedIndex]?.textContent || typeSelect.value,
+                type_id: typeSelect.value,
+                location: locationSelect.options[locationSelect.selectedIndex]?.textContent || locationSelect.value,
+                location_id: locationSelect.value,
+                colors: colorsSelect.value,
+                secondPass: secondPassCheckbox ? secondPassCheckbox.checked : false,
+                price: parseFloat(priceInput.value) || 0
+            });
+        }
     });
+    
+    // Обновляем данные в localStorage
+    cart[itemIndex].branding = brandings;
+    localStorage.setItem('cart', JSON.stringify(cart));
 }
 
 /**
@@ -380,127 +533,259 @@ function initBranding() {
  */
 function initBrandingItemHandlers(brandingItem) {
     const cartItem = brandingItem.closest('.cart-item');
+    const brandingContainer = brandingItem.closest('.branding-items');
+    const addBrandingBtn = cartItem.querySelector('.branding-add-btn');
+    const goodsId = addBrandingBtn?.dataset.goodsId;
     
     // Удаление брендирования
     const removeButton = brandingItem.querySelector('.branding-remove-btn');
     removeButton.addEventListener('click', function() {
+        const typeSelect = brandingItem.querySelector('.branding-type');
+        const locationSelect = brandingItem.querySelector('.branding-location');
+        
+        // Удаляем элемент
         brandingItem.remove();
+        
+        // Обновляем доступные опции для оставшихся элементов
+        if (goodsId) {
+            updateAllLocationOptionsInContainer(brandingContainer, goodsId);
+            
+            // Разблокируем кнопку добавления
+            if (addBrandingBtn) {
+                checkAndUpdateAddBrandingButton(addBrandingBtn, goodsId, brandingContainer);
+            }
+        }
+        
         updateItemTotal(cartItem);
         updateCartSummary();
+        
+        // Обновляем данные в localStorage
+        updateCartBrandingInLocalStorage(cartItem);
     });
     
-    // Обработчики изменения типа, места, количества цветов
-    const selects = brandingItem.querySelectorAll('select');
-    selects.forEach(select => {
-        select.addEventListener('change', function() {
+    // Обработчик изменения типа нанесения
+    const typeSelect = brandingItem.querySelector('.branding-type');
+    if (typeSelect) {
+        typeSelect.addEventListener('change', function() {
+            const locationSelect = brandingItem.querySelector('.branding-location');
+            const goodsId = this.dataset.goodsId;
+            const selectedTypeId = this.value;
+            
+            // Обновляем опции мест нанесения
+            if (goodsId && locationSelect) {
+                const opportunities = printOpportunitiesCache.get(goodsId) || [];
+                updateLocationOptions(opportunities, selectedTypeId, locationSelect, brandingContainer);
+            }
+            
             updateItemTotal(cartItem);
             updateCartSummary();
+            
+            // Обновляем данные в localStorage
+            updateCartBrandingInLocalStorage(cartItem);
         });
-    });
+    }
     
-    // Обработчик изменения цены нанесения
+    // Обработчик изменения места нанесения
+    const locationSelect = brandingItem.querySelector('.branding-location');
+    if (locationSelect) {
+        locationSelect.addEventListener('change', function() {
+            const goodsId = this.dataset.goodsId;
+            const typeSelect = brandingItem.querySelector('.branding-type');
+            const colorsSelect = brandingItem.querySelector('.branding-colors');
+            
+            if (goodsId && typeSelect && colorsSelect) {
+                const opportunities = printOpportunitiesCache.get(goodsId) || [];
+                const selectedTypeId = typeSelect.value;
+                const selectedPlaceId = this.value;
+                
+                // Обновляем опции количества цветов
+                updateColorsOptions(opportunities, selectedTypeId, selectedPlaceId, colorsSelect);
+                
+                // Обновляем доступные места для всех элементов
+                updateAllLocationOptionsInContainer(brandingContainer, goodsId);
+            }
+            
+            updateItemTotal(cartItem);
+            updateCartSummary();
+            
+            // Обновляем данные в localStorage
+            updateCartBrandingInLocalStorage(cartItem);
+        });
+    }
+    
+    // Оставшиеся обработчики с добавлением обновления localStorage
+    const colorsSelect = brandingItem.querySelector('.branding-colors');
+    if (colorsSelect) {
+        colorsSelect.addEventListener('change', function() {
+            updateItemTotal(cartItem);
+            updateCartSummary();
+            
+            // Обновляем данные в localStorage
+            updateCartBrandingInLocalStorage(cartItem);
+        });
+    }
+    
     const priceInput = brandingItem.querySelector('.branding-price');
-    priceInput.addEventListener('change', function() {
-        if (parseFloat(this.value) < 0) {
-            this.value = 0;
-        }
-        updateItemTotal(cartItem);
-        updateCartSummary();
-    });
+    if (priceInput) {
+        priceInput.addEventListener('change', function() {
+            if (parseFloat(this.value) < 0) {
+                this.value = 0;
+            }
+            updateItemTotal(cartItem);
+            updateCartSummary();
+            
+            // Обновляем данные в localStorage
+            updateCartBrandingInLocalStorage(cartItem);
+        });
+    }
     
-    // Обработчик чекбокса "Второй проход"
     const secondPassCheckbox = brandingItem.querySelector('.branding-second-pass');
-    secondPassCheckbox.addEventListener('change', function() {
-        updateItemTotal(cartItem);
-        updateCartSummary();
-    });
+    if (secondPassCheckbox) {
+        secondPassCheckbox.addEventListener('change', function() {
+            updateItemTotal(cartItem);
+            updateCartSummary();
+            
+            // Обновляем данные в localStorage
+            updateCartBrandingInLocalStorage(cartItem);
+        });
+    }
 }
 
 /**
  * Создание элемента брендирования
  * @param {string} itemArticle - Артикул товара
+ * @param {string} goodsId - ID товара
  * @param {number} index - Номер брендирования
+ * @param {HTMLElement} brandingContainer - Контейнер с брендированиями для проверки ограничений
  * @return {HTMLElement} - Новый элемент брендирования
  */
-function createBrandingItem(itemArticle, index) {
-    // Создаем шаблон брендирования в зависимости от типа товара
-    let typeOptions = '';
-    let locationOptions = '';
-    let defaultPrice = 0;
+function createBrandingItem(itemArticle, goodsId, index, brandingContainer) {
+    const div = document.createElement('div');
+    div.className = 'branding-item';
     
-    // Задаем опции в зависимости от типа товара
-    if (itemArticle.startsWith('PEN')) {
-        typeOptions = `
-            <option value="laser">Лазерная гравировка</option>
-            <option value="uv">УФ-печать</option>
-            <option value="tampo">Тампопечать</option>
-        `;
-        locationOptions = `
-            <option value="barrel">Корпус</option>
-            <option value="cap">Колпачок</option>
-            <option value="clip">Клип</option>
-        `;
-        defaultPrice = 500;
-    } else if (itemArticle.startsWith('NB')) {
-        typeOptions = `
-            <option value="offset">Офсетная печать</option>
-            <option value="digital">Цифровая печать</option>
-            <option value="emboss">Тиснение</option>
-        `;
-        locationOptions = `
-            <option value="cover">Обложка</option>
-            <option value="back">Задняя сторона</option>
-            <option value="pages">Блок страниц</option>
-        `;
-        defaultPrice = 800;
-    } else if (itemArticle.startsWith('MUG')) {
-        typeOptions = `
-            <option value="sublimation">Сублимация</option>
-            <option value="decal">Деколь</option>
-            <option value="uv">УФ-печать</option>
-        `;
-        locationOptions = `
-            <option value="front">Лицевая сторона</option>
-            <option value="back">Обратная сторона</option>
-            <option value="handle">Ручка</option>
-        `;
-        defaultPrice = 350;
-    } else {
-        // Значения по умолчанию
-        typeOptions = `
-            <option value="print">Печать</option>
-            <option value="embroidery">Вышивка</option>
-            <option value="engraving">Гравировка</option>
-        `;
-        locationOptions = `
-            <option value="front">Лицевая сторона</option>
-            <option value="back">Обратная сторона</option>
-        `;
-        defaultPrice = 450;
+    // Получаем возможности печати
+    const opportunities = printOpportunitiesCache.get(goodsId) || [];
+    
+    // Если нет данных о возможностях печати, возвращаем пустой элемент
+    if (!opportunities || opportunities.length === 0) {
+        return div;
+    }
+    
+    // Получаем уникальные типы печати
+    const printTypes = Array.from(new Set(opportunities.map(op => op.print_type_id)))
+        .map(typeId => {
+            const op = opportunities.find(o => o.print_type_id === typeId);
+            return {
+                id: typeId,
+                name: op ? op.print_type_name : 'Неизвестный тип'
+            };
+        });
+    
+    // Создаем опции для типов печати
+    let typeOptions = '';
+    printTypes.forEach(type => {
+        typeOptions += `<option value="${type.id}">${type.name}</option>`;
+    });
+    
+    // Временно создаем div без внутреннего содержимого для получения информации о брендированиях
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = `<select class="branding-type" value="${printTypes.length > 0 ? printTypes[0].id : ''}"></select>`;
+    div.appendChild(tempDiv);
+    
+    // Получаем текущие данные о количестве брендирований
+    const brandingByTypeAndPlace = getBrandingCountByTypeAndPlace(brandingContainer);
+    
+    // Определяем первый доступный тип печати и его места
+    let firstAvailableType = '';
+    let locationOptions = '';
+    let defaultPrice = 450;
+    
+    // Для места печати первоначально берем опции для первого доступного типа
+    if (printTypes.length > 0) {
+        // Проверяем каждый тип печати на наличие доступных мест
+        for (const type of printTypes) {
+            const placesForType = opportunities.filter(op => op.print_type_id == type.id);
+            const availablePlaces = placesForType.filter(place => {
+                const key = type.id + '-' + place.print_place_id;
+                const currentCount = brandingByTypeAndPlace.get(key) || 0;
+                return currentCount < place.place_quantity;
+            });
+            
+            if (availablePlaces.length > 0) {
+                firstAvailableType = type.id;
+                
+                // Создаем опции для доступных мест
+                availablePlaces.forEach(place => {
+                    locationOptions += `<option value="${place.print_place_id}">${place.print_place_name}</option>`;
+                });
+                
+                // Устанавливаем примерную стоимость в зависимости от размера нанесения
+                const size = availablePlaces[0].length * availablePlaces[0].height;
+                if (size < 2500) {
+                    defaultPrice = 350;
+                } else if (size < 10000) {
+                    defaultPrice = 450;
+                } else {
+                    defaultPrice = 550;
+                }
+                
+                break;
+            }
+        }
+    }
+    
+    // Убираем временный div
+    div.removeChild(tempDiv);
+    
+    // Если нет доступных мест, возвращаем пустой элемент
+    if (!firstAvailableType || locationOptions === '') {
+        return div;
+    }
+    
+    // Создаем опции для количества цветов
+    let colorOptions = '';
+    let maxColors = 4;
+    
+    // Находим опции для выбранного типа и первого доступного места
+    const selectedPlaceId = locationOptions.match(/value="([^"]+)"/)?.[1];
+    if (selectedPlaceId) {
+        const selectedOpportunity = opportunities.find(op => 
+            op.print_type_id == firstAvailableType && op.print_place_id == selectedPlaceId
+        );
+        
+        if (selectedOpportunity) {
+            maxColors = selectedOpportunity.color_quantity;
+            
+            for (let i = 1; i <= maxColors; i++) {
+                const colorText = i === 1 ? '1 цвет' : 
+                                (i > 1 && i < 5) ? i + ' цвета' : 
+                                i + ' цветов';
+                colorOptions += `<option value="${i}">${colorText}</option>`;
+            }
+            
+            // Добавляем опцию "Полноцвет" для определенных типов печати
+            if (['sublimation', 'uv', 'digital'].includes(firstAvailableType)) {
+                colorOptions += `<option value="full">Полноцвет</option>`;
+            }
+        }
     }
     
     // Создаем элемент
-    const div = document.createElement('div');
-    div.className = 'branding-item';
     div.innerHTML = `
         <div class="branding-item__row">
             <div class="branding-field branding-field-type">
-                <select class="branding-type">
+                <select class="branding-type" data-goods-id="${goodsId}">
                     ${typeOptions}
                 </select>
             </div>
             <div class="branding-field branding-field-location">
-                <select class="branding-location">
+                <select class="branding-location" data-goods-id="${goodsId}">
                     ${locationOptions}
                 </select>
             </div>
             <div class="branding-field branding-field-colors">
                 <select class="branding-colors">
-                    <option value="1">1 цвет</option>
-                    <option value="2">2 цвета</option>
-                    <option value="3">3 цвета</option>
-                    <option value="4">4 цвета</option>
-                    ${itemArticle.startsWith('MUG') ? '<option value="full">Полноцвет</option>' : ''}
+                    ${colorOptions}
                 </select>
             </div>
             <div class="branding-field branding-checkbox">
@@ -523,5 +808,180 @@ function createBrandingItem(itemArticle, index) {
         </div>
     `;
     
+    // Устанавливаем начальное значение типа печати
+    const typeSelectElement = div.querySelector('.branding-type');
+    if (typeSelectElement) {
+        typeSelectElement.value = firstAvailableType;
+    }
+    
     return div;
+}
+
+/**
+ * Получает информацию о количестве брендирований по типам и местам
+ * @param {HTMLElement} brandingContainer - Контейнер с брендированиями
+ * @return {Map} - Map с ключами "typeId-placeId" и количеством брендирований
+ */
+function getBrandingCountByTypeAndPlace(brandingContainer) {
+    if (!brandingContainer) return new Map();
+    
+    const brandingItems = brandingContainer.querySelectorAll('.branding-item');
+    const brandingByTypeAndPlace = new Map();
+    
+    brandingItems.forEach(item => {
+        const typeSelect = item.querySelector('.branding-type');
+        const locationSelect = item.querySelector('.branding-location');
+        
+        if (typeSelect && locationSelect) {
+            const typeId = typeSelect.value;
+            const placeId = locationSelect.value;
+            const key = typeId + '-' + placeId;
+            
+            if (!brandingByTypeAndPlace.has(key)) {
+                brandingByTypeAndPlace.set(key, 1);
+            } else {
+                brandingByTypeAndPlace.set(key, brandingByTypeAndPlace.get(key) + 1);
+            }
+        }
+    });
+    
+    return brandingByTypeAndPlace;
+}
+
+/**
+ * Обновление опций мест нанесения в зависимости от выбранного типа
+ * @param {Array} opportunities - Возможности печати
+ * @param {string} selectedTypeId - ID выбранного типа нанесения
+ * @param {HTMLElement} locationSelect - Select для мест нанесения
+ * @param {HTMLElement} brandingContainer - Контейнер с брендированиями для проверки ограничений
+ */
+function updateLocationOptions(opportunities, selectedTypeId, locationSelect, brandingContainer) {
+    if (!locationSelect) return;
+    
+    // Фильтруем места нанесения по выбранному типу
+    const availablePlaces = opportunities.filter(op => op.print_type_id == selectedTypeId);
+    
+    // Сохраняем текущее выбранное значение
+    const currentValue = locationSelect.value;
+    
+    // Очищаем текущие опции
+    locationSelect.innerHTML = '';
+    
+    // Получаем текущее количество брендирований по типам и местам
+    const brandingByTypeAndPlace = getBrandingCountByTypeAndPlace(brandingContainer);
+    
+    // Добавляем новые опции, только если не превышен лимит для места
+    availablePlaces.forEach(place => {
+        const key = selectedTypeId + '-' + place.print_place_id;
+        const currentCount = brandingByTypeAndPlace.get(key) || 0;
+        
+        // Добавляем опцию только если количество нанесений не превышает лимит
+        if (currentCount < place.place_quantity) {
+            const option = document.createElement('option');
+            option.value = place.print_place_id;
+            option.textContent = place.print_place_name;
+            locationSelect.appendChild(option);
+        }
+    });
+    
+    // Восстанавливаем выбранное значение, если оно все еще доступно
+    if (locationSelect.querySelector(`option[value="${currentValue}"]`)) {
+        locationSelect.value = currentValue;
+    }
+}
+
+/**
+ * Обновление опций количества цветов в зависимости от выбранного типа и места нанесения
+ * @param {Array} opportunities - Возможности печати
+ * @param {string} selectedTypeId - ID выбранного типа нанесения
+ * @param {string} selectedPlaceId - ID выбранного места нанесения
+ * @param {HTMLElement} colorsSelect - Select для количества цветов
+ */
+function updateColorsOptions(opportunities, selectedTypeId, selectedPlaceId, colorsSelect) {
+    if (!colorsSelect) return;
+    
+    // Находим соответствующую возможность печати
+    const opportunity = opportunities.find(op => 
+        op.print_type_id == selectedTypeId && op.print_place_id == selectedPlaceId
+    );
+    
+    if (!opportunity) return;
+    
+    // Сохраняем текущее выбранное значение
+    const currentValue = colorsSelect.value;
+    
+    // Очищаем текущие опции
+    colorsSelect.innerHTML = '';
+    
+    // Добавляем опции в зависимости от максимального количества цветов
+    for (let i = 1; i <= opportunity.color_quantity; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = i === 1 ? '1 цвет' : 
+                            (i > 1 && i < 5) ? i + ' цвета' : 
+                            i + ' цветов';
+        colorsSelect.appendChild(option);
+    }
+    
+    // Добавляем опцию "Полноцвет" для определенных типов печати
+    if (['sublimation', 'uv', 'digital'].includes(selectedTypeId)) {
+        const option = document.createElement('option');
+        option.value = 'full';
+        option.textContent = 'Полноцвет';
+        colorsSelect.appendChild(option);
+    }
+    
+    // Восстанавливаем выбранное значение, если оно все еще доступно
+    if (currentValue <= opportunity.color_quantity || 
+        (currentValue === 'full' && ['sublimation', 'uv', 'digital'].includes(selectedTypeId))) {
+        colorsSelect.value = currentValue;
+    }
+}
+
+/**
+ * Обновляет опции мест нанесения для всех элементов в контейнере
+ * @param {HTMLElement} brandingContainer - Контейнер с брендированиями
+ * @param {string} goodsId - ID товара
+ */
+function updateAllLocationOptionsInContainer(brandingContainer, goodsId) {
+    if (!brandingContainer) return;
+    
+    const brandingItems = brandingContainer.querySelectorAll('.branding-item');
+    const opportunities = printOpportunitiesCache.get(goodsId) || [];
+    
+    brandingItems.forEach(item => {
+        const typeSelect = item.querySelector('.branding-type');
+        const locationSelect = item.querySelector('.branding-location');
+        
+        if (typeSelect && locationSelect) {
+            updateLocationOptions(opportunities, typeSelect.value, locationSelect, brandingContainer);
+        }
+    });
+}
+
+/**
+ * Загрузка возможностей печати для товара
+ * @param {string} goodsId - ID товара
+ * @return {Promise} - Promise с данными о возможностях печати
+ */
+async function fetchPrintOpportunities(goodsId) {
+    if (printOpportunitiesCache.has(goodsId)) {
+        return printOpportunitiesCache.get(goodsId);
+    }
+    
+    try {
+        const response = await fetch(`/api/print-opportunities/${goodsId}`);
+        const data = await response.json();
+        
+        if (data.success && data.opportunities) {
+            printOpportunitiesCache.set(goodsId, data.opportunities);
+            return data.opportunities;
+        } else {
+            console.error('Ошибка загрузки возможностей печати:', data.error);
+            return [];
+        }
+    } catch (error) {
+        console.error('Ошибка загрузки возможностей печати:', error);
+        return [];
+    }
 }

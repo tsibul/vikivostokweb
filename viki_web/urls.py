@@ -26,6 +26,7 @@ urlpatterns = [
     path('price', views.price, name='price'),
     path('export-price-csv', views.export_price_csv, name='export_price_csv'),
     path('cart', views.cart, name='cart'),
+    path('api/print-opportunities/<int:goods_id>', views.get_print_opportunities, name='print_opportunities'),
     path('about', views.about, name='about'),
     path('news', views.news, name='news'),
     path('privacy', views.privacy, name='privacy'),
