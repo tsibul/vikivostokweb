@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Обработка кликов по кнопкам "В корзину"
     document.addEventListener('click', function(e) {
-        const addToCartBtn = e.target.closest('.btn__save');
+        const addToCartBtn = e.target.closest('.add-to-cart');
         if (!addToCartBtn) return;
 
         e.preventDefault();
@@ -116,6 +116,7 @@ document.addEventListener('DOMContentLoaded', function() {
             itemData = {
                 ...itemData,
                 id: activeImage.dataset.id,
+                goodsId: productContainer.dataset.id,
                 name: productContainer.querySelector('.recently-viewed__name').textContent.trim(),
                 article: productContainer.querySelector('.recently-viewed__article').textContent.trim(),
                 price: parseFloat(productContainer.querySelector('.recently-viewed__price').textContent.replace(/[^\d.]/g, '')),
@@ -132,6 +133,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 ...itemData,
                 id: activeImage.dataset.id,
                 name: productContainer.querySelector('h3').textContent.trim(),
+                goodsId: productContainer.dataset.id,
                 article: activeImage.dataset.article,
                 price: parseFloat(activeImage.dataset.price),
                 image: activeImage.tagName === 'IMG' ? activeImage.src : activeImage.querySelector('img')?.src || '/static/viki_web/icons/logo.svg',
