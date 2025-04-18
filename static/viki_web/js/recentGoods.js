@@ -122,7 +122,7 @@ class RecentlyViewed {
           ${colorElements}
         </div>
       </div>
-      <button class="recently-viewed__cart-btn btn btn__save">
+      <button class="recently-viewed__cart-btn btn btn__save add-to-cart">
         <i class="fa-solid fa-cart-shopping"></i>&nbsp; В корзину
       </button>
       <a class="btn-hor"
