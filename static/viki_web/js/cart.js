@@ -87,14 +87,33 @@ function updateItemTotal(cartItem) {
     const quantity = parseInt(cartItem.querySelector('.cart-item__quantity-input').value);
     
     // Получаем цену товара
-    const priceText = cartItem.querySelector('.cart-item__price-single').textContent;
-    const price = parseFloat(priceText.replace(/[^\d.]/g, '').replace(',', '.'));
+    let price = 0;
+    const priceInput = cartItem.querySelector('.cart-item__price-single-input');
+    
+    if (priceInput) {
+        price = parseFloat(priceInput.value);
+    } else {
+        // Для обратной совместимости
+        const priceText = cartItem.querySelector('.cart-item__price-single')?.textContent;
+        if (priceText) {
+            price = parseFloat(priceText.replace(/[^\d.]/g, '').replace(',', '.'));
+        }
+    }
     
     // Рассчитываем стоимость товаров без нанесения
     const itemTotal = price * quantity;
     
     // Обновляем отображение стоимости товаров
-    cartItem.querySelector('.cart-item__total-price').textContent = formatPrice(itemTotal.toFixed(0)) + ' руб.';
+    const totalPriceInput = cartItem.querySelector('.cart-item__total-price-input');
+    if (totalPriceInput) {
+        totalPriceInput.value = itemTotal.toFixed(2);
+    } else {
+        // Для обратной совместимости
+        const totalPriceElement = cartItem.querySelector('.cart-item__total-price');
+        if (totalPriceElement) {
+            totalPriceElement.textContent = formatPrice(itemTotal.toFixed(0)) + ' руб.';
+        }
+    }
     
     // Обновляем цены нанесения
     updateBrandingPrices(cartItem);
@@ -136,13 +155,28 @@ function updateBrandingPrices(cartItem) {
         brandingTotal += totalPrice;
         
         // Обновляем отображение стоимости нанесения
-        item.querySelector('.branding-total-price').textContent = formatPrice(totalPrice.toFixed(0)) + ' руб.';
+        const brandingTotalPriceInput = item.querySelector('.branding-total-price-input');
+        if (brandingTotalPriceInput) {
+            brandingTotalPriceInput.value = totalPrice.toFixed(2);
+        } else {
+            // Для обратной совместимости
+            const brandingTotalPrice = item.querySelector('.branding-total-price');
+            if (brandingTotalPrice) {
+                brandingTotalPrice.textContent = formatPrice(totalPrice.toFixed(0)) + ' руб.';
+            }
+        }
     });
     
     // Обновляем итоговую стоимость всех нанесений
-    const brandingSubtotal = cartItem.querySelector('.branding-subtotal-price');
-    if (brandingSubtotal) {
-        brandingSubtotal.textContent = formatPrice(brandingTotal.toFixed(0)) + ' руб.';
+    const brandingSubtotalInput = cartItem.querySelector('.branding-subtotal-price-input');
+    if (brandingSubtotalInput) {
+        brandingSubtotalInput.value = brandingTotal.toFixed(2);
+    } else {
+        // Для обратной совместимости
+        const brandingSubtotal = cartItem.querySelector('.branding-subtotal-price');
+        if (brandingSubtotal) {
+            brandingSubtotal.textContent = formatPrice(brandingTotal.toFixed(0)) + ' руб.';
+        }
     }
     
     return brandingTotal;
@@ -155,14 +189,33 @@ function updateBrandingPrices(cartItem) {
  */
 function updateItemFinalTotal(cartItem, itemTotal) {
     // Получаем стоимость нанесения
-    const brandingTotalText = cartItem.querySelector('.branding-subtotal-price').textContent;
-    const brandingTotal = parseFloat(brandingTotalText.replace(/[^\d.]/g, '').replace(',', '.'));
+    let brandingTotal = 0;
+    const brandingSubtotalInput = cartItem.querySelector('.branding-subtotal-price-input');
+    
+    if (brandingSubtotalInput) {
+        brandingTotal = parseFloat(brandingSubtotalInput.value);
+    } else {
+        // Для обратной совместимости
+        const brandingTotalText = cartItem.querySelector('.branding-subtotal-price')?.textContent;
+        if (brandingTotalText) {
+            brandingTotal = parseFloat(brandingTotalText.replace(/[^\d.]/g, '').replace(',', '.'));
+        }
+    }
     
     // Рассчитываем итоговую стоимость
     const finalTotal = itemTotal + brandingTotal;
     
     // Обновляем отображение итоговой стоимости
-    cartItem.querySelector('.cart-item__final-total-price').textContent = formatPrice(finalTotal.toFixed(0)) + ' руб.';
+    const finalTotalInput = cartItem.querySelector('.cart-item__final-total-price-input');
+    if (finalTotalInput) {
+        finalTotalInput.value = finalTotal.toFixed(2);
+    } else {
+        // Для обратной совместимости
+        const finalTotalElement = cartItem.querySelector('.cart-item__final-total-price');
+        if (finalTotalElement) {
+            finalTotalElement.textContent = formatPrice(finalTotal.toFixed(0)) + ' руб.';
+        }
+    }
 }
 
 /**
@@ -170,23 +223,38 @@ function updateItemFinalTotal(cartItem, itemTotal) {
  */
 function updateCartSummary() {
     const cartItems = document.querySelectorAll('.cart-item');
-    const totalElement = document.querySelector('.cart-summary__total span');
-    const subtotalElement = document.querySelector('.cart-summary__subtotal span');
-    const brandingTotalElement = document.querySelector('.cart-summary__branding-total span');
-    const itemsCountElement = document.querySelector('.cart-summary__items span');
-    
     let subtotal = 0;
     let brandingTotal = 0;
     
     cartItems.forEach(item => {
         // Стоимость товаров
-        const itemTotalText = item.querySelector('.cart-item__total-price').textContent;
-        const itemTotal = parseFloat(itemTotalText.replace(/[^\d.]/g, '').replace(',', '.'));
+        let itemTotal = 0;
+        const itemTotalInput = item.querySelector('.cart-item__total-price-input');
+        
+        if (itemTotalInput) {
+            itemTotal = parseFloat(itemTotalInput.value);
+        } else {
+            // Для обратной совместимости
+            const itemTotalText = item.querySelector('.cart-item__total-price')?.textContent;
+            if (itemTotalText) {
+                itemTotal = parseFloat(itemTotalText.replace(/[^\d.]/g, '').replace(',', '.'));
+            }
+        }
         subtotal += itemTotal;
         
         // Стоимость нанесения
-        const brandingTotalText = item.querySelector('.branding-subtotal-price').textContent;
-        const itemBrandingTotal = parseFloat(brandingTotalText.replace(/[^\d.]/g, '').replace(',', '.'));
+        let itemBrandingTotal = 0;
+        const brandingSubtotalInput = item.querySelector('.branding-subtotal-price-input');
+        
+        if (brandingSubtotalInput) {
+            itemBrandingTotal = parseFloat(brandingSubtotalInput.value);
+        } else {
+            // Для обратной совместимости
+            const brandingTotalText = item.querySelector('.branding-subtotal-price')?.textContent;
+            if (brandingTotalText) {
+                itemBrandingTotal = parseFloat(brandingTotalText.replace(/[^\d.]/g, '').replace(',', '.'));
+            }
+        }
         brandingTotal += itemBrandingTotal;
     });
     
@@ -194,10 +262,30 @@ function updateCartSummary() {
     const total = subtotal + brandingTotal;
     
     // Обновляем отображение итогов
-    itemsCountElement.textContent = cartItems.length;
-    subtotalElement.textContent = formatPrice(subtotal.toFixed(0)) + ' руб.';
-    brandingTotalElement.textContent = formatPrice(brandingTotal.toFixed(0)) + ' руб.';
-    totalElement.textContent = formatPrice(total.toFixed(0)) + ' руб.';
+    const itemsCountInput = document.querySelector('.cart-summary__items-input');
+    const subtotalInput = document.querySelector('.cart-summary__subtotal-input');
+    const brandingTotalInput = document.querySelector('.cart-summary__branding-total-input');
+    const totalInput = document.querySelector('.cart-summary__total-input');
+    
+    if (itemsCountInput && subtotalInput && brandingTotalInput && totalInput) {
+        itemsCountInput.value = cartItems.length;
+        subtotalInput.value = subtotal.toFixed(2);
+        brandingTotalInput.value = brandingTotal.toFixed(2);
+        totalInput.value = total.toFixed(2);
+    } else {
+        // Для обратной совместимости
+        const itemsCountElement = document.querySelector('.cart-summary__items span');
+        const subtotalElement = document.querySelector('.cart-summary__subtotal span');
+        const brandingTotalElement = document.querySelector('.cart-summary__branding-total span');
+        const totalElement = document.querySelector('.cart-summary__total span');
+        
+        if (itemsCountElement && subtotalElement && brandingTotalElement && totalElement) {
+            itemsCountElement.textContent = cartItems.length;
+            subtotalElement.textContent = formatPrice(subtotal.toFixed(0)) + ' руб.';
+            brandingTotalElement.textContent = formatPrice(brandingTotal.toFixed(0)) + ' руб.';
+            totalElement.textContent = formatPrice(total.toFixed(0)) + ' руб.';
+        }
+    }
 }
 
 /**
@@ -228,8 +316,18 @@ function initBranding() {
         updateBrandingPrices(item);
         
         // Получаем стоимость товаров
-        const itemTotalText = item.querySelector('.cart-item__total-price').textContent;
-        const itemTotal = parseFloat(itemTotalText.replace(/[^\d.]/g, '').replace(',', '.'));
+        const itemTotalInput = item.querySelector('.cart-item__total-price-input');
+        let itemTotal = 0;
+        
+        if (itemTotalInput) {
+            itemTotal = parseFloat(itemTotalInput.value);
+        } else {
+            // Для обратной совместимости проверяем старый формат
+            const itemTotalText = item.querySelector('.cart-item__total-price')?.textContent;
+            if (itemTotalText) {
+                itemTotal = parseFloat(itemTotalText.replace(/[^\d.]/g, '').replace(',', '.'));
+            }
+        }
         
         // Обновляем итоговую стоимость товара с нанесением
         updateItemFinalTotal(item, itemTotal);
@@ -398,10 +496,13 @@ function createBrandingItem(itemArticle, index) {
             </div>
             <div class="branding-field branding-field-price">
                 <input type="number" class="branding-price" value="${defaultPrice}" min="0">
-                <span>руб.</span>
+                <span class="currency">руб.</span>
             </div>
             <div class="branding-field branding-field-total">
-                <span class="branding-total-price">0 руб.</span>
+                <div class="price-container">
+                    <input type="number" class="branding-total-price-input text-like" value="0.00" readonly>
+                    <span class="currency">руб.</span>
+                </div>
             </div>
             <div class="branding-field branding-field-actions">
                 <button class="branding-remove-btn"><i class="fa-solid fa-trash"></i></button>
