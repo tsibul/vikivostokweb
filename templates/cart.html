@@ -2,36 +2,6 @@
 {% load static %}
 {% block content %}
     <script src="{% static 'viki_web/js/cart.js' %}" defer type="module"></script>
-    <style>
-        /* Styles to make readonly inputs look like text */
-        input[readonly].text-like {
-            border: none;
-            background: transparent;
-            font-size: inherit;
-            font-weight: inherit;
-            color: inherit;
-            padding: 0;
-            text-align: right;
-            width: 80px;
-            -moz-appearance: textfield; /* Firefox */
-        }
-        
-        input[readonly].text-like::-webkit-outer-spin-button,
-        input[readonly].text-like::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        
-        .price-container {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-        }
-        
-        .currency {
-            margin-left: 5px;
-        }
-    </style>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const cart = JSON.parse(localStorage.getItem('cart') || '[]');
@@ -193,27 +163,27 @@
                 <!-- Cart summary -->
                 <div class="cart-summary">
                     <div class="cart-summary__info">
-                        <p class="cart-summary__items">Товаров в корзине: 
+                        <div class="cart-summary__items">Товаров в корзине:
                             <input type="number" class="cart-summary__items-input text-like" value="0" readonly>
-                        </p>
-                        <p class="cart-summary__subtotal">Стоимость товаров: 
+                        </div>
+                        <div class="cart-summary__subtotal">Стоимость товаров:
                             <div class="price-container" style="display: inline-flex;">
                                 <input type="number" class="cart-summary__subtotal-input text-like" value="0.00" readonly>
                                 <span class="currency">руб.</span>
                             </div>
-                        </p>
-                        <p class="cart-summary__branding-total">Стоимость нанесения: 
-                            <div class="price-container" style="display: inline-flex;">
+                        </div>
+                        <div class="cart-summary__branding-total">Стоимость нанесения:
+                            <div class="price-container strong" >
                                 <input type="number" class="cart-summary__branding-total-input text-like" value="0.00" readonly>
                                 <span class="currency">руб.</span>
                             </div>
-                        </p>
-                        <p class="cart-summary__total">Итого: 
+                        </div>
+                        <div class="cart-summary__total">Итого:
                             <div class="price-container" style="display: inline-flex;">
                                 <input type="number" class="cart-summary__total-input text-like" value="0.00" readonly>
                                 <span class="currency">руб.</span>
                             </div>
-                        </p>
+                        </div>
                     </div>
                     <div class="cart-summary__actions">
                         <button class="btn btn__cancel cart-summary__continue">Продолжить покупки</button>
