@@ -3173,7 +3173,7 @@ dialog.company-dialog textarea {
 }
 .contacts-page__map-container {
   width: 100%;
-  height: auto;
+  height: 400px;
   margin: 20px 0;
   border-radius: 8px;
   overflow: hidden;
@@ -3208,138 +3208,49 @@ dialog.company-dialog textarea {
   margin-bottom: 10px;
 }
 .contacts-page__form {
-  margin: 30px 0;
+  margin-bottom: 40px;
 }
 .contacts-page__form h3 {
-  font-size: 20px;
+  font-family: "Montserrat", sans-serif;
+  font-size: 22px;
   font-weight: 600;
-  margin-bottom: 20px;
   color: #0F4880;
-}
-
-.contact-form-white {
-  background-color: #fff;
-  padding: 30px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  color: #0F4880;
+  margin-bottom: 20px;
 }
 
 .contact-form {
-  width: 100%;
+  max-width: 600px;
+  margin: 20px auto;
 }
 .contact-form .form-group {
   margin-bottom: 20px;
 }
 .contact-form .form-group label {
   display: block;
-  margin-bottom: 8px;
-  font-weight: 500;
-  color: #0F4880;
-  text-transform: uppercase;
-  font-size: 14px;
-  letter-spacing: 0.5px;
+  margin-bottom: 5px;
+  font-weight: 600;
+  font-family: "Montserrat", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #4A4A4A;
 }
 .contact-form .form-group input,
 .contact-form .form-group textarea {
   width: 100%;
   padding: 10px;
-  border: 1px solid #D1E0E0;
-  border-radius: 6px;
-  font-size: 16px;
-  transition: border-color 0.3s;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: "Montserrat", sans-serif;
 }
 .contact-form .form-group textarea {
-  min-height: 120px;
   resize: vertical;
-}
-
-.captcha-container {
-  margin-bottom: 10px;
-}
-
-#simple-captcha {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 10px;
-}
-
-#captcha-question {
-  font-weight: 500;
-  min-width: 160px;
-}
-
-#captcha-answer {
-  max-width: 100px;
-  padding: 8px;
-  border: 1px solid #D1E0E0;
-  border-radius: 6px;
-}
-
-.captcha-error {
-  color: #d12c2c;
-  font-size: 14px;
-  margin-top: 5px;
-}
-
-.alert {
-  padding: 15px;
-  margin-bottom: 20px;
-  border-radius: 6px;
-  font-size: 16px;
-}
-
-.alert-success {
-  background-color: #defce8;
-  color: #1a7d44;
-  border: 1px solid #b9f1cc;
-}
-
-.alert-danger {
-  background-color: #ffe8e8;
-  color: #d12c2c;
-  border: 1px solid #ffb3b3;
 }
 
 @media (max-width: 768px) {
   .contacts-page__details {
     grid-template-columns: 1fr;
   }
-  
-  .contacts-page__content {
-    grid-template-columns: 1fr;
-  }
-  
-  .g-recaptcha {
-    transform:scale(0.85);
-    transform-origin:0 0;
-  }
-}
-
-@media (max-width: 480px) {
-  .g-recaptcha {
-    transform:scale(0.75);
-    transform-origin:0 0;
-  }
-}
-
-.map-description {
-  margin-top: 10px;
-  padding: 10px;
-  background-color: #fff;
-  border-radius: 6px;
-  border: 1px solid #D1E0E0;
-}
-
-.map-description p {
-  margin: 5px 0;
-  font-size: 14px;
-  color: #4A4A4A;
-}
-
-.map-description p strong {
-  color: #0F4880;
-  font-weight: 600;
 }
 
 /*# sourceMappingURL=style.css.map */
