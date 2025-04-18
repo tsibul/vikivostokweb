@@ -24,6 +24,7 @@ urlpatterns = [
     path('products/', views.catalogue_search, name='catalogue'),
     path('shablon', views.layout, name='layout' ),
     path('price', views.price, name='price'),
+    path('export-price-csv', views.export_price_csv, name='export_price_csv'),
     path('cart', views.cart, name='cart'),
     path('about', views.about, name='about'),
     path('news', views.news, name='news'),
