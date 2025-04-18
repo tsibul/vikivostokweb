@@ -2531,15 +2531,17 @@ dialog.company-dialog textarea {
   flex-direction: column;
   gap: 0.5rem;
 }
-.cart-summary__info p {
+.cart-summary__info div {
   margin: 0;
   font-size: 0.95rem;
   display: flex;
   justify-content: space-between;
 }
-.cart-summary__info p span {
+.cart-summary__info div * {
   font-weight: 600;
-  text-align: right;
+}
+.cart-summary__info div span {
+  font-weight: 400;
 }
 .cart-summary__info .cart-summary__total {
   font-size: 1.2rem;
@@ -2547,6 +2549,8 @@ dialog.company-dialog textarea {
   margin-top: 0.5rem;
   padding-top: 0.5rem;
   border-top: 1px solid #0F4880;
+  display: flex;
+  justify-content: space-between;
 }
 .cart-summary__actions {
   display: flex;
@@ -2776,6 +2780,35 @@ dialog.company-dialog textarea {
   .recently-viewed__name {
     min-height: auto;
   }
+}
+
+/* Styles to make readonly inputs look like text */
+input[readonly].text-like {
+  border: none;
+  background: transparent;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+  padding: 0;
+  text-align: right;
+  width: 80px;
+  -moz-appearance: textfield; /* Firefox */
+}
+
+input[readonly].text-like::-webkit-outer-spin-button,
+input[readonly].text-like::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.price-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.currency {
+  margin-left: 5px;
 }
 
 /* Модальное окно для добавления в корзину */
