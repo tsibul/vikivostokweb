@@ -11,6 +11,7 @@
 
     {#    <script src="{% static 'production/js/dist/login.bundle.js' %}" defer type="module"></script>#}
     <script src="https://kit.fontawesome.com/e2a5b405b2.js" crossorigin="anonymous"></script>
+    <script src="{% static 'viki_web/js/addToCart.js' %}" defer></script>
     <link rel="stylesheet" href="{% static 'viki_web/css/style.css' %}">
 
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
@@ -47,6 +48,7 @@
                         <img src="{% static 'viki_web/icons/cart_menu.svg' %}"
                              alt="cart" class="">
                         <div class="tooltip-text">корзина</div>
+                        <span class="cart-badge"></span>
                     </a>
                 </nav>
                 <nav class="menu__cabinet catalogue">
