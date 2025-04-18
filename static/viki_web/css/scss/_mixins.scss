@@ -4,3 +4,46 @@
   border: 1px solid $colorPrimary;
   border-radius: 6px;
 }
+
+// Typography Mixins
+@mixin typo-p {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: $colorNeutral500;
+}
+
+@mixin typo-small {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: $colorNeutral400;
+}
+
+@mixin typo-h1 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: $colorPrimary;
+}
+
+@mixin typo-h2 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: $colorPrimary;
+}
+
+@mixin typo-h3 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: $colorPrimary;
+}
+
+@mixin typo-h4 {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: $colorPrimary;
+}

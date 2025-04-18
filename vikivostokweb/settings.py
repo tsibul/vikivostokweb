@@ -23,6 +23,11 @@ sec_key = config_dict['sec_key']
 e_mail = config_dict['e_mail']
 e_mail_pass = config_dict['e_mail_pass']
 
+# Получаем ключи reCAPTCHA из конфигурационного файла, если они есть
+# Используем тестовые ключи Google для локальной разработки
+recaptcha_site_key = config_dict.get('recaptcha_site_key', '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI')
+recaptcha_secret_key = config_dict.get('recaptcha_secret_key', '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe')
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -123,3 +128,10 @@ EMAIL_USE_TLS = False
 EMAIL_HOST_USER = e_mail
 EMAIL_HOST_PASSWORD = e_mail_pass
 DEFAULT_FROM_EMAIL = 'no-reply@vikivostok.ru'
+
+# Настройки для reCAPTCHA
+RECAPTCHA_SITE_KEY = recaptcha_site_key
+RECAPTCHA_SECRET_KEY = recaptcha_secret_key
+
+# Email для получения сообщений с контактной формы
+CONTACT_EMAIL = 'office@vikivostok.ru'

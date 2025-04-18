@@ -1,0 +1,230 @@
+{% extends "header.html" %}
+{% load static %}
+
+{% block content %}
+<main class="contacts-page">
+    <div class="container">
+        <h1 class="section-title">Контакты</h1>
+        
+        <div class="contacts-page__content">
+            <div class="contacts-page__info">
+                <h3>Контактная информация</h3>
+                <div class="contacts-page__details">
+                    <div class="contacts-page__detail">
+                        <i class="fa fa-map-marker"></i>
+                        <div>
+                            <h4>Адрес производства:</h4>
+                            <p>Московская обл, Балашиха, дер. Полтево, владение 115Д</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contacts-page__detail">
+                        <i class="fa fa-phone"></i>
+                        <div>
+                            <h4>Телефоны:</h4>
+                            <p>+7 (495) 640-4825</p>
+                            <p>+7 (926) 602-6441</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contacts-page__detail">
+                        <i class="fa fa-envelope"></i>
+                        <div>
+                            <h4>Email:</h4>
+                            <p>office@vikivostok.ru</p>
+                            <p>vikivostok@gmail.com</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contacts-page__detail">
+                        <i class="fa fa-clock-o"></i>
+                        <div>
+                            <h4>Часы работы:</h4>
+                            <p>пн. - пт. : 8:00 - 17:00</p>
+                            <p></p>
+                        </div>
+                    </div>
+                    
+                    <div class="contacts-page__detail">
+                        <i class="fa fa-whatsapp"></i>
+                        <div>
+                            <h4>WhatsApp:</h4>
+                            <p><a href="https://api.whatsapp.com/send/?phone=79266026441">+7 926 602-6441</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="contacts-page__map">
+                <h3>Схема проезда</h3>
+                <div class="contacts-page__map-container">
+                    <!-- Используем прямую ссылку на Яндекс.Карты с отметкой -->
+                    <a href="https://yandex.ru/maps/?pt=38.130939,55.709623&z=16&l=map" target="_blank">
+                        <img src="https://static-maps.yandex.ru/1.x/?ll=38.130939,55.709623&size=650,450&z=16&l=map&pt=38.130939,55.709623,pm2rdm" 
+                             alt="Карта с расположением ВикиВосток" 
+                             style="width:100%; height:auto; border-radius:8px;">
+                    </a>
+                    <div class="map-description">
+                        <p><strong>ВикиВосток</strong> - Московская обл, Балашиха, дер. Полтево, владение 115Д</p>
+                        <p>Нажмите на карту для открытия интерактивной версии в Яндекс.Картах</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="contacts-page__form contact-form-white">
+                <h3>Напишите нам</h3>
+                
+                {% if success_message %}
+                <div class="alert alert-success">
+                    {{ success_message }}
+                </div>
+                {% endif %}
+                
+                {% if error_message %}
+                <div class="alert alert-danger">
+                    {{ error_message }}
+                </div>
+                {% endif %}
+                
+                <form action="#" method="post" class="contact-form">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="name">Ваше имя</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Ваш email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Ваш телефон</label>
+                        <input type="tel" id="phone" name="phone">
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Сообщение</label>
+                        <textarea id="message" name="message" rows="5" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="captcha">Защита от спама</label>
+                        <div class="captcha-container">
+                            <div id="simple-captcha">
+                                <span id="captcha-question">Сколько будет 7 + 5?</span>
+                                <input type="number" id="captcha-answer" name="captcha_answer" min="0" max="100" required>
+                                <input type="hidden" id="captcha-expected" name="captcha_expected" value="12">
+                            </div>
+                            {% if captcha_error %}
+                            <div class="captcha-error">{{ captcha_error }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn__save">Отправить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+{% if True %}
+<script>
+    // Генерация случайного математического вопроса для капчи
+    document.addEventListener('DOMContentLoaded', function() {
+        // Генерируем случайные числа для капчи
+        function generateCaptcha() {
+            const num1 = Math.floor(Math.random() * 10) + 1;
+            const num2 = Math.floor(Math.random() * 10) + 1;
+            const answer = num1 + num2;
+            
+            document.getElementById('captcha-question').textContent = `Сколько будет ${num1} + ${num2}?`;
+            document.getElementById('captcha-expected').value = answer;
+        }
+        
+        // Генерируем капчу при загрузке страницы
+        generateCaptcha();
+        
+        const contactForm = document.querySelector('.contact-form');
+        
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Проверяем капчу
+            const userAnswer = document.getElementById('captcha-answer').value;
+            const expectedAnswer = document.getElementById('captcha-expected').value;
+            
+            if (userAnswer != expectedAnswer) {
+                // Если капча не пройдена
+                const alertDiv = document.createElement('div');
+                alertDiv.classList.add('alert', 'alert-danger');
+                alertDiv.textContent = 'Неверный ответ на вопрос. Пожалуйста, попробуйте снова.';
+                
+                // Удаляем предыдущие сообщения
+                const existingAlerts = document.querySelectorAll('.contact-form .alert');
+                existingAlerts.forEach(alert => alert.remove());
+                
+                // Вставляем сообщение перед формой
+                contactForm.parentNode.insertBefore(alertDiv, contactForm);
+                
+                // Генерируем новую капчу
+                generateCaptcha();
+                document.getElementById('captcha-answer').value = '';
+                return;
+            }
+            
+            const formData = new FormData(this);
+            
+            fetch('{% url "viki_web:contacts" %}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Создаем элемент для сообщения
+                const alertDiv = document.createElement('div');
+                alertDiv.classList.add('alert');
+                
+                if (data.success) {
+                    alertDiv.classList.add('alert-success');
+                    alertDiv.textContent = data.message;
+                    contactForm.reset(); // Очищаем форму при успешной отправке
+                    generateCaptcha(); // Генерируем новую капчу
+                } else {
+                    alertDiv.classList.add('alert-danger');
+                    alertDiv.textContent = data.message;
+                }
+                
+                // Удаляем предыдущие сообщения
+                const existingAlerts = document.querySelectorAll('.contact-form .alert');
+                existingAlerts.forEach(alert => alert.remove());
+                
+                // Вставляем сообщение перед формой
+                contactForm.parentNode.insertBefore(alertDiv, contactForm);
+                
+                // Прокручиваем к сообщению
+                alertDiv.scrollIntoView({ behavior: 'smooth' });
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+                const alertDiv = document.createElement('div');
+                alertDiv.classList.add('alert', 'alert-danger');
+                alertDiv.textContent = 'Произошла ошибка при отправке формы. Пожалуйста, попробуйте позже.';
+                
+                // Удаляем предыдущие сообщения
+                const existingAlerts = document.querySelectorAll('.contact-form .alert');
+                existingAlerts.forEach(alert => alert.remove());
+                
+                // Вставляем сообщение перед формой
+                contactForm.parentNode.insertBefore(alertDiv, contactForm);
+                
+                // Генерируем новую капчу
+                generateCaptcha();
+                document.getElementById('captcha-answer').value = '';
+            });
+        });
+    });
+</script>
+{% endif %}
+{% endblock %} 

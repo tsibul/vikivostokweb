@@ -11,6 +11,7 @@
 
     {#    <script src="{% static 'production/js/dist/login.bundle.js' %}" defer type="module"></script>#}
     <script src="{% static 'viki_web/js/login.js' %}" defer type="module"></script>
+    <script src="{% static 'viki_web/js/aboutMenu.js' %}" defer type="module"></script>
     <script src="https://kit.fontawesome.com/e2a5b405b2.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{% static 'viki_web/css/style.css' %}">
 
@@ -36,11 +37,16 @@
                     <li class="menu__item">
                         <a href="{% url 'viki_web:layout' %}">Шаблоны</a>
                     </li>
-                    <li class="menu__item">
+                    <li class="menu__item about-menu catalogue">
                         <div>О компании</div>
+                        <ul class="catalogue__item about-menu__dropdown">
+                            <li><a href="{% url 'viki_web:about' %}">О компании</a></li>
+                            <li><a href="{% url 'viki_web:news' %}">Новости</a></li>
+                            <li><a href="{% url 'viki_web:privacy' %}">Политика конфиденциальности</a></li>
+                        </ul>
                     </li>
                     <li class="menu__item">
-                        <div>Контакты</div>
+                        <a href="{% url 'viki_web:contacts' %}">Контакты</a>
                     </li>
                 </ul>
             </nav>

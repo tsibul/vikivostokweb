@@ -25,4 +25,8 @@ urlpatterns = [
     path('shablon', views.layout, name='layout' ),
     path('price', views.price, name='price'),
     path('cart', views.cart, name='cart'),
+    path('about', views.about, name='about'),
+    path('news', views.news, name='news'),
+    path('privacy', views.privacy, name='privacy'),
+    path('contacts', views.contacts, name='contacts'),
 ]

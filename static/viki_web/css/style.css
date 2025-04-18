@@ -2911,5 +2911,435 @@ dialog.company-dialog textarea {
     font-size: 13px;
   }
 }
+.about-menu__dropdown {
+  width: 260px !important;
+}
+.about-menu__dropdown li {
+  font-family: "Montserrat", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #4A4A4A;
+  transition: background-color 0.2s ease;
+}
+.about-menu__dropdown li a {
+  display: block;
+  text-decoration: none;
+  color: #0F4880;
+  width: 100%;
+  height: 100%;
+}
+.about-menu__dropdown.force-display {
+  display: block !important;
+}
+
+@media (max-width: 768px) {
+  .about-menu {
+    position: relative;
+  }
+  .about-menu__dropdown {
+    top: 36px;
+    width: 200px !important;
+  }
+}
+.about-page {
+  padding: 40px 0;
+}
+.about-page__title {
+  font-family: "Montserrat", sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: #0F4880;
+  color: #0F4880;
+  margin-bottom: 32px;
+  text-align: center;
+}
+.about-page__content {
+  font-family: "Montserrat", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #4A4A4A;
+  max-width: 1000px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+.about-page__content p {
+  margin-bottom: 16px;
+}
+.about-page__content h3 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: #0F4880;
+  color: #0F4880;
+  margin: 32px 0 16px;
+}
+.about-page__content ul {
+  margin-bottom: 16px;
+  padding-left: 24px;
+}
+.about-page__content ul li {
+  margin-bottom: 12px;
+}
+.about-page__image {
+  width: 100%;
+  max-width: 600px;
+  margin: 32px auto;
+  display: block;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.about-page__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 30px;
+  margin: 40px 0;
+}
+.about-page__product {
+  border: 1px solid rgba(0, 158, 163, 0.25);
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+}
+.about-page__product img {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 15px;
+  border-radius: 4px;
+}
+.about-page__product h4 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #0F4880;
+  margin-bottom: 10px;
+}
+.about-page__product p {
+  margin: 0;
+}
+
+.news-page {
+  padding: 40px 0;
+}
+.news-page__title {
+  font-family: "Montserrat", sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: #0F4880;
+  color: #0F4880;
+  margin-bottom: 32px;
+  text-align: center;
+}
+.news-page__list {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.news-page__item {
+  margin-bottom: 32px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid rgba(0, 158, 163, 0.25);
+}
+.news-page__item:last-child {
+  border-bottom: none;
+}
+.news-page__item-title {
+  font-family: "Montserrat", sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: #0F4880;
+  color: #0F4880;
+  margin-bottom: 8px;
+}
+.news-page__date {
+  font-family: "Montserrat", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #555;
+  color: rgba(0, 158, 163, 0.75);
+  margin-bottom: 16px;
+  display: block;
+}
+.news-page__content {
+  font-family: "Montserrat", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #4A4A4A;
+  line-height: 1.6;
+}
+.news-page__content p {
+  margin-bottom: 16px;
+}
+
+.privacy-page {
+  padding: 40px 0;
+}
+.privacy-page__title {
+  font-family: "Montserrat", sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: #0F4880;
+  color: #0F4880;
+  margin-bottom: 32px;
+  text-align: center;
+}
+.privacy-page__content {
+  font-family: "Montserrat", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #4A4A4A;
+  max-width: 1000px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+.privacy-page__content p {
+  margin-bottom: 16px;
+}
+.privacy-page__content h3 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: #0F4880;
+  color: #0F4880;
+  margin: 32px 0 16px;
+}
+.privacy-page__content ol, .privacy-page__content ul {
+  margin-bottom: 16px;
+  padding-left: 24px;
+}
+.privacy-page__content ol li, .privacy-page__content ul li {
+  margin-bottom: 8px;
+}
+
+.contacts-page {
+  padding: 40px 0;
+}
+.contacts-page__content {
+  margin-top: 30px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.contacts-page__info {
+  margin-bottom: 40px;
+}
+.contacts-page__info h3 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: #0F4880;
+  color: #0F4880;
+  margin-bottom: 20px;
+}
+.contacts-page__details {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+.contacts-page__detail {
+  display: flex;
+  align-items: flex-start;
+  padding: 15px;
+  border: 1px solid rgba(0, 158, 163, 0.25);
+  border-radius: 8px;
+}
+.contacts-page__detail i {
+  font-size: 24px;
+  margin-right: 15px;
+  color: #0F4880;
+}
+.contacts-page__detail h4 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #0F4880;
+  margin: 0 0 10px 0;
+}
+.contacts-page__detail p {
+  margin: 5px 0;
+  font-family: "Montserrat", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #4A4A4A;
+}
+.contacts-page__map {
+  margin-bottom: 40px;
+}
+.contacts-page__map h3 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: #0F4880;
+  color: #0F4880;
+  margin-bottom: 20px;
+}
+.contacts-page__map-container {
+  width: 100%;
+  height: auto;
+  margin: 20px 0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.contacts-page__directions {
+  padding: 15px;
+  background-color: #f8f8f8;
+  border-radius: 8px;
+}
+.contacts-page__directions h4 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #0F4880;
+  margin-top: 0;
+}
+.contacts-page__directions ul {
+  padding-left: 20px;
+}
+.contacts-page__directions ul li {
+  margin-bottom: 8px;
+  font-family: "Montserrat", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #4A4A4A;
+}
+.contacts-page__directions p {
+  font-family: "Montserrat", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #4A4A4A;
+  margin-bottom: 10px;
+}
+.contacts-page__form {
+  margin: 30px 0;
+}
+.contacts-page__form h3 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #0F4880;
+}
+
+.contact-form-white {
+  background-color: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.contact-form {
+  width: 100%;
+}
+.contact-form .form-group {
+  margin-bottom: 20px;
+}
+.contact-form .form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #0F4880;
+  text-transform: uppercase;
+  font-size: 14px;
+  letter-spacing: 0.5px;
+}
+.contact-form .form-group input,
+.contact-form .form-group textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #D1E0E0;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+.contact-form .form-group textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.captcha-container {
+  margin-bottom: 10px;
+}
+
+#simple-captcha {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 10px;
+}
+
+#captcha-question {
+  font-weight: 500;
+  min-width: 160px;
+}
+
+#captcha-answer {
+  max-width: 100px;
+  padding: 8px;
+  border: 1px solid #D1E0E0;
+  border-radius: 6px;
+}
+
+.captcha-error {
+  color: #d12c2c;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.alert {
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.alert-success {
+  background-color: #defce8;
+  color: #1a7d44;
+  border: 1px solid #b9f1cc;
+}
+
+.alert-danger {
+  background-color: #ffe8e8;
+  color: #d12c2c;
+  border: 1px solid #ffb3b3;
+}
+
+@media (max-width: 768px) {
+  .contacts-page__details {
+    grid-template-columns: 1fr;
+  }
+  
+  .contacts-page__content {
+    grid-template-columns: 1fr;
+  }
+  
+  .g-recaptcha {
+    transform:scale(0.85);
+    transform-origin:0 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .g-recaptcha {
+    transform:scale(0.75);
+    transform-origin:0 0;
+  }
+}
+
+.map-description {
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 6px;
+  border: 1px solid #D1E0E0;
+}
+
+.map-description p {
+  margin: 5px 0;
+  font-size: 14px;
+  color: #4A4A4A;
+}
+
+.map-description p strong {
+  color: #0F4880;
+  font-weight: 600;
+}
 
 /*# sourceMappingURL=style.css.map */
