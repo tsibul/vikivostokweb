@@ -66,6 +66,19 @@ function initCartItemRemove() {
     removeButtons.forEach(button => {
         button.addEventListener('click', function() {
             const cartItem = this.closest('.cart-item');
+            const itemId = this.dataset.id;
+            
+            // Удаляем товар из localStorage
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            const updatedCart = cart.filter(item => item.id != itemId);
+            localStorage.setItem('cart', JSON.stringify(updatedCart));
+            
+            // Обновляем бэдж корзины
+            if (window.CartManager) {
+                window.CartManager.updateBadge();
+            }
+            
+            // Удаляем товар из DOM
             cartItem.remove();
             updateCartSummary();
             
