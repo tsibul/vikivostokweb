@@ -3305,5 +3305,117 @@ input[readonly].text-like::-webkit-inner-spin-button {
     grid-template-columns: 1fr;
   }
 }
+/* Custom Dropdown Component */
+.viki-dropdown {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  /* Dropdown placement modifiers */
+  /* Dropdown sizes */
+  /* Secondary color variant */
+}
+.viki-dropdown__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 8px;
+  background-color: #fff;
+  border: 1px solid #0F4880;
+  border-radius: 6px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 0.85rem;
+}
+.viki-dropdown__trigger-icon {
+  display: inline-flex;
+  transition: transform 0.2s ease;
+}
+.viki-dropdown--open .viki-dropdown__trigger-icon {
+  transform: rotate(180deg);
+}
+.viki-dropdown__menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 200px;
+  width: max-content;
+  max-height: 0;
+  overflow: hidden;
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.2s ease-in-out;
+  /* Ensure the menu is initially hidden with zero height */
+  max-height: 0;
+  visibility: hidden;
+}
+.viki-dropdown--open .viki-dropdown__menu {
+  max-height: 300px;
+  opacity: 1;
+  transform: translateY(0);
+  overflow: auto;
+  visibility: visible;
+}
+.viki-dropdown__menu-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.viki-dropdown__menu-item {
+  padding: 0;
+  margin: 0;
+}
+.viki-dropdown__menu-item:not(:last-child) {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+.viki-dropdown__menu-link {
+  display: block;
+  padding: 10px 16px;
+  color: #4A4A4A;
+  text-decoration: none;
+  transition: background-color 0.15s ease;
+}
+.viki-dropdown__menu-link:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  color: #0F4880;
+}
+.viki-dropdown__menu-link--active {
+  color: #0F4880;
+  font-weight: 500;
+  background-color: rgba(15, 72, 128, 0.05);
+}
+.viki-dropdown__menu-link--disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+.viki-dropdown--right .viki-dropdown__menu {
+  left: auto;
+  right: 0;
+}
+.viki-dropdown--top .viki-dropdown__menu {
+  top: auto;
+  bottom: calc(100% + 8px);
+}
+.viki-dropdown--sm .viki-dropdown__trigger {
+  padding: 6px 12px;
+  font-size: 0.875rem;
+}
+.viki-dropdown--lg .viki-dropdown__trigger {
+  padding: 10px 20px;
+  font-size: 1.125rem;
+}
+.viki-dropdown--secondary .viki-dropdown__trigger {
+  background-color: #009EA3;
+}
+.viki-dropdown--secondary .viki-dropdown__menu-link:hover {
+  color: #009EA3;
+}
+.viki-dropdown--secondary .viki-dropdown__menu-link--active {
+  color: #009EA3;
+  background-color: rgba(0, 158, 163, 0.05);
+}
 
 /*# sourceMappingURL=style.css.map */
