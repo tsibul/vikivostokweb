@@ -9,12 +9,176 @@ const printOpportunitiesCache = new Map();
  * Инициализация функций корзины при загрузке документа
  */
 document.addEventListener('DOMContentLoaded', function() {
+    renderCart();
     initCartQuantity();
     initCartItemRemove();
     initBranding();
     RecentlyViewed.init();
-    window.cart = new Cart();
+    // Проверяем, что CartManager существует
+    if (!window.CartManager) {
+        window.CartManager = {
+            updateBadge() {
+                const cartCount = document.querySelector('.cart-count');
+                if (cartCount) {
+                    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+                    cartCount.textContent = cart.length;
+                    cartCount.style.display = cart.length > 0 ? 'flex' : 'none';
+                }
+            }
+        };
+    }
+    // Обновляем бейдж корзины
+    window.CartManager.updateBadge();
 });
+
+/**
+ * Отрисовка корзины и расчет итогов
+ */
+function renderCart() {
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const cartItemsContainer = document.querySelector('.cart-page__items');
+    const cartEmpty = document.querySelector('.cart-empty');
+    const cartSummary = document.querySelector('.cart-summary');
+    
+    // Show/hide empty cart message
+    if (cart.length === 0) {
+        cartItemsContainer.classList.add('item-hidden');
+        cartSummary.classList.add('item-hidden');
+        cartEmpty.classList.remove('item-hidden');
+    } else {
+        cartItemsContainer.classList.remove('item-hidden');
+        cartSummary.classList.remove('item-hidden');
+        cartEmpty.classList.add('item-hidden');
+    }
+
+    // Update cart items
+    cartItemsContainer.innerHTML = '';
+    let totalItems = 0;
+    let subtotal = 0;
+    let brandingTotal = 0;
+
+    cart.forEach((item, index) => {
+        totalItems += item.quantity;
+        
+        // Calculate item total
+        const itemTotal = item.price * item.quantity;
+        subtotal += itemTotal;
+        
+        // Calculate branding total
+        let itemBrandingTotal = 0;
+        if (item.branding && item.branding.length > 0) {
+            itemBrandingTotal = item.branding.reduce((sum, b) => sum + (b.price * item.quantity), 0);
+            brandingTotal += itemBrandingTotal;
+        }
+
+        // Create cart item HTML
+        const cartItem = document.createElement('div');
+        cartItem.className = 'cart-item';
+        cartItem.innerHTML = `
+            <div class="cart-item__image">
+                <img src="${item.image}" alt="${item.name}">
+            </div>
+            <div class="cart-item__info">
+                <h3 class="cart-item__name">${item.name}</h3>
+                <p class="cart-item__article">Артикул: ${item.article}</p>
+                <p class="cart-item__description">${item.description || ''}</p>
+            </div>
+            <div class="cart-item__price">
+                <div class="price-container">
+                    <input type="number" class="cart-item__price-single-input text-like" value="${item.price.toFixed(2)}" readonly>
+                    <span class="currency">руб.</span>
+                </div>
+            </div>
+            <div class="cart-item__quantity">
+                <button class="cart-item__quantity-btn cart-item__quantity-decrease">-</button>
+                <input type="number" class="cart-item__quantity-input" value="${item.quantity}" min="1">
+                <button class="cart-item__quantity-btn cart-item__quantity-increase">+</button>
+            </div>
+            <div class="cart-item__total">
+                <div class="price-container">
+                    <input type="number" class="cart-item__total-price-input text-like" value="${itemTotal.toFixed(2)}" readonly>
+                    <span class="currency">руб.</span>
+                </div>
+            </div>
+            <div class="cart-item__actions">
+                <button class="cart-item__remove" data-id="${item.id}">
+                    <i class="fa-solid fa-trash"></i>
+                </button>
+            </div>
+            
+            <!-- Branding section -->
+            <div class="cart-item__branding">
+                <div class="branding-header">
+                    <h4>Брендирование</h4>
+                    <button class="branding-add-btn" data-item="${item.article}" data-goods-id="${item.goodsId}">+ Добавить</button>
+                </div>
+                
+                <div class="branding-items">
+                    ${item.branding ? item.branding.map((branding, bIndex) => `
+                        <div class="branding-item">
+                            <div class="branding-item__row">
+                                <div class="branding-field branding-field-type">
+                                    <select class="branding-type">
+                                        <option value="${branding.type_id || branding.type}" selected>${branding.type}</option>
+                                    </select>
+                                </div>
+                                <div class="branding-field branding-field-location">
+                                    <select class="branding-location">
+                                        <option value="${branding.location_id || branding.location}" selected>${branding.location}</option>
+                                    </select>
+                                </div>
+                                <div class="branding-field branding-field-colors">
+                                    <select class="branding-colors">
+                                        <option value="${branding.colors}" selected>${branding.colors === 'full' ? 'Полноцвет' : (branding.colors == 1 ? '1 цвет' : (branding.colors > 1 && branding.colors < 5 ? branding.colors + ' цвета' : branding.colors + ' цветов'))}</option>
+                                    </select>
+                                </div>
+                                <div class="branding-field branding-checkbox">
+                                    <input type="checkbox" id="second-pass-${index}-${bIndex}" class="branding-second-pass" ${branding.secondPass ? 'checked' : ''}>
+                                    <label for="second-pass-${index}-${bIndex}">2й проход</label>
+                                </div>
+                                <div class="branding-field branding-field-price">
+                                    <input type="number" class="branding-price" value="${branding.price}" min="0">
+                                    <span class="currency">руб.</span>
+                                </div>
+                                <div class="branding-field branding-field-total">
+                                    <div class="price-container">
+                                        <input type="number" class="branding-total-price-input text-like" value="${(branding.price * item.quantity).toFixed(2)}" readonly>
+                                        <span class="currency">руб.</span>
+                                    </div>
+                                </div>
+                                <div class="branding-field branding-field-actions">
+                                    <button class="branding-remove-btn"><i class="fa-solid fa-trash"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('') : ''}
+                </div>
+                <div class="branding-subtotal">
+                    <span>Итого за нанесение:</span>
+                    <div class="price-container">
+                        <input type="number" class="branding-subtotal-price-input text-like" value="${itemBrandingTotal.toFixed(2)}" readonly>
+                        <span class="currency">руб.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="cart-item__final-total">
+                <span>Итого за товар с нанесением:</span>
+                <div class="price-container">
+                    <input type="number" class="cart-item__final-total-price-input text-like" value="${(itemTotal + itemBrandingTotal).toFixed(2)}" readonly>
+                    <span class="currency">руб.</span>
+                </div>
+            </div>
+        `;
+        cartItemsContainer.appendChild(cartItem);
+    });
+
+    // Update cart summary
+    const total = subtotal + brandingTotal;
+    document.querySelector('.cart-summary__items-input').value = totalItems;
+    document.querySelector('.cart-summary__subtotal-input').value = subtotal.toFixed(2);
+    document.querySelector('.cart-summary__branding-total-input').value = brandingTotal.toFixed(2);
+    document.querySelector('.cart-summary__total-input').value = total.toFixed(2);
+}
 
 /**
  * Инициализация кнопок изменения количества товаров
@@ -359,6 +523,25 @@ function initBranding() {
                 } else {
                     // Проверяем доступность мест для нанесения
                     const brandingContainer = item.querySelector('.branding-items');
+                    
+                    // Обновляем опции для существующих элементов брендирования
+                    const brandingItems = brandingContainer.querySelectorAll('.branding-item');
+                    brandingItems.forEach(brandingItem => {
+                        const typeSelect = brandingItem.querySelector('.branding-type');
+                        const locationSelect = brandingItem.querySelector('.branding-location');
+                        const colorsSelect = brandingItem.querySelector('.branding-colors');
+                        
+                        if (typeSelect && locationSelect && colorsSelect) {
+                            // Обновляем опции для каждого селекта
+                            updateAllLocationOptionsInContainer(brandingContainer, goodsId);
+                            
+                            // Обновляем опции цветов для текущей комбинации типа и места
+                            if (typeSelect.value && locationSelect.value) {
+                                updateColorsOptions(opportunities, typeSelect.value, locationSelect.value, colorsSelect);
+                            }
+                        }
+                    });
+                    
                     checkAndUpdateAddBrandingButton(addBrandingBtn, goodsId, brandingContainer);
                 }
             }
@@ -384,51 +567,67 @@ function initBranding() {
             updateItemFinalTotal(item, itemTotal);
         });
         
-        // Добавление нового брендирования
-        const addBrandingButtons = document.querySelectorAll('.branding-add-btn:not([disabled])');
-        addBrandingButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                const itemArticle = this.dataset.item;
-                const goodsId = this.dataset.goodsId;
-                const brandingContainer = this.closest('.cart-item__branding').querySelector('.branding-items');
-                const brandingCount = brandingContainer.querySelectorAll('.branding-item').length;
-                
-                // Создаем новый элемент брендирования с учетом ограничений
-                const newBrandingItem = createBrandingItem(itemArticle, goodsId, brandingCount + 1, brandingContainer);
-                
-                // Проверяем, есть ли доступные места для нанесения
-                const typeSelect = newBrandingItem.querySelector('.branding-type');
-                const locationSelect = newBrandingItem.querySelector('.branding-location');
-                
-                if (!locationSelect || locationSelect.options.length === 0) {
-                    // Если нет доступных мест, не добавляем элемент и блокируем кнопку
-                    this.disabled = true;
-                    this.title = 'Достигнут лимит для всех мест нанесения';
-                    this.classList.add('disabled');
-                    return;
-                }
-                
-                brandingContainer.appendChild(newBrandingItem);
-                
-                // Инициализируем обработчики для нового элемента
-                initBrandingItemHandlers(newBrandingItem);
-                
-                // Обновляем стоимость
-                updateItemTotal(this.closest('.cart-item'));
-                updateCartSummary();
-                
-                // Проверка на возможность добавления еще одного нанесения
-                checkAndUpdateAddBrandingButton(this, goodsId, brandingContainer);
-                
-                // Обновляем данные в localStorage
-                updateCartBrandingInLocalStorage(this.closest('.cart-item'));
-            });
-        });
+        // Добавляем обработчики для всех кнопок добавления брендирования
+        attachAddBrandingHandlers();
         
         // Инициализация обработчиков для существующих элементов брендирования
         const brandingItems = document.querySelectorAll('.branding-item');
         brandingItems.forEach(item => {
             initBrandingItemHandlers(item);
+        });
+    });
+}
+
+/**
+ * Прикрепляет обработчики событий к кнопкам добавления брендирования
+ */
+function attachAddBrandingHandlers() {
+    // Сначала удалим все существующие обработчики
+    const allButtons = document.querySelectorAll('.branding-add-btn');
+    allButtons.forEach(button => {
+        // Клонируем кнопку для удаления всех обработчиков
+        const newButton = button.cloneNode(true);
+        button.parentNode.replaceChild(newButton, button);
+    });
+    
+    // Теперь добавляем новые обработчики только к незаблокированным кнопкам
+    const addBrandingButtons = document.querySelectorAll('.branding-add-btn:not([disabled])');
+    addBrandingButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const itemArticle = this.dataset.item;
+            const goodsId = this.dataset.goodsId;
+            const brandingContainer = this.closest('.cart-item__branding').querySelector('.branding-items');
+            const brandingCount = brandingContainer.querySelectorAll('.branding-item').length;
+            
+            // Создаем новый элемент брендирования с учетом ограничений
+            const newBrandingItem = createBrandingItem(itemArticle, goodsId, brandingCount + 1, brandingContainer);
+            
+            // Проверяем, есть ли доступные места для нанесения
+            const typeSelect = newBrandingItem.querySelector('.branding-type');
+            const locationSelect = newBrandingItem.querySelector('.branding-location');
+            
+            if (!locationSelect || locationSelect.options.length === 0) {
+                // Если нет доступных мест, не добавляем элемент и блокируем кнопку
+                this.disabled = true;
+                this.title = 'Достигнут лимит для всех мест нанесения';
+                this.classList.add('disabled');
+                return;
+            }
+            
+            brandingContainer.appendChild(newBrandingItem);
+            
+            // Инициализируем обработчики для нового элемента
+            initBrandingItemHandlers(newBrandingItem);
+            
+            // Обновляем стоимость
+            updateItemTotal(this.closest('.cart-item'));
+            updateCartSummary();
+            
+            // Проверка на возможность добавления еще одного нанесения
+            checkAndUpdateAddBrandingButton(this, goodsId, brandingContainer);
+            
+            // Обновляем данные в localStorage
+            updateCartBrandingInLocalStorage(this.closest('.cart-item'));
         });
     });
 }
@@ -540,19 +739,28 @@ function initBrandingItemHandlers(brandingItem) {
     // Удаление брендирования
     const removeButton = brandingItem.querySelector('.branding-remove-btn');
     removeButton.addEventListener('click', function() {
-        const typeSelect = brandingItem.querySelector('.branding-type');
-        const locationSelect = brandingItem.querySelector('.branding-location');
-        
         // Удаляем элемент
         brandingItem.remove();
         
         // Обновляем доступные опции для оставшихся элементов
         if (goodsId) {
+            console.log('Брендирование удалено, обновляем остальные элементы');
+            
+            // Обновляем счётчики и доступные места для всех оставшихся элементов
             updateAllLocationOptionsInContainer(brandingContainer, goodsId);
             
-            // Разблокируем кнопку добавления
+            // Разблокируем кнопку добавления, т.к. после удаления элемента должно освободиться место
             if (addBrandingBtn) {
+                // Сначала безусловно разблокируем кнопку
+                addBrandingBtn.disabled = false;
+                addBrandingBtn.title = '';
+                addBrandingBtn.classList.remove('disabled');
+                
+                // Затем перепроверяем, действительно ли есть доступные места
                 checkAndUpdateAddBrandingButton(addBrandingBtn, goodsId, brandingContainer);
+                
+                // Переназначаем обработчики для всех кнопок добавления
+                attachAddBrandingHandlers();
             }
         }
         
@@ -567,14 +775,25 @@ function initBrandingItemHandlers(brandingItem) {
     const typeSelect = brandingItem.querySelector('.branding-type');
     if (typeSelect) {
         typeSelect.addEventListener('change', function() {
+            const opportunities = printOpportunitiesCache.get(goodsId) || [];
             const locationSelect = brandingItem.querySelector('.branding-location');
-            const goodsId = this.dataset.goodsId;
+            const colorsSelect = brandingItem.querySelector('.branding-colors');
             const selectedTypeId = this.value;
             
             // Обновляем опции мест нанесения
             if (goodsId && locationSelect) {
-                const opportunities = printOpportunitiesCache.get(goodsId) || [];
+                // Очищаем текущие опции мест
                 updateLocationOptions(opportunities, selectedTypeId, locationSelect, brandingContainer);
+                
+                // После обновления места нанесения обновляем также количество цветов
+                if (locationSelect.options.length > 0 && colorsSelect) {
+                    updateColorsOptions(opportunities, selectedTypeId, locationSelect.value, colorsSelect);
+                }
+            } else if (colorsSelect) {
+                // Даже если не удалось обновить места, попробуем обновить цвета для выбранного типа и текущего места
+                if (locationSelect && locationSelect.value) {
+                    updateColorsOptions(opportunities, selectedTypeId, locationSelect.value, colorsSelect);
+                }
             }
             
             updateItemTotal(cartItem);
@@ -589,7 +808,6 @@ function initBrandingItemHandlers(brandingItem) {
     const locationSelect = brandingItem.querySelector('.branding-location');
     if (locationSelect) {
         locationSelect.addEventListener('change', function() {
-            const goodsId = this.dataset.goodsId;
             const typeSelect = brandingItem.querySelector('.branding-type');
             const colorsSelect = brandingItem.querySelector('.branding-colors');
             
@@ -598,7 +816,8 @@ function initBrandingItemHandlers(brandingItem) {
                 const selectedTypeId = typeSelect.value;
                 const selectedPlaceId = this.value;
                 
-                // Обновляем опции количества цветов
+                // Обновляем опции количества цветов - всегда для выбранного типа/места, 
+                // независимо от того, доступен ли этот вариант для других элементов
                 updateColorsOptions(opportunities, selectedTypeId, selectedPlaceId, colorsSelect);
                 
                 // Обновляем доступные места для всех элементов
@@ -613,7 +832,7 @@ function initBrandingItemHandlers(brandingItem) {
         });
     }
     
-    // Оставшиеся обработчики с добавлением обновления localStorage
+    // Обработчик изменения количества цветов
     const colorsSelect = brandingItem.querySelector('.branding-colors');
     if (colorsSelect) {
         colorsSelect.addEventListener('change', function() {
@@ -742,11 +961,10 @@ function createBrandingItem(itemArticle, goodsId, index, brandingContainer) {
         return div;
     }
     
-    // Создаем опции для количества цветов
+    // Создаем опции для количества цветов - теперь для первого выбранного типа и места
     let colorOptions = '';
-    let maxColors = 4;
     
-    // Находим опции для выбранного типа и первого доступного места
+    // Находим первое доступное место для выбранного типа
     const selectedPlaceId = locationOptions.match(/value="([^"]+)"/)?.[1];
     if (selectedPlaceId) {
         const selectedOpportunity = opportunities.find(op => 
@@ -754,7 +972,7 @@ function createBrandingItem(itemArticle, goodsId, index, brandingContainer) {
         );
         
         if (selectedOpportunity) {
-            maxColors = selectedOpportunity.color_quantity;
+            const maxColors = selectedOpportunity.color_quantity;
             
             for (let i = 1; i <= maxColors; i++) {
                 const colorText = i === 1 ? '1 цвет' : 
@@ -849,6 +1067,140 @@ function getBrandingCountByTypeAndPlace(brandingContainer) {
 }
 
 /**
+ * Обновляет опции мест нанесения для всех элементов в контейнере
+ * @param {HTMLElement} brandingContainer - Контейнер с брендированиями
+ * @param {string} goodsId - ID товара
+ */
+function updateAllLocationOptionsInContainer(brandingContainer, goodsId) {
+    if (!brandingContainer) return;
+    
+    const brandingItems = brandingContainer.querySelectorAll('.branding-item');
+    const opportunities = printOpportunitiesCache.get(goodsId) || [];
+    
+    // Если нет доступных нанесений или элементов, просто выходим
+    if (!opportunities.length || !brandingItems.length) return;
+    
+    console.log('Обновление мест нанесения для всех элементов:', brandingItems.length);
+    
+    // Сначала собираем информацию о текущих выбранных значениях для каждого элемента
+    const selectedValues = [];
+    brandingItems.forEach(item => {
+        const typeSelect = item.querySelector('.branding-type');
+        const locationSelect = item.querySelector('.branding-location');
+        
+        if (typeSelect && locationSelect) {
+            selectedValues.push({
+                item: item,
+                typeId: typeSelect.value,
+                locationId: locationSelect.value
+            });
+        }
+    });
+    
+    // Получаем уникальные типы печати для всех элементов
+    const printTypes = Array.from(new Set(opportunities.map(op => op.print_type_id)))
+        .map(typeId => {
+            const op = opportunities.find(o => o.print_type_id === typeId);
+            return {
+                id: typeId,
+                name: op ? op.print_type_name : 'Неизвестный тип'
+            };
+        });
+    
+    // Обновляем опции для каждого селекта типа нанесения (перезаполняем их)
+    selectedValues.forEach((selection, index) => {
+        const item = selection.item;
+        const typeSelect = item.querySelector('.branding-type');
+        if (typeSelect) {
+            // Сохраняем текущее выбранное значение
+            const currentTypeId = typeSelect.value;
+            
+            // Очищаем текущие опции
+            typeSelect.innerHTML = '';
+            
+            // Добавляем опции для типов печати
+            printTypes.forEach(type => {
+                const option = document.createElement('option');
+                option.value = type.id;
+                option.textContent = type.name;
+                typeSelect.appendChild(option);
+            });
+            
+            // Восстанавливаем выбранное значение, если оно все еще доступно
+            if (printTypes.some(type => type.id === currentTypeId)) {
+                typeSelect.value = currentTypeId;
+            }
+        }
+    });
+    
+    // Создаем временный контейнер для проверки доступности мест
+    const tempContainer = document.createElement('div');
+    
+    // Теперь обновляем опции мест для каждого элемента
+    selectedValues.forEach((selection, index) => {
+        const item = selection.item;
+        
+        // Для каждого элемента нам нужно знать, какие места заняты другими элементами
+        // Поэтому создаем временный контейнер с другими элементами
+        tempContainer.innerHTML = '';
+        
+        selectedValues.forEach((sel, i) => {
+            if (i !== index) {
+                const tempItem = document.createElement('div');
+                tempItem.className = 'branding-item';
+                tempItem.innerHTML = `
+                    <select class="branding-type" value="${sel.typeId}"></select>
+                    <select class="branding-location" value="${sel.locationId}"></select>
+                `;
+                tempContainer.appendChild(tempItem);
+            }
+        });
+        
+        const typeSelect = item.querySelector('.branding-type');
+        const locationSelect = item.querySelector('.branding-location');
+        
+        if (typeSelect && locationSelect && typeSelect.value) {
+            // Здесь учитываем текущее состояние брендирования для правильного обновления
+            const currentConfig = {
+                typeId: typeSelect.value,
+                locationId: locationSelect.value
+            };
+            
+            // Обновляем опции места с учетом других элементов
+            console.log('Обновляем места для типа:', typeSelect.value);
+            updateLocationOptions(opportunities, typeSelect.value, locationSelect, tempContainer);
+            
+            // Если после обновления нет доступных мест, попробуем найти другой тип с доступными местами
+            if (locationSelect.options.length === 0) {
+                console.warn('Нет доступных мест для текущего типа, ищем другой тип');
+                
+                // Перебираем все типы в поисках доступного места
+                for (const type of printTypes) {
+                    if (type.id === typeSelect.value) continue; // Пропускаем текущий тип
+                    
+                    typeSelect.value = type.id;
+                    updateLocationOptions(opportunities, type.id, locationSelect, tempContainer);
+                    
+                    // Если нашли тип с доступными местами
+                    if (locationSelect.options.length > 0) {
+                        console.log('Найден альтернативный тип с доступными местами:', type.id);
+                        break;
+                    }
+                }
+            }
+        }
+        
+        // Независимо от доступности новых мест, всегда обновляем опции цветов
+        // Если текущая комбинация типа и места допустима (т.е. уже занята этим брендированием),
+        // то мы должны сохранить возможность выбора цветов
+        const colorsSelect = item.querySelector('.branding-colors');
+        if (colorsSelect && typeSelect && locationSelect && typeSelect.value && locationSelect.value) {
+            updateColorsOptions(opportunities, typeSelect.value, locationSelect.value, colorsSelect);
+        }
+    });
+}
+
+/**
  * Обновление опций мест нанесения в зависимости от выбранного типа
  * @param {Array} opportunities - Возможности печати
  * @param {string} selectedTypeId - ID выбранного типа нанесения
@@ -887,6 +1239,9 @@ function updateLocationOptions(opportunities, selectedTypeId, locationSelect, br
     // Восстанавливаем выбранное значение, если оно все еще доступно
     if (locationSelect.querySelector(`option[value="${currentValue}"]`)) {
         locationSelect.value = currentValue;
+    } else if (locationSelect.options.length > 0) {
+        // Если предыдущее значение недоступно, выбираем первое доступное
+        locationSelect.selectedIndex = 0;
     }
 }
 
@@ -905,7 +1260,11 @@ function updateColorsOptions(opportunities, selectedTypeId, selectedPlaceId, col
         op.print_type_id == selectedTypeId && op.print_place_id == selectedPlaceId
     );
     
-    if (!opportunity) return;
+    // Если нет данных о возможностях печати для данной комбинации, выходим
+    if (!opportunity) {
+        console.warn('Не найдены возможности печати для комбинации тип-место:', selectedTypeId, selectedPlaceId);
+        return;
+    }
     
     // Сохраняем текущее выбранное значение
     const currentValue = colorsSelect.value;
@@ -932,31 +1291,16 @@ function updateColorsOptions(opportunities, selectedTypeId, selectedPlaceId, col
     }
     
     // Восстанавливаем выбранное значение, если оно все еще доступно
-    if (currentValue <= opportunity.color_quantity || 
-        (currentValue === 'full' && ['sublimation', 'uv', 'digital'].includes(selectedTypeId))) {
-        colorsSelect.value = currentValue;
-    }
-}
-
-/**
- * Обновляет опции мест нанесения для всех элементов в контейнере
- * @param {HTMLElement} brandingContainer - Контейнер с брендированиями
- * @param {string} goodsId - ID товара
- */
-function updateAllLocationOptionsInContainer(brandingContainer, goodsId) {
-    if (!brandingContainer) return;
-    
-    const brandingItems = brandingContainer.querySelectorAll('.branding-item');
-    const opportunities = printOpportunitiesCache.get(goodsId) || [];
-    
-    brandingItems.forEach(item => {
-        const typeSelect = item.querySelector('.branding-type');
-        const locationSelect = item.querySelector('.branding-location');
-        
-        if (typeSelect && locationSelect) {
-            updateLocationOptions(opportunities, typeSelect.value, locationSelect, brandingContainer);
+    if (colorsSelect.options.length > 0) {
+        if (currentValue === 'full' && ['sublimation', 'uv', 'digital'].includes(selectedTypeId)) {
+            colorsSelect.value = 'full';
+        } else if (!isNaN(parseInt(currentValue)) && parseInt(currentValue) <= opportunity.color_quantity) {
+            colorsSelect.value = currentValue;
+        } else {
+            // Если предыдущее значение недоступно, выбираем первое доступное
+            colorsSelect.selectedIndex = 0;
         }
-    });
+    }
 }
 
 /**
