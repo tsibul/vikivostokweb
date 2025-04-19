@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viki Dropdown Component</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <!-- Assuming styles.css imports _dropdown.scss -->
+    <style>
+        /* Demo styles only */
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        
+        .example-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+        
+        .example-row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        
+        h2 {
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Viki Dropdown Component</h1>
+        
+        <div class="example-section">
+            <h2>Basic Dropdown</h2>
+            <div class="example-row">
+                <div class="viki-dropdown">
+                    <div class="viki-dropdown__trigger">
+                        Выберите опцию
+                        <span class="viki-dropdown__trigger-icon">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </span>
+                    </div>
+                    <div class="viki-dropdown__menu">
+                        <ul class="viki-dropdown__menu-list">
+                            <li class="viki-dropdown__menu-item">
+                                <a href="#" class="viki-dropdown__menu-link">Опция 1</a>
+                            </li>
+                            <li class="viki-dropdown__menu-item">
+                                <a href="#" class="viki-dropdown__menu-link">Опция 2</a>
+                            </li>
+                            <li class="viki-dropdown__menu-item">
+                                <a href="#" class="viki-dropdown__menu-link">Опция 3</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="example-section">
+            <h2>Dropdown Variants</h2>
+            <div class="example-row">
+                <!-- Default -->
+                <div class="viki-dropdown" id="dropdown1">
+                    <div class="viki-dropdown__trigger">
+                        Стандартный
+                        <span class="viki-dropdown__trigger-icon">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </span>
+                    </div>
+                    <div class="viki-dropdown__menu">
+                        <ul class="viki-dropdown__menu-list">
+                            <li class="viki-dropdown__menu-item">
+                                <a href="#" class="viki-dropdown__menu-link">Элемент 1</a>
+                            </li>
+                            <li class="viki-dropdown__menu-item">
+                                <a href="#" class="viki-dropdown__menu-link">Элемент 2</a>
+                            </li>
+                            <li class="viki-dropdown__menu-item">
+                                <a href="#" class="viki-dropdown__menu-link">Элемент 3</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Right aligned -->
+                <div class="viki-dropdown viki-dropdown--right" id="dropdown2">
+                    <div class="viki-dropdown__trigger">
+                        Выровнен справа
+                        <span class="viki-dropdown__trigger-icon">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </span>
+                    </div>
+                    <div class="viki-dropdown__menu">
+                        <ul class="viki-dropdown__menu-list">
+                            <li class="viki-dropdown__menu-item">
+                                <a href="#" class="viki-dropdown__menu-link">Элемент 1</a>
+                            </li>
+                            <li class="viki-dropdown__menu-item">
+                                <a href="#" class="viki-dropdown__menu-link">Элемент 2</a>
+                            </li>
+                            <li class="viki-dropdown__menu-item">
+                                <a href="#" class="viki-dropdown__menu-link">Элемент 3</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Small -->
+                <div class="viki-dropdown viki-dropdown--sm" id="dropdown3">
+                    <div class="viki-dropdown__trigger">
+                        Маленький
+                        <span class="viki-dropdown__trigger-icon">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </span>
+                    </div>
+                    <div class="viki-dropdown__menu">
+                        <ul class="viki-dropdown__menu-list">
+                            <li class="viki-dropdown__menu-item">
+                                <a href="#" class="viki-dropdown__menu-link">Элемент 1</a>
+                            </li>
+                            <li class="viki-dropdown__menu-item">
+                                <a href="#" class="viki-dropdown__menu-link">Элемент 2</a>
+                            </li>
+                            <li class="viki-dropdown__menu-item">
+                                <a href="#" class="viki-dropdown__menu-link">Элемент 3</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Large -->
+                <div class="viki-dropdown viki-dropdown--lg" id="dropdown4">
+                    <div class="viki-dropdown__trigger">
+                        Большой
+                        <span class="viki-dropdown__trigger-icon">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </span>
+                    </div>
+                    <div class="viki-dropdown__menu">
+                        <ul class="viki-dropdown__menu-list">
+                            <li class="viki-dropdown__menu-item">
+                                <a href="#" class="viki-dropdown__menu-link">Элемент 1</a>
+                            </li>
+                            <li class="viki-dropdown__menu-item">
+                                <a href="#" class="viki-dropdown__menu-link">Элемент 2</a>
+                            </li>
+                            <li class="viki-dropdown__menu-item">
+                                <a href="#" class="viki-dropdown__menu-link">Элемент 3</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="example-section">
+            <h2>Dropdown with Active & Disabled Items</h2>
+            <div class="example-row">
+                <div class="viki-dropdown" id="dropdown5">
+                    <div class="viki-dropdown__trigger">
+                        Выберите статус
+                        <span class="viki-dropdown__trigger-icon">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </span>
+                    </div>
+                    <div class="viki-dropdown__menu">
+                        <ul class="viki-dropdown__menu-list">
+                            <li class="viki-dropdown__menu-item">
+                                <a href="#" class="viki-dropdown__menu-link viki-dropdown__menu-link--active" data-value="active">Активный</a>
+                            </li>
+                            <li class="viki-dropdown__menu-item">
+                                <a href="#" class="viki-dropdown__menu-link" data-value="pending">В ожидании</a>
+                            </li>
+                            <li class="viki-dropdown__menu-item">
+                                <a href="#" class="viki-dropdown__menu-link viki-dropdown__menu-link--disabled" data-value="archived">Архивный</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="example-section">
+            <h2>Dynamic Dropdown (JavaScript Generated)</h2>
+            <div class="example-row">
+                <div class="viki-dropdown" id="dynamicDropdown">
+                    <div class="viki-dropdown__trigger">
+                        Выберите город
+                        <span class="viki-dropdown__trigger-icon">
+                            <i class="fa-solid fa-chevron-down"></i>
+                        </span>
+                    </div>
+                    <div class="viki-dropdown__menu">
+                        <ul class="viki-dropdown__menu-list">
+                            <!-- Items will be added dynamically via JavaScript -->
+                        </ul>
+                    </div>
+                </div>
+                
+                <button id="changeItemsBtn" class="btn">Изменить города</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Font Awesome for icons -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <!-- Import our dropdown script -->
+    <script src="../js/dropdown.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize all dropdowns
+            const dropdowns = VikiDropdown.initAll();
+            
+            // Get specific dropdown instances
+            const dropdown1 = new VikiDropdown('#dropdown1');
+            const dropdown2 = new VikiDropdown('#dropdown2');
+            const dropdown5 = new VikiDropdown('#dropdown5', {
+                onChange: function(value, element) {
+                    console.log('Status changed to:', value);
+                }
+            });
+            
+            // Initialize dynamic dropdown with custom options
+            const dynamicDropdown = new VikiDropdown('#dynamicDropdown', {
+                closeOnSelect: true,
+                hoverable: false,
+                onChange: function(value, element) {
+                    console.log('Selected city:', value);
+                }
+            });
+            
+            // Set initial items
+            const cities = [
+                { label: 'Москва', value: 'moscow' },
+                { label: 'Санкт-Петербург', value: 'spb' },
+                { label: 'Новосибирск', value: 'nsk' }
+            ];
+            dynamicDropdown.setItems(cities, 'moscow');
+            
+            // Button to change items
+            document.getElementById('changeItemsBtn').addEventListener('click', function() {
+                const newCities = [
+                    { label: 'Казань', value: 'kazan' },
+                    { label: 'Екатеринбург', value: 'ekb' },
+                    { label: 'Сочи', value: 'sochi' },
+                    { label: 'Владивосток', value: 'vdk', disabled: true }
+                ];
+                dynamicDropdown.setItems(newCities, 'ekb');
+            });
+            
+            // Example of programmatic control
+            setTimeout(() => {
+                dropdown1.open(); // Open first dropdown after 1 second
+            }, 1000);
+            
+            setTimeout(() => {
+                dropdown1.close(); // Close it after another second
+            }, 2000);
+        });
+    </script>
+</body>
+</html> 

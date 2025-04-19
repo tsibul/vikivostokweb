@@ -3318,10 +3318,11 @@ input[readonly].text-like::-webkit-inner-spin-button {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 6px 8px;
+  padding: 5px 8px;
   background-color: #fff;
   border: 1px solid #0F4880;
   border-radius: 6px;
+  border-radius: 4px;
   cursor: pointer;
   user-select: none;
   font-size: 0.85rem;

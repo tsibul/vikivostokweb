@@ -10,13 +10,11 @@
   &__trigger {
     display: flex;
     align-items: center;
-    //gap: 8px;
     justify-content: space-between;
-    padding: 6px 8px;
+    padding: 5px 8px;
     background-color: #fff;
-    //color: #fff;
     @include brd-standard;
-    //border-radius: 4px;
+    border-radius: 4px;
     cursor: pointer;
     user-select: none;
     font-size: 0.85rem;

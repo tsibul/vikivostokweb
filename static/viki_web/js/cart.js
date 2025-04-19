@@ -8,7 +8,7 @@ const printOpportunitiesCache = new Map();
 /**
  * Инициализация функций корзины при загрузке документа
  */
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     renderCart();
     initCartQuantity();
     initCartItemRemove();
@@ -39,7 +39,7 @@ function renderCart() {
     const cartItemsContainer = document.querySelector('.cart-page__items');
     const cartEmpty = document.querySelector('.cart-empty');
     const cartSummary = document.querySelector('.cart-summary');
-    
+
     // Show/hide empty cart message
     if (cart.length === 0) {
         cartItemsContainer.classList.add('item-hidden');
@@ -59,11 +59,11 @@ function renderCart() {
 
     cart.forEach((item, index) => {
         totalItems += item.quantity;
-        
+
         // Calculate item total
         const itemTotal = item.price * item.quantity;
         subtotal += itemTotal;
-        
+
         // Calculate branding total
         let itemBrandingTotal = 0;
         if (item.branding && item.branding.length > 0) {
@@ -127,10 +127,22 @@ function renderCart() {
                                         <option value="${branding.location_id || branding.location}" selected>${branding.location}</option>
                                     </select>
                                 </div>
-                                <div class="branding-field branding-field-colors">
-                                    <select class="branding-colors">
-                                        <option value="${branding.colors}" selected>${branding.colors === 'full' ? 'Полноцвет' : (branding.colors == 1 ? '1 цвет' : (branding.colors > 1 && branding.colors < 5 ? branding.colors + ' цвета' : branding.colors + ' цветов'))}</option>
-                                    </select>
+                                <div class="branding-field branding-field-colors viki-dropdown">
+                                    <div class="viki-dropdown__trigger">
+                                                ${(branding.colors == 1 ? '1 цвет' : (branding.colors > 1 && branding.colors < 5
+            ? branding.colors + ' цвета' : branding.colors + ' цветов'))}
+                                        <span class="viki-dropdown__trigger-icon">
+                                            <i class="fa-solid fa-chevron-down"></i>
+                                        </span>
+                                    </div>
+                                    <div class="viki-dropdown__menu">
+                                        <ul class="viki-dropdown__menu-list branding-colors">
+                                            <li value="${branding.colors}" selected>
+                                                ${(branding.colors == 1 ? '1 цвет' : (branding.colors > 1 && branding.colors < 5
+            ? branding.colors + ' цвета' : branding.colors + ' цветов'))}
+                                            </li>                                         
+                                        </ul>
+                                    </div>
                                 </div>
                                 <div class="branding-field branding-checkbox">
                                     <input type="checkbox" id="second-pass-${index}-${bIndex}" class="branding-second-pass" ${branding.secondPass ? 'checked' : ''}>
@@ -190,7 +202,7 @@ function initCartQuantity() {
 
     // Обработка кнопок уменьшения количества
     decreaseButtons.forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             const input = this.parentNode.querySelector('.cart-item__quantity-input');
             let value = parseInt(input.value);
             if (value > parseInt(input.min)) {
@@ -203,7 +215,7 @@ function initCartQuantity() {
 
     // Обработка кнопок увеличения количества
     increaseButtons.forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             const input = this.parentNode.querySelector('.cart-item__quantity-input');
             let value = parseInt(input.value);
             input.value = value + 1;
@@ -214,7 +226,7 @@ function initCartQuantity() {
 
     // Обработка изменения значения в поле ввода
     quantityInputs.forEach(input => {
-        input.addEventListener('change', function() {
+        input.addEventListener('change', function () {
             if (parseInt(this.value) < parseInt(this.min)) {
                 this.value = this.min;
             }
@@ -231,7 +243,7 @@ function initCartItemRemove() {
     const removeButtons = document.querySelectorAll('.cart-item__remove');
     
     removeButtons.forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             const cartItem = this.closest('.cart-item');
             const itemId = this.dataset.id;
             
@@ -318,8 +330,8 @@ function updateBrandingPrices(cartItem) {
         
         // Рассчитываем стоимость нанесения для всех товаров
         const secondPass = item.querySelector('.branding-second-pass').checked;
-        const colors = parseInt(item.querySelector('.branding-colors').value);
-        
+        const colors = parseInt(item.querySelector('.branding-colors')
+            .querySelector('li').value);
         // Коэффициент доплаты в зависимости от количества цветов
         let colorMultiplier = 1;
         if (!isNaN(colors)) {
@@ -523,25 +535,25 @@ function initBranding() {
                 } else {
                     // Проверяем доступность мест для нанесения
                     const brandingContainer = item.querySelector('.branding-items');
-                    
+
                     // Обновляем опции для существующих элементов брендирования
                     const brandingItems = brandingContainer.querySelectorAll('.branding-item');
                     brandingItems.forEach(brandingItem => {
                         const typeSelect = brandingItem.querySelector('.branding-type');
                         const locationSelect = brandingItem.querySelector('.branding-location');
                         const colorsSelect = brandingItem.querySelector('.branding-colors');
-                        
+
                         if (typeSelect && locationSelect && colorsSelect) {
                             // Обновляем опции для каждого селекта
                             updateAllLocationOptionsInContainer(brandingContainer, goodsId);
-                            
+
                             // Обновляем опции цветов для текущей комбинации типа и места
                             if (typeSelect.value && locationSelect.value) {
                                 updateColorsOptions(opportunities, typeSelect.value, locationSelect.value, colorsSelect);
                             }
                         }
                     });
-                    
+
                     checkAndUpdateAddBrandingButton(addBrandingBtn, goodsId, brandingContainer);
                 }
             }
@@ -569,7 +581,7 @@ function initBranding() {
         
         // Добавляем обработчики для всех кнопок добавления брендирования
         attachAddBrandingHandlers();
-        
+
         // Инициализация обработчиков для существующих элементов брендирования
         const brandingItems = document.querySelectorAll('.branding-item');
         brandingItems.forEach(item => {
@@ -589,45 +601,45 @@ function attachAddBrandingHandlers() {
         const newButton = button.cloneNode(true);
         button.parentNode.replaceChild(newButton, button);
     });
-    
+
     // Теперь добавляем новые обработчики только к незаблокированным кнопкам
-    const addBrandingButtons = document.querySelectorAll('.branding-add-btn:not([disabled])');
-    addBrandingButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const itemArticle = this.dataset.item;
-            const goodsId = this.dataset.goodsId;
-            const brandingContainer = this.closest('.cart-item__branding').querySelector('.branding-items');
-            const brandingCount = brandingContainer.querySelectorAll('.branding-item').length;
-            
-            // Создаем новый элемент брендирования с учетом ограничений
-            const newBrandingItem = createBrandingItem(itemArticle, goodsId, brandingCount + 1, brandingContainer);
-            
-            // Проверяем, есть ли доступные места для нанесения
-            const typeSelect = newBrandingItem.querySelector('.branding-type');
-            const locationSelect = newBrandingItem.querySelector('.branding-location');
-            
-            if (!locationSelect || locationSelect.options.length === 0) {
-                // Если нет доступных мест, не добавляем элемент и блокируем кнопку
-                this.disabled = true;
-                this.title = 'Достигнут лимит для всех мест нанесения';
-                this.classList.add('disabled');
-                return;
-            }
-            
-            brandingContainer.appendChild(newBrandingItem);
-            
-            // Инициализируем обработчики для нового элемента
-            initBrandingItemHandlers(newBrandingItem);
-            
-            // Обновляем стоимость
-            updateItemTotal(this.closest('.cart-item'));
-            updateCartSummary();
-            
-            // Проверка на возможность добавления еще одного нанесения
-            checkAndUpdateAddBrandingButton(this, goodsId, brandingContainer);
-            
-            // Обновляем данные в localStorage
-            updateCartBrandingInLocalStorage(this.closest('.cart-item'));
+        const addBrandingButtons = document.querySelectorAll('.branding-add-btn:not([disabled])');
+        addBrandingButtons.forEach(button => {
+        button.addEventListener('click', function () {
+                const itemArticle = this.dataset.item;
+                const goodsId = this.dataset.goodsId;
+                const brandingContainer = this.closest('.cart-item__branding').querySelector('.branding-items');
+                const brandingCount = brandingContainer.querySelectorAll('.branding-item').length;
+                
+                // Создаем новый элемент брендирования с учетом ограничений
+                const newBrandingItem = createBrandingItem(itemArticle, goodsId, brandingCount + 1, brandingContainer);
+                
+                // Проверяем, есть ли доступные места для нанесения
+                const typeSelect = newBrandingItem.querySelector('.branding-type');
+                const locationSelect = newBrandingItem.querySelector('.branding-location');
+                
+                if (!locationSelect || locationSelect.options.length === 0) {
+                    // Если нет доступных мест, не добавляем элемент и блокируем кнопку
+                    this.disabled = true;
+                    this.title = 'Достигнут лимит для всех мест нанесения';
+                    this.classList.add('disabled');
+                    return;
+                }
+                
+                brandingContainer.appendChild(newBrandingItem);
+                
+                // Инициализируем обработчики для нового элемента
+                initBrandingItemHandlers(newBrandingItem);
+                
+                // Обновляем стоимость
+                updateItemTotal(this.closest('.cart-item'));
+                updateCartSummary();
+                
+                // Проверка на возможность добавления еще одного нанесения
+                checkAndUpdateAddBrandingButton(this, goodsId, brandingContainer);
+                
+                // Обновляем данные в localStorage
+                updateCartBrandingInLocalStorage(this.closest('.cart-item'));
         });
     });
 }
@@ -714,7 +726,8 @@ function updateCartBrandingInLocalStorage(cartItem) {
                 type_id: typeSelect.value,
                 location: locationSelect.options[locationSelect.selectedIndex]?.textContent || locationSelect.value,
                 location_id: locationSelect.value,
-                colors: colorsSelect.value,
+                colors: colorsSelect.closest('.branding-field')
+                    .querySelector('.viki-dropdown__trigger').dataset.id,
                 secondPass: secondPassCheckbox ? secondPassCheckbox.checked : false,
                 price: parseFloat(priceInput.value) || 0
             });
@@ -738,14 +751,13 @@ function initBrandingItemHandlers(brandingItem) {
     
     // Удаление брендирования
     const removeButton = brandingItem.querySelector('.branding-remove-btn');
-    removeButton.addEventListener('click', function() {
+    removeButton.addEventListener('click', function () {
         // Удаляем элемент
         brandingItem.remove();
         
         // Обновляем доступные опции для оставшихся элементов
         if (goodsId) {
-            console.log('Брендирование удалено, обновляем остальные элементы');
-            
+
             // Обновляем счётчики и доступные места для всех оставшихся элементов
             updateAllLocationOptionsInContainer(brandingContainer, goodsId);
             
@@ -755,10 +767,10 @@ function initBrandingItemHandlers(brandingItem) {
                 addBrandingBtn.disabled = false;
                 addBrandingBtn.title = '';
                 addBrandingBtn.classList.remove('disabled');
-                
+
                 // Затем перепроверяем, действительно ли есть доступные места
                 checkAndUpdateAddBrandingButton(addBrandingBtn, goodsId, brandingContainer);
-                
+
                 // Переназначаем обработчики для всех кнопок добавления
                 attachAddBrandingHandlers();
             }
@@ -774,7 +786,7 @@ function initBrandingItemHandlers(brandingItem) {
     // Обработчик изменения типа нанесения
     const typeSelect = brandingItem.querySelector('.branding-type');
     if (typeSelect) {
-        typeSelect.addEventListener('change', function() {
+        typeSelect.addEventListener('change', function () {
             const opportunities = printOpportunitiesCache.get(goodsId) || [];
             const locationSelect = brandingItem.querySelector('.branding-location');
             const colorsSelect = brandingItem.querySelector('.branding-colors');
@@ -784,7 +796,7 @@ function initBrandingItemHandlers(brandingItem) {
             if (goodsId && locationSelect) {
                 // Очищаем текущие опции мест
                 updateLocationOptions(opportunities, selectedTypeId, locationSelect, brandingContainer);
-                
+
                 // После обновления места нанесения обновляем также количество цветов
                 if (locationSelect.options.length > 0 && colorsSelect) {
                     updateColorsOptions(opportunities, selectedTypeId, locationSelect.value, colorsSelect);
@@ -807,7 +819,7 @@ function initBrandingItemHandlers(brandingItem) {
     // Обработчик изменения места нанесения
     const locationSelect = brandingItem.querySelector('.branding-location');
     if (locationSelect) {
-        locationSelect.addEventListener('change', function() {
+        locationSelect.addEventListener('change', function () {
             const typeSelect = brandingItem.querySelector('.branding-type');
             const colorsSelect = brandingItem.querySelector('.branding-colors');
             
@@ -835,7 +847,7 @@ function initBrandingItemHandlers(brandingItem) {
     // Обработчик изменения количества цветов
     const colorsSelect = brandingItem.querySelector('.branding-colors');
     if (colorsSelect) {
-        colorsSelect.addEventListener('change', function() {
+        colorsSelect.addEventListener('change', function () {
             updateItemTotal(cartItem);
             updateCartSummary();
             
@@ -846,7 +858,7 @@ function initBrandingItemHandlers(brandingItem) {
     
     const priceInput = brandingItem.querySelector('.branding-price');
     if (priceInput) {
-        priceInput.addEventListener('change', function() {
+        priceInput.addEventListener('change', function () {
             if (parseFloat(this.value) < 0) {
                 this.value = 0;
             }
@@ -860,7 +872,7 @@ function initBrandingItemHandlers(brandingItem) {
     
     const secondPassCheckbox = brandingItem.querySelector('.branding-second-pass');
     if (secondPassCheckbox) {
-        secondPassCheckbox.addEventListener('change', function() {
+        secondPassCheckbox.addEventListener('change', function () {
             updateItemTotal(cartItem);
             updateCartSummary();
             
@@ -978,15 +990,14 @@ function createBrandingItem(itemArticle, goodsId, index, brandingContainer) {
                 const colorText = i === 1 ? '1 цвет' : 
                                 (i > 1 && i < 5) ? i + ' цвета' : 
                                 i + ' цветов';
-                colorOptions += `<option value="${i}">${colorText}</option>`;
+                colorOptions += `<li value="${i}">${colorText}</li>`;
             }
             
-            // Добавляем опцию "Полноцвет" для определенных типов печати
-            if (['sublimation', 'uv', 'digital'].includes(firstAvailableType)) {
-                colorOptions += `<option value="full">Полноцвет</option>`;
             }
         }
-    }
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(`<ul>${colorOptions}</ul>`, 'text/html');
+    const firstColor = doc.querySelector('li')
     
     // Создаем элемент
     div.innerHTML = `
@@ -1001,10 +1012,20 @@ function createBrandingItem(itemArticle, goodsId, index, brandingContainer) {
                     ${locationOptions}
                 </select>
             </div>
-            <div class="branding-field branding-field-colors">
-                <select class="branding-colors">
+            <div class="branding-field branding-field-colors viki-dropdown">
+                <div class="viki-dropdown__trigger" data-id="${firstColor.value}">
+                    ${firstColor.textContent}
+                    <span class="viki-dropdown__trigger-icon">
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </span>
+                </div>
+                <div class="viki-dropdown__menu">
+                    <ul class="viki-dropdown__menu-list branding-colors">
+                        <li class="viki-dropdown__menu-item">
                     ${colorOptions}
-                </select>
+                        </li>
+                    </ul>
+                </div>
             </div>
             <div class="branding-field branding-checkbox">
                 <input type="checkbox" id="second-pass-${itemArticle}-${index}" class="branding-second-pass">
@@ -1073,21 +1094,19 @@ function getBrandingCountByTypeAndPlace(brandingContainer) {
  */
 function updateAllLocationOptionsInContainer(brandingContainer, goodsId) {
     if (!brandingContainer) return;
-    
+
     const brandingItems = brandingContainer.querySelectorAll('.branding-item');
     const opportunities = printOpportunitiesCache.get(goodsId) || [];
-    
+
     // Если нет доступных нанесений или элементов, просто выходим
     if (!opportunities.length || !brandingItems.length) return;
-    
-    console.log('Обновление мест нанесения для всех элементов:', brandingItems.length);
-    
+
     // Сначала собираем информацию о текущих выбранных значениях для каждого элемента
     const selectedValues = [];
     brandingItems.forEach(item => {
         const typeSelect = item.querySelector('.branding-type');
         const locationSelect = item.querySelector('.branding-location');
-        
+
         if (typeSelect && locationSelect) {
             selectedValues.push({
                 item: item,
@@ -1096,7 +1115,7 @@ function updateAllLocationOptionsInContainer(brandingContainer, goodsId) {
             });
         }
     });
-    
+
     // Получаем уникальные типы печати для всех элементов
     const printTypes = Array.from(new Set(opportunities.map(op => op.print_type_id)))
         .map(typeId => {
@@ -1106,7 +1125,7 @@ function updateAllLocationOptionsInContainer(brandingContainer, goodsId) {
                 name: op ? op.print_type_name : 'Неизвестный тип'
             };
         });
-    
+
     // Обновляем опции для каждого селекта типа нанесения (перезаполняем их)
     selectedValues.forEach((selection, index) => {
         const item = selection.item;
@@ -1114,10 +1133,10 @@ function updateAllLocationOptionsInContainer(brandingContainer, goodsId) {
         if (typeSelect) {
             // Сохраняем текущее выбранное значение
             const currentTypeId = typeSelect.value;
-            
+
             // Очищаем текущие опции
             typeSelect.innerHTML = '';
-            
+
             // Добавляем опции для типов печати
             printTypes.forEach(type => {
                 const option = document.createElement('option');
@@ -1125,25 +1144,25 @@ function updateAllLocationOptionsInContainer(brandingContainer, goodsId) {
                 option.textContent = type.name;
                 typeSelect.appendChild(option);
             });
-            
+
             // Восстанавливаем выбранное значение, если оно все еще доступно
             if (printTypes.some(type => type.id === currentTypeId)) {
                 typeSelect.value = currentTypeId;
             }
         }
     });
-    
+
     // Создаем временный контейнер для проверки доступности мест
     const tempContainer = document.createElement('div');
-    
+
     // Теперь обновляем опции мест для каждого элемента
     selectedValues.forEach((selection, index) => {
         const item = selection.item;
-        
+
         // Для каждого элемента нам нужно знать, какие места заняты другими элементами
         // Поэтому создаем временный контейнер с другими элементами
         tempContainer.innerHTML = '';
-        
+
         selectedValues.forEach((sel, i) => {
             if (i !== index) {
                 const tempItem = document.createElement('div');
@@ -1155,41 +1174,38 @@ function updateAllLocationOptionsInContainer(brandingContainer, goodsId) {
                 tempContainer.appendChild(tempItem);
             }
         });
-        
+
         const typeSelect = item.querySelector('.branding-type');
         const locationSelect = item.querySelector('.branding-location');
-        
+
         if (typeSelect && locationSelect && typeSelect.value) {
             // Здесь учитываем текущее состояние брендирования для правильного обновления
             const currentConfig = {
                 typeId: typeSelect.value,
                 locationId: locationSelect.value
             };
-            
+
             // Обновляем опции места с учетом других элементов
-            console.log('Обновляем места для типа:', typeSelect.value);
             updateLocationOptions(opportunities, typeSelect.value, locationSelect, tempContainer);
-            
+
             // Если после обновления нет доступных мест, попробуем найти другой тип с доступными местами
             if (locationSelect.options.length === 0) {
-                console.warn('Нет доступных мест для текущего типа, ищем другой тип');
-                
+
                 // Перебираем все типы в поисках доступного места
                 for (const type of printTypes) {
                     if (type.id === typeSelect.value) continue; // Пропускаем текущий тип
-                    
+
                     typeSelect.value = type.id;
                     updateLocationOptions(opportunities, type.id, locationSelect, tempContainer);
-                    
+
                     // Если нашли тип с доступными местами
                     if (locationSelect.options.length > 0) {
-                        console.log('Найден альтернативный тип с доступными местами:', type.id);
                         break;
                     }
                 }
             }
         }
-        
+
         // Независимо от доступности новых мест, всегда обновляем опции цветов
         // Если текущая комбинация типа и места допустима (т.е. уже занята этим брендированием),
         // то мы должны сохранить возможность выбора цветов
@@ -1262,19 +1278,19 @@ function updateColorsOptions(opportunities, selectedTypeId, selectedPlaceId, col
     
     // Если нет данных о возможностях печати для данной комбинации, выходим
     if (!opportunity) {
-        console.warn('Не найдены возможности печати для комбинации тип-место:', selectedTypeId, selectedPlaceId);
         return;
     }
     
     // Сохраняем текущее выбранное значение
-    const currentValue = colorsSelect.value;
+    const currentValue = colorsSelect.closest('.branding-field')
+        .querySelector('.viki-dropdown__trigger').dataset.id;
     
     // Очищаем текущие опции
     colorsSelect.innerHTML = '';
     
     // Добавляем опции в зависимости от максимального количества цветов
     for (let i = 1; i <= opportunity.color_quantity; i++) {
-        const option = document.createElement('option');
+        const option = document.createElement('li');
         option.value = i;
         option.textContent = i === 1 ? '1 цвет' : 
                             (i > 1 && i < 5) ? i + ' цвета' : 
@@ -1282,20 +1298,18 @@ function updateColorsOptions(opportunities, selectedTypeId, selectedPlaceId, col
         colorsSelect.appendChild(option);
     }
     
-    // Добавляем опцию "Полноцвет" для определенных типов печати
-    if (['sublimation', 'uv', 'digital'].includes(selectedTypeId)) {
-        const option = document.createElement('option');
-        option.value = 'full';
-        option.textContent = 'Полноцвет';
-        colorsSelect.appendChild(option);
-    }
+    // // Добавляем опцию "Полноцвет" для определенных типов печати
+    // if (['sublimation', 'uv', 'digital'].includes(selectedTypeId)) {
+    //     const option = document.createElement('option');
+    //     option.value = 'full';
+    //     option.textContent = 'Полноцвет';
+    //     colorsSelect.appendChild(option);
+    // }
     
     // Восстанавливаем выбранное значение, если оно все еще доступно
-    if (colorsSelect.options.length > 0) {
-        if (currentValue === 'full' && ['sublimation', 'uv', 'digital'].includes(selectedTypeId)) {
-            colorsSelect.value = 'full';
-        } else if (!isNaN(parseInt(currentValue)) && parseInt(currentValue) <= opportunity.color_quantity) {
-            colorsSelect.value = currentValue;
+    if (colorsSelect.querySelectorAll('li').length > 0) {
+        if (!isNaN(parseInt(currentValue)) && parseInt(currentValue) <= opportunity.color_quantity) {
+        colorsSelect.value = currentValue;
         } else {
             // Если предыдущее значение недоступно, выбираем первое доступное
             colorsSelect.selectedIndex = 0;
@@ -1321,11 +1335,9 @@ async function fetchPrintOpportunities(goodsId) {
             printOpportunitiesCache.set(goodsId, data.opportunities);
             return data.opportunities;
         } else {
-            console.error('Ошибка загрузки возможностей печати:', data.error);
             return [];
         }
     } catch (error) {
-        console.error('Ошибка загрузки возможностей печати:', error);
         return [];
     }
 }
