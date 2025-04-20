@@ -93,10 +93,18 @@ export function renderCart() {
                                         <option value="${branding.type_id || branding.type}" selected>${branding.type}</option>
                                     </select>
                                 </div>
-                                <div class="branding-field branding-field-location">
-                                    <select class="branding-location">
-                                        <option value="${branding.location_id || branding.location}" selected>${branding.location}</option>
-                                    </select>
+                                <div class="branding-field branding-field-location viki-dropdown">
+                                    <div class="viki-dropdown__trigger" data-id="${branding.location_id || branding.location}">
+                                        ${branding.location}
+                                        <span class="viki-dropdown__trigger-icon">
+                                            <i class="fa-solid fa-chevron-down"></i>
+                                        </span>
+                                    </div>
+                                    <ul class="viki-dropdown__menu viki-dropdown__menu-list branding-location">
+                                        <li value="${branding.location_id || branding.location}" selected>
+                                            ${branding.location}
+                                        </li>                                         
+                                    </ul>
                                 </div>
                                 <div class="branding-field branding-field-colors viki-dropdown">
                                     <div class="viki-dropdown__trigger" data-id="${branding.colors}">

@@ -23,10 +23,10 @@ export function updateBrandingItem(brandingItem) {
     const addBrandingBtn = cartItem.querySelector('.branding-add-btn');
     const goodsId = addBrandingBtn?.dataset.goodsId;
 
-    // Initialize dropdown functionality
-    const dropdownTrigger = brandingItem.querySelector('.viki-dropdown__trigger');
-    if (dropdownTrigger) {
-        dropdownTrigger.addEventListener('click', function(e) {
+    // Initialize all dropdown functionality
+    const dropdownTriggers = brandingItem.querySelectorAll('.viki-dropdown__trigger');
+    dropdownTriggers.forEach(trigger => {
+        trigger.addEventListener('click', function(e) {
             e.stopPropagation();
             const dropdown = this.closest('.viki-dropdown');
 
@@ -40,12 +40,14 @@ export function updateBrandingItem(brandingItem) {
             // Toggle current dropdown
             dropdown.classList.toggle('viki-dropdown--open');
         });
+    });
 
-        // Handle dropdown menu item clicks
-        const dropdownItems = brandingItem.querySelectorAll('.branding-colors li');
+    // Process all dropdown menu items by attaching click handlers
+    const attachDropdownItemHandlers = (dropdownItems) => {
         dropdownItems.forEach(item => {
             item.addEventListener('click', function() {
                 const dropdown = this.closest('.viki-dropdown');
+                const dropdownList = dropdown.querySelector('.viki-dropdown__menu');
                 const trigger = dropdown.querySelector('.viki-dropdown__trigger');
 
                 // Update trigger text and data
@@ -62,21 +64,27 @@ export function updateBrandingItem(brandingItem) {
                 // Close dropdown
                 dropdown.classList.remove('viki-dropdown--open');
 
-                // Trigger change event to update calculations
-                const changeEvent = new Event('change');
-                brandingItem.querySelector('.branding-colors').dispatchEvent(changeEvent);
+                // Create and dispatch a change event on the dropdown
+                const changeEvent = new Event('change', { bubbles: true });
+                dropdownList.dispatchEvent(changeEvent);
             });
         });
+    };
 
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!e.target.closest('.viki-dropdown')) {
-                document.querySelectorAll('.viki-dropdown--open').forEach(dropdown => {
-                    dropdown.classList.remove('viki-dropdown--open');
-                });
-            }
-        });
-    }
+    // Attach handlers to all dropdown items
+    const colorDropdownItems = brandingItem.querySelectorAll('.branding-colors li');
+    const locationDropdownItems = brandingItem.querySelectorAll('.branding-location li');
+    attachDropdownItemHandlers(colorDropdownItems);
+    attachDropdownItemHandlers(locationDropdownItems);
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.viki-dropdown')) {
+            document.querySelectorAll('.viki-dropdown--open').forEach(dropdown => {
+                dropdown.classList.remove('viki-dropdown--open');
+            });
+        }
+    });
 
     // Branding removal
     const removeButton = brandingItem.querySelector('.branding-remove-btn');
@@ -118,6 +126,8 @@ export function updateBrandingItem(brandingItem) {
         typeSelect.addEventListener('change', function () {
             const opportunities = printOpportunitiesCache.get(goodsId) || [];
             const locationSelect = brandingItem.querySelector('.branding-location');
+            const locationDropdown = locationSelect.closest('.viki-dropdown');
+            const locationTrigger = locationDropdown.querySelector('.viki-dropdown__trigger');
             const colorsSelect = brandingItem.querySelector('.branding-colors');
             const selectedTypeId = this.value;
 
@@ -127,13 +137,40 @@ export function updateBrandingItem(brandingItem) {
                 updateLocationOptions(opportunities, selectedTypeId, locationSelect, brandingContainer);
 
                 // After updating location also update color count
-                if (locationSelect.options.length > 0 && colorsSelect) {
-                    updateColorsOptions(opportunities, selectedTypeId, locationSelect.value, colorsSelect);
+                if (locationSelect.querySelectorAll('li').length > 0 && colorsSelect) {
+                    const selectedPlaceId = locationTrigger.dataset.id;
+                    updateColorsOptions(opportunities, selectedTypeId, selectedPlaceId, colorsSelect);
                 }
+                
+                // Update available locations for all elements in this container
+                updateAllLocationOptionsInContainer(brandingContainer, goodsId);
+                
+                // After updating all locations, also update all color options
+                // for other branding items based on their current type and location
+                const allBrandingItems = brandingContainer.querySelectorAll('.branding-item');
+                allBrandingItems.forEach(item => {
+                    if (item !== brandingItem) { // Skip the current item that triggered the change
+                        const itemTypeSelect = item.querySelector('.branding-type');
+                        const itemLocationDropdown = item.querySelector('.branding-field-location');
+                        const itemLocationTrigger = itemLocationDropdown?.querySelector('.viki-dropdown__trigger');
+                        const itemColorsSelect = item.querySelector('.branding-colors');
+                        
+                        if (itemTypeSelect && itemLocationTrigger && itemColorsSelect && 
+                            itemTypeSelect.value && itemLocationTrigger.dataset.id) {
+                            updateColorsOptions(
+                                opportunities, 
+                                itemTypeSelect.value, 
+                                itemLocationTrigger.dataset.id, 
+                                itemColorsSelect
+                            );
+                        }
+                    }
+                });
             } else if (colorsSelect) {
                 // Even if locations couldn't be updated, try to update colors for selected type and current location
-                if (locationSelect && locationSelect.value) {
-                    updateColorsOptions(opportunities, selectedTypeId, locationSelect.value, colorsSelect);
+                if (locationSelect) {
+                    const selectedPlaceId = locationTrigger.dataset.id;
+                    updateColorsOptions(opportunities, selectedTypeId, selectedPlaceId, colorsSelect);
                 }
             }
 
@@ -151,18 +188,42 @@ export function updateBrandingItem(brandingItem) {
         locationSelect.addEventListener('change', function () {
             const typeSelect = brandingItem.querySelector('.branding-type');
             const colorsSelect = brandingItem.querySelector('.branding-colors');
+            const locationDropdown = locationSelect.closest('.viki-dropdown');
+            const locationTrigger = locationDropdown.querySelector('.viki-dropdown__trigger');
 
             if (goodsId && typeSelect && colorsSelect) {
                 const opportunities = printOpportunitiesCache.get(goodsId) || [];
                 const selectedTypeId = typeSelect.value;
-                const selectedPlaceId = this.value;
+                const selectedPlaceId = locationTrigger.dataset.id;
 
                 // Update color options - always for selected type/place,
                 // regardless of whether this option is available for other elements
                 updateColorsOptions(opportunities, selectedTypeId, selectedPlaceId, colorsSelect);
 
-                // Update available locations for all elements
+                // Update available locations for all elements in this container
                 updateAllLocationOptionsInContainer(brandingContainer, goodsId);
+                
+                // After updating all locations, also update all color options 
+                // for other branding items based on their current type and location
+                const allBrandingItems = brandingContainer.querySelectorAll('.branding-item');
+                allBrandingItems.forEach(item => {
+                    if (item !== brandingItem) { // Skip the current item that triggered the change
+                        const itemTypeSelect = item.querySelector('.branding-type');
+                        const itemLocationDropdown = item.querySelector('.branding-field-location');
+                        const itemLocationTrigger = itemLocationDropdown?.querySelector('.viki-dropdown__trigger');
+                        const itemColorsSelect = item.querySelector('.branding-colors');
+                        
+                        if (itemTypeSelect && itemLocationTrigger && itemColorsSelect && 
+                            itemTypeSelect.value && itemLocationTrigger.dataset.id) {
+                            updateColorsOptions(
+                                opportunities, 
+                                itemTypeSelect.value, 
+                                itemLocationTrigger.dataset.id, 
+                                itemColorsSelect
+                            );
+                        }
+                    }
+                });
             }
 
             updateItemTotal(cartItem);

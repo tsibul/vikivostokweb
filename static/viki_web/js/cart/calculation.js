@@ -64,8 +64,22 @@ export function updateBrandingPrices(cartItem) {
         
         // Calculate branding cost for all items
         const secondPass = item.querySelector('.branding-second-pass').checked;
-        const colors = parseInt(item.querySelector('.branding-colors')
-            .querySelector('li').value);
+        
+        // Get colors from dropdown structure - first try the data-id on trigger, then fallback to li value
+        let colors = 1; // Default to 1 color
+        const colorsDropdown = item.querySelector('.branding-colors');
+        const colorsTrigger = colorsDropdown?.closest('.viki-dropdown')?.querySelector('.viki-dropdown__trigger');
+        
+        if (colorsTrigger && colorsTrigger.dataset.id) {
+            colors = parseInt(colorsTrigger.dataset.id);
+        } else {
+            // Fallback to old structure
+            const colorsLi = colorsDropdown?.querySelector('li');
+            if (colorsLi) {
+                colors = parseInt(colorsLi.getAttribute('value'));
+            }
+        }
+        
         // Multiplier based on number of colors
         let colorMultiplier = 1;
         if (!isNaN(colors)) {

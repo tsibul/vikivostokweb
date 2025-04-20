@@ -7,6 +7,7 @@ import { updateItemTotal } from './calculation.js';
 import { updateBrandingItem } from './brandingItem.js';
 import { createBrandingItem, checkAndUpdateAddBrandingButton, updateCartBrandingInLocalStorage } from './brandingHelpers.js';
 import { printOpportunitiesCache, getBrandingCountByTypeAndPlace } from './brandingCommon.js';
+import { formatPrice } from './utils.js';
 
 /**
  * Initializes branding functionality
@@ -58,8 +59,11 @@ export function initBranding() {
                             updateAllLocationOptionsInContainer(brandingContainer, goodsId);
 
                             // Update color options for current type and location combination
-                            if (typeSelect.value && locationSelect.value) {
-                                updateColorsOptions(opportunities, typeSelect.value, locationSelect.value, colorsSelect);
+                            if (typeSelect.value && locationSelect) {
+                                const locationTrigger = locationSelect.closest('.viki-dropdown')?.querySelector('.viki-dropdown__trigger');
+                                if (locationTrigger && locationTrigger.dataset.id) {
+                                    updateColorsOptions(opportunities, typeSelect.value, locationTrigger.dataset.id, colorsSelect);
+                                }
                             }
                         }
                     });
@@ -164,11 +168,21 @@ export function attachAddBrandingHandlers() {
             // Create new branding element with restrictions
             const newBrandingItem = createBrandingItem(itemArticle, goodsId, brandingCount + 1, brandingContainer);
             
-            // Check if there are available locations for branding
-            const typeSelect = newBrandingItem.querySelector('.branding-type');
-            const locationSelect = newBrandingItem.querySelector('.branding-location');
+            // Check if the branding item was created successfully with locations
+            if (!newBrandingItem || !newBrandingItem.querySelector('.branding-item__row')) {
+                // If no valid branding item was created, disable button
+                this.disabled = true;
+                this.title = 'Достигнут лимит для всех мест нанесения';
+                this.classList.add('disabled');
+                return;
+            }
             
-            if (!locationSelect || locationSelect.options.length === 0) {
+            // Check for available locations
+            const locationDropdown = newBrandingItem.querySelector('.branding-field-location');
+            const locationUl = locationDropdown?.querySelector('.branding-location');
+            const hasLocations = locationUl && locationUl.querySelector('li');
+            
+            if (!hasLocations) {
                 // If no locations available, don't add element and disable button
                 this.disabled = true;
                 this.title = 'Достигнут лимит для всех мест нанесения';
@@ -180,6 +194,23 @@ export function attachAddBrandingHandlers() {
             
             // Initialize handlers for new element
             updateBrandingItem(newBrandingItem);
+            
+            // Add explicit handlers for dropdowns in the new item
+            const locationItems = newBrandingItem.querySelectorAll('.branding-location li');
+            const colorItems = newBrandingItem.querySelectorAll('.branding-colors li');
+            
+            locationItems.forEach(item => {
+                if (locationUl) {
+                    attachDropdownItemHandler(item, locationUl);
+                }
+            });
+            
+            colorItems.forEach(item => {
+                const colorsList = item.closest('.viki-dropdown')?.querySelector('.branding-colors');
+                if (colorsList) {
+                    attachDropdownItemHandler(item, colorsList);
+                }
+            });
             
             // Update cost
             updateItemTotal(this.closest('.cart-item'));
@@ -210,8 +241,22 @@ export function updateBrandingPrices(cartItem) {
         
         // Calculate branding cost for all items
         const secondPass = item.querySelector('.branding-second-pass').checked;
-        const colors = parseInt(item.querySelector('.branding-colors')
-            .querySelector('li').value);
+        
+        // Get colors from dropdown structure - first try the data-id on trigger, then fallback to li value
+        let colors = 1; // Default to 1 color
+        const colorsDropdown = item.querySelector('.branding-colors');
+        const colorsTrigger = colorsDropdown?.closest('.viki-dropdown')?.querySelector('.viki-dropdown__trigger');
+        
+        if (colorsTrigger && colorsTrigger.dataset.id) {
+            colors = parseInt(colorsTrigger.dataset.id);
+        } else {
+            // Fallback to old structure
+            const colorsLi = colorsDropdown?.querySelector('li');
+            if (colorsLi) {
+                colors = parseInt(colorsLi.getAttribute('value'));
+            }
+        }
+        
         // Multiplier based on number of colors
         let colorMultiplier = 1;
         if (!isNaN(colors)) {
@@ -308,13 +353,14 @@ export function updateAllLocationOptionsInContainer(brandingContainer, goodsId) 
     const selectedValues = [];
     brandingItems.forEach(item => {
         const typeSelect = item.querySelector('.branding-type');
-        const locationSelect = item.querySelector('.branding-location');
+        const locationField = item.querySelector('.branding-field-location');
+        const locationTrigger = locationField?.querySelector('.viki-dropdown__trigger');
 
-        if (typeSelect && locationSelect) {
+        if (typeSelect && locationTrigger && typeSelect.value && locationTrigger.dataset.id) {
             selectedValues.push({
                 item: item,
                 typeId: typeSelect.value,
-                locationId: locationSelect.value
+                locationId: locationTrigger.dataset.id
             });
         }
     });
@@ -370,30 +416,44 @@ export function updateAllLocationOptionsInContainer(brandingContainer, goodsId) 
             if (i !== index) {
                 const tempItem = document.createElement('div');
                 tempItem.className = 'branding-item';
+                
+                // Create temp elements with proper structure for getBrandingCountByTypeAndPlace to work
                 tempItem.innerHTML = `
-                    <select class="branding-type" value="${sel.typeId}"></select>
-                    <select class="branding-location" value="${sel.locationId}"></select>
+                    <div class="branding-item__row">
+                        <div class="branding-field branding-field-type">
+                            <select class="branding-type" value="${sel.typeId}">
+                                <option value="${sel.typeId}" selected></option>
+                            </select>
+                        </div>
+                        <div class="branding-field branding-field-location viki-dropdown">
+                            <div class="viki-dropdown__trigger" data-id="${sel.locationId}"></div>
+                            <ul class="viki-dropdown__menu viki-dropdown__menu-list branding-location" data-value="${sel.locationId}"></ul>
+                        </div>
+                    </div>
                 `;
                 tempContainer.appendChild(tempItem);
             }
         });
 
         const typeSelect = item.querySelector('.branding-type');
-        const locationSelect = item.querySelector('.branding-location');
+        const locationField = item.querySelector('.branding-field-location');
+        const locationSelect = locationField?.querySelector('.branding-location');
 
         if (typeSelect && locationSelect && typeSelect.value) {
+            // Get the selected location ID from the dropdown trigger
+            const locationTrigger = locationField.querySelector('.viki-dropdown__trigger');
+            
             // Consider current branding state for proper update
             const currentConfig = {
                 typeId: typeSelect.value,
-                locationId: locationSelect.value
+                locationId: locationTrigger?.dataset.id || ''
             };
 
             // Update location options considering other elements
             updateLocationOptions(opportunities, typeSelect.value, locationSelect, tempContainer);
 
             // If after update there are no available locations, try to find another type with available locations
-            if (locationSelect.options.length === 0) {
-
+            if (locationSelect.querySelectorAll('li').length === 0) {
                 // Try all types looking for available location
                 for (const type of printTypes) {
                     if (type.id === typeSelect.value) continue; // Skip current type
@@ -402,7 +462,7 @@ export function updateAllLocationOptionsInContainer(brandingContainer, goodsId) 
                     updateLocationOptions(opportunities, type.id, locationSelect, tempContainer);
 
                     // If found type with available locations
-                    if (locationSelect.options.length > 0) {
+                    if (locationSelect.querySelectorAll('li').length > 0) {
                         break;
                     }
                 }
@@ -413,8 +473,51 @@ export function updateAllLocationOptionsInContainer(brandingContainer, goodsId) 
         // If current type and location combination is allowed (i.e. already occupied by this branding),
         // we should preserve color selection options
         const colorsSelect = item.querySelector('.branding-colors');
-        if (colorsSelect && typeSelect && locationSelect && typeSelect.value && locationSelect.value) {
-            updateColorsOptions(opportunities, typeSelect.value, locationSelect.value, colorsSelect);
+        const locationDropdown = item.querySelector('.branding-field-location');
+        const locationTrigger = locationDropdown?.querySelector('.viki-dropdown__trigger');
+        
+        if (colorsSelect && typeSelect && locationTrigger && 
+            typeSelect.value && locationTrigger.dataset.id) {
+            updateColorsOptions(opportunities, typeSelect.value, locationTrigger.dataset.id, colorsSelect);
+        }
+    });
+}
+
+/**
+ * Attach click handlers to dropdown items
+ * @param {HTMLElement} option - The dropdown li element
+ * @param {HTMLElement} dropdownList - The dropdown list (ul element)
+ */
+function attachDropdownItemHandler(option, dropdownList) {
+    option.addEventListener('click', function() {
+        const dropdown = this.closest('.viki-dropdown');
+        if (!dropdown) return;
+        
+        const trigger = dropdown.querySelector('.viki-dropdown__trigger');
+        if (!trigger) return;
+        
+        // Update trigger text and data
+        trigger.textContent = this.textContent;
+        trigger.dataset.id = this.getAttribute('value');
+        
+        // Also set data-value on the ul element for compatibility
+        if (dropdownList) {
+            dropdownList.dataset.value = this.getAttribute('value');
+        }
+        
+        // Add back the icon
+        const icon = document.createElement('span');
+        icon.className = 'viki-dropdown__trigger-icon';
+        icon.innerHTML = '<i class="fa-solid fa-chevron-down"></i>';
+        trigger.appendChild(icon);
+        
+        // Close dropdown
+        dropdown.classList.remove('viki-dropdown--open');
+        
+        // Create and dispatch a change event
+        const changeEvent = new Event('change', { bubbles: true });
+        if (dropdownList) {
+            dropdownList.dispatchEvent(changeEvent);
         }
     });
 }
@@ -423,7 +526,7 @@ export function updateAllLocationOptionsInContainer(brandingContainer, goodsId) 
  * Updates location options based on selected type
  * @param {Array} opportunities - Print opportunities
  * @param {string} selectedTypeId - Selected print type ID
- * @param {HTMLElement} locationSelect - Location select element
+ * @param {HTMLElement} locationSelect - Location dropdown menu (ul element)
  * @param {HTMLElement} brandingContainer - Container with brandings for limit checking
  */
 export function updateLocationOptions(opportunities, selectedTypeId, locationSelect, brandingContainer) {
@@ -432,14 +535,24 @@ export function updateLocationOptions(opportunities, selectedTypeId, locationSel
     // Filter locations by selected type
     const availablePlaces = opportunities.filter(op => op.print_type_id == selectedTypeId);
     
+    // Get dropdown container and trigger element
+    const dropdownContainer = locationSelect.closest('.viki-dropdown');
+    if (!dropdownContainer) return;
+    
+    const dropdownTrigger = dropdownContainer.querySelector('.viki-dropdown__trigger');
+    if (!dropdownTrigger) return;
+    
     // Save current selected value
-    const currentValue = locationSelect.value;
+    const currentValue = dropdownTrigger.dataset.id;
     
     // Clear current options
     locationSelect.innerHTML = '';
     
     // Get current branding count by type and location
     const brandingByTypeAndPlace = getBrandingCountByTypeAndPlace(brandingContainer);
+    
+    // Track the first available option for dropdown
+    let firstOption = null;
     
     // Add new options only if limit not exceeded for location
     availablePlaces.forEach(place => {
@@ -448,20 +561,60 @@ export function updateLocationOptions(opportunities, selectedTypeId, locationSel
         
         // Add option only if branding count doesn't exceed limit
         if (currentCount < place.place_quantity) {
-            const option = document.createElement('option');
-            option.value = place.print_place_id;
+            // Create li element for dropdown
+            const option = document.createElement('li');
+            option.setAttribute('value', place.print_place_id);
             option.textContent = place.print_place_name;
             locationSelect.appendChild(option);
+            
+            // Add click handler for newly created option
+            attachDropdownItemHandler(option, locationSelect);
+            
+            // Save first option
+            if (!firstOption) {
+                firstOption = {
+                    value: place.print_place_id,
+                    text: place.print_place_name
+                };
+            }
         }
     });
     
-    // Restore selected value if still available
-    if (locationSelect.querySelector(`option[value="${currentValue}"]`)) {
-        locationSelect.value = currentValue;
-    } else if (locationSelect.options.length > 0) {
-        // If previous value not available, select first available
-        locationSelect.selectedIndex = 0;
+    // Check if current selected value is still available
+    const selectedLi = Array.from(locationSelect.querySelectorAll('li'))
+        .find(li => li.getAttribute('value') === currentValue);
+    
+    // If there are no available places, return early
+    if (locationSelect.querySelectorAll('li').length === 0) {
+        // Clear the dropdown trigger
+        dropdownTrigger.textContent = "Нет доступных мест";
+        dropdownTrigger.dataset.id = "";
+        locationSelect.dataset.value = "";
+        return;
     }
+    
+    // Handle selection and UI update
+    if (selectedLi) {
+        // The current value is still available
+        locationSelect.dataset.value = currentValue;
+        
+        // Update trigger display
+        dropdownTrigger.textContent = selectedLi.textContent;
+        dropdownTrigger.dataset.id = currentValue;
+    } else if (firstOption) {
+        // Current value not available, use first option
+        locationSelect.dataset.value = firstOption.value;
+        
+        // Update trigger display
+        dropdownTrigger.textContent = firstOption.text;
+        dropdownTrigger.dataset.id = firstOption.value;
+    }
+    
+    // Add back the icon
+    const icon = document.createElement('span');
+    icon.className = 'viki-dropdown__trigger-icon';
+    icon.innerHTML = '<i class="fa-solid fa-chevron-down"></i>';
+    dropdownTrigger.appendChild(icon);
 }
 
 /**
@@ -484,9 +637,15 @@ export function updateColorsOptions(opportunities, selectedTypeId, selectedPlace
         return;
     }
     
+    // Get dropdown container and trigger
+    const dropdownContainer = colorsSelect.closest('.viki-dropdown');
+    if (!dropdownContainer) return;
+    
+    const dropdownTrigger = dropdownContainer.querySelector('.viki-dropdown__trigger');
+    if (!dropdownTrigger) return;
+    
     // Save current selected value
-    const currentValue = colorsSelect.closest('.branding-field')
-        .querySelector('.viki-dropdown__trigger').dataset.id;
+    const currentValue = dropdownTrigger.dataset.id;
     
     // Clear current options
     colorsSelect.innerHTML = '';
@@ -494,30 +653,51 @@ export function updateColorsOptions(opportunities, selectedTypeId, selectedPlace
     // Add options based on maximum number of colors
     for (let i = 1; i <= opportunity.color_quantity; i++) {
         const option = document.createElement('li');
-        option.value = i;
+        option.setAttribute('value', i);
         option.textContent = i === 1 ? '1 цвет' : 
                             (i > 1 && i < 5) ? i + ' цвета' : 
                             i + ' цветов';
         colorsSelect.appendChild(option);
+        
+        // Add click handler for newly created option
+        attachDropdownItemHandler(option, colorsSelect);
     }
     
-    // // Add "Full color" option for certain print types
-    // if (['sublimation', 'uv', 'digital'].includes(selectedTypeId)) {
-    //     const option = document.createElement('option');
-    //     option.value = 'full';
-    //     option.textContent = 'Полноцвет';
-    //     colorsSelect.appendChild(option);
-    // }
-    
-    // Restore selected value if still available
-    if (colorsSelect.querySelectorAll('li').length > 0) {
-        if (!isNaN(parseInt(currentValue)) && parseInt(currentValue) <= opportunity.color_quantity) {
-        colorsSelect.value = currentValue;
-        } else {
-            // If previous value not available, select first available
-            colorsSelect.selectedIndex = 0;
-        }
+    // If there are no color options, exit
+    if (colorsSelect.querySelectorAll('li').length === 0) {
+        // Clear the dropdown trigger
+        dropdownTrigger.textContent = "Нет доступных цветов";
+        dropdownTrigger.dataset.id = "";
+        colorsSelect.dataset.value = "";
+        return;
     }
+    
+    // Set 'value' property for compatibility with existing code
+    const selectedLi = Array.from(colorsSelect.querySelectorAll('li'))
+        .find(li => li.getAttribute('value') === currentValue);
+    
+    if (selectedLi && !isNaN(parseInt(currentValue)) && parseInt(currentValue) <= opportunity.color_quantity) {
+        // Current value is still available
+        colorsSelect.dataset.value = currentValue;
+        
+        // Update trigger display
+        dropdownTrigger.textContent = selectedLi.textContent;
+        dropdownTrigger.dataset.id = currentValue;
+    } else if (colorsSelect.querySelectorAll('li').length > 0) {
+        // Current value not available, use first option
+        const firstOption = colorsSelect.querySelector('li');
+        colorsSelect.dataset.value = firstOption.getAttribute('value');
+        
+        // Update trigger display
+        dropdownTrigger.textContent = firstOption.textContent;
+        dropdownTrigger.dataset.id = firstOption.getAttribute('value');
+    }
+    
+    // Add back the icon
+    const icon = document.createElement('span');
+    icon.className = 'viki-dropdown__trigger-icon';
+    icon.innerHTML = '<i class="fa-solid fa-chevron-down"></i>';
+    dropdownTrigger.appendChild(icon);
 }
 
 /**

@@ -16,12 +16,15 @@ export function getBrandingCountByTypeAndPlace(brandingContainer) {
     
     brandingItems.forEach(item => {
         const typeSelect = item.querySelector('.branding-type');
-        const locationSelect = item.querySelector('.branding-location');
+        const locationDropdown = item.querySelector('.branding-field-location');
         
-        if (typeSelect && typeSelect.value && locationSelect && locationSelect.value) {
-            const key = typeSelect.value + '-' + locationSelect.value;
-            const currentCount = countByTypeAndPlace.get(key) || 0;
-            countByTypeAndPlace.set(key, currentCount + 1);
+        if (typeSelect && typeSelect.value && locationDropdown) {
+            const locationTrigger = locationDropdown.querySelector('.viki-dropdown__trigger');
+            if (locationTrigger && locationTrigger.dataset.id) {
+                const key = typeSelect.value + '-' + locationTrigger.dataset.id;
+                const currentCount = countByTypeAndPlace.get(key) || 0;
+                countByTypeAndPlace.set(key, currentCount + 1);
+            }
         }
     });
     

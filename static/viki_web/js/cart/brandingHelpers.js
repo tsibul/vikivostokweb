@@ -121,6 +121,24 @@ export function createBrandingItem(itemArticle, goodsId, index, brandingContaine
     const doc = parser.parseFromString(`<ul>${colorOptions}</ul>`, 'text/html');
     const firstColor = doc.querySelector('li')
     
+    // Parse locationOptions to get the list items and first selected value
+    const locationOptionsParser = new DOMParser();
+    const locationDoc = locationOptionsParser.parseFromString(`<select>${locationOptions}</select>`, 'text/html');
+    const locationSelectOptions = locationDoc.querySelectorAll('option');
+    let firstLocation = null;
+    if (locationSelectOptions.length > 0) {
+        firstLocation = {
+            value: locationSelectOptions[0].value,
+            text: locationSelectOptions[0].textContent
+        };
+    }
+    
+    // Convert options to list items for dropdown
+    let locationListItems = '';
+    locationSelectOptions.forEach(option => {
+        locationListItems += `<li value="${option.value}">${option.textContent}</li>`;
+    });
+    
     // Create element
     div.innerHTML = `
         <div class="branding-item__row">
@@ -129,10 +147,16 @@ export function createBrandingItem(itemArticle, goodsId, index, brandingContaine
                     ${typeOptions}
                 </select>
             </div>
-            <div class="branding-field branding-field-location">
-                <select class="branding-location" data-goods-id="${goodsId}">
-                    ${locationOptions}
-                </select>
+            <div class="branding-field branding-field-location viki-dropdown">
+                <div class="viki-dropdown__trigger" data-id="${firstLocation ? firstLocation.value : ''}">
+                    ${firstLocation ? firstLocation.text : ''}
+                    <span class="viki-dropdown__trigger-icon">
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </span>
+                </div>
+                <ul class="viki-dropdown__menu viki-dropdown__menu-list branding-location" data-value="${firstLocation ? firstLocation.value : ''}">
+                    ${locationListItems}
+                </ul>
             </div>
             <div class="branding-field branding-field-colors viki-dropdown">
                 <div class="viki-dropdown__trigger" data-id="${firstColor.value}">
@@ -245,19 +269,32 @@ export function updateCartBrandingInLocalStorage(cartItem) {
     
     brandingItems.forEach(item => {
         const typeSelect = item.querySelector('.branding-type');
-        const locationSelect = item.querySelector('.branding-location');
-        const colorsSelect = item.querySelector('.branding-colors');
+        const locationField = item.querySelector('.branding-field-location');
+        const colorsField = item.querySelector('.branding-field-colors');
         const secondPassCheckbox = item.querySelector('.branding-second-pass');
         const priceInput = item.querySelector('.branding-price');
         
-        if (typeSelect && locationSelect && colorsSelect && priceInput) {
+        if (typeSelect && locationField && colorsField && priceInput) {
+            // Get location from dropdown
+            const locationTrigger = locationField.querySelector('.viki-dropdown__trigger');
+            let locationId = locationTrigger.dataset.id;
+            let locationText = locationTrigger.textContent.trim();
+            
+            // Remove any child elements text (like the dropdown icon)
+            const tempSpan = document.createElement('span');
+            tempSpan.innerHTML = locationText;
+            locationText = tempSpan.textContent.trim();
+            
+            // Get colors from dropdown
+            const colorsTrigger = colorsField.querySelector('.viki-dropdown__trigger');
+            let colorsValue = colorsTrigger.dataset.id;
+            
             brandings.push({
                 type: typeSelect.options[typeSelect.selectedIndex]?.textContent || typeSelect.value,
                 type_id: typeSelect.value,
-                location: locationSelect.options[locationSelect.selectedIndex]?.textContent || locationSelect.value,
-                location_id: locationSelect.value,
-                colors: colorsSelect.closest('.branding-field')
-                    .querySelector('.viki-dropdown__trigger').dataset.id,
+                location: locationText,
+                location_id: locationId,
+                colors: parseInt(colorsValue) || 1,
                 secondPass: secondPassCheckbox ? secondPassCheckbox.checked : false,
                 price: parseFloat(priceInput.value) || 0
             });
