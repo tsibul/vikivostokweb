@@ -125,11 +125,14 @@ export function updateBrandingItem(brandingItem) {
     if (typeSelect) {
         typeSelect.addEventListener('change', function () {
             const opportunities = printOpportunitiesCache.get(goodsId) || [];
+            const typeDropdown = typeSelect.closest('.viki-dropdown');
+            const typeTrigger = typeDropdown?.querySelector('.viki-dropdown__trigger');
+            const selectedTypeId = typeTrigger.dataset.id;
+            
             const locationSelect = brandingItem.querySelector('.branding-location');
             const locationDropdown = locationSelect.closest('.viki-dropdown');
             const locationTrigger = locationDropdown.querySelector('.viki-dropdown__trigger');
             const colorsSelect = brandingItem.querySelector('.branding-colors');
-            const selectedTypeId = this.value;
 
             // Update location options
             if (goodsId && locationSelect) {
@@ -150,16 +153,17 @@ export function updateBrandingItem(brandingItem) {
                 const allBrandingItems = brandingContainer.querySelectorAll('.branding-item');
                 allBrandingItems.forEach(item => {
                     if (item !== brandingItem) { // Skip the current item that triggered the change
-                        const itemTypeSelect = item.querySelector('.branding-type');
+                        const itemTypeDropdown = item.querySelector('.branding-field-type');
+                        const itemTypeTrigger = itemTypeDropdown?.querySelector('.viki-dropdown__trigger');
                         const itemLocationDropdown = item.querySelector('.branding-field-location');
                         const itemLocationTrigger = itemLocationDropdown?.querySelector('.viki-dropdown__trigger');
                         const itemColorsSelect = item.querySelector('.branding-colors');
                         
-                        if (itemTypeSelect && itemLocationTrigger && itemColorsSelect && 
-                            itemTypeSelect.value && itemLocationTrigger.dataset.id) {
+                        if (itemTypeTrigger && itemLocationTrigger && itemColorsSelect && 
+                            itemTypeTrigger.dataset.id && itemLocationTrigger.dataset.id) {
                             updateColorsOptions(
                                 opportunities, 
-                                itemTypeSelect.value, 
+                                itemTypeTrigger.dataset.id, 
                                 itemLocationTrigger.dataset.id, 
                                 itemColorsSelect
                             );
@@ -186,14 +190,15 @@ export function updateBrandingItem(brandingItem) {
     const locationSelect = brandingItem.querySelector('.branding-location');
     if (locationSelect) {
         locationSelect.addEventListener('change', function () {
-            const typeSelect = brandingItem.querySelector('.branding-type');
+            const typeDropdown = brandingItem.querySelector('.branding-field-type');
+            const typeTrigger = typeDropdown?.querySelector('.viki-dropdown__trigger');
             const colorsSelect = brandingItem.querySelector('.branding-colors');
             const locationDropdown = locationSelect.closest('.viki-dropdown');
             const locationTrigger = locationDropdown.querySelector('.viki-dropdown__trigger');
 
-            if (goodsId && typeSelect && colorsSelect) {
+            if (goodsId && typeTrigger && colorsSelect) {
                 const opportunities = printOpportunitiesCache.get(goodsId) || [];
-                const selectedTypeId = typeSelect.value;
+                const selectedTypeId = typeTrigger.dataset.id;
                 const selectedPlaceId = locationTrigger.dataset.id;
 
                 // Update color options - always for selected type/place,
@@ -208,16 +213,17 @@ export function updateBrandingItem(brandingItem) {
                 const allBrandingItems = brandingContainer.querySelectorAll('.branding-item');
                 allBrandingItems.forEach(item => {
                     if (item !== brandingItem) { // Skip the current item that triggered the change
-                        const itemTypeSelect = item.querySelector('.branding-type');
+                        const itemTypeDropdown = item.querySelector('.branding-field-type');
+                        const itemTypeTrigger = itemTypeDropdown?.querySelector('.viki-dropdown__trigger');
                         const itemLocationDropdown = item.querySelector('.branding-field-location');
                         const itemLocationTrigger = itemLocationDropdown?.querySelector('.viki-dropdown__trigger');
                         const itemColorsSelect = item.querySelector('.branding-colors');
                         
-                        if (itemTypeSelect && itemLocationTrigger && itemColorsSelect && 
-                            itemTypeSelect.value && itemLocationTrigger.dataset.id) {
+                        if (itemTypeTrigger && itemLocationTrigger && itemColorsSelect && 
+                            itemTypeTrigger.dataset.id && itemLocationTrigger.dataset.id) {
                             updateColorsOptions(
                                 opportunities, 
-                                itemTypeSelect.value, 
+                                itemTypeTrigger.dataset.id, 
                                 itemLocationTrigger.dataset.id, 
                                 itemColorsSelect
                             );

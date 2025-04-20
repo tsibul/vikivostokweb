@@ -15,13 +15,14 @@ export function getBrandingCountByTypeAndPlace(brandingContainer) {
     const countByTypeAndPlace = new Map();
     
     brandingItems.forEach(item => {
-        const typeSelect = item.querySelector('.branding-type');
+        const typeField = item.querySelector('.branding-field-type');
+        const typeTrigger = typeField?.querySelector('.viki-dropdown__trigger');
         const locationDropdown = item.querySelector('.branding-field-location');
         
-        if (typeSelect && typeSelect.value && locationDropdown) {
+        if (typeTrigger && typeTrigger.dataset.id && locationDropdown) {
             const locationTrigger = locationDropdown.querySelector('.viki-dropdown__trigger');
             if (locationTrigger && locationTrigger.dataset.id) {
-                const key = typeSelect.value + '-' + locationTrigger.dataset.id;
+                const key = typeTrigger.dataset.id + '-' + locationTrigger.dataset.id;
                 const currentCount = countByTypeAndPlace.get(key) || 0;
                 countByTypeAndPlace.set(key, currentCount + 1);
             }

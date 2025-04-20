@@ -34,22 +34,22 @@ export function createBrandingItem(itemArticle, goodsId, index, brandingContaine
             };
         });
     
-    // Create options for print types
-    let typeOptions = '';
+    // Create type dropdown items
+    let typeListItems = '';
     printTypes.forEach(type => {
-        typeOptions += `<option value="${type.id}">${type.name}</option>`;
+        typeListItems += `<li value="${type.id}">${type.name}</li>`;
     });
     
     // Temporarily create div without content to get branding information
     const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = `<select class="branding-type" value="${printTypes.length > 0 ? printTypes[0].id : ''}"></select>`;
+    tempDiv.innerHTML = `<div class="branding-type" data-id="${printTypes.length > 0 ? printTypes[0].id : ''}"></div>`;
     div.appendChild(tempDiv);
     
     // Get current data about branding count
     const brandingByTypeAndPlace = getBrandingCountByTypeAndPlace(brandingContainer);
     
     // Determine first available print type and its locations
-    let firstAvailableType = '';
+    let firstAvailableType = null;
     let locationOptions = '';
     let defaultPrice = 450;
     
@@ -65,7 +65,7 @@ export function createBrandingItem(itemArticle, goodsId, index, brandingContaine
             });
             
             if (availablePlaces.length > 0) {
-                firstAvailableType = type.id;
+                firstAvailableType = type;
                 
                 // Create options for available locations
                 availablePlaces.forEach(place => {
@@ -102,7 +102,7 @@ export function createBrandingItem(itemArticle, goodsId, index, brandingContaine
     const selectedPlaceId = locationOptions.match(/value="([^"]+)"/)?.[1];
     if (selectedPlaceId) {
         const selectedOpportunity = opportunities.find(op => 
-            op.print_type_id == firstAvailableType && op.print_place_id == selectedPlaceId
+            op.print_type_id == firstAvailableType.id && op.print_place_id == selectedPlaceId
         );
         
         if (selectedOpportunity) {
@@ -142,10 +142,16 @@ export function createBrandingItem(itemArticle, goodsId, index, brandingContaine
     // Create element
     div.innerHTML = `
         <div class="branding-item__row">
-            <div class="branding-field branding-field-type">
-                <select class="branding-type" data-goods-id="${goodsId}">
-                    ${typeOptions}
-                </select>
+            <div class="branding-field branding-field-type viki-dropdown">
+                <div class="viki-dropdown__trigger" data-id="${firstAvailableType.id}">
+                    ${firstAvailableType.name}
+                    <span class="viki-dropdown__trigger-icon">
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </span>
+                </div>
+                <ul class="viki-dropdown__menu viki-dropdown__menu-list branding-type" data-value="${firstAvailableType.id}">
+                    ${typeListItems}
+                </ul>
             </div>
             <div class="branding-field branding-field-location viki-dropdown">
                 <div class="viki-dropdown__trigger" data-id="${firstLocation ? firstLocation.value : ''}">
@@ -188,12 +194,6 @@ export function createBrandingItem(itemArticle, goodsId, index, brandingContaine
             </div>
         </div>
     `;
-    
-    // Set initial print type value
-    const typeSelectElement = div.querySelector('.branding-type');
-    if (typeSelectElement) {
-        typeSelectElement.value = firstAvailableType;
-    }
     
     return div;
 }
@@ -268,30 +268,40 @@ export function updateCartBrandingInLocalStorage(cartItem) {
     const brandings = [];
     
     brandingItems.forEach(item => {
-        const typeSelect = item.querySelector('.branding-type');
+        const typeField = item.querySelector('.branding-field-type');
         const locationField = item.querySelector('.branding-field-location');
         const colorsField = item.querySelector('.branding-field-colors');
         const secondPassCheckbox = item.querySelector('.branding-second-pass');
         const priceInput = item.querySelector('.branding-price');
         
-        if (typeSelect && locationField && colorsField && priceInput) {
+        if (typeField && locationField && colorsField && priceInput) {
+            // Get type from dropdown
+            const typeTrigger = typeField.querySelector('.viki-dropdown__trigger');
+            let typeId = typeTrigger.dataset.id;
+            let typeText = typeTrigger.textContent.trim();
+            
+            // Remove any child elements text (like the dropdown icon)
+            const tempTypeSpan = document.createElement('span');
+            tempTypeSpan.innerHTML = typeText;
+            typeText = tempTypeSpan.textContent.trim();
+            
             // Get location from dropdown
             const locationTrigger = locationField.querySelector('.viki-dropdown__trigger');
             let locationId = locationTrigger.dataset.id;
             let locationText = locationTrigger.textContent.trim();
             
             // Remove any child elements text (like the dropdown icon)
-            const tempSpan = document.createElement('span');
-            tempSpan.innerHTML = locationText;
-            locationText = tempSpan.textContent.trim();
+            const tempLocationSpan = document.createElement('span');
+            tempLocationSpan.innerHTML = locationText;
+            locationText = tempLocationSpan.textContent.trim();
             
             // Get colors from dropdown
             const colorsTrigger = colorsField.querySelector('.viki-dropdown__trigger');
             let colorsValue = colorsTrigger.dataset.id;
             
             brandings.push({
-                type: typeSelect.options[typeSelect.selectedIndex]?.textContent || typeSelect.value,
-                type_id: typeSelect.value,
+                type: typeText,
+                type_id: typeId,
                 location: locationText,
                 location_id: locationId,
                 colors: parseInt(colorsValue) || 1,

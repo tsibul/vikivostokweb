@@ -88,10 +88,18 @@ export function renderCart() {
                     ${item.branding ? item.branding.map((branding, bIndex) => `
                         <div class="branding-item">
                             <div class="branding-item__row">
-                                <div class="branding-field branding-field-type">
-                                    <select class="branding-type">
-                                        <option value="${branding.type_id || branding.type}" selected>${branding.type}</option>
-                                    </select>
+                                <div class="branding-field branding-field-type viki-dropdown">
+                                    <div class="viki-dropdown__trigger" data-id="${branding.type_id || branding.type}">
+                                        ${branding.type}
+                                        <span class="viki-dropdown__trigger-icon">
+                                            <i class="fa-solid fa-chevron-down"></i>
+                                        </span>
+                                    </div>
+                                    <ul class="viki-dropdown__menu viki-dropdown__menu-list branding-type">
+                                        <li value="${branding.type_id || branding.type}" selected>
+                                            ${branding.type}
+                                        </li>
+                                    </ul>
                                 </div>
                                 <div class="branding-field branding-field-location viki-dropdown">
                                     <div class="viki-dropdown__trigger" data-id="${branding.location_id || branding.location}">
