@@ -50,7 +50,8 @@ export function updateBrandingItem(brandingItem) {
 
                 // Update trigger text and data
                 trigger.textContent = this.textContent;
-                trigger.dataset.id = this.value;
+                // Make sure we get the value attribute correctly
+                trigger.dataset.id = this.getAttribute('value');
 
                 // Add trigger icon back
                 const icon = document.createElement('span');

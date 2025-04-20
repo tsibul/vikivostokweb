@@ -142,9 +142,7 @@ export function createBrandingItem(itemArticle, goodsId, index, brandingContaine
                     </span>
                 </div>
                 <ul class="viki-dropdown__menu viki-dropdown__menu-list branding-colors">
-                    <li class="viki-dropdown__menu-item">
-                ${colorOptions}
-                    </li>
+                    ${colorOptions}
                 </ul>
             </div>
             <div class="branding-field branding-checkbox">
