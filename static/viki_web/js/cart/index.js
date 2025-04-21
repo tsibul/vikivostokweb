@@ -2,14 +2,14 @@
  * Main cart module - exports all cart functionality
  */
 
-export { renderCart, showEmptyCart } from './rendering.js';
-export { initCartQuantity } from './quantity.js';
-export { initCartItemRemove } from './remove.js';
-export { updateItemTotal, updateBrandingPrices, updateItemFinalTotal } from './calculation.js';
-export { updateCartSummary } from './summary.js';
-export { formatPrice } from './utils.js';
-export { printOpportunitiesCache, getBrandingCountByTypeAndPlace } from './brandingCommon.js';
-export { 
+import { renderCart } from './rendering.js';
+import { initCartQuantity } from './quantity.js';
+import { initCartItemRemove } from './remove.js';
+import { updateItemTotal, updateBrandingPrices, updateItemFinalTotal } from './calculation.js';
+import { updateCartSummary } from './summary.js';
+import { formatPrice } from './utils.js';
+import { printOpportunitiesCache, getBrandingCountByTypeAndPlace } from './brandingCommon.js';
+import { 
     initBranding, 
     attachAddBrandingHandlers, 
     updateAllLocationOptionsInContainer,
@@ -18,9 +18,20 @@ export {
     fetchPrintOpportunities,
     initDropdowns
 } from './branding.js';
-export {
+import {
     createBrandingItem,
     checkAndUpdateAddBrandingButton,
     updateCartBrandingInLocalStorage
 } from './brandingHelpers.js';
-export { updateBrandingItem } from './brandingItem.js'; 
+import { updateBrandingItem } from './brandingItem.js';
+import { initPriceManager } from './priceManager.js';
+
+export { 
+    renderCart, 
+    initCartQuantity, 
+    initCartItemRemove, 
+    initBranding,
+    initDropdowns,
+    initPriceManager,
+    printOpportunitiesCache
+}; 

@@ -7,6 +7,7 @@ import {
     initCartItemRemove, 
     initBranding,
     initDropdowns,
+    initPriceManager,
     printOpportunitiesCache
 } from './cart/index.js';
 
@@ -19,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
     initCartItemRemove();
     initBranding();
     initDropdowns();
+    initPriceManager(); // Initialize price manager
     RecentlyViewed.init();
     // Check if CartManager exists
     if (!window.CartManager) {
