@@ -84,7 +84,7 @@ class RecentlyViewed {
                         ? item.price 
                         : product.price || '0';
       
-      const itemPromotionPrice = item.promotion_price || false;
+      const itemPromotionPrice = item.promotion_price || product.promotion_price || false;
                         
       if (item.item.id != product.id_random) {
         images += `<img src="/static/viki_web_cms/files/item_photo/${item.item.image}" 
@@ -94,7 +94,7 @@ class RecentlyViewed {
                       data-id="${item.item.id}"
                       data-article="${item.item.item_article || ''}"
                       data-price="${itemPrice}"
-                      data-promotion="${itemPromotionPrice}"
+                      data-promotion="${itemPromotionPrice ? 'true' : 'false'}"
                       data-color-description="${item.color_description || ''}" />`
       } else {
         images += `<img src="/static/viki_web_cms/files/item_photo/${item.item.image}" 
@@ -102,7 +102,7 @@ class RecentlyViewed {
                       data-id="${item.item.id}"
                       data-article="${item.item.item_article || ''}"
                       data-price="${itemPrice}"
-                      data-promotion="${itemPromotionPrice}"
+                      data-promotion="${itemPromotionPrice ? 'true' : 'false'}"
                       data-color-description="${item.color_description || ''}" />`
       }
     });
@@ -296,7 +296,10 @@ class RecentlyViewed {
         if (priceElem) {
           const priceText = newImage.dataset.price || '0';
           const volumePrice = container.querySelector('.recently-viewed__price span').textContent.includes('от');
-          priceElem.innerHTML = `<span>Цена${volumePrice ? ' от' : ''}:</span> ${priceText} руб.`;
+          const isPromotion = newImage.dataset.promotion === 'true';
+          
+          priceElem.innerHTML = `<span>Цена${volumePrice ? ' от' : ''}:</span> ${priceText} руб.
+                                ${isPromotion ? '<span class="product-promotion-badge">Акция</span>' : ''}`;
         }
         
         const descriptionElem = container.querySelector('.recently-viewed__description');
