@@ -252,21 +252,6 @@ export function updateBrandingItem(brandingItem) {
         });
     }
 
-    // Price change handler
-    const priceInput = brandingItem.querySelector('.branding-price');
-    if (priceInput) {
-        priceInput.addEventListener('change', function () {
-            if (parseFloat(this.value) < 0) {
-                this.value = 0;
-            }
-            updateItemTotal(cartItem);
-            updateCartSummary();
-
-            // Update data in localStorage
-            updateCartBrandingInLocalStorage(cartItem);
-        });
-    }
-
     // Second pass checkbox handler
     const secondPassCheckbox = brandingItem.querySelector('.branding-second-pass');
     if (secondPassCheckbox) {
@@ -277,5 +262,38 @@ export function updateBrandingItem(brandingItem) {
             // Update data in localStorage
             updateCartBrandingInLocalStorage(cartItem);
         });
+    }
+    
+    // Add a handler for programmatically updating the price input
+    const priceInput = brandingItem.querySelector('.branding-price');
+    if (priceInput) {
+        // Create a MutationObserver to watch for value changes
+        const observer = new MutationObserver(function(mutations) {
+            updateItemTotal(cartItem);
+            updateCartSummary();
+            updateCartBrandingInLocalStorage(cartItem);
+        });
+        
+        // Watch for attribute changes on the price input
+        observer.observe(priceInput, { attributes: true, attributeFilter: ['value'] });
+        
+        // Add a custom method to set the price programmatically
+        priceInput.setPriceValue = function(newPrice) {
+            if (parseFloat(newPrice) < 0) {
+                newPrice = 0;
+            }
+            this.value = newPrice;
+            
+            // Trigger a custom event that the cart can listen for
+            const changeEvent = new CustomEvent('branding-price-change', { 
+                bubbles: true,
+                detail: { price: newPrice }
+            });
+            this.dispatchEvent(changeEvent);
+            
+            updateItemTotal(cartItem);
+            updateCartSummary();
+            updateCartBrandingInLocalStorage(cartItem);
+        };
     }
 } 

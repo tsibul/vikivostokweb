@@ -190,7 +190,7 @@ export function createBrandingItem(itemArticle, goodsId, index, brandingContaine
                 <label for="second-pass-${itemArticle}-${index}">2й проход</label>
             </div>
             <div class="branding-field branding-field-price">
-                <input type="number" class="branding-price" value="${defaultPrice}" min="0">
+                <input type="number" class="branding-price text-like" value="${defaultPrice}" min="0" readonly>
                 <span class="currency">руб.</span>
             </div>
             <div class="branding-field branding-field-total">

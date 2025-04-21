@@ -162,7 +162,7 @@ export function renderCart() {
                                     <label for="second-pass-${index}-${bIndex}">2й проход</label>
                                 </div>
                                 <div class="branding-field branding-field-price">
-                                    <input type="number" class="branding-price" value="${branding.price}" min="0">
+                                    <input type="number" class="branding-price text-like" value="${branding.price}" min="0" readonly>
                                     <span class="currency">руб.</span>
                                 </div>
                                 <div class="branding-field branding-field-total">
