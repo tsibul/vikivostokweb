@@ -103,6 +103,58 @@ function updateCartItemPrice(itemId, price) {
 }
 
 /**
+ * Adds or removes promotion badge for a cart item
+ * @param {HTMLElement} cartItem - Cart item element
+ * @param {boolean} isPromotion - Whether the item is on promotion
+ */
+function updatePromotionBadge(cartItem, isPromotion) {
+    // Check if promotion badge already exists
+    let badge = cartItem.querySelector('.promotion-badge');
+    
+    if (isPromotion) {
+        // Add badge if it doesn't exist
+        if (!badge) {
+            badge = document.createElement('div');
+            badge.className = 'promotion-badge';
+            badge.textContent = 'Акция';
+            
+            // Insert badge into cart item
+            const infoElement = cartItem.querySelector('.cart-item__info');
+            if (infoElement) {
+                infoElement.insertBefore(badge, infoElement.firstChild);
+            }
+        }
+    } else {
+        // Remove badge if it exists
+        if (badge) {
+            badge.remove();
+        }
+    }
+    
+    // Also update promotion flag in localStorage
+    updatePromotionFlagInLocalStorage(cartItem, isPromotion);
+}
+
+/**
+ * Updates promotion flag in localStorage
+ * @param {HTMLElement} cartItem - Cart item element
+ * @param {boolean} isPromotion - Whether the item is on promotion
+ */
+function updatePromotionFlagInLocalStorage(cartItem, isPromotion) {
+    const removeBtn = cartItem.querySelector('.cart-item__remove');
+    if (!removeBtn || !removeBtn.dataset.id) return;
+    
+    const itemId = removeBtn.dataset.id;
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const itemIndex = cart.findIndex(item => item.id === itemId);
+    
+    if (itemIndex !== -1) {
+        cart[itemIndex].promotion = isPromotion;
+        localStorage.setItem('cart', JSON.stringify(cart));
+    }
+}
+
+/**
  * Updates price for all cart items
  */
 async function updateAllPrices() {
@@ -130,6 +182,9 @@ async function updateAllPrices() {
                 
                 // Update item in localStorage
                 updateCartItemPrice(itemId, priceData.price);
+                
+                // Update promotion badge
+                updatePromotionBadge(cartItem, priceData.promotion_price);
             } else {
                 // Volume-based price
                 volumePricesCache.set(itemId, {
@@ -151,6 +206,9 @@ async function updateAllPrices() {
                     
                     // Update item in localStorage
                     updateCartItemPrice(itemId, price);
+                    
+                    // Update promotion badge
+                    updatePromotionBadge(cartItem, priceData.promotion_price);
                 }
             }
         }
@@ -191,6 +249,9 @@ function updatePriceOnQuantityChange(cartItem, newQuantity) {
  * Initialize price management
  */
 function initPriceManager() {
+    // Add CSS for promotion badge
+    addPromotionBadgeStyles();
+    
     // First, update all prices
     updateAllPrices();
     
@@ -200,6 +261,30 @@ function initPriceManager() {
             updatePriceOnQuantityChange(e.detail.cartItem, e.detail.quantity);
         }
     });
+}
+
+/**
+ * Adds CSS styles for promotion badge
+ */
+function addPromotionBadgeStyles() {
+    if (!document.getElementById('promotion-badge-styles')) {
+        const styleElement = document.createElement('style');
+        styleElement.id = 'promotion-badge-styles';
+        styleElement.textContent = `
+            .promotion-badge {
+                display: inline-block;
+                padding: 4px 8px;
+                background-color: #ff6b6b;
+                color: white;
+                font-weight: bold;
+                border-radius: 4px;
+                font-size: 12px;
+                margin-right: 5px;
+                margin-bottom: 5px;
+            }
+        `;
+        document.head.appendChild(styleElement);
+    }
 }
 
 export { initPriceManager, updateAllPrices, getItemPrice }; 

@@ -3,9 +3,36 @@
  */
 
 /**
+ * Adds CSS styles for promotion badge if not already added
+ */
+function ensurePromotionBadgeStyles() {
+    if (!document.getElementById('promotion-badge-styles')) {
+        const styleElement = document.createElement('style');
+        styleElement.id = 'promotion-badge-styles';
+        styleElement.textContent = `
+            .promotion-badge {
+                display: inline-block;
+                padding: 4px 8px;
+                background-color: #ff6b6b;
+                color: white;
+                font-weight: bold;
+                border-radius: 4px;
+                font-size: 12px;
+                margin-right: 5px;
+                margin-bottom: 5px;
+            }
+        `;
+        document.head.appendChild(styleElement);
+    }
+}
+
+/**
  * Renders the cart and calculates totals
  */
 export function renderCart() {
+    // Ensure promotion badge styles are added
+    ensurePromotionBadgeStyles();
+    
     const cart = JSON.parse(localStorage.getItem('cart') || '[]');
     const cartItemsContainer = document.querySelector('.cart-page__items');
     const cartEmpty = document.querySelector('.cart-empty');
@@ -50,6 +77,7 @@ export function renderCart() {
                 <img src="${item.image}" alt="${item.name}">
             </div>
             <div class="cart-item__info">
+                ${item.promotion ? '<div class="promotion-badge">Акция</div>' : ''}
                 <h3 class="cart-item__name">${item.name}</h3>
                 <p class="cart-item__article">Артикул: ${item.article}</p>
                 <p class="cart-item__description">${item.description || ''}</p>
