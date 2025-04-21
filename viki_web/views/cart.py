@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.utils import timezone
 from django.db.models import Max, Q
 
-from viki_web_cms.models import ProductGroup, PrintOpportunity, Goods, Price, PriceGoodsStandard, PriceItemStandard, PriceGoodsVolume, StandardPriceType, UserExtension, Customer, CatalogueItem
+from viki_web_cms.models import ProductGroup, PrintOpportunity, Goods, Price, PriceGoodsStandard, PriceItemStandard, PriceGoodsVolume, StandardPriceType, UserExtension, Customer, CatalogueItem, PrintGroupToGoods, PrintPrice, PrintVolume
 
 
 def cart(request):
@@ -23,7 +23,7 @@ def get_print_opportunities(request, goods_id):
         result = []
         for opportunity in opportunities:
             print_data = opportunity.print_data
-            result.append({
+            opportunity_data = {
                 'id': opportunity.id,
                 'print_type_id': print_data.print_type.id,
                 'print_type_name': print_data.print_type.name,
@@ -33,13 +33,83 @@ def get_print_opportunities(request, goods_id):
                 'place_quantity': print_data.place_quantity,
                 'length': print_data.length,
                 'height': print_data.height
-            })
+            }
+            
+            # Добавляем цены для каждой возможности нанесения
+            prices = get_print_prices_data(opportunity.id)
+            if prices:
+                opportunity_data['prices'] = prices
+            
+            result.append(opportunity_data)
             
         return JsonResponse({'success': True, 'opportunities': result})
     except Goods.DoesNotExist:
         return JsonResponse({'success': False, 'error': 'Товар не найден'})
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)})
+
+
+def get_print_prices_data(opportunity_id):
+    """
+    Возвращает данные о ценах на брендирование для указанной возможности нанесения
+    """
+    try:
+        current_date = timezone.now().date()
+        
+        # Получаем возможность нанесения
+        opportunity = PrintOpportunity.objects.get(id=opportunity_id, deleted=False)
+        goods = opportunity.goods
+        print_data = opportunity.print_data
+        print_type = print_data.print_type
+        print_place = print_data.print_place
+        
+        # Сначала пытаемся найти запись с точным соответствием места печати
+        print_group = PrintGroupToGoods.objects.filter(
+            goods=goods,
+            print_price_group__print_type=print_type,
+            print_place=print_place,
+            deleted=False
+        ).first()
+        
+        # Если запись с точным соответствием не найдена, ищем запись с пустым полем print_place
+        if not print_group:
+            print_group = PrintGroupToGoods.objects.filter(
+                goods=goods,
+                print_price_group__print_type=print_type,
+                print_place__isnull=True,
+                deleted=False
+            ).first()
+        
+        if not print_group:
+            return None
+        
+        print_price_group = print_group.print_price_group
+        
+        # Получаем цены для группы нанесения в зависимости от тиража
+        print_prices_query = PrintPrice.objects.filter(
+            print_price_group=print_price_group,
+            deleted=False,
+            price_list__price_list_date__lte=current_date
+        ).order_by('print_volume__quantity', '-price_list__price_list_date')
+        
+        # Обрабатываем результаты, чтобы получить уникальные количества с самыми последними ценами
+        print_prices_dict = {}
+        
+        for price in print_prices_query:
+            quantity = price.print_volume.quantity
+            
+            # Оставляем только первую (самую последнюю) цену для каждого количества
+            if quantity not in print_prices_dict:
+                print_prices_dict[quantity] = {
+                    'quantity': quantity,
+                    'price': price.price,
+                }
+        
+        # Конвертируем словарь в список
+        return list(print_prices_dict.values())
+        
+    except (PrintOpportunity.DoesNotExist, Exception):
+        return None
 
 
 def get_item_price(request, item_id):
