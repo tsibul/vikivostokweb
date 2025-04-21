@@ -2444,7 +2444,6 @@ dialog.company-dialog textarea {
   align-items: center;
   padding: 0.25rem;
   gap: 0.5rem;
-  flex-wrap: wrap;
 }
 @media (max-width: 992px) {
   .branding-item__row {
@@ -2467,34 +2466,31 @@ dialog.company-dialog textarea {
   background-color: #fff;
 }
 .branding-field-type {
-  flex: 3;
   min-width: 150px;
 }
 .branding-field-type select {
   width: 100%;
 }
 .branding-field-location {
-  flex: 2;
   min-width: 120px;
 }
 .branding-field-location select {
   width: 100%;
 }
 .branding-field-colors {
-  flex: 1;
   min-width: 100px;
 }
 .branding-field-colors select {
   width: 100%;
 }
 .branding-field-price {
-  width: 100px;
   display: flex;
   align-items: center;
 }
 .branding-field-price input {
   width: 70px;
   text-align: right;
+  font-size: 0.85rem;
 }
 .branding-field-price span {
   margin-left: 0.25rem;
@@ -2502,14 +2498,12 @@ dialog.company-dialog textarea {
   color: #0F4880;
 }
 .branding-field-total {
-  width: 120px;
   font-weight: 600;
   font-size: 0.85rem;
   color: #0F4880;
   text-align: right;
 }
 .branding-field-actions {
-  width: 30px;
   display: flex;
   justify-content: center;
 }
@@ -2522,9 +2516,6 @@ dialog.company-dialog textarea {
 }
 .branding-field-actions button:hover {
   color: #ff0000;
-}
-.branding-field.branding-checkbox {
-  width: 110px;
 }
 .branding-field.branding-checkbox input[type=checkbox] {
   margin-right: 0.5rem;
@@ -2852,6 +2843,18 @@ input[readonly].text-like::-webkit-outer-spin-button,
 input[readonly].text-like::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+/* Style for span elements with text-like class */
+span.text-like {
+  display: inline-block;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+  padding: 0;
+  text-align: right;
+  min-width: 80px;
+  margin-left: 6px;
 }
 
 .price-container {
