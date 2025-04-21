@@ -36,7 +36,7 @@ def product_context(request, goods, product_groups, product_group):
     for goods_item in goods:
         dimensions, goods_description, packing = goods_data(goods_item)
         print_data, print_layout = create_print_data(goods_item)
-        price, price_volume = goods_price(goods_item, price_type)
+        price, price_volume, promotion_price = goods_price(goods_item, price_type)
         price_min, price_max = price_min_max(price_min, price_max, price)
         item_list, id_list, colors, price_min, price_max = (
             create_item_list(goods_item, price_type, price_min, price_max))
@@ -63,6 +63,7 @@ def product_context(request, goods, product_groups, product_group):
             'packing': packing,
             'price': price,
             'price_volume': price_volume,
+            'promotion_price': promotion_price,
         })
     # if not product_group:
     #     product_group = {'name': 'Каталог', 'product_group_url': 'catalogue'}
@@ -97,12 +98,13 @@ def create_item_list(goods_item, price_type, price_min, price_max):
             if goods_item.goods_option_group:
                 option = item.goods_option.name
                 color_description += goods_item.goods_option_group.name.upper() + ': ' + option
-        price = item_price(item, price_type)
+        price, promotion_price = item_price(item, price_type)
         price_min, price_max = price_min_max(price_min, price_max, price)
         item_list.append({
             'item': item,
             'color_description': color_description,
             'price': price,
+            'promotion_price': promotion_price,
         })
     colors = items.values(
         'id',
@@ -191,6 +193,7 @@ def goods_price(goods_item, price_type):
         ).first()
         price = price_obj.price if price_obj else 'по запросу'
         price_volume = False
+        promotion_price = price_obj.price_list.promotion_price if price_obj else False
     else:
         minimum_price = PriceGoodsQuantity.objects.filter(deleted=False).order_by('-quantity').first()
         price_obj = PriceGoodsVolume.objects.filter(
@@ -208,7 +211,8 @@ def goods_price(goods_item, price_type):
         ).first()
         price = price_obj.price if price_obj else 'по запросу'
         price_volume = True
-    return price, price_volume
+        promotion_price = price_obj.price_list.promotion_price if price_obj else False
+    return price, price_volume, promotion_price
 
 
 def item_price(item, price_type):
@@ -225,7 +229,8 @@ def item_price(item, price_type):
         '-price_list__price_list_date'
     ).first()
     price = price_obj.price if price_obj else None
-    return price
+    promotion_price = price_obj.price_list.promotion_price if price_obj else False
+    return price, promotion_price
 
 
 def price_min_max(price_min, price_max, price):

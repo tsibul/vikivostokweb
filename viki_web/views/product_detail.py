@@ -24,7 +24,7 @@ def product_detail(request, product_name):
     # Получаем данные о товаре
     dimensions, goods_description, packing = goods_data(goods)
     print_data, print_layout = create_print_data(goods)
-    price, price_volume = goods_price(goods, price_type)
+    price, price_volume, promotion_price = goods_price(goods, price_type)
 
     # Получаем варианты товара, цвета и цены
     item_list, id_list, colors = create_item_list_details(goods, price_type)
@@ -57,6 +57,7 @@ def product_detail(request, product_name):
         'random_item': catalogue_item_to_dict(random_item),
         'price': price,
         'price_volume': price_volume,
+        'promotion_price': promotion_price,
         'goods_description': goods_description,
         'colors': list(colors),
         'article_set': article_set,
@@ -74,6 +75,7 @@ def product_detail(request, product_name):
             'random_item': random_item,
             'price': price,
             'price_volume': price_volume,
+            'promotion_price': promotion_price,
             'goods_description': goods_description,
             'dimensions': str(dimensions),
             'colors': colors,
@@ -93,6 +95,7 @@ def catalogue_item_to_dict(item_el):
     return {
         'color_description': item_el['color_description'],
         'price': item_el['price'] if 'price' in item_el else None,
+        'promotion_price': item_el['promotion_price'] if 'promotion_price' in item_el else False,
         'item': {
             'id': item_el['item'].id,
             'name': item_el['item'].name,
@@ -118,11 +121,12 @@ def create_item_list_details(goods_item, price_type):
                 option = item.goods_option.name
                 color_description += goods_item.goods_option_group.name.upper() + ': ' + option
         additional_photo = list(CatalogueItemPhoto.objects.filter(item=item, deleted=False).values('add_photo'))
-        price = item_price(item, price_type)
+        price, promotion_price = item_price(item, price_type)
         item_list.append({
             'item': item,
             'color_description': color_description,
             'price': price,
+            'promotion_price': promotion_price,
             'additional_photo': additional_photo,
         })
     colors = items.values(
@@ -139,7 +143,7 @@ def similar_related_goods(request, goods_item):
     similar_goods = []
     for goods in similar:
         price_type = find_price_type(request)
-        price, price_volume = goods_price(goods.similar_goods, price_type)
+        price, price_volume, promotion_price = goods_price(goods.similar_goods, price_type)
         catalogue_item = CatalogueItem.objects.filter(goods=goods.similar_goods, deleted=False).order_by('?').first()
         if catalogue_item:
             similar_goods.append({
@@ -148,12 +152,13 @@ def similar_related_goods(request, goods_item):
                 'name': goods.similar_goods.name,
                 'slug': goods.similar_goods.slug,
                 'price_volume': price_volume,
+                'promotion_price': promotion_price,
             })
     related = GoodsRelated.objects.filter(main_goods=goods_item, deleted=False)
     related_goods = []
     for goods in related:
         price_type = find_price_type(request)
-        price, price_volume = goods_price(goods.related_goods, price_type)
+        price, price_volume, promotion_price = goods_price(goods.related_goods, price_type)
         catalogue_item = CatalogueItem.objects.filter(goods=goods.related_goods, deleted=False).order_by('?').first()
         if catalogue_item:
             related_goods.append({
@@ -161,5 +166,6 @@ def similar_related_goods(request, goods_item):
                 'image': catalogue_item.image,
                 'name': goods.related_goods.name,
                 'price_volume': price_volume,
+                'promotion_price': promotion_price,
                 'slug': goods.related_goods.slug})
     return similar_goods, related_goods

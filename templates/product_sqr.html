@@ -178,6 +178,9 @@
                                     {% endif %}
                                 </span>
                                 </h4>
+                                {% if goods.promotion_price or goods.random_item.promotion_price %}
+                                    <div class="product-promotion-badge">Акция</div>
+                                {% endif %}
                             </div>
                             <div class="filter__content_data_color color-padding">
                                 {% for color in goods.colors %}

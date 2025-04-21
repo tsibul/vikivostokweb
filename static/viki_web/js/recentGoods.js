@@ -57,6 +57,7 @@ class RecentlyViewed {
     const randomItemData = randomItem.item || {};
     const price = product.price || 0;
     const priceVolume = product.price_volume || false;
+    const promotionPrice = product.promotion_price || randomItem.promotion_price || false;
 
     const itemDiv = document.createElement('div');
     itemDiv.className = 'recently-viewed__item';
@@ -82,6 +83,8 @@ class RecentlyViewed {
       const itemPrice = (item.price && item.price !== '0' && item.price !== '') 
                         ? item.price 
                         : product.price || '0';
+      
+      const itemPromotionPrice = item.promotion_price || false;
                         
       if (item.item.id != product.id_random) {
         images += `<img src="/static/viki_web_cms/files/item_photo/${item.item.image}" 
@@ -91,6 +94,7 @@ class RecentlyViewed {
                       data-id="${item.item.id}"
                       data-article="${item.item.item_article || ''}"
                       data-price="${itemPrice}"
+                      data-promotion="${itemPromotionPrice}"
                       data-color-description="${item.color_description || ''}" />`
       } else {
         images += `<img src="/static/viki_web_cms/files/item_photo/${item.item.image}" 
@@ -98,6 +102,7 @@ class RecentlyViewed {
                       data-id="${item.item.id}"
                       data-article="${item.item.item_article || ''}"
                       data-price="${itemPrice}"
+                      data-promotion="${itemPromotionPrice}"
                       data-color-description="${item.color_description || ''}" />`
       }
     });
@@ -117,6 +122,7 @@ class RecentlyViewed {
         <div class="recently-viewed__description" data-name="description">${randomItem.color_description || ''}</div>
         <div class="recently-viewed__price" data-name="price">
             <span>Цена${priceVolume ? ' от' : ''}:</span> ${initialPrice} руб.
+            ${promotionPrice ? '<span class="product-promotion-badge">Акция</span>' : ''}
         </div>
         <div class="recently-viewed__colors">
           ${colorElements}
@@ -216,7 +222,10 @@ class RecentlyViewed {
     if (priceElem) {
       const priceText = newImage.dataset.price || '0';
       const volumePrice = container.querySelector('.recently-viewed__price span').textContent.includes('от');
-      priceElem.innerHTML = `<span>Цена${volumePrice ? ' от' : ''}:</span> ${priceText} руб.`;
+      const isPromotion = newImage.dataset.promotion === 'true';
+      
+      priceElem.innerHTML = `<span>Цена${volumePrice ? ' от' : ''}:</span> ${priceText} руб.
+                            ${isPromotion ? '<span class="product-promotion-badge">Акция</span>' : ''}`;
     }
     
     const descriptionElem = container.querySelector('.recently-viewed__description');

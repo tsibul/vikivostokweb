@@ -54,6 +54,9 @@
                                 <h3 class="strong">Цена{% if goods.price_volume %} от{% endif %}:
                                     {% if goods.random_item.price %}{{ goods.random_item.price }}{% else %}
                                         {{ goods.price }}{% endif %} руб.</h3>
+                                {% if goods.promotion_price or goods.random_item.promotion_price %}
+                                    <div class="product-promotion-badge">Акция</div>
+                                {% endif %}
                                 <div class="detail-page__color-description">{{ goods.random_item.color_description|safe }}</div>
                             </div>
                             <div class="detail-page__description">

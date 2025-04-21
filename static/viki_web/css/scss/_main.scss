@@ -161,3 +161,34 @@ input[type='checkbox'] {
   }
 
 }
+
+/* Promotion badge styles */
+.promotion-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  background-color: #ff6b6b;
+  color: white;
+  font-weight: bold;
+  border-radius: 4px;
+  font-size: 12px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+
+}
+
+/* Smaller badge for product pages */
+.product-promotion-badge {
+  position: absolute;
+  top:-1.25rem;
+  right: -1rem;
+  display: inline-block;
+  padding: 3px 6px;
+  background-color: #ff6b6b;
+  color: white;
+  font-weight: bold;
+  border-radius: 3px;
+  font-size: 10px;
+  margin-left: 5px;
+  vertical-align: middle;
+
+}
