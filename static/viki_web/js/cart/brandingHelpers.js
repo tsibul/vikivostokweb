@@ -195,7 +195,7 @@ export function createBrandingItem(itemArticle, goodsId, index, brandingContaine
             </div>
             <div class="branding-field branding-field-total">
                 <div class="price-container">
-                    <input type="number" class="branding-total-price-input text-like" value="0.00" readonly>
+                    <span class="branding-total-price-input text-like" data-value="0.00" style="min-width: 100px; display: inline-block;">0,00</span>
                     <span class="currency">руб.</span>
                 </div>
             </div>

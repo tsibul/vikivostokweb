@@ -32,7 +32,8 @@ export function updateItemTotal(cartItem) {
     // Update item total display
     const totalPriceInput = cartItem.querySelector('.cart-item__total-price-input');
     if (totalPriceInput) {
-        totalPriceInput.value = itemTotal.toFixed(2);
+        totalPriceInput.dataset.value = itemTotal.toFixed(2);
+        totalPriceInput.textContent = itemTotal.toLocaleString('ru-RU', {minimumFractionDigits: 2, maximumFractionDigits: 2});
     } else {
         // For backward compatibility
         const totalPriceElement = cartItem.querySelector('.cart-item__total-price');
@@ -97,7 +98,8 @@ export function updateBrandingPrices(cartItem) {
         // Update branding price display
         const brandingTotalPriceInput = item.querySelector('.branding-total-price-input');
         if (brandingTotalPriceInput) {
-            brandingTotalPriceInput.value = totalPrice.toFixed(2);
+            brandingTotalPriceInput.dataset.value = totalPrice.toFixed(2);
+            brandingTotalPriceInput.textContent = totalPrice.toLocaleString('ru-RU', {minimumFractionDigits: 2, maximumFractionDigits: 2});
         } else {
             // For backward compatibility
             const brandingTotalPrice = item.querySelector('.branding-total-price');
@@ -110,7 +112,8 @@ export function updateBrandingPrices(cartItem) {
     // Update total branding cost
     const brandingSubtotalInput = cartItem.querySelector('.branding-subtotal-price-input');
     if (brandingSubtotalInput) {
-        brandingSubtotalInput.value = brandingTotal.toFixed(2);
+        brandingSubtotalInput.dataset.value = brandingTotal.toFixed(2);
+        brandingSubtotalInput.textContent = brandingTotal.toLocaleString('ru-RU', {minimumFractionDigits: 2, maximumFractionDigits: 2});
     } else {
         // For backward compatibility
         const brandingSubtotal = cartItem.querySelector('.branding-subtotal-price');
@@ -133,7 +136,7 @@ export function updateItemFinalTotal(cartItem, itemTotal) {
     const brandingSubtotalInput = cartItem.querySelector('.branding-subtotal-price-input');
     
     if (brandingSubtotalInput) {
-        brandingTotal = parseFloat(brandingSubtotalInput.value);
+        brandingTotal = parseFloat(brandingSubtotalInput.dataset.value);
     } else {
         // For backward compatibility
         const brandingTotalText = cartItem.querySelector('.branding-subtotal-price')?.textContent;
@@ -148,7 +151,8 @@ export function updateItemFinalTotal(cartItem, itemTotal) {
     // Update final total display
     const finalTotalInput = cartItem.querySelector('.cart-item__final-total-price-input');
     if (finalTotalInput) {
-        finalTotalInput.value = finalTotal.toFixed(2);
+        finalTotalInput.dataset.value = finalTotal.toFixed(2);
+        finalTotalInput.textContent = finalTotal.toLocaleString('ru-RU', {minimumFractionDigits: 2, maximumFractionDigits: 2});
     } else {
         // For backward compatibility
         const finalTotalElement = cartItem.querySelector('.cart-item__final-total-price');

@@ -18,7 +18,7 @@ export function updateCartSummary() {
         const itemTotalInput = item.querySelector('.cart-item__total-price-input');
         
         if (itemTotalInput) {
-            itemTotal = parseFloat(itemTotalInput.value);
+            itemTotal = parseFloat(itemTotalInput.dataset.value);
         } else {
             // For backward compatibility
             const itemTotalText = item.querySelector('.cart-item__total-price')?.textContent;
@@ -33,7 +33,7 @@ export function updateCartSummary() {
         const brandingSubtotalInput = item.querySelector('.branding-subtotal-price-input');
         
         if (brandingSubtotalInput) {
-            itemBrandingTotal = parseFloat(brandingSubtotalInput.value);
+            itemBrandingTotal = parseFloat(brandingSubtotalInput.dataset.value);
         } else {
             // For backward compatibility
             const brandingTotalText = item.querySelector('.branding-subtotal-price')?.textContent;
@@ -54,10 +54,17 @@ export function updateCartSummary() {
     const totalInput = document.querySelector('.cart-summary__total-input');
     
     if (itemsCountInput && subtotalInput && brandingTotalInput && totalInput) {
-        itemsCountInput.value = cartItems.length;
-        subtotalInput.value = subtotal.toFixed(2);
-        brandingTotalInput.value = brandingTotal.toFixed(2);
-        totalInput.value = total.toFixed(2);
+        itemsCountInput.textContent = cartItems.length;
+        itemsCountInput.dataset.value = cartItems.length;
+        
+        subtotalInput.textContent = subtotal.toLocaleString('ru-RU', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        subtotalInput.dataset.value = subtotal.toFixed(2);
+        
+        brandingTotalInput.textContent = brandingTotal.toLocaleString('ru-RU', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        brandingTotalInput.dataset.value = brandingTotal.toFixed(2);
+        
+        totalInput.textContent = total.toLocaleString('ru-RU', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        totalInput.dataset.value = total.toFixed(2);
     } else {
         // For backward compatibility
         const itemsCountElement = document.querySelector('.cart-summary__items span');

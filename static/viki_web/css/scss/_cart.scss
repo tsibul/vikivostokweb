@@ -172,6 +172,10 @@
     span:last-child {
       margin-left: 0.5rem;
     }
+
+    span.text-like {
+      font-size: 0.85rem;
+    }
   }
 
   @media (max-width: 992px) {
@@ -385,6 +389,10 @@
     font-size: 0.85rem;
     color: $colorPrimary;
     text-align: right;
+
+    span.text-like {
+      font-size: 0.85rem;
+    }
   }
 
   &-actions {
@@ -448,6 +456,10 @@
 
   span:last-child {
     margin-left: 0.5rem;
+  }
+
+  span.text-like {
+    font-size: 0.85rem;
   }
 }
 
@@ -683,7 +695,7 @@
     color: $colorPrimary;
     margin: 0;
   }
-  
+
   &__description {
     font-size: 0.75rem;
     color: $colorPrimary;
@@ -695,7 +707,7 @@
     min-height: 3.3rem;
     line-height: 1.4;
   }
-  
+
   &__price {
     position: relative;
     font-size: 0.9rem;
@@ -763,7 +775,7 @@
 input[readonly].text-like {
   border: none;
   background: transparent;
-  font-size: inherit;
+  font-size: 0.85rem;
   font-weight: inherit;
   color: inherit;
   padding: 0;

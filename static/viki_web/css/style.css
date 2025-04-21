@@ -2320,6 +2320,9 @@ dialog.company-dialog textarea {
 .cart-item__final-total span:last-child {
   margin-left: 0.5rem;
 }
+.cart-item__final-total span.text-like {
+  font-size: 0.85rem;
+}
 @media (max-width: 992px) {
   .cart-item {
     grid-template-columns: 70px 1fr 70px;
@@ -2503,6 +2506,9 @@ dialog.company-dialog textarea {
   color: #0F4880;
   text-align: right;
 }
+.branding-field-total span.text-like {
+  font-size: 0.85rem;
+}
 .branding-field-actions {
   display: flex;
   justify-content: center;
@@ -2553,6 +2559,9 @@ dialog.company-dialog textarea {
 }
 .branding-subtotal span:last-child {
   margin-left: 0.5rem;
+}
+.branding-subtotal span.text-like {
+  font-size: 0.85rem;
 }
 
 .cart-summary {
@@ -2830,7 +2839,7 @@ dialog.company-dialog textarea {
 input[readonly].text-like {
   border: none;
   background: transparent;
-  font-size: inherit;
+  font-size: 0.85rem;
   font-weight: inherit;
   color: inherit;
   padding: 0;

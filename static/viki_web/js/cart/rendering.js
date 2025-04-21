@@ -95,7 +95,7 @@ export function renderCart() {
             </div>
             <div class="cart-item__total">
                 <div class="price-container">
-                    <input type="number" class="cart-item__total-price-input text-like" value="${itemTotal.toFixed(2)}" readonly>
+                    <span class="cart-item__total-price-input text-like" data-value="${itemTotal.toFixed(2)}">${itemTotal.toLocaleString('ru-RU', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                     <span class="currency">руб.</span>
                 </div>
             </div>
@@ -167,7 +167,7 @@ export function renderCart() {
                                 </div>
                                 <div class="branding-field branding-field-total">
                                     <div class="price-container">
-                                        <input type="number" class="branding-total-price-input text-like" value="${(branding.price * item.quantity).toFixed(2)}" readonly>
+                                        <span class="branding-total-price-input text-like" data-value="${(branding.price * item.quantity).toFixed(2)}">${(branding.price * item.quantity).toLocaleString('ru-RU', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                                         <span class="currency">руб.</span>
                                     </div>
                                 </div>
@@ -181,7 +181,7 @@ export function renderCart() {
                 <div class="branding-subtotal">
                     <span>Итого за нанесение:</span>
                     <div class="price-container">
-                        <input type="number" class="branding-subtotal-price-input text-like" value="${itemBrandingTotal.toFixed(2)}" readonly>
+                        <span class="branding-subtotal-price-input text-like" data-value="${itemBrandingTotal.toFixed(2)}">${itemBrandingTotal.toLocaleString('ru-RU', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                         <span class="currency">руб.</span>
                     </div>
                 </div>
@@ -189,7 +189,7 @@ export function renderCart() {
             <div class="cart-item__final-total">
                 <span>Итого за товар с нанесением:</span>
                 <div class="price-container">
-                    <input type="number" class="cart-item__final-total-price-input text-like" value="${(itemTotal + itemBrandingTotal).toFixed(2)}" readonly>
+                    <span class="cart-item__final-total-price-input text-like" data-value="${(itemTotal + itemBrandingTotal).toFixed(2)}">${(itemTotal + itemBrandingTotal).toLocaleString('ru-RU', {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
                     <span class="currency">руб.</span>
                 </div>
             </div>
@@ -199,10 +199,17 @@ export function renderCart() {
 
     // Update cart summary
     const total = subtotal + brandingTotal;
-    document.querySelector('.cart-summary__items-input').value = totalItems;
-    document.querySelector('.cart-summary__subtotal-input').value = subtotal.toFixed(2);
-    document.querySelector('.cart-summary__branding-total-input').value = brandingTotal.toFixed(2);
-    document.querySelector('.cart-summary__total-input').value = total.toFixed(2);
+    document.querySelector('.cart-summary__items-input').textContent = totalItems;
+    document.querySelector('.cart-summary__items-input').dataset.value = totalItems;
+
+    document.querySelector('.cart-summary__subtotal-input').textContent = subtotal.toLocaleString('ru-RU', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    document.querySelector('.cart-summary__subtotal-input').dataset.value = subtotal.toFixed(2);
+
+    document.querySelector('.cart-summary__branding-total-input').textContent = brandingTotal.toLocaleString('ru-RU', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    document.querySelector('.cart-summary__branding-total-input').dataset.value = brandingTotal.toFixed(2);
+
+    document.querySelector('.cart-summary__total-input').textContent = total.toLocaleString('ru-RU', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+    document.querySelector('.cart-summary__total-input').dataset.value = total.toFixed(2);
 }
 
 /**
