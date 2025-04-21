@@ -34,19 +34,29 @@ export function createBrandingItem(itemArticle, goodsId, index, brandingContaine
             };
         });
     
+    // Get current data about branding count
+    const brandingByTypeAndPlace = getBrandingCountByTypeAndPlace(brandingContainer);
+    
+    // Filter print types to only those with available locations
+    const availablePrintTypes = printTypes.filter(type => {
+        const placesForType = opportunities.filter(op => op.print_type_id == type.id);
+        return placesForType.some(place => {
+            const key = type.id + '-' + place.print_place_id;
+            const currentCount = brandingByTypeAndPlace.get(key) || 0;
+            return currentCount < place.place_quantity;
+        });
+    });
+    
     // Create type dropdown items
     let typeListItems = '';
-    printTypes.forEach(type => {
+    availablePrintTypes.forEach(type => {
         typeListItems += `<li value="${type.id}">${type.name}</li>`;
     });
     
     // Temporarily create div without content to get branding information
     const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = `<div class="branding-type" data-id="${printTypes.length > 0 ? printTypes[0].id : ''}"></div>`;
+    tempDiv.innerHTML = `<div class="branding-type" data-id="${availablePrintTypes.length > 0 ? availablePrintTypes[0].id : ''}"></div>`;
     div.appendChild(tempDiv);
-    
-    // Get current data about branding count
-    const brandingByTypeAndPlace = getBrandingCountByTypeAndPlace(brandingContainer);
     
     // Determine first available print type and its locations
     let firstAvailableType = null;
@@ -54,9 +64,9 @@ export function createBrandingItem(itemArticle, goodsId, index, brandingContaine
     let defaultPrice = 450;
     
     // For print location initially take options for first available type
-    if (printTypes.length > 0) {
+    if (availablePrintTypes.length > 0) {
         // Check each print type for available locations
-        for (const type of printTypes) {
+        for (const type of availablePrintTypes) {
             const placesForType = opportunities.filter(op => op.print_type_id == type.id);
             const availablePlaces = placesForType.filter(place => {
                 const key = type.id + '-' + place.print_place_id;
