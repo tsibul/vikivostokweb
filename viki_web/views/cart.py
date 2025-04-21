@@ -1,7 +1,9 @@
 from django.shortcuts import render
 from django.http import JsonResponse
+from django.utils import timezone
+from django.db.models import Max, Q
 
-from viki_web_cms.models import ProductGroup, PrintOpportunity, Goods
+from viki_web_cms.models import ProductGroup, PrintOpportunity, Goods, Price, PriceGoodsStandard, PriceItemStandard, PriceGoodsVolume, StandardPriceType, UserExtension, Customer, CatalogueItem
 
 
 def cart(request):
@@ -35,6 +37,97 @@ def get_print_opportunities(request, goods_id):
             
         return JsonResponse({'success': True, 'opportunities': result})
     except Goods.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Товар не найден'})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})
+
+
+def get_item_price(request, item_id):
+    """
+    Получает цену на товар по item_id
+    """
+    try:
+        current_date = timezone.now().date()
+        
+        # Get user and determine price type
+        user = request.user
+        price_type = None
+        
+        # Try to get user extension
+        user_extension = UserExtension.objects.filter(user=user).first()
+        if user_extension and user_extension.customer:
+            price_type = user_extension.customer.standard_price_type
+        
+        # If no price type found, get default (priority 1)
+        if not price_type:
+            price_type = StandardPriceType.objects.filter(priority=1).first()
+        
+        # Get item and goods
+        item = CatalogueItem.objects.get(id=item_id)
+        goods = item.goods
+        
+        # Check if goods has standard price
+        if goods.standard_price:
+            # First try to find price for item_id
+            item_price = PriceItemStandard.objects.filter(
+                item_id=item_id,
+                price_type=price_type,
+                price_list__price_list_date__lte=current_date
+            ).filter(
+                Q(price_list__promotion_price=False) |
+                Q(price_list__promotion_price=True, price_list__promotion_end_date__gt=current_date)
+            ).order_by('-price_list__price_list_date').first()
+            
+            if item_price:
+                return JsonResponse({
+                    'success': True,
+                    'price': item_price.price,
+                    'price_type': price_type.name,
+                    'promotion_price': item_price.price_list.promotion_price,
+                    'standard_price': True
+                })
+            
+            # If no item price, try to find price for goods_id
+            goods_price = PriceGoodsStandard.objects.filter(
+                goods=goods,
+                price_type=price_type,
+                price_list__price_list_date__lte=current_date
+            ).filter(
+                Q(price_list__promotion_price=False) |
+                Q(price_list__promotion_price=True, price_list__promotion_end_date__gt=current_date)
+            ).order_by('-price_list__price_list_date').first()
+            
+            if goods_price:
+                return JsonResponse({
+                    'success': True,
+                    'price': goods_price.price,
+                    'price_type': price_type.name,
+                    'promotion_price': goods_price.price_list.promotion_price,
+                    'standard_price': True
+                })
+        else:
+            # If not standard price, get all volume prices
+            volume_prices = PriceGoodsVolume.objects.filter(
+                goods=goods,
+                price_type=price_type,
+                price_list__price_list_date__lte=current_date
+            ).filter(
+                Q(price_list__promotion_price=False) |
+                Q(price_list__promotion_price=True, price_list__promotion_end_date__gt=current_date)
+            ).values('price_volume__quantity', 'price', 'price_list__promotion_price').order_by('price_volume__quantity', '-price_list__price_list_date').distinct('price_volume__quantity')
+            
+            if volume_prices.exists():
+                return JsonResponse({
+                    'success': True,
+                    'prices': list(volume_prices),
+                    'price_type': price_type.name,
+                    'promotion_price': volume_prices.first()['price_list__promotion_price'],
+                    'standard_price': False
+                })
+        
+        return JsonResponse({'success': False, 'error': 'Цена не найдена'})
+        
+    except CatalogueItem.DoesNotExist:
         return JsonResponse({'success': False, 'error': 'Товар не найден'})
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)})

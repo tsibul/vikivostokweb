@@ -31,4 +31,5 @@ urlpatterns = [
     path('news', views.news, name='news'),
     path('privacy', views.privacy, name='privacy'),
     path('contacts', views.contacts, name='contacts'),
+    path('api/get-item-price/<int:item_id>/', views.get_item_price, name='get_item_price'),
 ]
