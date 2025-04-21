@@ -41,6 +41,7 @@ def price(request):
     for goods in goods_standard:
         price_item = {'article': goods.article, 'goods': goods.name, 'group': goods.goods_group.name}
         prices = []
+        has_promotion = False
         for price_typ in price_type:
             standard_price = PriceGoodsStandard.objects.filter(
                 Q(goods=goods) &
@@ -51,8 +52,11 @@ def price(request):
                  Q(price_list__promotion_end_date__gte=current_date)
                  )).order_by('-price_list__price_list_date').first()
             prices.insert(0, standard_price.price)
-            # add promotion flag
+            # check if price is from a promotion price list
+            if standard_price and standard_price.price_list.promotion_price:
+                has_promotion = True
         price_item['price'] = prices
+        price_item['promotion'] = has_promotion
         standard_prices.append(price_item)
         catalogue_items = CatalogueItem.objects.filter(
             goods=goods,
@@ -64,6 +68,7 @@ def price(request):
                 price_item = {'article': catalogue_item.item_article, 'goods': catalogue_item.name,
                               'group': goods.goods_group.name}
                 prices = []
+                has_promotion = False
                 for price_typ in price_type:
                     standard_price = PriceItemStandard.objects.filter(
                         Q(item=catalogue_item) &
@@ -74,8 +79,10 @@ def price(request):
                          Q(price_list__promotion_end_date__gte=current_date)
                          )).order_by('-price_list__price_list_date').first()
                     prices.insert(0, standard_price.price)
-                    # add promotion flag
+                    if standard_price and standard_price.price_list.promotion_price:
+                        has_promotion = True
                 price_item['price'] = prices
+                price_item['promotion'] = has_promotion
                 standard_prices.append(price_item)
     goods_quantity = PriceGoodsQuantity.objects.filter(deleted=False).order_by('quantity')
     volume_prices = []
@@ -86,6 +93,7 @@ def price(request):
         for goods in goods_volume:
             goods_item = {'article': goods.article, 'goods': goods.name, 'group': goods.goods_group.name}
             prices = []
+            has_promotion = False
             for price_typ in price_type:
                 volume_price = PriceGoodsVolume.objects.filter(
                     Q(goods=goods) &
@@ -97,7 +105,10 @@ def price(request):
                      Q(price_list__promotion_end_date__gte=current_date)
                      )).order_by('-price_list__price_list_date').first()
                 prices.insert(0, volume_price.price)
+                if volume_price and volume_price.price_list.promotion_price:
+                    has_promotion = True
             goods_item['price'] = prices
+            goods_item['promotion'] = has_promotion
             goods_list.append(goods_item)
         volume_item['goods'] = goods_list
         volume_prices.append(volume_item)
@@ -114,7 +125,7 @@ def price(request):
 
 
 def print_price(current_date):
-    print_type = list(PrintType.objects.filter(deleted=False).order_by(
+    print_types_list = list(PrintType.objects.filter(deleted=False).order_by(
         *PrintType.order_default()
     ).annotate(
         print_type__id=F('id'),
@@ -122,13 +133,13 @@ def print_price(current_date):
         'print_type__id',
         'name',
     ))
-    price_data = []
-    for type in print_type:
-        print_volume = PrintVolume.objects.filter(
-            deleted=False, print_type__id=type['print_type__id']
+    result_data = []
+    for print_type_item in print_types_list:
+        volumes_queryset = PrintVolume.objects.filter(
+            deleted=False, print_type__id=print_type_item['print_type__id']
         ).order_by(*PrintVolume.order_default())
-        print_volume_length = len(print_volume)
-        print_volume_data = list(print_volume.annotate(
+        volumes_count = len(volumes_queryset)
+        volumes_data = list(volumes_queryset.annotate(
             print_volume_id=F('id'),
         ).values(
             'print_volume_id',
@@ -136,39 +147,44 @@ def print_price(current_date):
             'quantity'
         )
         )
-        temp_item = type.copy()
-        temp_item['print_volume_length'] = print_volume_length
-        temp_item['print_volume_data'] = print_volume_data
-        print_groups_list = []
-        print_groups = PrintPriceGroup.objects.filter(
+        type_result = print_type_item.copy()
+        type_result['print_volume_length'] = volumes_count
+        type_result['print_volume_data'] = volumes_data
+        groups_result = []
+        groups_queryset = PrintPriceGroup.objects.filter(
             deleted=False,
-            print_type__id=type['print_type__id']
+            print_type__id=print_type_item['print_type__id']
         ).order_by(*PrintPriceGroup.order_default())
-        for group in print_groups:
-            temp_group = {
-                'print_price_group__id': group.id,
-                'print_price_group__name': group.name,
+        for group_item in groups_queryset:
+            group_result = {
+                'print_price_group__id': group_item.id,
+                'print_price_group__name': group_item.name,
             }
-            prices = list(PrintPrice.objects.filter(
-                Q(deleted=False) &
-                Q(print_price_group__id=group.id) &
-                (Q(price_list__price_list_date__lte=current_date) &
-                 Q(price_list__promotion_price=False) |
-                 Q(price_list__promotion_price=True) &
-                 Q(price_list__promotion_end_date__gte=current_date)
-                 )).order_by(*PrintPrice.order_default()).annotate(
-                price__id=F('id'),
-            ).values(
-                'price__id',
-                'price',
-                'print_volume__id'
-            ))
-            temp_group['prices'] = prices
-            print_groups_list.append(temp_group)
-        temp_item['print_groups'] = print_groups_list
-        price_data.append(temp_item)
+            prices_list = []
+            for volume_item in volumes_queryset:
+                price_object = PrintPrice.objects.filter(
+                    Q(deleted=False) &
+                    Q(print_price_group__id=group_item.id) &
+                    Q(print_volume=volume_item) &
+                    (Q(price_list__price_list_date__lte=current_date) &
+                     Q(price_list__promotion_price=False) |
+                     Q(price_list__promotion_price=True) &
+                     Q(price_list__promotion_end_date__gte=current_date)
+                     )).order_by('-price_list__price_list_date').first()
+                
+                single_price = {
+                    'price': price_object.price if price_object else None,
+                    'print_volume__id': volume_item.id,
+                    'promotion': price_object.price_list.promotion_price if price_object else False
+                }
+                prices_list.append(single_price)
+            
+            group_result['prices'] = prices_list
+            groups_result.append(group_result)
+        type_result['print_groups'] = groups_result
+        result_data.append(type_result)
 
-    return price_data
+    return result_data
 
 
 def export_price_csv(request):

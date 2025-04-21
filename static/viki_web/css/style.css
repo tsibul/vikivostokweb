@@ -2032,6 +2032,7 @@ dialog.company-dialog textarea {
   margin-bottom: 12px;
 }
 .price-content__row {
+  position: relative;
   display: grid;
   grid-template-columns: 1fr 2fr 4fr 100px 100px;
   gap: 20px;
@@ -2146,6 +2147,12 @@ dialog.company-dialog textarea {
 .strong {
   font-weight: 600;
   color: #0F4880;
+}
+
+.price-badge {
+  left: -3rem;
+  top: 0.25rem;
+  width: fit-content;
 }
 
 .cart-page__title {

@@ -16,6 +16,7 @@
   }
 
   &__row {
+    position: relative;
     display: grid;
     grid-template-columns: 1fr 2fr 4fr 100px 100px;
     gap: 20px;
@@ -143,4 +144,11 @@
 .strong {
   font-weight: 600;
   color: $colorPrimary;
+}
+
+.price-badge{
+
+  left: -3rem;
+  top:0.25rem;
+  width: fit-content;
 }

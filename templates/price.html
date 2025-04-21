@@ -41,7 +41,12 @@
                             <div></div>
                         {% endif %}
                         {% for price in record.price %}
-                            <div class="price-content__item">{{ price }}</div>
+                            <div class="price-content__item">
+                                {{ price }}
+                                {% if record.promotion %}
+                                    <div class="product-promotion-badge price-badge">АКЦИЯ</div>
+                                {% endif %}
+                            </div>
                         {% endfor %}
                     </div>
                 {% endfor %}
@@ -74,7 +79,12 @@
                                     <div></div>
                                 {% endif %}
                                 {% for price in record.price %}
-                                    <div class="price-content__item">{{ price }}</div>
+                                    <div class="price-content__item">
+                                        {{ price }}
+                                        {% if record.promotion %}
+                                            <div class="product-promotion-badge price-badge">АКЦИЯ</div>
+                                        {% endif %}
+                                    </div>
                                 {% endfor %}
                             </div>
                         {% endfor %}
@@ -101,7 +111,12 @@
                             style="grid-template-columns: 1.5fr repeat({{ print.print_volume_length }}, 1fr)">
                                 <div class="layout-content__row_item">{{ record.print_price_group__name }}</div>
                                 {% for price in record.prices %}
-                                    <div class="price-content__item">{{ price.price }}</div>
+                                    <div class="price-content__item">
+                                        {{ price.price }}
+{#                                        {% if price.promotion %}#}
+{#                                            <div class="product-promotion-badge">АКЦИЯ</div>#}
+{#                                        {% endif %}#}
+                                    </div>
                                 {% endfor %}
                             </div>
                         {% endfor %}
