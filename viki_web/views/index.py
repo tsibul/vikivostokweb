@@ -10,7 +10,7 @@ def index(request):
     new_items = []
     for item in new_items_request:
         price_type = find_price_type(request)
-        price, price_volume = goods_price(item, price_type)
+        price, price_volume, promotion_price = goods_price(item, price_type)
         catalogue_item = CatalogueItem.objects.filter(goods=item, deleted=False).order_by('?').first()
         description = GoodsDescription.objects.filter(
             goods=item, deleted=False).first()
@@ -22,6 +22,7 @@ def index(request):
                 'name': item.name,
                 'slug': item.slug,
                 'price_volume': price_volume,
+                'promotion_price': promotion_price,
                 'description': goods_description,
             })
 
