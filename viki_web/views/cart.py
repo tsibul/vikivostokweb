@@ -79,13 +79,14 @@ def get_item_price(request, item_id):
             ).order_by('-price_list__price_list_date').first()
             
             if item_price:
-                return JsonResponse({
+                context = {
                     'success': True,
                     'price': item_price.price,
                     'price_type': price_type.name,
                     'promotion_price': item_price.price_list.promotion_price,
                     'standard_price': True
-                })
+                }
+                return JsonResponse(context)
             
             # If no item price, try to find price for goods_id
             goods_price = PriceGoodsStandard.objects.filter(
@@ -98,32 +99,53 @@ def get_item_price(request, item_id):
             ).order_by('-price_list__price_list_date').first()
             
             if goods_price:
-                return JsonResponse({
+                context= {
                     'success': True,
                     'price': goods_price.price,
                     'price_type': price_type.name,
                     'promotion_price': goods_price.price_list.promotion_price,
                     'standard_price': True
-                })
+                }
+                return JsonResponse(context)
         else:
             # If not standard price, get all volume prices
-            volume_prices = PriceGoodsVolume.objects.filter(
+            volume_prices_query = PriceGoodsVolume.objects.filter(
                 goods=goods,
                 price_type=price_type,
                 price_list__price_list_date__lte=current_date
             ).filter(
                 Q(price_list__promotion_price=False) |
                 Q(price_list__promotion_price=True, price_list__promotion_end_date__gt=current_date)
-            ).values('price_volume__quantity', 'price', 'price_list__promotion_price').order_by('price_volume__quantity', '-price_list__price_list_date').distinct('price_volume__quantity')
+            ).order_by('price_volume__quantity', '-price_list__price_list_date')
             
-            if volume_prices.exists():
-                return JsonResponse({
+            # Process data to get distinct quantities with latest price
+            volume_prices_dict = {}
+            promotion_price = False
+            
+            for price in volume_prices_query:
+                quantity = price.price_volume.quantity
+                # Only keep the first (latest) price for each quantity
+                if quantity not in volume_prices_dict:
+                    volume_prices_dict[quantity] = {
+                        'quantity': quantity,
+                        'price': price.price
+                    }
+                    # Store promotion flag from the first price
+                    if not promotion_price:
+                        promotion_price = price.price_list.promotion_price
+            
+            # Convert dict to list
+            volume_prices = list(volume_prices_dict.values())
+            
+            if volume_prices:
+                context = {
                     'success': True,
-                    'prices': list(volume_prices),
+                    'prices': volume_prices,
                     'price_type': price_type.name,
-                    'promotion_price': volume_prices.first()['price_list__promotion_price'],
+                    'promotion_price': promotion_price,
                     'standard_price': False
-                })
+                }
+                return JsonResponse(context)
         
         return JsonResponse({'success': False, 'error': 'Цена не найдена'})
         
