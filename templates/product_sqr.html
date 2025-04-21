@@ -28,6 +28,9 @@
                              data-article-set="{{ goods.article_set }}"
                             {% endif %}
                     >
+                        {% if goods.goods_item.new %}
+                            <div class="product-new-badge">НОВИНКА</div>
+                        {% endif %}
                         <h3>{{ goods.goods_item.name }}</h3>
                         <div class="product-sqr__frame product-frame">
                             {% for item in goods.item_list %}
