@@ -2199,15 +2199,9 @@ dialog.company-dialog textarea {
 }
 
 .cart-item {
-  display: grid;
-  grid-template-columns: 70px 3fr 0.7fr 0.7fr 0.7fr 40px;
-  grid-template-rows: auto auto auto;
-  gap: 0.75rem;
-  align-items: center;
-  padding: 1rem;
-  background-color: #fff;
-  border-radius: 8px;
+  width: 100%;
   border: 1px solid #0F4880;
+  border-radius: 6px;
 }
 .cart-item__image {
   width: 70px;

@@ -34,15 +34,17 @@
 }
 
 .cart-item {
-  display: grid;
-  grid-template-columns: 70px 3fr 0.7fr 0.7fr 0.7fr 40px;
-  grid-template-rows: auto auto auto;
-  gap: 0.75rem;
-  align-items: center;
-  padding: 1rem;
-  background-color: #fff;
-  border-radius: 8px;
-  border: 1px solid $colorPrimary;
+  //display: grid;
+  //grid-template-columns: 70px 3fr 0.7fr 0.7fr 0.7fr 40px;
+  //grid-template-rows: auto auto auto;
+  //gap: 0.75rem;
+  //align-items: center;
+  //padding: 1rem;
+  //background-color: #fff;
+  width: 100%;
+
+  @include brd-standard;
+  //border: 1px solid $colorPrimary;
 
   &__image {
     width: 70px;

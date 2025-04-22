@@ -11,7 +11,10 @@
 
     {#    <script src="{% static 'production/js/dist/login.bundle.js' %}" defer type="module"></script>#}
     <script src="https://kit.fontawesome.com/e2a5b405b2.js" crossorigin="anonymous"></script>
-    <script src="{% static 'viki_web/js/addToCart.js' %}" defer></script>
+    <!-- Modern browsers -->
+    <script src="{% static 'viki_web/js/addToCart.js' %}" defer type="module"></script>
+    <!-- Legacy browsers fallback -->
+    <script src="{% static 'viki_web/js/addToCartFallback.js' %}" defer nomodule></script>
     <link rel="stylesheet" href="{% static 'viki_web/css/style.css' %}">
 
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>

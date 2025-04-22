@@ -4,12 +4,13 @@
 
 import { updateItemTotal } from './calculation.js';
 import { updateCartSummary } from './summary.js';
-import { printOpportunitiesCache } from './brandingCommon.js';
+import { printOpportunitiesCache, getBrandingCountByTypeAndPlace } from './brandingCommon.js';
 import {
     updateAllLocationOptionsInContainer,
     updateLocationOptions,
     updateColorsOptions,
     attachAddBrandingHandlers,
+    getBrandingPrice
 } from './branding.js';
 import { checkAndUpdateAddBrandingButton, updateCartBrandingInLocalStorage } from './brandingHelpers.js';
 
@@ -296,4 +297,24 @@ export function updateBrandingItem(brandingItem) {
             updateCartBrandingInLocalStorage(cartItem);
         };
     }
+}
+
+/**
+ * Инициализирует обработчик изменения количества товара для обновления цен брендирования
+ */
+export function initQuantityChangeHandler() {
+    // Найти все элементы изменения количества в корзине
+    const quantityInputs = document.querySelectorAll('.cart-item__quantity-input');
+    quantityInputs.forEach(input => {
+        // Прослушивание события изменения количества
+        input.addEventListener('change', function() {
+            // Получаем cart-item
+            const cartItem = this.closest('.cart-item');
+            if (!cartItem) return;
+            
+            // Обновляем цены брендирования при изменении количества
+            updateItemTotal(cartItem);
+            updateCartSummary();
+        });
+    });
 } 

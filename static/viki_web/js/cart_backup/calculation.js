@@ -3,6 +3,8 @@
  */
 
 import { formatPrice } from './utils.js';
+import { getBrandingPrice } from './branding.js';
+import { printOpportunitiesCache } from './brandingCommon.js';
 
 /**
  * Updates the total price for a cart item and all calculations
@@ -58,10 +60,46 @@ export function updateBrandingPrices(cartItem) {
     const brandingItems = cartItem.querySelectorAll('.branding-item');
     let brandingTotal = 0;
     
+    // Get goodsId for this cart item if possible
+    const addBrandingBtn = cartItem.querySelector('.branding-add-btn');
+    const goodsId = addBrandingBtn ? addBrandingBtn.dataset.goodsId : null;
+    const opportunities = goodsId ? printOpportunitiesCache.get(goodsId) || [] : [];
+    
+    let priceWasUpdated = false;
+    
     brandingItems.forEach(item => {
+        // Получаем выбранный тип и место нанесения
+        const typeField = item.querySelector('.branding-field-type');
+        const typeTrigger = typeField?.querySelector('.viki-dropdown__trigger');
+        const typeId = typeTrigger?.dataset.id;
+        
+        const locationField = item.querySelector('.branding-field-location');
+        const locationTrigger = locationField?.querySelector('.viki-dropdown__trigger');
+        const locationId = locationTrigger?.dataset.id;
+        
         // Get branding price
         const priceInput = item.querySelector('.branding-price');
-        const pricePerItem = parseFloat(priceInput.value);
+        let pricePerItem = parseFloat(priceInput.value);
+        
+        // Если есть возможности нанесения и мы знаем тип и место,
+        // обновляем базовую цену в зависимости от количества товара
+        if (opportunities.length > 0 && typeId && locationId) {
+            const opportunity = opportunities.find(op => 
+                op.print_type_id == typeId && op.print_place_id == locationId
+            );
+            
+            if (opportunity) {
+                // Обновляем базовую цену исходя из количества
+                const newBasePrice = getBrandingPrice(opportunity, quantity);
+                
+                // Если цена изменилась, обновляем значение в поле
+                if (Math.abs(pricePerItem - newBasePrice) > 0.01) { // Учитываем погрешность чисел с плавающей точкой
+                    priceInput.value = newBasePrice;
+                    pricePerItem = newBasePrice;
+                    priceWasUpdated = true;
+                }
+            }
+        }
         
         // Calculate branding cost for all items
         const secondPass = item.querySelector('.branding-second-pass').checked;
@@ -120,6 +158,14 @@ export function updateBrandingPrices(cartItem) {
         if (brandingSubtotal) {
             brandingSubtotal.textContent = formatPrice(brandingTotal.toFixed(0)) + ' руб.';
         }
+    }
+    
+    // Если цена была обновлена, обновляем данные в localStorage
+    if (priceWasUpdated) {
+        // Импортируем функцию здесь, чтобы избежать циклической зависимости
+        import('./brandingHelpers.js').then(module => {
+            module.updateCartBrandingInLocalStorage(cartItem);
+        });
     }
     
     return brandingTotal;

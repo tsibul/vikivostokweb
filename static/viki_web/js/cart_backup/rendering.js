@@ -2,6 +2,8 @@
  * Module for cart rendering functions
  */
 
+import { getBrandingPrice } from './branding.js';
+
 /**
  * Adds CSS styles for promotion badge if not already added
  */

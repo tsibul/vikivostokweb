@@ -3,6 +3,7 @@
  */
 
 import { printOpportunitiesCache, getBrandingCountByTypeAndPlace } from './brandingCommon.js';
+import { getBrandingPrice } from './branding.js';
 
 /**
  * Creates a branding element
@@ -61,7 +62,13 @@ export function createBrandingItem(itemArticle, goodsId, index, brandingContaine
     // Determine first available print type and its locations
     let firstAvailableType = null;
     let locationOptions = '';
-    let defaultPrice = 450;
+    let defaultPrice = 450;  // Дефолтная цена если не найдем никакую другую
+    let selectedOpportunity = null;
+    
+    // Найдем количество товара
+    const cartItem = brandingContainer.closest('.cart-item');
+    const quantityInput = cartItem ? cartItem.querySelector('.cart-item__quantity-input') : null;
+    const quantity = quantityInput ? parseInt(quantityInput.value) || 1 : 1;
     
     // For print location initially take options for first available type
     if (availablePrintTypes.length > 0) {
@@ -82,14 +89,22 @@ export function createBrandingItem(itemArticle, goodsId, index, brandingContaine
                     locationOptions += `<option value="${place.print_place_id}">${place.print_place_name}</option>`;
                 });
                 
-                // Set approximate cost based on print size
-                const size = availablePlaces[0].length * availablePlaces[0].height;
-                if (size < 2500) {
-                    defaultPrice = 350;
-                } else if (size < 10000) {
-                    defaultPrice = 450;
+                // Выберем первую доступную возможность нанесения для определения цены
+                selectedOpportunity = availablePlaces[0];
+                
+                // Получим цену на брендирование в зависимости от количества товара
+                if (selectedOpportunity) {
+                    defaultPrice = getBrandingPrice(selectedOpportunity, quantity);
                 } else {
-                    defaultPrice = 550;
+                    // Если по какой-то причине не получилось найти opportunity, используем размер для оценки цены
+                    const size = availablePlaces[0].length * availablePlaces[0].height;
+                    if (size < 2500) {
+                        defaultPrice = 350;
+                    } else if (size < 10000) {
+                        defaultPrice = 450;
+                    } else {
+                        defaultPrice = 550;
+                    }
                 }
                 
                 break;

@@ -765,12 +765,42 @@ export async function fetchPrintOpportunities(goodsId) {
         const data = await response.json();
         
         if (data.success && data.opportunities) {
-            printOpportunitiesCache.set(goodsId, data.opportunities);
-            return data.opportunities;
+            // Сохраняем возможности нанесения в кэше
+            const opportunities = data.opportunities;
+            printOpportunitiesCache.set(goodsId, opportunities);
+            return opportunities;
         } else {
             return [];
         }
     } catch (error) {
         return [];
     }
+}
+
+/**
+ * Получает цену на брендирование для данного opportunity и количества товара
+ * @param {Object} opportunity - Объект с данными о возможности нанесения
+ * @param {number} quantity - Количество товара
+ * @return {number} - Базовая цена за единицу для брендирования
+ */
+export function getBrandingPrice(opportunity, quantity) {
+    // Если у возможности нет цен, возвращаем дефолтную цену
+    if (!opportunity || !opportunity.prices || opportunity.prices.length === 0) {
+        return 450; // Дефолтная цена
+    }
+    
+    // Сортируем цены по возрастанию количества
+    const sortedPrices = [...opportunity.prices].sort((a, b) => a.quantity - b.quantity);
+    
+    // Находим подходящую цену в зависимости от количества товара
+    let price = sortedPrices[0].price; // Начинаем с первой цены
+    
+    for (const priceObj of sortedPrices) {
+        if (quantity <= priceObj.quantity) {
+            price = priceObj.price;
+            break;
+        }
+    }
+    
+    return price;
 } 

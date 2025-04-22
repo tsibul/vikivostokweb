@@ -1,40 +1,38 @@
+/**
+ * Main cart initialization
+ * This file is the entry point for the cart functionality
+ */
+
 'use strict';
 
 import RecentlyViewed from './recentGoods.js';
 import { 
-    renderCart, 
-    initCartQuantity, 
-    initCartItemRemove, 
-    initBranding,
-    initDropdowns,
-    initPriceManager,
-    printOpportunitiesCache
+    initCart,
+    loadPrintOpportunities,
+    updateCartBadge
 } from './cart/index.js';
 
 /**
  * Initialization of cart functions when document loads
+ * Now using Canvas-based rendering
  */
-document.addEventListener('DOMContentLoaded', function () {
-    renderCart();
-    initCartQuantity();
-    initCartItemRemove();
-    initBranding();
-    initDropdowns();
-    initPriceManager(); // Initialize price manager
+document.addEventListener('DOMContentLoaded', async function () {
+    // Load print opportunities data first
+    await loadPrintOpportunities();
+    
+    // Initialize cart
+    initCart();
+    
+    // Initialize recently viewed
     RecentlyViewed.init();
-    // Check if CartManager exists
+    
+    // Expose CartManager for external use
     if (!window.CartManager) {
         window.CartManager = {
-            updateBadge() {
-                const cartCount = document.querySelector('.cart-count');
-                if (cartCount) {
-                    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-                    cartCount.textContent = cart.length;
-                    cartCount.style.display = cart.length > 0 ? 'flex' : 'none';
-                }
-            }
+            updateBadge: updateCartBadge
         };
     }
+    
     // Update cart badge
     window.CartManager.updateBadge();
 });

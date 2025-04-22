@@ -1,146 +1,120 @@
-'use strict';
+/**
+ * Cart Module for modern browsers
+ * Uses ES modules
+ */
 
-// Функции для работы с корзиной
-window.CartManager = window.CartManager || {
-    // Получить корзину из localStorage
-    getCart() {
-        return JSON.parse(localStorage.getItem('cart') || '[]');
-    },
+import eventBus from './cart/eventBus.js';
 
-    // Сохранить корзину в localStorage
-    saveCart(cart) {
-        localStorage.setItem('cart', JSON.stringify(cart));
-    },
+/**
+ * Add product to cart functionality
+ * Extracts product data from DOM and adds it to cart
+ */
+function addToCart() {
+    console.log('Initializing add to cart functionality');
+    
+    // Find all add to cart buttons
+    const addButtons = document.querySelectorAll('.add-to-cart-btn');
+    
+    // Add click event handlers
+    addButtons.forEach(button => {
+        button.addEventListener('click', handleAddToCartClick);
+    });
+    
+    console.log(`Found ${addButtons.length} add to cart buttons`);
+}
 
-    // Обновить бейдж корзины
-    updateBadge() {
-        const cart = this.getCart();
-        const cartBadge = document.querySelector('.cart-badge');
-        if (cartBadge) {
-            // Показываем количество уникальных товаров в корзине
-            const uniqueItems = cart.length;
-            cartBadge.textContent = uniqueItems;
-            cartBadge.style.display = uniqueItems > 0 ? 'block' : 'none';
-        }
-    },
+/**
+ * Handle add to cart button click
+ * @param {Event} event - Click event
+ */
+function handleAddToCartClick(event) {
+    event.preventDefault();
+    
+    // Get product data from button's dataset or parent element
+    const button = event.currentTarget;
+    const productId = button.dataset.productId;
+    const productName = button.dataset.productName;
+    const productPrice = parseFloat(button.dataset.productPrice);
+    
+    if (!productId) {
+        console.error('No product ID found for add to cart button');
+        return;
+    }
+    
+    // Create product object
+    const product = {
+        id: productId,
+        name: productName || 'Unknown Product',
+        price: isNaN(productPrice) ? 0 : productPrice,
+        quantity: 1
+    };
+    
+    console.log('Adding product to cart:', product);
+    
+    // Emit event for cart to handle
+    eventBus.publish('cart:add', product);
+    
+    // Show notification
+    showAddedToCartNotification(product);
+}
 
-    // Добавить товар в корзину
-    addItem(itemData) {
-        const cart = this.getCart();
-        const existingItem = cart.find(item => item.id === itemData.id);
-        
-        if (existingItem) {
-            this.showNotification(existingItem, true);
-            return;
-        }
-
-        cart.push(itemData);
-        this.saveCart(cart);
-        this.updateBadge();
-        this.showNotification(itemData, false);
-    },
-
-    // Показать уведомление
-    showNotification(itemData, exists) {
-        const notification = document.createElement('div');
-        notification.className = 'success-notification active';
-        
-        if (exists) {
-            // Сообщение для существующего товара
-            notification.innerHTML = `
-                <i class="fa-solid fa-info success-notification__icon"></i>
-                <div class="success-notification__content">
-                    <h4 class="success-notification__title">Товар уже в корзине</h4>
-                    <p class="success-notification__message">
-                        ${itemData.name}
-                        <br>
-                        Артикул: ${itemData.article}
-                        <br>
-                        Количество: ${itemData.quantity}
-                    </p>
-                </div>
-                <button class="success-notification__close">×</button>
-            `;
-        } else {
-            // Сообщение для нового товара
-            notification.innerHTML = `
-                <i class="fa-solid fa-check success-notification__icon"></i>
-                <div class="success-notification__content">
-                    <h4 class="success-notification__title">Товар добавлен в корзину</h4>
-                    <p class="success-notification__message">
-                        ${itemData.name}
-                        <br>
-                        Артикул: ${itemData.article}
-                    </p>
-                </div>
-                <button class="success-notification__close">×</button>
-            `;
-        }
-        
-        document.body.appendChild(notification);
-        setTimeout(() => {
-            notification.classList.remove('active');
-            setTimeout(() => notification.remove(), 300);
-        }, 3000);
-
-        notification.querySelector('.success-notification__close').addEventListener('click', () => {
-            notification.classList.remove('active');
-            setTimeout(() => notification.remove(), 300);
+/**
+ * Show notification that product was added to cart
+ * @param {Object} product - Product data
+ */
+function showAddedToCartNotification(product) {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = 'cart-notification';
+    notification.innerHTML = `
+        <div class="cart-notification__content">
+            <div class="cart-notification__icon">✓</div>
+            <div class="cart-notification__text">
+                <div class="cart-notification__title">${product.name}</div>
+                <div class="cart-notification__message">добавлен в корзину</div>
+            </div>
+            <button class="cart-notification__close">×</button>
+        </div>
+    `;
+    
+    // Add notification to page
+    document.body.appendChild(notification);
+    
+    // Add close functionality
+    const closeBtn = notification.querySelector('.cart-notification__close');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            notification.remove();
         });
     }
-};
+    
+    // Auto remove after 3 seconds
+    setTimeout(() => {
+        notification.classList.add('cart-notification--hiding');
+        setTimeout(() => {
+            notification.remove();
+        }, 300);
+    }, 3000);
+    
+    // Show with animation
+    setTimeout(() => {
+        notification.classList.add('cart-notification--visible');
+    }, 10);
+}
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Инициализация бейджа корзины при загрузке страницы
-    CartManager.updateBadge();
+// Subscribe to cart initialization event
+eventBus.subscribe('cart:initialized', () => {
+    console.log('Cart initialized, activating add to cart functionality');
+    addToCart();
+});
 
-    // Обработка кликов по кнопкам "В корзину"
-    document.addEventListener('click', function(e) {
-        const addToCartBtn = e.target.closest('.add-to-cart');
-        if (!addToCartBtn) return;
-
-        e.preventDefault();
-        
-        const productContainer = addToCartBtn.closest('.product, .detail-page__content, .recently-viewed__item');
-        if (!productContainer) return;
-
-        let itemData = {
-            quantity: 1
-        };
-
-        // Для recently-viewed товаров
-        if (productContainer.classList.contains('recently-viewed__item')) {
-            const activeImage = productContainer.querySelector('img:not(.item-hidden)');
-            if (!activeImage) return;
-
-            itemData = {
-                ...itemData,
-                id: activeImage.dataset.id,
-                goodsId: productContainer.dataset.id,
-                name: productContainer.querySelector('.recently-viewed__name').textContent.trim(),
-                article: productContainer.querySelector('.recently-viewed__article').textContent.trim(),
-                price: parseFloat(productContainer.querySelector('.recently-viewed__price').textContent.replace(/[^\d.]/g, '')),
-                image: activeImage.src || '/static/viki_web/icons/logo.svg',
-                description: productContainer.querySelector('.recently-viewed__description')?.textContent.trim()
-            };
-        } 
-        // Для товаров в каталоге и на странице товара
-        else {
-            const activeImage = productContainer.querySelector('.product-hor__image-frame:not(.item-hidden), .detail-page__main-image img:not(.item-hidden)');
-            if (!activeImage) return;
-
-            itemData = {
-                ...itemData,
-                id: activeImage.dataset.id,
-                name: productContainer.querySelector('h3').textContent.trim(),
-                goodsId: productContainer.dataset.id,
-                article: activeImage.dataset.article,
-                price: parseFloat(activeImage.dataset.price),
-                image: activeImage.tagName === 'IMG' ? activeImage.src : activeImage.querySelector('img')?.src || '/static/viki_web/icons/logo.svg',
-                description: activeImage.dataset.description
-            };
-        }
-
-        CartManager.addItem(itemData);
-    });
+// Initialize add to cart functionality when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    // Add immediate initialization for pages without cart module
+    if (!window.CartManager) {
+        console.log('No CartManager found, initializing add to cart independently');
+        addToCart();
+    }
+    
+    console.log('Add to cart module loaded');
 }); 
