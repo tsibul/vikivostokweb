@@ -50,6 +50,19 @@ def privacy(request):
     return render(request, 'privacy.html')
 
 
+def legal(request):
+    """
+    Renders the legal information page.
+    
+    Args:
+        request: HTTP request object
+        
+    Returns:
+        Rendered legal information page
+    """
+    return render(request, 'legal.html')
+
+
 def contacts(request):
     """
     Renders the contacts page and handles contact form submissions.

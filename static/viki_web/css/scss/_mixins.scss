@@ -47,3 +47,84 @@
   font-weight: 600;
   color: $colorPrimary;
 }
+
+// Long content text mixin for policies, articles, etc.
+@mixin text-content {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: $colorSecondary;
+  
+  h1, h2, h3, h4, h5, h6 {
+    margin-top: 1.5em;
+    margin-bottom: 0.75em;
+    color: $colorSecondary;
+  }
+  
+  h1 {
+    font-size: 28px;
+    font-weight: 600;
+  }
+  
+  h2 {
+    font-size: 24px;
+    font-weight: 600;
+  }
+  
+  h3 {
+    font-size: 20px;
+    font-weight: 600;
+  }
+  
+  h4 {
+    font-size: 18px;
+    font-weight: 600;
+  }
+  
+  p {
+    margin-bottom: 1em;
+  }
+  
+  a {
+    color: $colorPrimary;
+    text-decoration: none;
+    transition: color 0.2s;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  
+  ul, ol {
+    margin-bottom: 1em;
+    padding-left: 1.5em;
+    
+    li {
+      margin-bottom: 0.5em;
+    }
+  }
+  
+  strong, b {
+    font-weight: 600;
+  }
+  
+  em, i {
+    font-style: italic;
+  }
+  
+  blockquote {
+    border-left: 3px solid $colorPrimary;
+    padding-left: 1em;
+    margin-left: 0;
+    margin-right: 0;
+    font-style: italic;
+    color: $colorNeutral400;
+  }
+  
+  code {
+    font-family: monospace;
+    background-color: rgba($colorPrimary, 0.1);
+    padding: 2px 4px;
+    border-radius: 3px;
+  }
+}

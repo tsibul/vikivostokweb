@@ -17,6 +17,8 @@
     <script src="{% static 'viki_web/js/addToCartFallback.js' %}" defer nomodule></script>
     <!-- Cart badge initialization -->
     <script src="{% static 'viki_web/js/cart/badge/cartBadge.js' %}" defer type="module"></script>
+    <!-- Cookie consent banner -->
+    <script src="{% static 'viki_web/js/cookieBanner.js' %}" defer type="module"></script>
     <link rel="stylesheet" href="{% static 'viki_web/css/style.css' %}">
 
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
@@ -267,5 +269,9 @@
 </dialog>
 {% block content %}
 {% endblock %}
+
+<!-- Cookie Banner -->
+{% include 'cookie_banner.html' %}
+
 </body>
 </html>

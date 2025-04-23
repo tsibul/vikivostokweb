@@ -18,6 +18,8 @@
     <script src="{% static 'viki_web/js/addToCartFallback.js' %}" defer nomodule></script>
     <!-- Cart badge initialization -->
     <script src="{% static 'viki_web/js/cart/badge/cartBadge.js' %}" defer type="module"></script>
+    <!-- Cookie consent banner -->
+    <script src="{% static 'viki_web/js/cookieBanner.js' %}" defer type="module"></script>
     <script src="https://kit.fontawesome.com/e2a5b405b2.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{% static 'viki_web/css/style.css' %}">
 
@@ -48,6 +50,7 @@
                         <ul class="catalogue__item about-menu__dropdown">
                             <li><a href="{% url 'viki_web:about' %}">О компании</a></li>
                             <li><a href="{% url 'viki_web:news' %}">Новости</a></li>
+                            <li><a href="{% url 'viki_web:legal' %}">Юридическая информация</a></li>
                             <li><a href="{% url 'viki_web:privacy' %}">Политика конфиденциальности</a></li>
                         </ul>
                     </li>
@@ -212,5 +215,9 @@
 </dialog>
 {% block content %}
 {% endblock %}
+
+<!-- Cookie Banner -->
+{% include 'cookie_banner.html' %}
+
 </body>
 </html>
