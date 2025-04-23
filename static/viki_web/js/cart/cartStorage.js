@@ -38,6 +38,8 @@ export function saveCartItems(items) {
     try {
         localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
         eventBus.publish(STORAGE_EVENTS.CART_UPDATED, items);
+        // Генерируем DOM событие для обработки другими модулями
+        document.dispatchEvent(new CustomEvent('cart:updated'));
     } catch (error) {
         console.error('Failed to save cart items to storage:', error);
     }
@@ -155,6 +157,7 @@ export function updateCartItemBranding(itemId, branding) {
 export function clearCart() {
     localStorage.removeItem(CART_STORAGE_KEY);
     eventBus.publish(STORAGE_EVENTS.CART_CLEARED, []);
+    document.dispatchEvent(new CustomEvent('cart:updated'));
     updateCartBadge();
 }
 
