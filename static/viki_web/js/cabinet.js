@@ -14,6 +14,7 @@ import {cancelDialog} from "./cabinet/cancelDialog.js";
 import {modalDnD} from "./common/modalDnD.js";
 import {checkBank} from './cabinet/checkBank.js';
 import {saveBank} from './cabinet/saveBank.js';
+import {initPriceListHandler} from './cabinet/priceListHandler.js';
 
 /**
  * Collection of all disabled input elements in the form
@@ -59,18 +60,28 @@ export const bankSaveDialog = document.querySelector('#bank-dialog-save');
 
 document.querySelector('li.log-logout').style.display='none'
 
+// Initialize data and UI
 const dataInitial = await fullDataInitial(personalData, legalData);
-const personalDataInitial = dataInitial['personalData']
+const personalDataInitial = dataInitial['personalData'];
+const isStaff = dataInitial['isStaff'] || false;
+const priceTypes = dataInitial['priceTypes'] || [];
+
+// Initialize price list handler for staff users
+initPriceListHandler(isStaff, priceTypes, personalDataInitial.price_id);
 
 allInputDisabled();
 
-// companySaveDialog.showModal();
-// modalDnD(companySaveDialog);
+// Setup event listeners for personal data editing
+await editBtnListeners(personalData, personalDataInitial, '#first_name', 'personal', isStaff);
 
-document.querySelector('#new-company').addEventListener('click', (e) => {
-    companyDialog.showModal()
-    modalDnD(companyDialog);
-});
+const newCompanyBtn = document.querySelector('#new-company');
+if (newCompanyBtn) {
+    newCompanyBtn.addEventListener('click', (e) => {
+        companyDialog.showModal()
+        modalDnD(companyDialog);
+    });
+}
+
 companyDialog.querySelector('form').addEventListener('submit', async (e) => {
     await checkCompany(e, companyDialog);
 });
@@ -85,12 +96,15 @@ companySaveDialog.querySelector('form').addEventListener('reset', async (e) => {
 });
 
 // Initialize bank dialog handlers
-document.querySelector('#new-bank').addEventListener('click', (e) => {
+const newBankBtn = document.querySelector('#new-bank');
+if (newBankBtn) {
+    newBankBtn.addEventListener('click', (e) => {
         const companyId = e.target.closest('.company').querySelector(`input[name="id"]`).value;
         bankDialog.querySelector('form').dataset.companyId = companyId;
         bankDialog.showModal();
         modalDnD(bankDialog);
     });
+}
 
 bankDialog.querySelector('form').addEventListener('submit', async (e) => {
     const companyId = e.target.dataset.companyId;
@@ -105,8 +119,6 @@ bankSaveDialog.querySelector('form').addEventListener('submit', async (e) => {
 bankSaveDialog.querySelector('form').addEventListener('reset', (e) => {
     cancelDialog(e, bankSaveDialog);
 });
-
-await editBtnListeners(personalData, personalDataInitial, '#first_name', 'personal');
 
 [...allInputs].forEach(item => {
     item.addEventListener('mousedown', (e) => {

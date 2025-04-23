@@ -1,12 +1,6 @@
 @import "vars";
 @import "mixins";
 
-// Общие стили
-//.cabinet-container {
-//  max-width: 1200px;
-//  margin: 0 auto;
-//}
-
 .section-title {
   font-size: 1.5rem;
   margin-bottom: 1.5rem;
@@ -475,4 +469,68 @@ dialog.company-dialog {
 // Утилиты
 .item-hidden {
   display: none !important;
+}
+
+.price-block {
+  position: relative;
+  height: 52px;
+  
+  .viki-dropdown {
+    &.personal-data__dropdown {
+      .viki-dropdown__trigger {
+        padding: 12px 16px;
+        font-size: 16px;
+        border-radius: 8px;
+        border: 1px solid rgba($colorPrimary, 0.3);
+        height: 45px;
+        
+        &:hover {
+          border-color: rgba($colorPrimary, 0.5);
+        }
+        
+        &-text {
+          color: $colorNeutral700;
+          font-size: 16px;
+        }
+        
+        &-icon {
+          color: $colorNeutral700;
+          font-size: 12px;
+          margin-left: 8px;
+          transition: transform 0.2s ease;
+          
+          .viki-dropdown--open & {
+            transform: rotate(180deg);
+          }
+        }
+        
+        .viki-dropdown--open & {
+          border-color: $colorPrimary;
+          box-shadow: 0 0 0 3px rgba($colorPrimary, 0.2);
+          outline: none;
+        }
+      }
+      
+      .viki-dropdown__menu {
+        border-radius: 8px;
+        border: 1px solid rgba($colorPrimary, 0.3);
+        box-shadow: 0 4px 12px rgba($colorPrimary, 0.1);
+        margin-top: 2px;
+        
+        li {
+          padding: 12px 16px;
+          font-size: 16px;
+          color: $colorNeutral700;
+          
+          &:hover {
+            background-color: rgba($colorPrimary, 0.05);
+          }
+          
+          &:not(:last-child) {
+            border-bottom: 1px solid rgba($colorPrimary, 0.05);
+          }
+        }
+      }
+    }
+  }
 }

@@ -174,6 +174,107 @@ input[type=checkbox] {
   vertical-align: middle;
 }
 
+/* Custom Dropdown Component */
+.viki-dropdown {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  /* Dropdown placement modifiers */
+  /* Dropdown sizes */
+  /* Secondary color variant */
+}
+.viki-dropdown__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 8px;
+  background-color: #fff;
+  border: 1px solid #0F4880;
+  border-radius: 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 0.85rem;
+  z-index: 1;
+}
+.viki-dropdown__trigger-icon {
+  display: inline-flex;
+  transition: transform 0.2s ease;
+}
+.viki-dropdown--open .viki-dropdown__trigger-icon {
+  transform: rotate(180deg);
+}
+.viki-dropdown__menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  width: 100%;
+  max-height: 0;
+  overflow: hidden;
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.2s ease-in-out;
+  z-index: 100;
+  /* Ensure the menu is initially hidden with zero height */
+  visibility: hidden;
+}
+.viki-dropdown__menu li {
+  padding: 5px 8px;
+  background-color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 0.85rem;
+  transition: background-color 0.2s ease;
+}
+.viki-dropdown__menu li:hover {
+  background-color: rgba(0, 158, 163, 0.1);
+}
+.viki-dropdown--open .viki-dropdown__menu {
+  max-height: 300px;
+  opacity: 1;
+  transform: translateY(0);
+  overflow: auto;
+  visibility: visible;
+  z-index: 100;
+}
+.viki-dropdown__menu-item {
+  padding: 0;
+  margin: 0;
+}
+.viki-dropdown__menu-item:not(:last-child) {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+.viki-dropdown--right .viki-dropdown__menu {
+  left: auto;
+  right: 0;
+}
+.viki-dropdown--top .viki-dropdown__menu {
+  top: auto;
+  bottom: calc(100% + 8px);
+}
+.viki-dropdown--sm .viki-dropdown__trigger {
+  padding: 6px 12px;
+  font-size: 0.875rem;
+}
+.viki-dropdown--lg .viki-dropdown__trigger {
+  padding: 10px 20px;
+  font-size: 1.125rem;
+}
+.viki-dropdown--secondary .viki-dropdown__trigger {
+  background-color: #009EA3;
+}
+.viki-dropdown--secondary .viki-dropdown__menu-link:hover {
+  color: #009EA3;
+}
+.viki-dropdown--secondary .viki-dropdown__menu-link--active {
+  color: #009EA3;
+  background-color: rgba(0, 158, 163, 0.05);
+}
+
 .menu {
   height: 60px;
   width: 100%;
@@ -955,6 +1056,56 @@ dialog.company-dialog textarea {
 
 .item-hidden {
   display: none !important;
+}
+
+.price-block {
+  position: relative;
+  height: 52px;
+}
+.price-block .viki-dropdown.personal-data__dropdown .viki-dropdown__trigger {
+  padding: 12px 16px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid rgba(15, 72, 128, 0.3);
+  height: 45px;
+}
+.price-block .viki-dropdown.personal-data__dropdown .viki-dropdown__trigger:hover {
+  border-color: rgba(15, 72, 128, 0.5);
+}
+.price-block .viki-dropdown.personal-data__dropdown .viki-dropdown__trigger-text {
+  color: #363636;
+  font-size: 16px;
+}
+.price-block .viki-dropdown.personal-data__dropdown .viki-dropdown__trigger-icon {
+  color: #363636;
+  font-size: 12px;
+  margin-left: 8px;
+  transition: transform 0.2s ease;
+}
+.viki-dropdown--open .price-block .viki-dropdown.personal-data__dropdown .viki-dropdown__trigger-icon {
+  transform: rotate(180deg);
+}
+.viki-dropdown--open .price-block .viki-dropdown.personal-data__dropdown .viki-dropdown__trigger {
+  border-color: #0F4880;
+  box-shadow: 0 0 0 3px rgba(15, 72, 128, 0.2);
+  outline: none;
+}
+.price-block .viki-dropdown.personal-data__dropdown .viki-dropdown__menu {
+  border-radius: 8px;
+  border: 1px solid rgba(15, 72, 128, 0.3);
+  box-shadow: 0 4px 12px rgba(15, 72, 128, 0.1);
+  margin-top: 2px;
+}
+.price-block .viki-dropdown.personal-data__dropdown .viki-dropdown__menu li {
+  padding: 12px 16px;
+  font-size: 16px;
+  color: #363636;
+}
+.price-block .viki-dropdown.personal-data__dropdown .viki-dropdown__menu li:hover {
+  background-color: rgba(15, 72, 128, 0.05);
+}
+.price-block .viki-dropdown.personal-data__dropdown .viki-dropdown__menu li:not(:last-child) {
+  border-bottom: 1px solid rgba(15, 72, 128, 0.05);
 }
 
 .menu-product {
@@ -3360,107 +3511,6 @@ span.text-like {
     grid-template-columns: 1fr;
   }
 }
-/* Custom Dropdown Component */
-.viki-dropdown {
-  position: relative;
-  display: inline-block;
-  width: 100%;
-  /* Dropdown placement modifiers */
-  /* Dropdown sizes */
-  /* Secondary color variant */
-}
-.viki-dropdown__trigger {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 5px 8px;
-  background-color: #fff;
-  border: 1px solid #0F4880;
-  border-radius: 6px;
-  border-radius: 4px;
-  cursor: pointer;
-  user-select: none;
-  font-size: 0.85rem;
-  z-index: 1;
-}
-.viki-dropdown__trigger-icon {
-  display: inline-flex;
-  transition: transform 0.2s ease;
-}
-.viki-dropdown--open .viki-dropdown__trigger-icon {
-  transform: rotate(180deg);
-}
-.viki-dropdown__menu {
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
-  width: 100%;
-  max-height: 0;
-  overflow: hidden;
-  background-color: #fff;
-  border-radius: 4px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  opacity: 0;
-  transform: translateY(-10px);
-  transition: all 0.2s ease-in-out;
-  z-index: 100;
-  /* Ensure the menu is initially hidden with zero height */
-  visibility: hidden;
-}
-.viki-dropdown__menu li {
-  padding: 5px 8px;
-  background-color: #fff;
-  border-radius: 4px;
-  cursor: pointer;
-  user-select: none;
-  font-size: 0.85rem;
-  transition: background-color 0.2s ease;
-}
-.viki-dropdown__menu li:hover {
-  background-color: rgba(0, 158, 163, 0.1);
-}
-.viki-dropdown--open .viki-dropdown__menu {
-  max-height: 300px;
-  opacity: 1;
-  transform: translateY(0);
-  overflow: auto;
-  visibility: visible;
-  z-index: 100;
-}
-.viki-dropdown__menu-item {
-  padding: 0;
-  margin: 0;
-}
-.viki-dropdown__menu-item:not(:last-child) {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-}
-.viki-dropdown--right .viki-dropdown__menu {
-  left: auto;
-  right: 0;
-}
-.viki-dropdown--top .viki-dropdown__menu {
-  top: auto;
-  bottom: calc(100% + 8px);
-}
-.viki-dropdown--sm .viki-dropdown__trigger {
-  padding: 6px 12px;
-  font-size: 0.875rem;
-}
-.viki-dropdown--lg .viki-dropdown__trigger {
-  padding: 10px 20px;
-  font-size: 1.125rem;
-}
-.viki-dropdown--secondary .viki-dropdown__trigger {
-  background-color: #009EA3;
-}
-.viki-dropdown--secondary .viki-dropdown__menu-link:hover {
-  color: #009EA3;
-}
-.viki-dropdown--secondary .viki-dropdown__menu-link--active {
-  color: #009EA3;
-  background-color: rgba(0, 158, 163, 0.05);
-}
-
 .cookie-banner {
   position: fixed;
   bottom: 0;

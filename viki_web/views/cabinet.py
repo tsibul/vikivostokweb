@@ -24,7 +24,19 @@ def cabinet_data(request):
         if user_extension:
             if user_extension.customer:
                 legal_data = collect_legal_data(user_extension.customer)
+        
         context = {'personalData': personal_data, 'legalData': legal_data}
+        
+        # Добавляем список прайс-листов для staff-пользователей
+        if user.is_staff:
+            price_types = list(StandardPriceType.objects.filter(
+                deleted=False
+            ).order_by('priority').values('id', 'name'))
+            context['priceTypes'] = price_types
+            context['isStaff'] = True
+        else:
+            context['isStaff'] = False
+            
         return JsonResponse({'status': 'ok', 'data': context})
     else:
         return redirect('main')
@@ -64,20 +76,29 @@ def collect_bank_data(company_id):
 def collect_personal_data(user):
     user_extension = UserExtension.objects.filter(user=user).first()
     price = ''
+    price_id = None
     customer_name = ''
-    if user_extension.customer:
+    customer_id = None
+    
+    if user_extension and user_extension.customer:
         price = user_extension.customer.standard_price_type.name
+        price_id = user_extension.customer.standard_price_type.id
         customer_name = user_extension.customer.name
+        customer_id = user_extension.customer.id
+    
     phone = ''
     if user_extension:
         phone = user_extension.phone
+        
     return {
         'email': user.email,
         'first_name': user.first_name,
         'last_name': user.last_name,
         'price': price,
+        'price_id': price_id,
         'phone': phone,
         'customer': customer_name,
+        'customer_id': customer_id,
     }
 
 
@@ -99,6 +120,7 @@ def cabinet_save(request, form_type):
 def save_personal_data(request):
     user = request.user
     user_phone = UserExtension.objects.filter(user=user).first()
+    
     if request.POST['phone']:
         if phone_validation(request.POST['phone']):
             if user_phone:
@@ -108,14 +130,38 @@ def save_personal_data(request):
                 UserExtension.objects.create(phone=request.POST['phone'], user=user)
         else:
             return JsonResponse({'status': 'error', 'message': 'Ошибка в номере телефона', 'field': 'phone'})
+    
     if name_validation(request.POST['first_name']):
         user.first_name = request.POST['first_name']
     else:
         return JsonResponse({'status': 'error', 'message': 'Неверный формат имени', 'field': 'first_name'})
+    
     if name_validation(request.POST['last_name']):
         user.last_name = request.POST['last_name']
     else:
         return JsonResponse({'status': 'error', 'message': 'Неверный формат фамилии', 'field': 'last_name'})
+    
+    # Обработка изменения прайс-листа для staff-пользователей
+    if user.is_staff and 'price_id' in request.POST and request.POST['price_id']:
+        try:
+            price_type = StandardPriceType.objects.get(id=request.POST['price_id'])
+            if user_phone and user_phone.customer:
+                # Если у пользователя уже есть customer, обновляем у него прайс-лист
+                user_phone.customer.standard_price_type = price_type
+                user_phone.customer.save()
+            else:
+                # Если у пользователя нет customer, создаем новый
+                customer = Customer.objects.create(
+                    name=user.get_full_name() or user.username,
+                    standard_price_type=price_type
+                )
+                if not user_phone:
+                    user_phone = UserExtension(user=user)
+                user_phone.customer = customer
+                user_phone.save()
+        except StandardPriceType.DoesNotExist:
+            return JsonResponse({'status': 'error', 'message': 'Указанный прайс-лист не найден', 'field': 'price_id'})
+    
     user.save()
     return JsonResponse({'status': 'ok'})
 

@@ -44,12 +44,26 @@
                                data-name="customer"
                                disabled>
                     </div>
-                    <div class="personal-data__block">
+                    <div class="personal-data__block price-block">
                         <label for="price" class="personal-data__label">Прайс-лист</label>
                         <input type="text" id="price"
-                               class="personal-data__input"
+                               class="personal-data__input price-input"
                                data-name="price"
                                disabled>
+                        <input type="hidden" id="price_id"
+                               name="price_id"
+                               data-name="price_id">
+                        
+                        <!-- Кастомный выпадающий список вместо select -->
+                        <div id="price_dropdown" class="viki-dropdown personal-data__dropdown item-hidden">
+                            <div class="viki-dropdown__trigger">
+                                <span class="viki-dropdown__trigger-text">Выберите прайс-лист</span>
+                                <span class="viki-dropdown__trigger-icon">▼</span>
+                            </div>
+                            <ul class="viki-dropdown__menu">
+                                <!-- Элементы будут добавлены через JavaScript -->
+                            </ul>
+                        </div>
                     </div>
                 </div>
                 <div class="personal-data__inputs">
