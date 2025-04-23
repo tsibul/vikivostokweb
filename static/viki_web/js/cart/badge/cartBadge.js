@@ -65,4 +65,4 @@ export function initCartBadge() {
 }
 
 // Initialize the badge when DOM is ready
-document.addEventListener('DOMContentLoaded', initCartBadge); 
+document.addEventListener('DOMContentLoaded', initCartBadge);
