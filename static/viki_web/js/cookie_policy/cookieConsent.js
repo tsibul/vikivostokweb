@@ -6,6 +6,16 @@
 import { getCookieConsent, saveCookieConsent } from './cookieStorage.js';
 
 /**
+ * Show cookie settings modal
+ */
+export function showCookieModal() {
+  const modal = document.getElementById('cookie-policy-modal');
+  if (modal) {
+    modal.classList.add('cookie-policy-modal--visible');
+  }
+}
+
+/**
  * Initialize cookie consent banner
  */
 export function initCookieConsent() {

@@ -216,6 +216,64 @@
 {% block content %}
 {% endblock %}
 
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer__container">
+            <div class="footer__column">
+                <div class="footer__title">О компании</div>
+                <div class="footer__text">ООО «Вики Восток Сувенир»</div>
+                <div class="footer__text">ИНН: 50 01 021 228</div>
+                <div class="footer__text">ОГРН: 1155001000549</div>
+            </div>
+            <div class="footer__column">
+                <div class="footer__title">Контакты</div>
+                <div class="footer__text">Тел.: 8-926-602-64-41</div>
+                <div class="footer__text">E-mail: office@vikivostok.ru</div>
+                <div class="footer__social">
+                    <a href="https://api.whatsapp.com/send/?phone=79266026441" class="footer__social-link">
+                        <i class="fab fa-whatsapp fa-lg"></i>
+                    </a>
+                    <a href="#" class="footer__social-link">
+                        <i class="fab fa-telegram fa-lg"></i>
+                    </a>
+                    <a href="#" class="footer__social-link">
+                        <i class="fab fa-vk fa-lg"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="footer__column">
+                <div class="footer__title">Категории товаров</div>
+                <a href="{% url 'viki_web:catalogue' %}" class="footer__link">Все товары</a>
+                {% for group in footer_product_groups %}
+                    <a href="{% url 'viki_web:products' group.product_group_url %}" class="footer__link">{{ group.name }}</a>
+                {% endfor %}
+                <a href="{% url 'viki_web:sitemap' %}" class="footer__link">Все категории</a>
+            </div>
+            <div class="footer__column">
+                <div class="footer__title">Навигация</div>
+                <a href="{% url 'viki_web:main' %}" class="footer__link">Главная</a>
+                <a href="{% url 'viki_web:catalogue' %}" class="footer__link">Каталог</a>
+                <a href="{% url 'viki_web:price' %}" class="footer__link">Прайс-лист</a>
+                <a href="{% url 'viki_web:layout' %}" class="footer__link">Шаблоны</a>
+                <a href="{% url 'viki_web:cart' %}" class="footer__link">Корзина</a>
+                <a href="{% url 'viki_web:cabinet' %}" class="footer__link">Личный кабинет</a>
+                
+                <div class="footer__title footer__title_small">О компании</div>
+                <a href="{% url 'viki_web:about' %}" class="footer__link">О компании</a>
+                <a href="{% url 'viki_web:news' %}" class="footer__link">Новости</a>
+                <a href="{% url 'viki_web:legal' %}" class="footer__link">Юридическая информация</a>
+                <a href="{% url 'viki_web:privacy' %}" class="footer__link">Политика конфиденциальности</a>
+                <a href="{% url 'viki_web:contacts' %}" class="footer__link">Контакты</a>
+                <a href="{% url 'viki_web:sitemap' %}" class="footer__link">Карта сайта</a>
+            </div>
+        </div>
+        <div class="footer__copyright">
+            © {% now "Y" %} Вики Восток — Все права защищены
+        </div>
+    </div>
+</footer>
+
 <!-- Cookie Banner -->
 {% include 'cookie_banner.html' %}
 

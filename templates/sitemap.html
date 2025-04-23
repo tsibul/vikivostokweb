@@ -1,0 +1,103 @@
+{% extends 'header.html' %}
+{% load static %}
+
+{% block content %}
+<section class="sitemap">
+    <div class="container">
+        <h1 class="sitemap__title">Карта сайта</h1>
+        
+        <div class="sitemap__section">
+            <h2 class="sitemap__subtitle">Основные разделы</h2>
+            <ul class="sitemap__list">
+                <li class="sitemap__item">
+                    <a href="{% url 'viki_web:main' %}" class="sitemap__link">Главная страница</a>
+                </li>
+                <li class="sitemap__item">
+                    <a href="{% url 'viki_web:catalogue' %}" class="sitemap__link">Каталог товаров</a>
+                </li>
+                <li class="sitemap__item">
+                    <a href="{% url 'viki_web:price' %}" class="sitemap__link">Прайс-лист</a>
+                </li>
+                <li class="sitemap__item">
+                    <a href="{% url 'viki_web:layout' %}" class="sitemap__link">Шаблоны</a>
+                </li>
+                <li class="sitemap__item">
+                    <a href="{% url 'viki_web:cart' %}" class="sitemap__link">Корзина</a>
+                </li>
+                <li class="sitemap__item">
+                    <a href="{% url 'viki_web:cabinet' %}" class="sitemap__link">Личный кабинет</a>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="sitemap__section">
+            <h2 class="sitemap__subtitle">Категории товаров</h2>
+            <ul class="sitemap__list">
+                {% for product_group in footer_product_groups %}
+                <li class="sitemap__item">
+                    <a href="{% url 'viki_web:products' product_group.product_group_url %}" class="sitemap__link">{{ product_group.name }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+        <div class="sitemap__section">
+            <h2 class="sitemap__subtitle">Группы товаров</h2>
+            <ul class="sitemap__list">
+                {% for goods_group in footer_goods_groups %}
+                <li class="sitemap__item">
+                    <a href="{% url 'viki_web:goods_group' goods_group.goods_group_url %}" class="sitemap__link">{{ goods_group.name }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+        <div class="sitemap__section">
+            <h2 class="sitemap__subtitle">О компании</h2>
+            <ul class="sitemap__list">
+                <li class="sitemap__item">
+                    <a href="{% url 'viki_web:about' %}" class="sitemap__link">О компании</a>
+                </li>
+                <li class="sitemap__item">
+                    <a href="{% url 'viki_web:news' %}" class="sitemap__link">Новости</a>
+                </li>
+                <li class="sitemap__item">
+                    <a href="{% url 'viki_web:legal' %}" class="sitemap__link">Юридическая информация</a>
+                </li>
+                <li class="sitemap__item">
+                    <a href="{% url 'viki_web:contacts' %}" class="sitemap__link">Контакты</a>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="sitemap__section">
+            <h2 class="sitemap__subtitle">Документы</h2>
+            <ul class="sitemap__list">
+                <li class="sitemap__item">
+                    <a href="{% url 'viki_web:privacy' %}" class="sitemap__link">Политика конфиденциальности</a>
+                </li>
+                <li class="sitemap__item">
+                    <a href="#" class="sitemap__link" id="cookie-settings-sitemap">Настройки cookie</a>
+                </li>
+                <li class="sitemap__item">
+                    <a href="{% url 'viki_web:sitemap' %}" class="sitemap__link">Карта сайта</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<script type="module">
+    import { showCookieModal } from '{% static "viki_web/js/cookie_policy/index.js" %}';
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        const cookieSettingsLink = document.getElementById('cookie-settings-sitemap');
+        if (cookieSettingsLink) {
+            cookieSettingsLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                showCookieModal();
+            });
+        }
+    });
+</script>
+{% endblock %} 

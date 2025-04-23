@@ -32,5 +32,6 @@ urlpatterns = [
     path('privacy', views.privacy, name='privacy'),
     path('legal', views.legal, name='legal'),
     path('contacts', views.contacts, name='contacts'),
+    path('sitemap', views.sitemap, name='sitemap'),
     path('api/get-item-price/<int:item_id>/', views.get_item_price, name='get_item_price'),
 ]

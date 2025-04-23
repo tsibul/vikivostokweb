@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sitemaps',
     'viki_web.apps.VikiWebConfig',
     'viki_web_cms.apps.VikiWebCmsConfig',
 ]
@@ -73,6 +74,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'viki_web.context_processors.common_data',
             ],
         },
     },

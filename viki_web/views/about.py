@@ -7,8 +7,6 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.core.mail import send_mail
 from django.conf import settings
-import requests
-import json
 
 
 def about(request):
@@ -61,6 +59,19 @@ def legal(request):
         Rendered legal information page
     """
     return render(request, 'legal.html')
+
+
+def sitemap(request):
+    """
+    Renders the sitemap page.
+    
+    Args:
+        request: HTTP request object
+        
+    Returns:
+        Rendered sitemap page with all site sections
+    """
+    return render(request, 'sitemap.html')
 
 
 def contacts(request):
