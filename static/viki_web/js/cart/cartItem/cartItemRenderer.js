@@ -7,6 +7,7 @@ import eventBus from '../eventBus.js';
 import { formatPrice } from '../pricing/priceFormatter.js';
 import { STORAGE_EVENTS } from '../cartStorage.js';
 import { logCanvasReadyEvent } from './eventDebugger.js';
+import { UPDATE_EVENTS } from './priceUpdateManager.js';
 
 // Flag to track font loading status
 let isFontLoaded = false;
@@ -60,18 +61,15 @@ async function ensureFontLoaded() {
                         resolve();
                     }).catch(() => {
                         // If font loading fails, use fallback
-                        console.warn('Failed to load Montserrat font, using fallback');
                         resolve();
                     });
                 } catch (e) {
                     // FontFace API failed, use fallback
-                    console.warn('FontFace API error, using fallback font');
                     resolve();
                 }
             });
         } else {
             // FontFace API not available, use fallback immediately
-            console.warn('FontFace API not available, using fallback font');
             resolve();
         }
     });
@@ -134,7 +132,6 @@ export function createCartItemCanvas(item, index, container) {
     // Проверяем, существует ли уже canvas для этого элемента
     const existingCanvas = container.querySelector(`.cart-item-canvas[data-item-id="${item.id}"]`);
     if (existingCanvas) {
-        console.log(`Using existing canvas for item ${item.id}`);
         return existingCanvas;
     }
     
@@ -143,8 +140,6 @@ export function createCartItemCanvas(item, index, container) {
     canvas.className = 'cart-item-canvas';
     canvas.dataset.itemId = item.id;
     canvas.dataset.index = index;
-    
-    console.log(`Creating canvas for item ${item.id}`);
     
     // Устанавливаем ширину на 100% от контейнера для правильного отображения
     canvas.style.width = '100%';
@@ -510,12 +505,6 @@ function drawQuantityControls(ctx, canvas, item, x, y, width) {
     canvas.dataset.minusBtn = JSON.stringify(minusBtnPos);
     canvas.dataset.plusBtn = JSON.stringify(plusBtnPos);
     canvas.dataset.qtyInput = JSON.stringify(qtyInputPos);
-    
-    console.log(`Canvas ID: ${canvas.dataset.itemId}, Controls:`, {
-        minus: minusBtnPos,
-        input: qtyInputPos,
-        plus: plusBtnPos
-    });
 }
 
 /**
@@ -583,8 +572,6 @@ function drawRemoveButton(ctx, canvas, x, y) {
     };
     
     canvas.dataset.removeBtn = JSON.stringify(removeBtnPos);
-    
-    console.log(`Canvas ID: ${canvas.dataset.itemId}, Remove button:`, removeBtnPos);
 }
 
 /**
@@ -626,8 +613,6 @@ function drawBrandingButton(ctx, canvas, item, x, y, width) {
     };
     
     canvas.dataset.brandingBtn = JSON.stringify(brandingBtnPos);
-    
-    console.log(`Canvas ID: ${item.id}, Branding button:`, brandingBtnPos);
 }
 
 /**
@@ -832,8 +817,6 @@ export function initCartItemCanvases(container) {
 export function initCartRendering() {
     const container = document.querySelector('.cart-page__items');
     if (container) {
-        console.log('Starting cart rendering initialization');
-        
         // Переменные для дебаунсинга и отслеживания событий
         let canvasReadyTimer = null;
         let lastReadyEventTime = 0;
@@ -847,13 +830,11 @@ export function initCartRendering() {
                 const now = Date.now();
                 // Предотвращаем отправку событий слишком часто
                 if (now - lastReadyEventTime < 500) {
-                    console.log('Skipping canvas:ready event due to throttling');
                     return;
                 }
                 
                 eventCounter++;
                 
-                console.log(`Canvases fully rendered, firing canvas:ready event (source: ${source}, id: ${eventCounter})`);
                 lastReadyEventTime = now;
                 
                 const eventData = {
@@ -874,18 +855,15 @@ export function initCartRendering() {
         
         // Load font first, then initialize canvases
         ensureFontLoaded().then(() => {
-            console.log('Font loaded, initializing canvases');
-            
             // Create and render all canvases
             const canvases = initCartItemCanvases(container);
             
             // Отправляем событие о готовности canvas с указанием конкретных элементов
             notifyCanvasReady('initial-render', canvases);
-            
+    
             // Subscribe to cart updates to refresh canvases
             eventBus.subscribe(STORAGE_EVENTS.CART_UPDATED, () => {
                 if (container) {
-                    console.log('Cart updated, re-initializing canvases');
                     const updatedCanvases = initCartItemCanvases(container);
                     
                     // Отправляем событие о готовности после обновления корзины,
@@ -894,12 +872,26 @@ export function initCartRendering() {
                 }
             });
             
+            // Подписываемся на событие обновления цены, чтобы перерисовать canvas
+            eventBus.subscribe(UPDATE_EVENTS.PRICE_CALCULATION_COMPLETE, (data) => {
+                if (data && data.item) {
+                    // Находим canvas для обновления
+                    const canvas = document.querySelector(`.cart-item-canvas[data-item-id="${data.item.id}"]`);
+                    if (canvas) {
+                        // Перерисовываем canvas с обновленными данными товара
+                        renderCartItem(canvas, data.item);
+                        
+                        // Отправляем событие о готовности canvas
+                        notifyCanvasReady('price-update', [canvas]);
+                    }
+                }
+            });
+            
             // Add resize listener for responsive canvases
             window.addEventListener('resize', () => {
                 // Вызываем с задержкой для нормализации частых изменений размера
                 clearTimeout(window.canvasResizeTimer);
                 window.canvasResizeTimer = setTimeout(() => {
-                    console.log('Window resized, adjusting canvases');
                     const resizedCanvases = handleCanvasResize();
                     
                     // Отправляем событие о готовности после ресайза
@@ -913,7 +905,6 @@ export function initCartRendering() {
                     // Обработка аналогична window resize
                     clearTimeout(window.containerResizeTimer);
                     window.containerResizeTimer = setTimeout(() => {
-                        console.log('Container resized, adjusting canvases');
                         const resizedCanvases = handleCanvasResize();
                         
                         // Отправляем событие о готовности после ресайза контейнера

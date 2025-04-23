@@ -106,20 +106,11 @@ function logCanvasClick(event, canvas) {
     const scaledX = canvasX * scaleX / dpr;
     const scaledY = canvasY * scaleY / dpr;
     
-    // Выводим в консоль с визуальным разделителем
-    console.log('\n🔍 CANVAS CLICK DETECTED 🔍');
-    console.log(`Canvas ID: ${canvas.dataset.itemId}, Index: ${canvas.dataset.index}`);
-    console.log(`Canvas size: ${canvas.width / dpr}x${canvas.height / dpr}px (DPR: ${dpr})`);
-    console.log(`Click coordinates:`);
-    console.log(`  • Client: (${clientX.toFixed(1)}, ${clientY.toFixed(1)})px`);
-    console.log(`  • Canvas: (${canvasX.toFixed(1)}, ${canvasY.toFixed(1)})px`);
-    console.log(`  • Scaled: (${scaledX.toFixed(1)}, ${scaledY.toFixed(1)})px`);
-    
     // Проверяем и выводим позиции интерактивных элементов
     try {
         logInteractiveElements(canvas, scaledX, scaledY);
     } catch (e) {
-        console.error('Error logging interactive elements:', e);
+        // Тихая обработка ошибки
     }
 }
 
@@ -233,7 +224,7 @@ export function logCanvasReadyEvent(eventData, wasProcessed = true) {
         canvasReadyEvents.shift();
     }
     
-    // Выводим информацию о последних 5 событиях
+    // Выводим информацию о последних 5 событиях - ОСТАВЛЯЕМ ЭТОТ ЛОГ
     if (canvasReadyEvents.length >= 3) {
         console.log('\nCanvas:ready event history (last 3):');
         canvasReadyEvents.slice(-3).forEach((event, index) => {

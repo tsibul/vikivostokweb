@@ -7,9 +7,6 @@ import eventBus from '../eventBus.js';
 import { removeCartItem } from '../cartStorage.js';
 import { registerModuleInit, logCanvasReadyEvent } from './eventDebugger.js';
 
-// Регистрируем загрузку модуля
-console.log('Loading cartItemEvents.js module - UI EVENTS HANDLER');
-
 // Константы для типов событий
 export const QUANTITY_EVENTS = {
     INCREASE: 'cart:quantity:increase',
@@ -33,26 +30,20 @@ const canvasWithHandlers = new Set();
  * Initialize event handlers for cart item canvases
  */
 export function initCartItemEvents() {
-    console.log('Initializing cart item events [cartItemEvents.js]');
-    
     // Регистрируем инициализацию
     registerModuleInit('cartItemEvents.js', { phase: 'start' });
     
     // Подписываемся на события изменения количества
     if (!handlersInitialized) {
-        console.log('Setting up canvas:ready event subscription');
-        
         eventBus.subscribe('canvas:ready', (data) => {
             // Проверяем, не обрабатывали ли мы уже это событие
             if (data.id && data.id <= lastProcessedEventId) {
-                console.log(`Skipping already processed canvas:ready event with id ${data.id}`);
                 logCanvasReadyEvent(data, false); // Логируем пропущенное событие
                 return;
             }
             
             // Проверяем по timestamp как дополнительный барьер
             if (data.timestamp && data.timestamp <= lastProcessedEventTimestamp) {
-                console.log(`Skipping already processed canvas:ready event with timestamp ${data.timestamp}`);
                 logCanvasReadyEvent(data, false);
                 return;
             }
@@ -60,7 +51,6 @@ export function initCartItemEvents() {
             // Используем debouncing для предотвращения множественных вызовов
             clearTimeout(debounceTimer);
             debounceTimer = setTimeout(() => {
-                console.log(`Received canvas:ready event, attaching handlers to ${data.canvasCount} canvases`);
                 logCanvasReadyEvent(data, true); // Логируем обработанное событие
                 
                 // Сохраняем time и id последнего обработанного события
@@ -71,8 +61,6 @@ export function initCartItemEvents() {
                 
                 // Если в событии есть прямые ссылки на canvas элементы, используем их
                 if (data.canvases && data.canvases.length > 0) {
-                    console.log(`Using ${data.canvases.length} canvases passed directly in the event`);
-                    
                     // Добавляем обработчики только к этим канвасам, не трогая остальные
                     data.canvases.forEach(canvas => {
                         attachHandlersToCanvas(canvas);
@@ -97,7 +85,6 @@ export function initCartItemEvents() {
  */
 function attachHandlersToCanvas(canvas) {
     if (!canvas || !canvas.dataset || !canvas.dataset.itemId) {
-        console.warn('Attempted to attach handlers to invalid canvas', canvas);
         return;
     }
     
@@ -113,13 +100,8 @@ function attachHandlersToCanvas(canvas) {
     canvas.addEventListener('mousemove', handleCanvasMouseMove);
     canvas.addEventListener('mouseleave', handleCanvasMouseLeave);
     
-    // Log interactive elements
-    logCanvasInteractiveElements(canvas);
-    
     // Mark as having handlers
     canvasWithHandlers.add(canvasId);
-    
-    console.log(`Attached handlers to canvas ID: ${canvasId}`);
 }
 
 /**
@@ -134,19 +116,12 @@ function attachEventHandlers() {
     
     // Get all canvas elements in the cart
     const canvases = document.querySelectorAll('.cart-item-canvas');
-    console.log(`Attaching event handlers to ${canvases.length} cart item canvases`);
     
     canvases.forEach(canvas => {
         const canvasId = canvas.dataset.itemId;
         
         // Проверяем, не прикреплены ли уже обработчики к этому canvas
         if (canvasWithHandlers.has(canvasId)) {
-            console.log(`Handlers already attached to canvas ${canvasId}, skipping`);
-            
-            // Важно: убедимся, что обработчики действительно привязаны к этому DOM-элементу
-            // Возможно, что canvas был пересоздан, но ID остался прежним
-            // В этом случае нужно переприкрепить обработчики
-            
             // Для гарантии удаляем существующие обработчики
             canvas.removeEventListener('click', handleCanvasClick);
             canvas.removeEventListener('mousemove', handleCanvasMouseMove);
@@ -167,7 +142,6 @@ function attachEventHandlers() {
         
         // Add click event listener to handle all button clicks
         canvas.addEventListener('click', handleCanvasClick);
-        console.log(`Added click handler to canvas ID: ${canvas.dataset.itemId}`);
         
         // Add hover effects for buttons by listening to mouse move
         canvas.addEventListener('mousemove', handleCanvasMouseMove);
@@ -175,43 +149,9 @@ function attachEventHandlers() {
         // Reset cursor when mouse leaves canvas
         canvas.addEventListener('mouseleave', handleCanvasMouseLeave);
         
-        // Выводим информацию о всех интерактивных элементах этого canvas
-        logCanvasInteractiveElements(canvas);
-        
         // Отмечаем canvas как обработанный
         canvasWithHandlers.add(canvasId);
     });
-}
-
-/**
- * Log interactive elements of a canvas for debugging
- * @param {HTMLCanvasElement} canvas - Canvas element
- */
-function logCanvasInteractiveElements(canvas) {
-    try {
-        const itemId = canvas.dataset.itemId;
-        console.log(`\n--- Canvas ${itemId} interactive elements ---`);
-        
-        // Получаем данные всех интерактивных элементов
-        const elements = {
-            minus: tryParseJson(canvas.dataset.minusBtn),
-            plus: tryParseJson(canvas.dataset.plusBtn),
-            input: tryParseJson(canvas.dataset.qtyInput),
-            remove: tryParseJson(canvas.dataset.removeBtn),
-            branding: tryParseJson(canvas.dataset.brandingBtn)
-        };
-        
-        // Выводим центральные точки каждого элемента
-        for (const [name, element] of Object.entries(elements)) {
-            if (element && element.centerX !== undefined) {
-                console.log(`${name.padEnd(10)}: center (${element.centerX.toFixed(1)}, ${element.centerY.toFixed(1)}), rect (${element.x.toFixed(1)}, ${element.y.toFixed(1)}, ${element.width.toFixed(1)}x${element.height.toFixed(1)})`);
-            }
-        }
-        
-        console.log(`--- End of canvas ${itemId} elements ---\n`);
-    } catch (e) {
-        console.error('Error logging canvas elements:', e);
-    }
 }
 
 /**
@@ -233,8 +173,6 @@ function tryParseJson(json) {
  * @param {MouseEvent} event - Click event
  */
 function handleCanvasClick(event) {
-    console.log('🔍 cartItemEvents.js click event handler');
-    
     const canvas = event.currentTarget;
     const rect = canvas.getBoundingClientRect();
     
@@ -251,8 +189,6 @@ function handleCanvasClick(event) {
     const x = clientX * scaleX / dpr;
     const y = clientY * scaleY / dpr;
     
-    console.log(`Click at (${x.toFixed(1)}, ${y.toFixed(1)}) on canvas ${canvas.dataset.itemId}`);
-    
     // Получаем данные о позициях кнопок
     try {
         // Парсим позиции элементов из dataset
@@ -261,13 +197,6 @@ function handleCanvasClick(event) {
         const qtyInputPos = JSON.parse(canvas.dataset.qtyInput || '{}');
         const removeBtnPos = JSON.parse(canvas.dataset.removeBtn || '{}');
         const brandingBtnPos = JSON.parse(canvas.dataset.brandingBtn || '{}');
-        
-        console.log('Button positions from dataset:');
-        console.log('Minus:', minusBtnPos);
-        console.log('Plus:', plusBtnPos);
-        console.log('Input:', qtyInputPos);
-        console.log('Remove:', removeBtnPos);
-        console.log('Branding:', brandingBtnPos);
         
         // Определяем область клика напрямую (без вспомогательных функций)
         const padding = 5; // Увеличиваем зону клика для лучшего срабатывания на мобильных устройствах
@@ -278,7 +207,6 @@ function handleCanvasClick(event) {
             y >= (minusBtnPos.y - padding) &&
             y <= (minusBtnPos.y + minusBtnPos.height + padding)) {
             
-            console.log('📉 Minus button clicked');
             handleMinusButtonClick(canvas);
             return;
         }
@@ -289,7 +217,6 @@ function handleCanvasClick(event) {
             y >= (plusBtnPos.y - padding) &&
             y <= (plusBtnPos.y + plusBtnPos.height + padding)) {
             
-            console.log('📈 Plus button clicked');
             handlePlusButtonClick(canvas);
             return;
         }
@@ -300,7 +227,6 @@ function handleCanvasClick(event) {
             y >= (qtyInputPos.y - padding) &&
             y <= (qtyInputPos.y + qtyInputPos.height + padding)) {
             
-            console.log('📝 Quantity input field clicked');
             handleInputFieldClick(canvas);
             return;
         }
@@ -311,7 +237,6 @@ function handleCanvasClick(event) {
             y >= (removeBtnPos.y - padding) &&
             y <= (removeBtnPos.y + removeBtnPos.height + padding)) {
             
-            console.log('🗑️ Remove button clicked');
             handleRemoveItem(canvas);
             return;
         }
@@ -323,7 +248,6 @@ function handleCanvasClick(event) {
             y >= (brandingBtnPos.y - padding) &&
             y <= (brandingBtnPos.y + brandingBtnPos.height + padding)) {
             
-            console.log('🏷️ Branding button clicked');
             // Здесь будет код для брендирования
             return;
         }
@@ -341,20 +265,16 @@ function handleCanvasClick(event) {
                 y <= (btnPos.y + btnPos.height + padding)) {
                     
                 if (key.includes('remove')) {
-                    console.log('🧹 Branding remove button clicked');
                     handleRemoveBranding(canvas, btnPos.index);
                 } else if (key.includes('checkbox')) {
-                    console.log('☑️ Branding checkbox clicked');
                     handleToggleSecondPass(canvas, btnPos.index);
                 }
                 return;
             }
         }
         
-        console.log('⚠️ Click not on any interactive element');
-        
     } catch (e) {
-        console.error('Error processing canvas click:', e);
+        // Тихая обработка ошибки
     }
 }
 
@@ -372,7 +292,6 @@ function handleMinusButtonClick(canvas) {
     if (item && item.quantity > 1) {
         // Только эмитируем событие, не меняем напрямую
         const newQuantity = item.quantity - 1;
-        console.log(`Emitting quantity decrease event for item ${itemId}, from ${item.quantity} to ${newQuantity}`);
         
         // Эмитируем событие уменьшения количества
         eventBus.publish(QUANTITY_EVENTS.DECREASE, {
@@ -380,8 +299,6 @@ function handleMinusButtonClick(canvas) {
             quantity: newQuantity,
             previousQuantity: item.quantity
         });
-    } else {
-        console.log('Cannot decrease quantity below 1');
     }
 }
 
@@ -390,27 +307,19 @@ function handleMinusButtonClick(canvas) {
  */
 function handlePlusButtonClick(canvas) {
     const itemId = canvas.dataset.itemId;
-    console.log('DEBUG-PLUS: handlePlusButtonClick called for itemId', itemId);
     
     if (!itemId) {
-        console.error('DEBUG-PLUS: No itemId found in canvas dataset');
         return;
     }
     
     // Get cart items
     const cartItems = JSON.parse(localStorage.getItem('cart') || '[]');
-    console.log('DEBUG-PLUS: Cart items from localStorage', cartItems);
     
     const item = cartItems.find(item => item.id === itemId);
-    console.log('DEBUG-PLUS: Found item in cart', item);
     
     if (item) {
         // Только эмитируем событие, не меняем напрямую
         const newQuantity = item.quantity + 1;
-        console.log(`DEBUG-PLUS: Emitting quantity increase event for item ${itemId}, from ${item.quantity} to ${newQuantity}`);
-        
-        // Проверяем константу события
-        console.log('DEBUG-PLUS: Event constant value', QUANTITY_EVENTS.INCREASE);
         
         // Эмитируем событие увеличения количества
         const eventData = {
@@ -418,16 +327,8 @@ function handlePlusButtonClick(canvas) {
             quantity: newQuantity,
             previousQuantity: item.quantity
         };
-        console.log('DEBUG-PLUS: Publishing event with data', eventData);
         
-        try {
-            eventBus.publish(QUANTITY_EVENTS.INCREASE, eventData);
-            console.log('DEBUG-PLUS: Event published successfully');
-        } catch (e) {
-            console.error('DEBUG-PLUS: Error publishing event', e);
-        }
-    } else {
-        console.error('DEBUG-PLUS: Item not found in cart for ID', itemId);
+        eventBus.publish(QUANTITY_EVENTS.INCREASE, eventData);
     }
 }
 
@@ -443,7 +344,6 @@ function handleInputFieldClick(canvas) {
     const item = cartItems.find(item => item.id === itemId);
     
     if (item) {
-        console.log('Creating quantity input field');
         createQuantityInputElement(canvas, item);
     }
 }
@@ -464,7 +364,6 @@ function createQuantityInputElement(canvas, item) {
     // Получаем данные о позиции поля ввода
     const qtyInputPos = JSON.parse(canvas.dataset.qtyInput || '{}');
     if (!qtyInputPos.x) {
-        console.error('No quantity input position data found');
         return null;
     }
     
@@ -541,7 +440,7 @@ function createQuantityInputElement(canvas, item) {
         input.focus();
         input.select();
     } catch (e) {
-        console.error('Error focusing input:', e);
+        // Тихая обработка ошибки
     }
     
     return input;
@@ -574,8 +473,6 @@ function applyQuantityChangeFromInput(input) {
         
         if (item) {
             // Эмитируем событие изменения количества
-            console.log(`Emitting quantity change event for item ${canvasId}, from ${item.quantity} to ${quantity}`);
-            
             eventBus.publish(QUANTITY_EVENTS.CHANGE, {
                 itemId: canvasId,
                 quantity: quantity,
@@ -658,7 +555,7 @@ function handleCanvasMouseMove(event) {
             }
         }
     } catch (e) {
-        console.error('Error in mousemove handling:', e);
+        // Тихая обработка ошибки
     }
     
     // Update cursor based on whether we're over a button

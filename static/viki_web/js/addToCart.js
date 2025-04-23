@@ -10,8 +10,6 @@ import eventBus from './cart/eventBus.js';
  * Extracts product data from DOM and adds it to cart
  */
 function addToCart() {
-    console.log('Initializing add to cart functionality');
-    
     // Find all add to cart buttons
     const addButtons = document.querySelectorAll('.add-to-cart-btn');
     
@@ -19,8 +17,6 @@ function addToCart() {
     addButtons.forEach(button => {
         button.addEventListener('click', handleAddToCartClick);
     });
-    
-    console.log(`Found ${addButtons.length} add to cart buttons`);
 }
 
 /**
@@ -48,8 +44,6 @@ function handleAddToCartClick(event) {
         price: isNaN(productPrice) ? 0 : productPrice,
         quantity: 1
     };
-    
-    console.log('Adding product to cart:', product);
     
     // Emit event for cart to handle
     eventBus.publish('cart:add', product);
@@ -104,7 +98,6 @@ function showAddedToCartNotification(product) {
 
 // Subscribe to cart initialization event
 eventBus.subscribe('cart:initialized', () => {
-    console.log('Cart initialized, activating add to cart functionality');
     addToCart();
 });
 
@@ -112,9 +105,6 @@ eventBus.subscribe('cart:initialized', () => {
 document.addEventListener('DOMContentLoaded', () => {
     // Add immediate initialization for pages without cart module
     if (!window.CartManager) {
-        console.log('No CartManager found, initializing add to cart independently');
         addToCart();
     }
-    
-    console.log('Add to cart module loaded');
 }); 

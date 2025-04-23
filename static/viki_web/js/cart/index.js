@@ -11,6 +11,7 @@ import { initCartItemEvents } from './cartItem/cartItemEvents.js';
 import { initQuantityInputHandlers } from './cartItem/cartItemQuantity.js';
 import { registerModuleInit } from './cartItem/eventDebugger.js';
 import { initCartSummary } from './summary/index.js';
+import { initPriceUpdateManager } from './cartItem/priceUpdateManager.js';
 import eventBus from './eventBus.js';
 
 // Глобальные данные о возможностях печати
@@ -100,6 +101,9 @@ export function initCart() {
         
         // Регистрируем инициализацию для отладки
         registerModuleInit('index.js', { phase: 'start' });
+        
+        // Инициализация менеджера обновления цен
+        initPriceUpdateManager();
         
         // Инициализация рендеринга корзины
         initCartRendering();
