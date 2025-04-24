@@ -3,7 +3,6 @@
  * Handles displaying and updating cart badge count
  */
 
-console.log('cartBadge.js module loaded');
 
 /**
  * Update cart badge with item count
@@ -20,7 +19,6 @@ export function updateCartBadge(options = { useUniqueCount: true }) {
         const cartBadges = document.querySelectorAll('.cart-badge');
         
         if (!cartBadges.length) {
-            console.log('No cart badges found in the document');
             return; // No badges found
         }
         
@@ -34,8 +32,6 @@ export function updateCartBadge(options = { useUniqueCount: true }) {
             // Count total quantity across all items
             count = cart.reduce((total, item) => total + (parseInt(item.quantity) || 1), 0);
         }
-        
-        console.log(`Updating cart badge with count: ${count}`);
         
         // Update all badge elements
         cartBadges.forEach(badge => {
@@ -53,28 +49,24 @@ export function updateCartBadge(options = { useUniqueCount: true }) {
  * Updates the badge on page load and sets up event listeners
  */
 export function initCartBadge() {
-    console.log('initCartBadge called');
-    
+
     // Update badge on page load
     updateCartBadge();
     
     // Set up event listener for storage changes
     window.addEventListener('storage', event => {
         if (event.key === 'cart') {
-            console.log('Storage event detected for cart');
             updateCartBadge();
         }
     });
     
     // Listen for custom cart update events
     document.addEventListener('cart:updated', () => {
-        console.log('cart:updated event received');
         updateCartBadge();
     });
 }
 
 // Initialize the badge when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOMContentLoaded in cartBadge.js');
     initCartBadge();
 });

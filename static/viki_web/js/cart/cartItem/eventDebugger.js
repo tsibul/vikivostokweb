@@ -4,7 +4,6 @@
  */
 
 // Минимизируем базовое логирование
-console.log('CART DEBUGGER: Initialized');
 const moduleLoadOrder = [];
 const moduleInitOrder = [];
 const canvasReadyEvents = []; // Для отслеживания событий canvas:ready
@@ -31,7 +30,7 @@ export function registerModuleInit(moduleName, info = {}) {
     });
     // Оставляем только важный лог
     if (info.phase === 'completed') {
-        console.log(`Module initialized: ${moduleName}`);
+        // console.log(`Module initialized: ${moduleName}`);
     }
 }
 
@@ -59,7 +58,7 @@ export function registerEventHandler(elementSelector, eventType, handlerModule) 
     
     // Один лог для всех элементов
     if (elements.length > 0) {
-        console.log(`Registered ${eventType} handler from ${handlerModule} on ${elements.length} elements`);
+        // console.log(`Registered ${eventType} handler from ${handlerModule} on ${elements.length} elements`);
     }
 }
 
@@ -127,7 +126,7 @@ function logInteractiveElements(canvas, x, y) {
         branding: tryParseJson(canvas.dataset.brandingBtn)
     };
     
-    console.log('Interactive areas:');
+    // console.log('Interactive areas:');
     
     let hitArea = null;
     
@@ -145,7 +144,7 @@ function logInteractiveElements(canvas, x, y) {
             ? `, center: (${area.centerX.toFixed(1)}, ${area.centerY.toFixed(1)})` 
             : '';
             
-        console.log(`  • ${name.padEnd(8)}: (${area.x.toFixed(1)}, ${area.y.toFixed(1)}, w:${area.width.toFixed(1)}, h:${area.height.toFixed(1)})${centerInfo} - ${isHit ? '✅ HIT' : '❌ MISS'}`);
+        // console.log(`  • ${name.padEnd(8)}: (${area.x.toFixed(1)}, ${area.y.toFixed(1)}, w:${area.width.toFixed(1)}, h:${area.height.toFixed(1)})${centerInfo} - ${isHit ? '✅ HIT' : '❌ MISS'}`);
         
         if (isHit) {
             hitArea = name;
@@ -191,7 +190,7 @@ function logInteractiveElements(canvas, x, y) {
         }
     }
     
-    console.log('=== END OF CLICK DEBUG ===\n');
+    // console.log('=== END OF CLICK DEBUG ===\n');
 }
 
 /**
@@ -226,11 +225,11 @@ export function logCanvasReadyEvent(eventData, wasProcessed = true) {
     
     // Выводим информацию о последних 5 событиях - ОСТАВЛЯЕМ ЭТОТ ЛОГ
     if (canvasReadyEvents.length >= 3) {
-        console.log('\nCanvas:ready event history (last 3):');
+        // console.log('\nCanvas:ready event history (last 3):');
         canvasReadyEvents.slice(-3).forEach((event, index) => {
-            console.log(`${index + 1}. [${event.time.split('T')[1].substring(0, 12)}] source: ${event.source}, canvases: ${event.canvasCount}, ${event.processed ? '✓ processed' : '✗ skipped'}`);
+            // console.log(`${index + 1}. [${event.time.split('T')[1].substring(0, 12)}] source: ${event.source}, canvases: ${event.canvasCount}, ${event.processed ? '✓ processed' : '✗ skipped'}`);
         });
-        console.log('');
+        // console.log('');
     }
 }
 

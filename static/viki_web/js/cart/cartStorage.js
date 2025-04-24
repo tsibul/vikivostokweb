@@ -196,6 +196,5 @@ document.addEventListener('DOMContentLoaded', updateCartBadge);
 
 // Подписываемся на событие добавления товара
 eventBus.subscribe('cart:add', (product) => {
-    console.log('Received cart:add event, adding product to cart:', product);
     addCartItem(product);
 });

@@ -7,7 +7,6 @@ import { initCookieConsent, showCookieModal } from './cookie_policy/index.js';
 
 // Initialize cookie consent when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('Initializing cookie consent banner');
   initCookieConsent();
   
   // Add handler for footer cookie settings link

@@ -14,8 +14,7 @@ const priceCache = new Map();
  * Sets up listeners for cart item updates
  */
 export function initPriceCalculator() {
-    console.log('Initializing product price calculator');
-    
+
     // Listen for quantity changes
     eventBus.subscribe(STORAGE_EVENTS.CART_ITEM_UPDATED, (data) => {
         if (data && data.item) {

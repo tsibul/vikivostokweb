@@ -344,9 +344,6 @@ class RecentlyViewed {
           const product = {name, article, color: colorName};
 
           CartAlert.showAddToCartModal(product, function (product) {
-            // Callback on confirmation
-            console.log(`Product "${product.name}" (${product.article}, color: ${product.color}) added to cart`);
-
             // Show success notification
             CartAlert.showSuccessMessage(product);
           });

@@ -16,7 +16,6 @@ let eventHandlersInitialized = false;
 export function initAddToCartEvents() {
     // Prevent double initialization
     if (eventHandlersInitialized) {
-        console.log('Add to cart event handlers already initialized, skipping');
         return;
     }
     

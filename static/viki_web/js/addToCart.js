@@ -104,7 +104,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Add immediate initialization for pages without cart module
     if (!window.CartManager) {
-        console.log('CartManager not found, initializing add to cart functionality');
         initAddToCart();
     }
 });

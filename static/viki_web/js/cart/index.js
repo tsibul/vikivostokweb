@@ -26,7 +26,6 @@ export async function loadPrintOpportunities() {
         const cartItems = getCartItems();
         
         if (!cartItems || cartItems.length === 0) {
-            console.log('No items in cart, skipping print opportunities load');
             return [];
         }
         
@@ -42,8 +41,7 @@ export async function loadPrintOpportunities() {
                 continue;
             }
             
-            console.log(`Loading print opportunities for goods ID: ${goodsId}`);
-            
+
             try {
                 const response = await fetch(`/api/print-opportunities/${goodsId}`);
                 
@@ -97,8 +95,7 @@ export function initCart() {
     const cartContainer = document.querySelector('.cart-page__items');
     
     if (cartContainer) {
-        console.log('Cart container found, initializing cart');
-        
+
         // Регистрируем инициализацию для отладки
         registerModuleInit('index.js', { phase: 'start' });
         
@@ -123,12 +120,10 @@ export function initCart() {
         // Регистрируем завершение инициализации
         registerModuleInit('index.js', { phase: 'completed' });
     } else {
-        console.log('Not on cart page, initialize only core functionality');
     }
     
     // Публикуем событие инициализации корзины
     eventBus.publish('cart:initialized', { timestamp: Date.now() });
-    console.log('Cart initialization completed, published cart:initialized event');
 }
 
 // Реэкспорт функций и констант

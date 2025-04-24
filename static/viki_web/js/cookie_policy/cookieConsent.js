@@ -23,7 +23,6 @@ export function initCookieConsent() {
   const modal = document.getElementById('cookie-policy-modal');
   
   if (!banner) {
-    console.log('Cookie banner element not found.');
     return;
   }
   

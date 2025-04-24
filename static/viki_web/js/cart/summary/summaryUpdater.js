@@ -17,5 +17,4 @@ export function initSummaryUpdateEvents() {
     eventBus.subscribe(STORAGE_EVENTS.CART_ITEM_REMOVED, updateSummary);
     eventBus.subscribe(STORAGE_EVENTS.CART_ITEM_UPDATED, updateSummary);
     
-    console.log('Summary update events initialized');
 }

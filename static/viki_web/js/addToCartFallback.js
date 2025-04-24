@@ -181,8 +181,7 @@
     
     // Initialize when DOM is ready
     document.addEventListener('DOMContentLoaded', function() {
-        console.log('Cart initialized (fallback for legacy browsers)');
-        
+
         // Initialize cart badge
         CartManager.updateBadge();
         

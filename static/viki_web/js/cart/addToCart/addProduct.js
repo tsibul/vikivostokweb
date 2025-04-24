@@ -77,7 +77,7 @@ export async function addProductToCart(productData) {
                     // Update product in cart
                     updateCartItem(product);
                     
-                    console.log(`Price updated for ${product.name}: ${originalPrice} -> ${calculatedPrice}`);
+                    // console.log(`Price updated for ${product.name}: ${originalPrice} -> ${calculatedPrice}`);
                 }
             }
         } catch (priceError) {
