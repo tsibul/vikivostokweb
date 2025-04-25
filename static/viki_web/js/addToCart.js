@@ -5,6 +5,7 @@
 
 import { initAddToCart } from './cart/addToCart/index.js';
 import eventBus from './cart/eventBus.js';
+import {notificationClose} from "./cart/addToCart/notification.js";
 
 /**
  * Add product to cart functionality
@@ -76,25 +77,7 @@ function showAddedToCartNotification(product) {
     document.body.appendChild(notification);
     
     // Add close functionality
-    const closeBtn = notification.querySelector('.cart-notification__close');
-    if (closeBtn) {
-        closeBtn.addEventListener('click', () => {
-            notification.remove();
-        });
-    }
-    
-    // Auto remove after 3 seconds
-    setTimeout(() => {
-        notification.classList.add('cart-notification--hiding');
-        setTimeout(() => {
-            notification.remove();
-        }, 300);
-    }, 3000);
-    
-    // Show with animation
-    setTimeout(() => {
-        notification.classList.add('cart-notification--visible');
-    }, 10);
+    notificationClose(notification)
 }
 
 // Initialize add to cart functionality when DOM is ready

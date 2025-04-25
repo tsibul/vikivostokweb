@@ -14,7 +14,7 @@ export function showAddToCartNotification(productData, exists = false, duration 
         // Create notification element
         const notification = document.createElement('div');
         notification.className = 'success-notification active';
-        
+
         if (exists) {
             // Product already exists notification
             notification.innerHTML = `
@@ -46,16 +46,16 @@ export function showAddToCartNotification(productData, exists = false, duration 
                 <button class="success-notification__close">×</button>
             `;
         }
-        
+
         // Add to DOM
         document.body.appendChild(notification);
-        
+
         // Setup auto-close
         setTimeout(() => {
             notification.classList.remove('active');
             setTimeout(() => notification.remove(), 300);
         }, duration);
-        
+
         // Setup close button
         notification.querySelector('.success-notification__close').addEventListener('click', () => {
             notification.classList.remove('active');
@@ -76,7 +76,7 @@ export function showErrorNotification(message, duration = 3000) {
         // Create notification element
         const notification = document.createElement('div');
         notification.className = 'error-notification active';
-        
+
         notification.innerHTML = `
             <i class="fa-solid fa-exclamation-triangle error-notification__icon"></i>
             <div class="error-notification__content">
@@ -85,16 +85,16 @@ export function showErrorNotification(message, duration = 3000) {
             </div>
             <button class="error-notification__close">×</button>
         `;
-        
+
         // Add to DOM
         document.body.appendChild(notification);
-        
+
         // Setup auto-close
         setTimeout(() => {
             notification.classList.remove('active');
             setTimeout(() => notification.remove(), 300);
         }, duration);
-        
+
         // Setup close button
         notification.querySelector('.error-notification__close').addEventListener('click', () => {
             notification.classList.remove('active');
@@ -103,4 +103,27 @@ export function showErrorNotification(message, duration = 3000) {
     } catch (error) {
         console.error('Error showing error notification:', error);
     }
-} 
+}
+
+export function notificationClose(notification) {
+    const closeBtn = notification.querySelector('.cart-notification__close');
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            notification.remove();
+        });
+    }
+
+    // Auto remove after 3 seconds
+    setTimeout(() => {
+        notification.classList.add('cart-notification--hiding');
+        setTimeout(() => {
+            notification.remove();
+        }, 300);
+    }, 3000);
+
+    // Show with animation
+    setTimeout(() => {
+        notification.classList.add('cart-notification--visible');
+    }, 10);
+
+}
