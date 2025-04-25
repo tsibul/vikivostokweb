@@ -4,16 +4,16 @@
  */
 
 import eventBus from '../eventBus.js';
-import { updateCartItemBranding } from '../cartStorage.js';
-import { 
-    fetchPrintOpportunities, 
-    getUniqueTypes, 
+import {updateCartItemBranding} from '../cartStorage.js';
+import {
+    fetchPrintOpportunities,
+    getUniqueTypes,
     getLocationsForType,
     getColorsForTypeAndLocation,
     getBrandingPrice,
     isLocationAvailable
 } from './brandingOptionsManager.js';
-import { showErrorNotification } from '../addToCart/notification.js';
+import {notificationClose, showErrorNotification} from '../addToCart/notification.js';
 
 /**
  * Initialize branding add functionality
@@ -22,72 +22,6 @@ export function initBrandingAdd() {
     eventBus.subscribe('cart:branding:add', async (data) => {
         await showBrandingDialog(data.goodsId);
     });
-
-    /*
-    document.addEventListener('click', handleBrandingAddClick);
-    
-    async function handleBrandingAddClick(event) {
-        // Check if the click is on a canvas
-        if (event.target.classList.contains('cart-item-canvas')) {
-            const canvas = event.target;
-            const rect = canvas.getBoundingClientRect();
-            
-            // Calculate click position in canvas coordinates
-            const scaleX = canvas.width / rect.width;
-            const scaleY = canvas.height / rect.height;
-            const x = (event.clientX - rect.left) * scaleX;
-            const y = (event.clientY - rect.top) * scaleY;
-            
-            // Check if the click is in the "Add branding" area (when no branding exists)
-            const itemId = canvas.dataset.itemId;
-            if (!itemId) return;
-            
-            const cartItems = JSON.parse(localStorage.getItem('cart') || '[]');
-            const item = cartItems.find(item => item.id === itemId);
-            
-            if (!item) return;
-            
-            // If item has no branding, check if click is in the add branding area
-            if (!item.branding || item.branding.length === 0) {
-                const imageSize = 70; // This should match the CONFIG.imageSize in cartItemRenderer.js
-                const padding = 16;   // This should match the CONFIG.padding in cartItemRenderer.js
-                
-                const brandingAreaX = padding;
-                const brandingAreaY = padding + imageSize + padding;
-                const brandingAreaWidth = canvas.width - 2 * padding;
-                const brandingAreaHeight = 50;
-                
-                if (
-                    x >= brandingAreaX &&
-                    x <= brandingAreaX + brandingAreaWidth &&
-                    y >= brandingAreaY &&
-                    y <= brandingAreaY + brandingAreaHeight
-                ) {
-                    await showBrandingDialog(item);
-                    return;
-                }
-            }
-            
-            // Check if the click is on the "+ Add" button in branding section
-            if (item.branding && item.branding.length > 0) {
-                const brandingAddBtnX = canvas.width - 16 - 120; // Right-aligned
-                const brandingAddBtnY = 86; // Positioned below image and above branding items
-                const brandingAddBtnWidth = 120;
-                const brandingAddBtnHeight = 24;
-                
-                if (
-                    x >= brandingAddBtnX &&
-                    x <= brandingAddBtnX + brandingAddBtnWidth &&
-                    y >= brandingAddBtnY &&
-                    y <= brandingAddBtnY + brandingAddBtnHeight
-                ) {
-                    await showBrandingDialog(item);
-                    return;
-                }
-            }
-        }
-    }
-    */
 }
 
 /**
@@ -95,326 +29,344 @@ export function initBrandingAdd() {
  * @param {string} goodsId - Goods ID
  */
 async function showBrandingDialog(goodsId) {
-    console.log('Showing branding dialog for goodsId:', goodsId);
 
     // Fetch print opportunities for this item
     const opportunities = await fetchPrintOpportunities(goodsId);
     console.log('Print opportunities:', opportunities);
-    
+
     if (!opportunities || opportunities.length === 0) {
-        showErrorNotification('Для данного товара нет доступных опций брендирования.');
+        showBrandingNotification();//'Для данного товара нет доступных опций брендирования.');
         return;
     }
-    
+
     // Create modal dialog
-    const modal = document.createElement('div');
-    modal.className = 'modal';
-    modal.style.display = 'block';
-    modal.style.position = 'fixed';
-    modal.style.zIndex = '1000';
-    modal.style.left = '0';
-    modal.style.top = '0';
-    modal.style.width = '100%';
-    modal.style.height = '100%';
-    modal.style.backgroundColor = 'rgba(0,0,0,0.5)';
-    
+    const modal = document.createElement('dialog');
+    modal.className = 'branding-modal';
+
     // Create modal content
     const modalContent = document.createElement('div');
-    modalContent.className = 'modal-content';
-    modalContent.style.backgroundColor = '#fff';
-    modalContent.style.margin = '10% auto';
-    modalContent.style.padding = '20px';
-    modalContent.style.width = '80%';
-    modalContent.style.maxWidth = '600px';
-    modalContent.style.borderRadius = '8px';
-    modalContent.style.position = 'relative';
-    
+    modalContent.className = 'branding-modal__content';
+
     // Create modal title
     const modalTitle = document.createElement('h2');
+    modalTitle.className = 'branding-modal__title';
     modalTitle.textContent = 'Добавить брендирование';
-    modalTitle.style.marginTop = '0';
-    modalTitle.style.color = '#1e3a8a';
-    
+
     // Create modal close button
     const closeButton = document.createElement('button');
+    closeButton.className = 'branding-modal__close';
     closeButton.innerHTML = '&times;';
-    closeButton.style.position = 'absolute';
-    closeButton.style.right = '10px';
-    closeButton.style.top = '10px';
-    closeButton.style.background = 'none';
-    closeButton.style.border = 'none';
-    closeButton.style.fontSize = '24px';
-    closeButton.style.cursor = 'pointer';
-    closeButton.style.color = '#1e3a8a';
-    
+
     // Create form
     const form = document.createElement('form');
     form.id = 'branding-add-form';
-    
+
     // Create type select
     const typeGroup = document.createElement('div');
-    typeGroup.style.marginBottom = '15px';
-    
+    typeGroup.className = 'branding-modal__form-group';
+
     const typeLabel = document.createElement('label');
+    typeLabel.className = 'branding-modal__label';
     typeLabel.textContent = 'Тип нанесения:';
-    typeLabel.style.display = 'block';
-    typeLabel.style.marginBottom = '5px';
-    typeLabel.style.fontWeight = 'bold';
-    
-    const typeSelect = document.createElement('select');
-    typeSelect.id = 'branding-type';
-    typeSelect.style.width = '100%';
-    typeSelect.style.padding = '8px';
-    typeSelect.style.border = '1px solid #ccc';
-    typeSelect.style.borderRadius = '4px';
-    
-    // Add options for types
+
+    const typeDropdown = document.createElement('div');
+    typeDropdown.className = 'viki-dropdown';
+
     const types = getUniqueTypes(opportunities);
+    let typeList = ''
     types.forEach(type => {
-        const option = document.createElement('option');
-        option.value = type.id;
-        option.textContent = type.name;
-        typeSelect.appendChild(option);
+        const option = `
+        <li class="branding-modal__li" value="${type.id}">${type.name}</li>
+        `;
+        typeList += option;
     });
-    
+
+
+    typeDropdown.insertAdjacentHTML('afterbegin', dropdownHtml(typeList, 'branding-type'))
+
+    // Add options for types
+
     typeGroup.appendChild(typeLabel);
-    typeGroup.appendChild(typeSelect);
-    
+    typeGroup.appendChild(typeDropdown);
+
     // Create location select
     const locationGroup = document.createElement('div');
-    locationGroup.style.marginBottom = '15px';
-    
+    locationGroup.className = 'branding-modal__form-group';
+
     const locationLabel = document.createElement('label');
+    locationLabel.className = 'branding-modal__label';
     locationLabel.textContent = 'Место нанесения:';
-    locationLabel.style.display = 'block';
-    locationLabel.style.marginBottom = '5px';
-    locationLabel.style.fontWeight = 'bold';
-    
-    const locationSelect = document.createElement('select');
-    locationSelect.id = 'branding-location';
-    locationSelect.style.width = '100%';
-    locationSelect.style.padding = '8px';
-    locationSelect.style.border = '1px solid #ccc';
-    locationSelect.style.borderRadius = '4px';
-    
+
+    const locationDropdown = document.createElement('div');
+    locationDropdown.className = 'viki-dropdown';
+
+    const locationList = updateLocationOptions(opportunities, null, []);
+    locationDropdown.insertAdjacentHTML('afterbegin', dropdownHtml(locationList, 'branding-location'));
+
     // Add initial options for locations
-    updateLocationOptions(locationSelect, opportunities, typeSelect.value, []);
-    
+
     locationGroup.appendChild(locationLabel);
-    locationGroup.appendChild(locationSelect);
-    
+    locationGroup.appendChild(locationDropdown);
+
     // Create colors select
     const colorsGroup = document.createElement('div');
-    colorsGroup.style.marginBottom = '15px';
-    
+    colorsGroup.className = 'branding-modal__form-group';
+
     const colorsLabel = document.createElement('label');
+    colorsLabel.className = 'branding-modal__label';
     colorsLabel.textContent = 'Количество цветов:';
-    colorsLabel.style.display = 'block';
-    colorsLabel.style.marginBottom = '5px';
-    colorsLabel.style.fontWeight = 'bold';
-    
-    const colorsSelect = document.createElement('select');
-    colorsSelect.id = 'branding-colors';
-    colorsSelect.style.width = '100%';
-    colorsSelect.style.padding = '8px';
-    colorsSelect.style.border = '1px solid #ccc';
-    colorsSelect.style.borderRadius = '4px';
-    
+
+    const colorsDropdown = document.createElement('div');
+
+    colorsDropdown.className = 'viki-dropdown';
+    const colorList = updateColorOptions(opportunities, null, null);
+    colorsDropdown.insertAdjacentHTML('afterbegin', dropdownHtml(colorList, 'branding-colors'));
+
     // Add initial options for colors
-    updateColorOptions(colorsSelect, opportunities, typeSelect.value, locationSelect.value);
-    
+
     colorsGroup.appendChild(colorsLabel);
-    colorsGroup.appendChild(colorsSelect);
-    
+    colorsGroup.appendChild(colorsDropdown);
+
     // Create second pass checkbox
     const secondPassGroup = document.createElement('div');
-    secondPassGroup.style.marginBottom = '20px';
-    
+    secondPassGroup.className = 'branding-modal__checkbox-group';
+
     const secondPassCheckbox = document.createElement('input');
     secondPassCheckbox.type = 'checkbox';
     secondPassCheckbox.id = 'branding-second-pass';
-    secondPassCheckbox.style.marginRight = '5px';
-    
+
     const secondPassLabel = document.createElement('label');
     secondPassLabel.htmlFor = 'branding-second-pass';
     secondPassLabel.textContent = 'Второй проход';
-    
-    secondPassGroup.appendChild(secondPassCheckbox);
+    secondPassLabel.className = 'branding-modal__label'
+
     secondPassGroup.appendChild(secondPassLabel);
-    
+    secondPassGroup.appendChild(secondPassCheckbox);
+
     // Create buttons
     const buttonsGroup = document.createElement('div');
-    buttonsGroup.style.display = 'flex';
-    buttonsGroup.style.justifyContent = 'flex-end';
-    buttonsGroup.style.gap = '10px';
-    buttonsGroup.style.marginTop = '20px';
-    
+    buttonsGroup.className = 'branding-modal__buttons';
+
     const cancelButton = document.createElement('button');
     cancelButton.type = 'button';
+    cancelButton.className = 'btn btn__cancel';
     cancelButton.textContent = 'Отмена';
-    cancelButton.style.padding = '8px 16px';
-    cancelButton.style.border = '1px solid #ccc';
-    cancelButton.style.borderRadius = '4px';
-    cancelButton.style.backgroundColor = '#f8f9fa';
-    cancelButton.style.cursor = 'pointer';
-    
+
     const addButton = document.createElement('button');
     addButton.type = 'button';
+    addButton.className = 'btn btn__save';
     addButton.textContent = 'Добавить';
-    addButton.style.padding = '8px 16px';
-    addButton.style.border = 'none';
-    addButton.style.borderRadius = '4px';
-    addButton.style.backgroundColor = '#1e3a8a';
-    addButton.style.color = 'white';
-    addButton.style.cursor = 'pointer';
-    
+
     buttonsGroup.appendChild(cancelButton);
     buttonsGroup.appendChild(addButton);
-    
+
     // Add all elements to form
     form.appendChild(typeGroup);
     form.appendChild(locationGroup);
     form.appendChild(colorsGroup);
     form.appendChild(secondPassGroup);
     form.appendChild(buttonsGroup);
-    
+
     // Add form to modal
     modalContent.appendChild(modalTitle);
     modalContent.appendChild(closeButton);
     modalContent.appendChild(form);
-    
+
     // Add modal to document
     modal.appendChild(modalContent);
     document.body.appendChild(modal);
-    
+
     // Event listeners
-    closeButton.addEventListener('click', () => {
-        document.body.removeChild(modal);
+    closeButton.addEventListener('click', (e) => {
+        modal.close();
+        modal.remove();
     });
-    
-    cancelButton.addEventListener('click', () => {
-        document.body.removeChild(modal);
+
+    cancelButton.addEventListener('click', (e) => {
+        modal.close()
+        modal.remove();
     });
-    
+
     // Update location options when type changes
-    typeSelect.addEventListener('change', () => {
-        updateLocationOptions(locationSelect, opportunities, typeSelect.value, []);
-        updateColorOptions(colorsSelect, opportunities, typeSelect.value, locationSelect.value);
+    const typeDropdownInstance = new VikiDropdown(typeDropdown, {
+        onChange: (value, item) => {
+            const typeId = value;
+            const typeName = item.textContent;
+            typeDropdown.querySelector('input').value = typeId;
+            typeDropdown.querySelector('.viki-dropdown__trigger-text').textContent = typeName;
+
+            updateLocationOptions(opportunities, typeId, []);
+            updateColorOptions(opportunities, typeId, locationDropdown.querySelector('input').value);
+        }
     });
-    
+
     // Update colors options when location changes
-    locationSelect.addEventListener('change', () => {
-        updateColorOptions(colorsSelect, opportunities, typeSelect.value, locationSelect.value);
+    const locationDropdownInstance = new VikiDropdown(locationDropdown, {
+        onChange: (value, item) => {
+            const locationId = value;
+            const locationName = item.textContent;
+            locationDropdown.querySelector('input').value = locationId;
+            locationDropdown.querySelector('.viki-dropdown__trigger-text').textContent = locationName;
+
+            updateColorOptions(opportunities, typeDropdown.querySelector('input').value, locationId);
+        }
     });
-    
+
+    // Initialize colors dropdown
+    const colorsDropdownInstance = new VikiDropdown(colorsDropdown, {
+        onChange: (value, item) => {
+            const colors = value;
+            const colorsText = item.textContent;
+            colorsDropdown.querySelector('input').value = colors;
+            colorsDropdown.querySelector('.viki-dropdown__trigger-text').textContent = colorsText;
+        }
+    });
+
     // Add branding when form is submitted
     addButton.addEventListener('click', () => {
-        const typeId = typeSelect.value;
-        const locationId = locationSelect.value;
-        const colors = parseInt(colorsSelect.value);
+        const typeId = typeDropdown.querySelector('input').value;
+        const locationId = locationDropdown.querySelector('input').value;
+        const colors = parseInt(colorsDropdown.querySelector('input').value);
         const secondPass = secondPassCheckbox.checked;
-        
+
+        if (!typeId || !locationId || !colors) {
+            showErrorNotification('Пожалуйста, заполните все поля');
+            return;
+        }
+
         // Get price for this branding option
         const price = getBrandingPrice(
-            opportunities, 
-            typeId, 
-            locationId, 
-            colors, 
+            opportunities,
+            typeId,
+            locationId,
+            colors,
             1 // Assuming quantity is 1 for adding new branding
         );
-        
+
         // Create new branding item
         const newBranding = {
             type_id: typeId,
-            type: typeSelect.options[typeSelect.selectedIndex].text,
+            type: typeDropdown.querySelector('.viki-dropdown__trigger-text').textContent,
             location_id: locationId,
-            location: locationSelect.options[locationSelect.selectedIndex].text,
+            location: locationDropdown.querySelector('.viki-dropdown__trigger-text').textContent,
             colors: colors,
             secondPass: secondPass,
             price: price
         };
-        
+
         // Update storage
         updateCartItemBranding(goodsId, [newBranding]);
-        
+
         // Close modal
-        document.body.removeChild(modal);
+        modal.close();
+        modal.remove();
     });
 }
 
 /**
  * Update location options based on selected type and existing branding
- * @param {HTMLSelectElement} locationSelect - Location select element
  * @param {Array} opportunities - Print opportunities
  * @param {string|number} typeId - Selected type ID
  * @param {Array} existingBranding - Existing branding items
  */
-function updateLocationOptions(locationSelect, opportunities, typeId, existingBranding) {
-    // Clear current options
-    locationSelect.innerHTML = '';
-    
+function updateLocationOptions(opportunities, typeId, existingBranding) {
+
     // Get locations for this type
     const locations = getLocationsForType(opportunities, typeId);
-    
+
     // Add options
+    let count = 0;
+    let locationList = '';
     locations.forEach(location => {
         // Check if this location is still available
         if (isLocationAvailable(opportunities, existingBranding, typeId, location.id)) {
-            const option = document.createElement('option');
-            option.value = location.id;
-            option.textContent = location.name;
-            locationSelect.appendChild(option);
+            const option = `
+            <li class="branding-modal__li" value="${location.id}">${location.name}</li>
+            `;
+            locationList += option;
         }
     });
-    
+    return locationList;
+
     // If no options, add placeholder
-    if (locationSelect.options.length === 0) {
-        const option = document.createElement('option');
-        option.disabled = true;
-        option.selected = true;
-        option.textContent = 'Нет доступных мест нанесения';
-        locationSelect.appendChild(option);
-    }
+    // if (count === 0) {
+    //     const option = document.createElement('option');
+    //     option.disabled = true;
+    //     option.selected = true;
+    //     option.textContent = 'Нет доступных мест нанесения';
+    //     locationDropdown.appendChild(option);
+    // }
 }
 
 /**
  * Update color options based on selected type and location
- * @param {HTMLSelectElement} colorsSelect - Colors select element
  * @param {Array} opportunities - Print opportunities
  * @param {string|number} typeId - Selected type ID
  * @param {string|number} locationId - Selected location ID
  */
-function updateColorOptions(colorsSelect, opportunities, typeId, locationId) {
-    // Clear current options
-    colorsSelect.innerHTML = '';
-    
+function updateColorOptions(opportunities, typeId, locationId) {
+    let colorsList = '';
+
     // Get color options for this type and location
     const colorOptions = getColorsForTypeAndLocation(opportunities, typeId, locationId);
-    
+
     // Add options
     colorOptions.forEach(colorCount => {
-        const option = document.createElement('option');
-        option.value = colorCount;
-        
-        const colorText = colorCount == 1 
-            ? '1 цвет' 
-            : (colorCount > 1 && colorCount < 5 
-                ? `${colorCount} цвета` 
+        const colorText = colorCount === 1
+            ? '1 цвет'
+            : (colorCount > 1 && colorCount < 5
+                ? `${colorCount} цвета`
                 : `${colorCount} цветов`);
-                
-        option.textContent = colorText;
-        colorsSelect.appendChild(option);
+        const option = `
+        <li class="branding-modal__li" value="${colorCount}">${colorText}</li>
+        `;
+        colorsList += option;
     });
-    
+    return colorsList;
+
     // If no options, add placeholder
-    if (colorsSelect.options.length === 0) {
-        const option = document.createElement('option');
-        option.disabled = true;
-        option.selected = true;
-        option.textContent = 'Нет доступных опций';
-        colorsSelect.appendChild(option);
-    }
+    // if (colorsList.children.length === 0) {
+    //     const li = document.createElement('li');
+    //     li.className = 'viki-dropdown__menu-item';
+    //     li.innerHTML = '<a href="#" class="viki-dropdown__menu-link" disabled>Нет доступных опций</a>';
+    //     colorsList.appendChild(li);
+    // }
+
+    // Reinitialize dropdown
+    // const instance = VikiDropdown.getInstance(colorsDropdown);
+    // if (instance) {
+    //     instance._initEvents();
+    // }
 }
 
-// Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', initBrandingAdd);
+function showBrandingNotification() {
+    const notification = document.createElement('div');
+    notification.className = 'success-notification active';
+    notification.innerHTML = `
+                <i class="fa-solid fa-info success-notification__icon"></i>
+                <div class="success-notification__content">
+                    <h4 class="success-notification__title"></h4>
+                    <p>Для данного товара нет доступных опций брендирования</p>
+                </div>
+                <button class="success-notification__close">×</button>
+            `;
+    document.body.appendChild(notification);
+    // Add close functionality
+    notificationClose(notification);
+}
+
+
+function dropdownHtml(liList, name) {
+    return ` <div class="viki-dropdown__trigger branding-modal__trigger">
+            <span class="viki-dropdown__trigger-text">Выберите количество</span>
+            <i class="viki-dropdown__trigger-icon">▼</i>
+        </div>
+        <div class="viki-dropdown__menu">
+            <ul class="viki-dropdown__menu-list">
+                ${liList}
+        </ul>
+        </div>
+        <input type="hidden" name="${name}">
+    `;
+
+}
