@@ -3847,4 +3847,66 @@ span.text-like {
   color: #009EA3;
 }
 
+.branding-modal {
+  display: block;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.branding-modal__content {
+  background-color: #fff;
+  margin: 10% auto;
+  padding: 20px;
+  width: 80%;
+  max-width: 600px;
+  border-radius: 8px;
+  position: relative;
+}
+.branding-modal__title {
+  margin: 0 0 1rem 0;
+  color: #1e3a8a;
+}
+.branding-modal__close {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #1e3a8a;
+}
+.branding-modal__form-group {
+  margin-bottom: 15px;
+}
+.branding-modal__label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+.branding-modal__trigger {
+  height: 40px;
+}
+.branding-modal__checkbox-group {
+  margin-bottom: 20px;
+  display: flex;
+  gap: 16px;
+}
+.branding-modal__buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+.branding-modal li {
+  padding: 12px 8px;
+}
+.branding-modal .viki-dropdown__menu {
+  top: 100%;
+}
+
 /*# sourceMappingURL=style.css.map */
