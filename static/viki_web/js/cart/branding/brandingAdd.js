@@ -13,90 +13,96 @@ import {
     getBrandingPrice,
     isLocationAvailable
 } from './brandingOptionsManager.js';
+import { showErrorNotification } from '../addToCart/notification.js';
 
 /**
  * Initialize branding add functionality
  */
 export function initBrandingAdd() {
-    document.addEventListener('click', handleBrandingAddClick);
-}
+    eventBus.subscribe('cart:branding:add', async (data) => {
+        await showBrandingDialog(data.goodsId);
+    });
 
-/**
- * Handle clicks on "Add branding" buttons
- * @param {MouseEvent} event - Click event
- */
-async function handleBrandingAddClick(event) {
-    // Check if the click is on a canvas
-    if (event.target.classList.contains('cart-item-canvas')) {
-        const canvas = event.target;
-        const rect = canvas.getBoundingClientRect();
-        
-        // Calculate click position in canvas coordinates
-        const scaleX = canvas.width / rect.width;
-        const scaleY = canvas.height / rect.height;
-        const x = (event.clientX - rect.left) * scaleX;
-        const y = (event.clientY - rect.top) * scaleY;
-        
-        // Check if the click is in the "Add branding" area (when no branding exists)
-        const itemId = canvas.dataset.itemId;
-        if (!itemId) return;
-        
-        const cartItems = JSON.parse(localStorage.getItem('cart') || '[]');
-        const item = cartItems.find(item => item.id === itemId);
-        
-        if (!item) return;
-        
-        // If item has no branding, check if click is in the add branding area
-        if (!item.branding || item.branding.length === 0) {
-            const imageSize = 70; // This should match the CONFIG.imageSize in cartItemRenderer.js
-            const padding = 16;   // This should match the CONFIG.padding in cartItemRenderer.js
+    /*
+    document.addEventListener('click', handleBrandingAddClick);
+    
+    async function handleBrandingAddClick(event) {
+        // Check if the click is on a canvas
+        if (event.target.classList.contains('cart-item-canvas')) {
+            const canvas = event.target;
+            const rect = canvas.getBoundingClientRect();
             
-            const brandingAreaX = padding;
-            const brandingAreaY = padding + imageSize + padding;
-            const brandingAreaWidth = canvas.width - 2 * padding;
-            const brandingAreaHeight = 50;
+            // Calculate click position in canvas coordinates
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            const x = (event.clientX - rect.left) * scaleX;
+            const y = (event.clientY - rect.top) * scaleY;
             
-            if (
-                x >= brandingAreaX &&
-                x <= brandingAreaX + brandingAreaWidth &&
-                y >= brandingAreaY &&
-                y <= brandingAreaY + brandingAreaHeight
-            ) {
-                await showBrandingDialog(item);
-                return;
+            // Check if the click is in the "Add branding" area (when no branding exists)
+            const itemId = canvas.dataset.itemId;
+            if (!itemId) return;
+            
+            const cartItems = JSON.parse(localStorage.getItem('cart') || '[]');
+            const item = cartItems.find(item => item.id === itemId);
+            
+            if (!item) return;
+            
+            // If item has no branding, check if click is in the add branding area
+            if (!item.branding || item.branding.length === 0) {
+                const imageSize = 70; // This should match the CONFIG.imageSize in cartItemRenderer.js
+                const padding = 16;   // This should match the CONFIG.padding in cartItemRenderer.js
+                
+                const brandingAreaX = padding;
+                const brandingAreaY = padding + imageSize + padding;
+                const brandingAreaWidth = canvas.width - 2 * padding;
+                const brandingAreaHeight = 50;
+                
+                if (
+                    x >= brandingAreaX &&
+                    x <= brandingAreaX + brandingAreaWidth &&
+                    y >= brandingAreaY &&
+                    y <= brandingAreaY + brandingAreaHeight
+                ) {
+                    await showBrandingDialog(item);
+                    return;
+                }
             }
-        }
-        
-        // Check if the click is on the "+ Add" button in branding section
-        if (item.branding && item.branding.length > 0) {
-            const brandingAddBtnX = canvas.width - 16 - 120; // Right-aligned
-            const brandingAddBtnY = 86; // Positioned below image and above branding items
-            const brandingAddBtnWidth = 120;
-            const brandingAddBtnHeight = 24;
             
-            if (
-                x >= brandingAddBtnX &&
-                x <= brandingAddBtnX + brandingAddBtnWidth &&
-                y >= brandingAddBtnY &&
-                y <= brandingAddBtnY + brandingAddBtnHeight
-            ) {
-                await showBrandingDialog(item);
-                return;
+            // Check if the click is on the "+ Add" button in branding section
+            if (item.branding && item.branding.length > 0) {
+                const brandingAddBtnX = canvas.width - 16 - 120; // Right-aligned
+                const brandingAddBtnY = 86; // Positioned below image and above branding items
+                const brandingAddBtnWidth = 120;
+                const brandingAddBtnHeight = 24;
+                
+                if (
+                    x >= brandingAddBtnX &&
+                    x <= brandingAddBtnX + brandingAddBtnWidth &&
+                    y >= brandingAddBtnY &&
+                    y <= brandingAddBtnY + brandingAddBtnHeight
+                ) {
+                    await showBrandingDialog(item);
+                    return;
+                }
             }
         }
     }
+    */
 }
 
 /**
  * Show dialog to add branding
- * @param {Object} item - Cart item
+ * @param {string} goodsId - Goods ID
  */
-async function showBrandingDialog(item) {
+async function showBrandingDialog(goodsId) {
+    console.log('Showing branding dialog for goodsId:', goodsId);
+
     // Fetch print opportunities for this item
-    const opportunities = await fetchPrintOpportunities(item.goodsId);
+    const opportunities = await fetchPrintOpportunities(goodsId);
+    console.log('Print opportunities:', opportunities);
     
     if (!opportunities || opportunities.length === 0) {
-        alert('Для данного товара нет доступных опций брендирования.');
+        showErrorNotification('Для данного товара нет доступных опций брендирования.');
         return;
     }
     
@@ -192,7 +198,7 @@ async function showBrandingDialog(item) {
     locationSelect.style.borderRadius = '4px';
     
     // Add initial options for locations
-    updateLocationOptions(locationSelect, opportunities, typeSelect.value, item.branding || []);
+    updateLocationOptions(locationSelect, opportunities, typeSelect.value, []);
     
     locationGroup.appendChild(locationLabel);
     locationGroup.appendChild(locationSelect);
@@ -292,7 +298,7 @@ async function showBrandingDialog(item) {
     
     // Update location options when type changes
     typeSelect.addEventListener('change', () => {
-        updateLocationOptions(locationSelect, opportunities, typeSelect.value, item.branding || []);
+        updateLocationOptions(locationSelect, opportunities, typeSelect.value, []);
         updateColorOptions(colorsSelect, opportunities, typeSelect.value, locationSelect.value);
     });
     
@@ -314,7 +320,7 @@ async function showBrandingDialog(item) {
             typeId, 
             locationId, 
             colors, 
-            item.quantity
+            1 // Assuming quantity is 1 for adding new branding
         );
         
         // Create new branding item
@@ -328,12 +334,8 @@ async function showBrandingDialog(item) {
             price: price
         };
         
-        // Add to existing branding array or create new one
-        const branding = item.branding || [];
-        branding.push(newBranding);
-        
         // Update storage
-        updateCartItemBranding(item.id, branding);
+        updateCartItemBranding(goodsId, [newBranding]);
         
         // Close modal
         document.body.removeChild(modal);

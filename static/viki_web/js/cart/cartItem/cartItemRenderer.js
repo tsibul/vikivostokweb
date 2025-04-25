@@ -140,6 +140,7 @@ export function createCartItemCanvas(item, index, container) {
     canvas.className = 'cart-item-canvas';
     canvas.dataset.itemId = item.id;
     canvas.dataset.index = index;
+    canvas.dataset.goodsId = item.goodsId;
     
     // Устанавливаем ширину на 100% от контейнера для правильного отображения
     canvas.style.width = '100%';

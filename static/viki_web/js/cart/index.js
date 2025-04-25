@@ -12,6 +12,7 @@ import { initQuantityInputHandlers } from './cartItem/cartItemQuantity.js';
 import { registerModuleInit } from './cartItem/eventDebugger.js';
 import { initCartSummary } from './summary/index.js';
 import { initPriceUpdateManager } from './cartItem/priceUpdateManager.js';
+import { initBranding } from './branding/brandingInit.js';
 import eventBus from './eventBus.js';
 
 // Глобальные данные о возможностях печати
@@ -95,7 +96,6 @@ export function initCart() {
     const cartContainer = document.querySelector('.cart-page__items');
     
     if (cartContainer) {
-
         // Регистрируем инициализацию для отладки
         registerModuleInit('index.js', { phase: 'start' });
         
@@ -116,6 +116,9 @@ export function initCart() {
         
         // Инициализация блока суммы корзины
         initCartSummary();
+        
+        // Инициализация функционала брендирования
+        initBranding();
         
         // Регистрируем завершение инициализации
         registerModuleInit('index.js', { phase: 'completed' });

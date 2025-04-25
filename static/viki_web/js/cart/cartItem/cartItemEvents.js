@@ -247,8 +247,8 @@ function handleCanvasClick(event) {
             x <= (brandingBtnPos.x + brandingBtnPos.width + padding) &&
             y >= (brandingBtnPos.y - padding) &&
             y <= (brandingBtnPos.y + brandingBtnPos.height + padding)) {
-            
-            // Здесь будет код для брендирования
+
+            handleBrandingAdd(canvas);
             return;
         }
     
@@ -264,11 +264,11 @@ function handleCanvasClick(event) {
                 y >= (btnPos.y - padding) && 
                 y <= (btnPos.y + btnPos.height + padding)) {
                     
-                if (key.includes('remove')) {
+                // if (key.includes('remove')) {
                     handleRemoveBranding(canvas, btnPos.index);
-                } else if (key.includes('checkbox')) {
-                    handleToggleSecondPass(canvas, btnPos.index);
-                }
+                // } else if (key.includes('checkbox')) {
+                //     handleToggleSecondPass(canvas, btnPos.index);
+                // }
                 return;
             }
         }
@@ -358,7 +358,11 @@ function createQuantityInputElement(canvas, item) {
     // Удаляем существующий input, если есть
     const existingInput = document.getElementById('canvas-qty-input');
     if (existingInput) {
-        existingInput.remove();
+        try {
+            existingInput.remove();
+        } catch (e) {
+            console.warn('Failed to remove existing input:', e);
+        }
     }
     
     // Получаем данные о позиции поля ввода
@@ -420,27 +424,38 @@ function createQuantityInputElement(canvas, item) {
     // Сохраняем ссылку на canvas в input для использования при обработке событий
     input.dataset.canvasId = canvas.dataset.itemId;
     
+    // Флаг для отслеживания обработки событий
+    let isHandled = false;
+    
     // Обработчик для поля ввода
+    const handleInputChange = () => {
+        if (isHandled) return;
+        isHandled = true;
+        applyQuantityChangeFromInput(input);
+    };
+    
     input.addEventListener('keydown', function(e) {
         if (e.key === 'Enter') {
-            applyQuantityChangeFromInput(input);
+            handleInputChange();
         } else if (e.key === 'Escape') {
-            input.remove();
-            canvas.dataset.isEditing = 'false';
+            try {
+                input.remove();
+                canvas.dataset.isEditing = 'false';
+            } catch (e) {
+                console.warn('Failed to remove input on escape:', e);
+            }
         }
     });
     
     // Применить изменения при потере фокуса
-    input.addEventListener('blur', function() {
-        applyQuantityChangeFromInput(input);
-    });
+    input.addEventListener('blur', handleInputChange);
     
     // Фокусируем и выделяем текст
     try {
         input.focus();
         input.select();
     } catch (e) {
-        // Тихая обработка ошибки
+        console.warn('Failed to focus input:', e);
     }
     
     return input;
@@ -451,6 +466,8 @@ function createQuantityInputElement(canvas, item) {
  * @param {HTMLInputElement} input - Input element
  */
 function applyQuantityChangeFromInput(input) {
+    if (!input) return;
+    
     // Получаем значение
     let quantity = parseInt(input.value, 10);
     
@@ -482,8 +499,14 @@ function applyQuantityChangeFromInput(input) {
         }
     }
     
-    // Удаляем input
-    input.remove();
+    // Удаляем input с проверкой
+    try {
+        if (input && input.parentNode) {
+            input.remove();
+        }
+    } catch (e) {
+        console.warn('Failed to remove input element:', e);
+    }
 }
 
 /**
@@ -643,6 +666,18 @@ function handleToggleSecondPass(canvas, brandingIndex) {
     eventBus.publish('cart:branding:toggle', {
         itemId: itemId,
         brandingIndex: brandingIndex
+    });
+}
+
+/**
+ * Handle branding add button click
+ * @param {HTMLCanvasElement} canvas - Cart item canvas
+ */
+function handleBrandingAdd(canvas) {
+    eventBus.publish('cart:branding:add', {
+        itemId: canvas.dataset.itemId,
+        goodsId: canvas.dataset.goodsId,
+        canvas: canvas
     });
 }
 
