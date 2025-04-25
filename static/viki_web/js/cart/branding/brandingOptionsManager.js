@@ -107,24 +107,21 @@ export function getColorsForTypeAndLocation(opportunities, typeId, locationId) {
     }
     
     // Find the opportunity that matches type and location
-    const matchingOpportunities = opportunities.filter(
+    const matchingOpportunities = opportunities.find(
         opportunity => opportunity.print_type_id == typeId && 
                       opportunity.print_place_id == locationId
     );
     
-    if (!matchingOpportunities.length) {
+    if (!matchingOpportunities) {
         return [];
     }
     
     // Get unique color counts
-    const colorCounts = new Set();
-    matchingOpportunities.forEach(opportunity => {
-        if (opportunity.color_quantity) {
-            colorCounts.add(opportunity.color_quantity);
-        }
-    });
-    
-    return Array.from(colorCounts).sort((a, b) => a - b);
+    const colorCounts = [];
+    for (let i =1; i <= matchingOpportunities; i++){
+        colorCounts.push(i)
+    }
+    return colorCounts;
 }
 
 /**
