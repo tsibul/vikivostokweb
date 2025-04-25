@@ -14,7 +14,7 @@ let isFontLoaded = false;
 
 // Configuration for canvas rendering
 const CONFIG = {
-    itemMinHeight: 220,
+    itemMinHeight: 186,
     imageSize: 70,
     padding: 16,
     borderRadius: 6,
