@@ -671,6 +671,7 @@ function handleToggleSecondPass(canvas, brandingIndex) {
 
 /**
  * Handle branding add button click
+ * @param {Event} e - Event object
  * @param {HTMLCanvasElement} canvas - Cart item canvas
  */
 function handleBrandingClick(e, canvas) {

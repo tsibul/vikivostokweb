@@ -405,21 +405,22 @@ export async function renderCartItem(canvas, item) {
     
     // Проверка доступности брендирования
     let isBrandingAvailable = true;
-    // Если у товара уже есть брендирование, проверяем доступность
-    if (item.branding && item.branding.length > 0) {
-        try {
-            // Импортируем функцию проверки доступности асинхронно
-            const { isAnyBrandingAvailable } = await import('../branding/brandingAdd.js');
-            const { fetchPrintOpportunities } = await import('../branding/brandingOptionsManager.js');
-            // Получаем возможности брендирования для товара
-            const opportunities = await fetchPrintOpportunities(item.goodsId);
-            // Проверяем доступность брендирования
-            isBrandingAvailable = isAnyBrandingAvailable(opportunities, item.branding);
-        } catch (error) {
-            console.error('Error checking branding availability:', error);
-            // В случае ошибки считаем брендирование доступным
-            isBrandingAvailable = true;
-        }
+    
+    try {
+        // Импортируем функции асинхронно
+        const { fetchPrintOpportunities } = await import('../branding/brandingOptionsManager.js');
+        const { isAnyBrandingAvailable } = await import('../branding/brandingAdd.js');
+        
+        // Получаем данные о возможностях брендирования из кэша
+        const opportunities = await fetchPrintOpportunities(item.goodsId);
+        
+        // Проверяем доступность брендирования
+        const existingBranding = item.branding || [];
+        isBrandingAvailable = isAnyBrandingAvailable(opportunities, existingBranding);
+    } catch (error) {
+        console.error('Error checking branding availability:', error);
+        // В случае ошибки считаем брендирование доступным
+        isBrandingAvailable = true;
     }
     
     // Кнопка "Добавить брендирование" - ниже строки с ценой
