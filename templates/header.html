@@ -57,6 +57,11 @@
                     <li class="menu__item">
                         <a href="{% url 'viki_web:contacts' %}">Контакты</a>
                     </li>
+                    {% if request.user.is_staff %}
+                        <li class="menu__item">
+                            <a href="{% url 'viki_web_cms:main' %}">CMS</a>
+                        </li>
+                    {% endif %}
                 </ul>
             </nav>
             <div class="menu__right">
@@ -246,7 +251,8 @@
                 <div class="footer__title">Категории товаров</div>
                 <a href="{% url 'viki_web:catalogue' %}" class="footer__link">Все товары</a>
                 {% for group in footer_product_groups %}
-                    <a href="{% url 'viki_web:products' group.product_group_url %}" class="footer__link">{{ group.name }}</a>
+                    <a href="{% url 'viki_web:products' group.product_group_url %}"
+                       class="footer__link">{{ group.name }}</a>
                 {% endfor %}
                 <a href="{% url 'viki_web:sitemap' %}" class="footer__link">Все категории</a>
             </div>
@@ -258,7 +264,7 @@
                 <a href="{% url 'viki_web:layout' %}" class="footer__link">Шаблоны</a>
                 <a href="{% url 'viki_web:cart' %}" class="footer__link">Корзина</a>
                 <a href="{% url 'viki_web:cabinet' %}" class="footer__link">Личный кабинет</a>
-                
+
                 <div class="footer__title footer__title_small">О компании</div>
                 <a href="{% url 'viki_web:about' %}" class="footer__link">О компании</a>
                 <a href="{% url 'viki_web:news' %}" class="footer__link">Новости</a>
