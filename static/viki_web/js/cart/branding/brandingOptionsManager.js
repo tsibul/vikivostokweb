@@ -141,8 +141,7 @@ export function getPricesForBranding(opportunities, typeId, locationId, colorCou
     // Find the opportunity that matches all criteria
     const matchingOpportunity = opportunities.find(
         opportunity => opportunity.print_type_id == typeId && 
-                      opportunity.print_place_id == locationId &&
-                      opportunity.color_quantity == colorCount
+                      opportunity.print_place_id == locationId
     );
     
     if (!matchingOpportunity || !matchingOpportunity.prices) {
