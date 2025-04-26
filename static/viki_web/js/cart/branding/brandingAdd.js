@@ -14,6 +14,8 @@ import {
     isLocationAvailable
 } from './brandingOptionsManager.js';
 import {notificationClose, showErrorNotification} from '../addToCart/notification.js';
+// Import the dropdown handler functions
+import { initBrandingDropdowns } from './dropdownHandler.js';
 
 /**
  * Initialize branding add functionality
@@ -187,6 +189,8 @@ async function showBrandingDialog(goodsId) {
         modal.remove();
     });
 
+    // Commenting out existing VikiDropdown initialization
+    /*
     // Update location options when type changes
     const typeDropdownInstance = new VikiDropdown(typeDropdown, {
         onChange: (value, item) => {
@@ -221,6 +225,10 @@ async function showBrandingDialog(goodsId) {
             colorsDropdown.querySelector('.viki-dropdown__trigger-text').textContent = colorsText;
         }
     });
+    */
+
+    // Initialize dropdown handlers with event delegation
+    initBrandingDropdowns(form, opportunities);
 
     // Add branding when form is submitted
     addButton.addEventListener('click', () => {
@@ -269,7 +277,7 @@ async function showBrandingDialog(goodsId) {
  * @param {string|number} typeId - Selected type ID
  * @param {Array} existingBranding - Existing branding items
  */
-function updateLocationOptions(opportunities, typeId, existingBranding) {
+export function updateLocationOptions(opportunities, typeId, existingBranding) {
 
     // Get locations for this type
     const locations = getLocationsForType(opportunities, typeId);
@@ -304,7 +312,7 @@ function updateLocationOptions(opportunities, typeId, existingBranding) {
  * @param {string|number} typeId - Selected type ID
  * @param {string|number} locationId - Selected location ID
  */
-function updateColorOptions(opportunities, typeId, locationId) {
+export function updateColorOptions(opportunities, typeId, locationId) {
     let colorsList = '';
 
     // Get color options for this type and location

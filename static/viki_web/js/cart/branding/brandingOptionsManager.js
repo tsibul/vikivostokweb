@@ -107,19 +107,20 @@ export function getColorsForTypeAndLocation(opportunities, typeId, locationId) {
     }
     
     // Find the opportunity that matches type and location
-    const matchingOpportunities = opportunities.find(
+    const matchingOpportunity = opportunities.find(
         opportunity => opportunity.print_type_id == typeId && 
                       opportunity.print_place_id == locationId
     );
     
-    if (!matchingOpportunities) {
+    if (!matchingOpportunity) {
         return [];
     }
     
     // Get unique color counts
     const colorCounts = [];
-    for (let i =1; i <= matchingOpportunities; i++){
-        colorCounts.push(i)
+    const maxColors = matchingOpportunity.color_quantity || 0;
+    for (let i = 1; i <= maxColors; i++) {
+        colorCounts.push(i);
     }
     return colorCounts;
 }
