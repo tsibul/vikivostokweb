@@ -403,9 +403,28 @@ export async function renderCartItem(canvas, item) {
     ctx.textAlign = 'right';
     ctx.fillText(`Сумма: ${formatPrice(total)} руб.`, displayWidth - CONFIG.padding, priceRowY);
     
+    // Проверка доступности брендирования
+    let isBrandingAvailable = true;
+    // Если у товара уже есть брендирование, проверяем доступность
+    if (item.branding && item.branding.length > 0) {
+        try {
+            // Импортируем функцию проверки доступности асинхронно
+            const { isAnyBrandingAvailable } = await import('../branding/brandingAdd.js');
+            const { fetchPrintOpportunities } = await import('../branding/brandingOptionsManager.js');
+            // Получаем возможности брендирования для товара
+            const opportunities = await fetchPrintOpportunities(item.goodsId);
+            // Проверяем доступность брендирования
+            isBrandingAvailable = isAnyBrandingAvailable(opportunities, item.branding);
+        } catch (error) {
+            console.error('Error checking branding availability:', error);
+            // В случае ошибки считаем брендирование доступным
+            isBrandingAvailable = true;
+        }
+    }
+    
     // Кнопка "Добавить брендирование" - ниже строки с ценой
     const brandingY = priceRowY + 20;
-    drawBrandingButton(ctx, canvas, item, CONFIG.padding, brandingY, displayWidth - 2 * CONFIG.padding);
+    drawBrandingButton(ctx, canvas, item, CONFIG.padding, brandingY, displayWidth - 2 * CONFIG.padding, isBrandingAvailable);
     
     // Кнопка удаления - в правом верхнем углу
     drawRemoveButton(ctx, canvas, displayWidth - 40, CONFIG.padding);
@@ -577,18 +596,25 @@ function drawRemoveButton(ctx, canvas, x, y) {
 
 /**
  * Draw branding button
+ * @param {CanvasRenderingContext2D} ctx - Canvas context
+ * @param {HTMLCanvasElement} canvas - Canvas element
+ * @param {Object} item - Cart item data
+ * @param {number} x - X position
+ * @param {number} y - Y position
+ * @param {number} width - Width of button
+ * @param {boolean} isAvailable - Whether branding is available
  */
-function drawBrandingButton(ctx, canvas, item, x, y, width) {
+function drawBrandingButton(ctx, canvas, item, x, y, width, isAvailable = true) {
     // Высота кнопки
     const height = 40;
     
     // Dashed border
-    ctx.strokeStyle = '#ddd';
+    ctx.strokeStyle = isAvailable ? '#ddd' : '#ccc';
     ctx.setLineDash([4, 2]);
     ctx.lineWidth = 1;
     
     // Background color
-    ctx.fillStyle = CONFIG.buttonBackground;
+    ctx.fillStyle = isAvailable ? CONFIG.buttonBackground : '#f5f5f5';
     
     // Draw button
     drawRoundedRect(ctx, x, y, width, height, 6);
@@ -597,11 +623,30 @@ function drawBrandingButton(ctx, canvas, item, x, y, width) {
     ctx.setLineDash([]);
     
     // Text
-    ctx.fillStyle = CONFIG.textColor;
-    ctx.font = `14px ${getCurrentFont()}`;
+    ctx.fillStyle = isAvailable ? CONFIG.textColor : '#888';
+    ctx.font = isAvailable ? `14px ${getCurrentFont()}` : `12px ${getCurrentFont()}`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.fillText('Добавить брендирование', x + width/2, y + height/2);
+    
+    // Разный текст в зависимости от доступности
+    const buttonText = isAvailable 
+        ? 'Добавить брендирование' 
+        : 'Для данного товара исчерпаны опции брендирования';
+    
+    // Если текст длинный, разбиваем его на две строки
+    if (!isAvailable && width < 400) {
+        // Разбиваем длинный текст на две строки
+        const words = buttonText.split(' ');
+        const midPoint = Math.floor(words.length / 2);
+        const line1 = words.slice(0, midPoint).join(' ');
+        const line2 = words.slice(midPoint).join(' ');
+        
+        ctx.fillText(line1, x + width/2, y + height/2 - 8);
+        ctx.fillText(line2, x + width/2, y + height/2 + 8);
+    } else {
+        // Обычный одностроковый текст
+        ctx.fillText(buttonText, x + width/2, y + height/2);
+    }
     
     // Store branding button position with center point
     const brandingBtnPos = {
@@ -610,7 +655,8 @@ function drawBrandingButton(ctx, canvas, item, x, y, width) {
         width: width, 
         height: height,
         centerX: x + width/2,
-        centerY: y + height/2
+        centerY: y + height/2,
+        isAvailable: isAvailable // Сохраняем состояние доступности
     };
     
     canvas.dataset.brandingBtn = JSON.stringify(brandingBtnPos);

@@ -248,7 +248,7 @@ function handleCanvasClick(event) {
             y >= (brandingBtnPos.y - padding) &&
             y <= (brandingBtnPos.y + brandingBtnPos.height + padding)) {
 
-            handleBrandingAdd(canvas);
+            handleBrandingClick(event, canvas);
             return;
         }
     
@@ -673,12 +673,29 @@ function handleToggleSecondPass(canvas, brandingIndex) {
  * Handle branding add button click
  * @param {HTMLCanvasElement} canvas - Cart item canvas
  */
-function handleBrandingAdd(canvas) {
-    eventBus.publish('cart:branding:add', {
-        itemId: canvas.dataset.itemId,
-        goodsId: canvas.dataset.goodsId,
-        canvas: canvas
-    });
+function handleBrandingClick(e, canvas) {
+    const brandingBtnData = canvas.dataset.brandingBtn;
+    if (!brandingBtnData) return;
+    
+    const brandingBtn = JSON.parse(brandingBtnData);
+    
+    // Check if the button is available
+    if (brandingBtn.isAvailable === false) {
+        // Button is disabled, do nothing
+        return;
+    }
+    
+    // Get item ID and goods ID
+    const itemId = canvas.dataset.itemId;
+    const goodsId = canvas.dataset.goodsId;
+    
+    if (itemId && goodsId) {
+        // Publish event to add branding
+        eventBus.publish('cart:branding:add', {
+            itemId: itemId,
+            goodsId: goodsId
+        });
+    }
 }
 
 // Initialize events when DOM is ready

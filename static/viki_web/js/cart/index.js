@@ -14,6 +14,8 @@ import { initCartSummary } from './summary/index.js';
 import { initPriceUpdateManager } from './cartItem/priceUpdateManager.js';
 import { initBranding } from './branding/brandingInit.js';
 import eventBus from './eventBus.js';
+// import { initBrandingAdd } from './branding/brandingAdd.js';
+import initBrandingButtonManager from './branding/brandingButtonManager.js';
 
 // Глобальные данные о возможностях печати
 let printOpportunities = [];
@@ -89,9 +91,15 @@ export function getPrintOpportunities() {
 }
 
 /**
- * Initialize cart functionality
+ * Initialize all cart functionality
  */
 export function initCart() {
+    // Initialize branding functionality
+    // initBrandingAdd();
+    
+    // Initialize branding button manager
+    initBrandingButtonManager();
+    
     // Check if we're on the cart page
     const cartContainer = document.querySelector('.cart-page__items');
     
