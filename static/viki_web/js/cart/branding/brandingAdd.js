@@ -28,11 +28,39 @@ export function initBrandingAdd() {
 }
 
 /**
+ * Check if any branding options are available for an item
+ * @param {Array} opportunities - Print opportunities
+ * @param {Array} existingBranding - Existing branding items
+ * @returns {boolean} True if any branding options are available
+ */
+export function isAnyBrandingAvailable(opportunities, existingBranding) {
+    if (!opportunities || !opportunities.length) {
+        return false;
+    }
+    
+    // Check if any type has available locations
+    const types = getUniqueTypes(opportunities);
+    for (const type of types) {
+        const locations = getLocationsForType(opportunities, type.id);
+        for (const location of locations) {
+            if (isLocationAvailable(opportunities, existingBranding, type.id, location.id)) {
+                return true;
+            }
+        }
+    }
+    
+    return false;
+}
+
+/**
  * Show dialog to add branding
  * @param {string} goodsId - Goods ID
  * @param itemId
  */
 async function showBrandingDialog(goodsId, itemId) {
+    // Get current cart item and its branding
+    const cartItem = getCartItem(itemId);
+    const existingBranding = cartItem ? cartItem.branding || [] : [];
 
     // Fetch print opportunities for this item
     const opportunities = await fetchPrintOpportunities(goodsId);
@@ -40,6 +68,12 @@ async function showBrandingDialog(goodsId, itemId) {
 
     if (!opportunities || opportunities.length === 0) {
         showBrandingNotification();//'Для данного товара нет доступных опций брендирования.');
+        return;
+    }
+    
+    // Check if any branding options are available
+    if (!isAnyBrandingAvailable(opportunities, existingBranding)) {
+        showBrandingNotification();
         return;
     }
 
@@ -104,7 +138,7 @@ async function showBrandingDialog(goodsId, itemId) {
     const locationDropdown = document.createElement('div');
     locationDropdown.className = 'viki-dropdown';
 
-    const locationList = updateLocationOptions(opportunities, null, []);
+    const locationList = updateLocationOptions(opportunities, null, existingBranding);
     locationDropdown.insertAdjacentHTML('afterbegin', dropdownHtml(locationList, 'branding-location'));
 
     // Add initial options for locations
@@ -193,7 +227,7 @@ async function showBrandingDialog(goodsId, itemId) {
 
 
     // Initialize dropdown handlers with event delegation
-    initBrandingDropdowns(form, opportunities);
+    initBrandingDropdowns(form, opportunities, existingBranding);
 
     // Add branding when form is submitted
     addButton.addEventListener('click', () => {
