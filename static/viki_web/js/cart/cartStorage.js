@@ -136,10 +136,10 @@ export function updateCartItemQuantity(itemId, quantity) {
  */
 export function updateCartItemBranding(itemId, branding) {
     const items = getCartItems();
-    const itemIndex = items.findIndex(item => item.id === itemId);
+    const itemIndex = items.findIndex(item => Number.parseInt(item.id) === Number.parseInt(itemId));
     
     if (itemIndex >= 0) {
-        items[itemIndex].branding = branding || [];
+        items[itemIndex].branding.push(branding);
         saveCartItems(items);
         
         eventBus.publish(STORAGE_EVENTS.CART_ITEM_UPDATED, {
