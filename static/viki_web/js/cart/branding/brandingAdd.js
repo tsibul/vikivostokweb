@@ -16,6 +16,7 @@ import {
 import {notificationClose, showErrorNotification} from '../addToCart/notification.js';
 // Import the dropdown handler functions
 import { initBrandingDropdowns } from './dropdownHandler.js';
+import {getCartItem} from "../storage/cartStorage.js";
 
 /**
  * Initialize branding add functionality
@@ -35,7 +36,7 @@ async function showBrandingDialog(goodsId, itemId) {
 
     // Fetch print opportunities for this item
     const opportunities = await fetchPrintOpportunities(goodsId);
-    console.log('Print opportunities:', opportunities);
+    // console.log('Print opportunities:', opportunities);
 
     if (!opportunities || opportunities.length === 0) {
         showBrandingNotification();//'Для данного товара нет доступных опций брендирования.');
@@ -190,43 +191,6 @@ async function showBrandingDialog(goodsId, itemId) {
         modal.remove();
     });
 
-    // Commenting out existing VikiDropdown initialization
-    /*
-    // Update location options when type changes
-    const typeDropdownInstance = new VikiDropdown(typeDropdown, {
-        onChange: (value, item) => {
-            const typeId = value;
-            const typeName = item.textContent;
-            typeDropdown.querySelector('input').value = typeId;
-            typeDropdown.querySelector('.viki-dropdown__trigger-text').textContent = typeName;
-
-            updateLocationOptions(opportunities, typeId, []);
-            updateColorOptions(opportunities, typeId, locationDropdown.querySelector('input').value);
-        }
-    });
-
-    // Update colors options when location changes
-    const locationDropdownInstance = new VikiDropdown(locationDropdown, {
-        onChange: (value, item) => {
-            const locationId = value;
-            const locationName = item.textContent;
-            locationDropdown.querySelector('input').value = locationId;
-            locationDropdown.querySelector('.viki-dropdown__trigger-text').textContent = locationName;
-
-            updateColorOptions(opportunities, typeDropdown.querySelector('input').value, locationId);
-        }
-    });
-
-    // Initialize colors dropdown
-    const colorsDropdownInstance = new VikiDropdown(colorsDropdown, {
-        onChange: (value, item) => {
-            const colors = value;
-            const colorsText = item.textContent;
-            colorsDropdown.querySelector('input').value = colors;
-            colorsDropdown.querySelector('.viki-dropdown__trigger-text').textContent = colorsText;
-        }
-    });
-    */
 
     // Initialize dropdown handlers with event delegation
     initBrandingDropdowns(form, opportunities);
@@ -249,8 +213,8 @@ async function showBrandingDialog(goodsId, itemId) {
             Number.parseInt(typeId),
             Number.parseInt(locationId),
             colors,
-            1 // Assuming quantity is 1 for adding new branding
-        );
+            getCartItem(itemId).quantity
+            );
 
         // Create new branding item
         const newBranding = {
@@ -296,15 +260,6 @@ export function updateLocationOptions(opportunities, typeId, existingBranding) {
         }
     });
     return locationList;
-
-    // If no options, add placeholder
-    // if (count === 0) {
-    //     const option = document.createElement('option');
-    //     option.disabled = true;
-    //     option.selected = true;
-    //     option.textContent = 'Нет доступных мест нанесения';
-    //     locationDropdown.appendChild(option);
-    // }
 }
 
 /**
@@ -332,20 +287,6 @@ export function updateColorOptions(opportunities, typeId, locationId) {
         colorsList += option;
     });
     return colorsList;
-
-    // If no options, add placeholder
-    // if (colorsList.children.length === 0) {
-    //     const li = document.createElement('li');
-    //     li.className = 'viki-dropdown__menu-item';
-    //     li.innerHTML = '<a href="#" class="viki-dropdown__menu-link" disabled>Нет доступных опций</a>';
-    //     colorsList.appendChild(li);
-    // }
-
-    // Reinitialize dropdown
-    // const instance = VikiDropdown.getInstance(colorsDropdown);
-    // if (instance) {
-    //     instance._initEvents();
-    // }
 }
 
 function showBrandingNotification() {
