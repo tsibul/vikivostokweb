@@ -139,7 +139,8 @@ export function updateCartItemBranding(itemId, branding) {
     const itemIndex = items.findIndex(item => Number.parseInt(item.id) === Number.parseInt(itemId));
     
     if (itemIndex >= 0) {
-        items[itemIndex].branding.push(branding);
+        // Заменяем весь массив брендирования, а не добавляем новый элемент
+        items[itemIndex].branding = branding;
         saveCartItems(items);
         
         eventBus.publish(STORAGE_EVENTS.CART_ITEM_UPDATED, {

@@ -288,7 +288,8 @@ async function showBrandingDialog(goodsId, itemId) {
         };
 
         // Update storage
-        updateCartItemBranding(itemId, newBranding);
+        existingBranding.push(newBranding);
+        updateCartItemBranding(itemId, existingBranding);
 
         // Close modal
         modal.close();
