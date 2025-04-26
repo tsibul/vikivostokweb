@@ -72,7 +72,7 @@ export async function loadPrintOpportunities() {
         // Сохраняем все возможности
         printOpportunities = allOpportunities;
         
-        console.log('Loaded print opportunities:', printOpportunities);
+        // console.log('Loaded print opportunities:', printOpportunities);
         return printOpportunities;
     } catch (error) {
         console.error('Error loading print opportunities:', error);
