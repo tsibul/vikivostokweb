@@ -16,9 +16,9 @@ const priceCache = new Map();
 export function initPriceCalculator() {
 
     // Listen for quantity changes
-    eventBus.subscribe(STORAGE_EVENTS.CART_ITEM_UPDATED, (data) => {
+    eventBus.subscribe(STORAGE_EVENTS.CART_ITEM_UPDATED, async (data) => {
         if (data && data.item) {
-            updateProductPrice(data.item.id, data.item.quantity);
+            await updateProductPrice(data.item.id, data.item.quantity);
         }
     });
 }
