@@ -15,7 +15,7 @@ import {
 } from './brandingOptionsManager.js';
 import {notificationClose, showErrorNotification} from '../addToCart/notification.js';
 // Import the dropdown handler functions
-import { initBrandingDropdowns } from './dropdownHandler.js';
+import {initBrandingDropdowns} from './dropdownHandler.js';
 import {getCartItem} from "../storage/cartStorage.js";
 
 /**
@@ -37,13 +37,13 @@ export function filterAvailableTypes(opportunities, existingBranding) {
     if (!opportunities || !opportunities.length) {
         return [];
     }
-    
+
     const allTypes = getUniqueTypes(opportunities);
-    
+
     // Filter only types that have at least one available location
     return allTypes.filter(type => {
         const locations = getLocationsForType(opportunities, type.id);
-        return locations.some(location => 
+        return locations.some(location =>
             isLocationAvailable(opportunities, existingBranding, type.id, location.id)
         );
     });
@@ -59,7 +59,7 @@ export function isAnyBrandingAvailable(opportunities, existingBranding) {
     if (!opportunities || !opportunities.length) {
         return false;
     }
-    
+
     // Check if any type has available locations
     const types = getUniqueTypes(opportunities);
     for (const type of types) {
@@ -70,7 +70,7 @@ export function isAnyBrandingAvailable(opportunities, existingBranding) {
             }
         }
     }
-    
+
     return false;
 }
 
@@ -92,7 +92,7 @@ async function showBrandingDialog(goodsId, itemId) {
         showBrandingNotification();//'Для данного товара нет доступных опций брендирования.');
         return;
     }
-    
+
     // Check if any branding options are available
     if (!isAnyBrandingAvailable(opportunities, existingBranding)) {
         showBrandingNotification();
@@ -143,7 +143,8 @@ async function showBrandingDialog(goodsId, itemId) {
     });
 
 
-    typeDropdown.insertAdjacentHTML('afterbegin', dropdownHtml(typeList, 'branding-type'))
+    typeDropdown.insertAdjacentHTML('afterbegin', dropdownHtml(typeList,
+        'branding-type', 'Выберите тип нанесения'))
 
     // Add options for types
 
@@ -162,7 +163,8 @@ async function showBrandingDialog(goodsId, itemId) {
     locationDropdown.className = 'viki-dropdown';
 
     const locationList = updateLocationOptions(opportunities, null, existingBranding);
-    locationDropdown.insertAdjacentHTML('afterbegin', dropdownHtml(locationList, 'branding-location'));
+    locationDropdown.insertAdjacentHTML('afterbegin', dropdownHtml(locationList,
+        'branding-location', 'Выберите место нанесения'));
 
     // Add initial options for locations
 
@@ -181,7 +183,8 @@ async function showBrandingDialog(goodsId, itemId) {
 
     colorsDropdown.className = 'viki-dropdown';
     const colorList = updateColorOptions(opportunities, null, null);
-    colorsDropdown.insertAdjacentHTML('afterbegin', dropdownHtml(colorList, 'branding-colors'));
+    colorsDropdown.insertAdjacentHTML('afterbegin', dropdownHtml(colorList,
+        'branding-colors', 'Выберите количество цветов'));
 
     // Add initial options for colors
 
@@ -271,7 +274,7 @@ async function showBrandingDialog(goodsId, itemId) {
             Number.parseInt(locationId),
             colors,
             getCartItem(itemId).quantity
-            );
+        );
 
         // Create new branding item
         const newBranding = {
@@ -363,9 +366,9 @@ function showBrandingNotification() {
 }
 
 
-function dropdownHtml(liList, name) {
+function dropdownHtml(liList, name, placeHolder) {
     return ` <div class="viki-dropdown__trigger branding-modal__trigger">
-            <span class="viki-dropdown__trigger-text">Выберите количество</span>
+            <span class="viki-dropdown__trigger-text">${placeHolder}</span>
             <i class="viki-dropdown__trigger-icon">▼</i>
         </div>
         <div class="viki-dropdown__menu">
