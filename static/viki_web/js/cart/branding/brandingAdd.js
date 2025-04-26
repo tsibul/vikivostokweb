@@ -22,15 +22,16 @@ import { initBrandingDropdowns } from './dropdownHandler.js';
  */
 export function initBrandingAdd() {
     eventBus.subscribe('cart:branding:add', async (data) => {
-        await showBrandingDialog(data.goodsId);
+        await showBrandingDialog(data.goodsId, data.itemId);
     });
 }
 
 /**
  * Show dialog to add branding
  * @param {string} goodsId - Goods ID
+ * @param itemId
  */
-async function showBrandingDialog(goodsId) {
+async function showBrandingDialog(goodsId, itemId) {
 
     // Fetch print opportunities for this item
     const opportunities = await fetchPrintOpportunities(goodsId);
@@ -245,17 +246,17 @@ async function showBrandingDialog(goodsId) {
         // Get price for this branding option
         const price = getBrandingPrice(
             opportunities,
-            typeId,
-            locationId,
+            Number.parseInt(typeId),
+            Number.parseInt(locationId),
             colors,
             1 // Assuming quantity is 1 for adding new branding
         );
 
         // Create new branding item
         const newBranding = {
-            type_id: typeId,
+            type_id: Number.parseInt(typeId),
             type: typeDropdown.querySelector('.viki-dropdown__trigger-text').textContent,
-            location_id: locationId,
+            location_id: Number.parseInt(locationId),
             location: locationDropdown.querySelector('.viki-dropdown__trigger-text').textContent,
             colors: colors,
             secondPass: secondPass,
@@ -263,7 +264,7 @@ async function showBrandingDialog(goodsId) {
         };
 
         // Update storage
-        updateCartItemBranding(goodsId, [newBranding]);
+        updateCartItemBranding(itemId, newBranding);
 
         // Close modal
         modal.close();
