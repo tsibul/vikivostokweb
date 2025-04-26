@@ -75,15 +75,15 @@ export function showErrorNotification(message, duration = 3000) {
     try {
         // Create notification element
         const notification = document.createElement('div');
-        notification.className = 'error-notification active';
+        notification.className = 'success-notification active';
 
         notification.innerHTML = `
-            <i class="fa-solid fa-exclamation-triangle error-notification__icon"></i>
-            <div class="error-notification__content">
-                <h4 class="error-notification__title">Ошибка</h4>
-                <p class="error-notification__message">${message}</p>
+            <i class="fa-solid fa-exclamation-triangle success-notification__icon"></i>
+            <div class="success-notification__content">
+                <h4 class="success-notification__title">Ошибка</h4>
+                <p class="success-notification__message">${message}</p>
             </div>
-            <button class="error-notification__close">×</button>
+            <button class="success-notification__close">×</button>
         `;
 
         // Add to DOM
