@@ -28,6 +28,28 @@ export function initBrandingAdd() {
 }
 
 /**
+ * Filter available branding types based on location availability
+ * @param {Array} opportunities - Print opportunities
+ * @param {Array} existingBranding - Existing branding items
+ * @returns {Array} Available types with at least one available location
+ */
+export function filterAvailableTypes(opportunities, existingBranding) {
+    if (!opportunities || !opportunities.length) {
+        return [];
+    }
+    
+    const allTypes = getUniqueTypes(opportunities);
+    
+    // Filter only types that have at least one available location
+    return allTypes.filter(type => {
+        const locations = getLocationsForType(opportunities, type.id);
+        return locations.some(location => 
+            isLocationAvailable(opportunities, existingBranding, type.id, location.id)
+        );
+    });
+}
+
+/**
  * Check if any branding options are available for an item
  * @param {Array} opportunities - Print opportunities
  * @param {Array} existingBranding - Existing branding items
@@ -110,9 +132,10 @@ async function showBrandingDialog(goodsId, itemId) {
     const typeDropdown = document.createElement('div');
     typeDropdown.className = 'viki-dropdown';
 
-    const types = getUniqueTypes(opportunities);
+    // Filter types to only include those with available locations
+    const availableTypes = filterAvailableTypes(opportunities, existingBranding);
     let typeList = ''
-    types.forEach(type => {
+    availableTypes.forEach(type => {
         const option = `
         <li class="branding-modal__li" value="${type.id}">${type.name}</li>
         `;
