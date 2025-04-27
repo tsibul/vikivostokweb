@@ -113,9 +113,9 @@ export function initItemPriceSync() {
  * Обработчик события изменения количества товара
  * @param {Object} data - Данные события {itemId, quantity}
  */
-function handleQuantityChange(data) {
+async function handleQuantityChange(data) {
     if (data && data.itemId && data.quantity) {
         // Обновляем цены брендирования для измененного товара
-        updateItemBrandingPrices(data.itemId, data.quantity);
+        await updateItemBrandingPrices(data.itemId, data.quantity);
     }
 } 
