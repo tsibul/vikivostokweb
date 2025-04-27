@@ -1065,6 +1065,43 @@ export function initCartRendering() {
         const READY_EVENT_DELAY = 100;
         let eventCounter = 0; // Counter to identify unique events
         
+        // Функция для принудительного сброса и перерисовки канваса по ID товара
+        function resetAndRedrawCanvas(itemId) {
+            const canvas = document.querySelector(`.cart-item-canvas[data-item-id="${itemId}"]`);
+            if (canvas) {
+                // Используем современный метод reset(), если он доступен
+                const ctx = canvas.getContext('2d');
+                
+                // Сохраняем текущие размеры
+                const width = canvas.width;
+                const height = canvas.height;
+                
+                try {
+                    // Пробуем использовать современный метод reset (поддерживается в большинстве современных браузеров)
+                    if (ctx.reset && typeof ctx.reset === 'function') {
+                        ctx.reset();
+                        console.log('Used ctx.reset() for canvas reset');
+                    } else {
+                        // Fallback: используем традиционный метод
+                        canvas.width = width;
+                        console.log('Used width reset for canvas');
+                    }
+                } catch (e) {
+                    // В случае ошибки с reset(), используем традиционный подход
+                    canvas.width = width;
+                    console.log('Reset error, fallback to width reset', e.message);
+                }
+                
+                // Перерисовываем канвас
+                const cartItems = JSON.parse(localStorage.getItem('cart') || '[]');
+                const item = cartItems.find(i => i.id === itemId);
+                if (item) {
+                    renderCartItem(canvas, item);
+                    console.log('Canvas state reset and redrawn', itemId);
+                }
+            }
+        }
+        
         // Функция для отправки события о готовности canvas с дебаунсингом
         function notifyCanvasReady(source = 'init', canvases = []) {
             clearTimeout(canvasReadyTimer);
@@ -1086,9 +1123,6 @@ export function initCartRendering() {
                     id: eventCounter, // Include unique id for the event
                     canvases: canvases  // Pass the canvas elements directly
                 };
-                
-                // Логируем отправку события
-                logCanvasReadyEvent(eventData, true);
                 
                 // Публикуем событие
                 eventBus.publish('canvas:ready', eventData);
@@ -1129,6 +1163,25 @@ export function initCartRendering() {
                 }
             });
             
+            // Подписываемся на события связанные с брендированием
+            eventBus.subscribe('cart:branding:add', (data) => {
+                // Сбрасываем состояние канваса после того, как брендирование добавлено
+                if (data && data.itemId) {
+                    setTimeout(() => {
+                        resetAndRedrawCanvas(data.itemId);
+                    }, 300); // Используем большую задержку для завершения транзакции брендирования
+                }
+            });
+            
+            // Подписываемся на событие обновления брендирования для элемента корзины
+            eventBus.subscribe(STORAGE_EVENTS.CART_ITEM_UPDATED, (data) => {
+                if (data && data.item && data.item.id) {
+                    setTimeout(() => {
+                        resetAndRedrawCanvas(data.item.id);
+                    }, 100);
+                }
+            });
+            
             // Add resize listener for responsive canvases
             window.addEventListener('resize', () => {
                 // Вызываем с задержкой для нормализации частых изменений размера
@@ -1160,6 +1213,21 @@ export function initCartRendering() {
             
             // Добавляем обработчик движения мыши для изменения курсора
             initCanvasMouseHandlers(container);
+            
+            // Добавляем обработчик кликов для сброса состояния канваса после взаимодействия
+            container.addEventListener('click', (e) => {
+                const canvas = e.target.closest('canvas.cart-item-canvas');
+                if (canvas) {
+                    // Сохраняем ID товара
+                    const itemId = canvas.dataset.itemId;
+                    
+                    // После небольшой задержки (чтобы завершились другие обработчики)
+                    setTimeout(() => {
+                        // Используем общую функцию сброса и перерисовки
+                        resetAndRedrawCanvas(itemId);
+                    }, 50);
+                }
+            });
         });
     }
 }
