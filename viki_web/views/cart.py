@@ -124,9 +124,10 @@ def get_item_price(request, item_id):
         price_type = None
         
         # Try to get user extension
-        user_extension = UserExtension.objects.filter(user=user).first()
-        if user_extension and user_extension.customer:
-            price_type = user_extension.customer.standard_price_type
+        if user.is_authenticated:
+            user_extension = UserExtension.objects.filter(user=user).first()
+            if user_extension and user_extension.customer:
+                price_type = user_extension.customer.standard_price_type
         
         # If no price type found, get default (priority 1)
         if not price_type:
