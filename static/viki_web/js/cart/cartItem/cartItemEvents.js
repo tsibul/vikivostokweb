@@ -692,10 +692,10 @@ function handleBrandingClick(e, canvas) {
     
     if (itemId && goodsId) {
         // Publish event to add branding
-        eventBus.publish('cart:branding:add', {
+    eventBus.publish('cart:branding:add', {
             itemId: itemId,
             goodsId: goodsId
-        });
+    });
     }
 }
 
