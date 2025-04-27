@@ -4,8 +4,8 @@
  */
 
 import eventBus from '../eventBus.js';
-import { STORAGE_EVENTS } from '../cartStorage.js';
-import { formatPrice } from '../pricing/priceFormatter.js';
+import {STORAGE_EVENTS} from '../cartStorage.js';
+import {formatPrice} from '../pricing/priceFormatter.js';
 
 /**
  * Calculate cart summary data
@@ -13,23 +13,27 @@ import { formatPrice } from '../pricing/priceFormatter.js';
  */
 export function calculateSummary() {
     const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    
+
     let totalItems = 0;
     let subtotal = 0;
     let brandingTotal = 0;
-    
+
     cart.forEach(item => {
         totalItems += item.quantity;
         subtotal += item.price * item.quantity;
-        
+
         // Calculate branding total
         if (item.branding && item.branding.length > 0) {
-            brandingTotal += item.branding.reduce((sum, b) => sum + (b.price * item.quantity), 0);
+            brandingTotal += item.branding.reduce((sum, b) => {
+                const secondPassMultiplier = b.secondPass ? 1.3 : 1;
+                const currentPrice = b.price * b.colors * secondPassMultiplier;
+                return sum + (currentPrice * item.quantity);
+            }, 0);
         }
     });
-    
+
     const grandTotal = subtotal + brandingTotal;
-    
+
     return {
         totalItems,
         subtotal,
@@ -45,11 +49,11 @@ export function calculateSummary() {
 export function updateSummary() {
     const summaryElement = document.querySelector('.cart-summary');
     const emptyCartElement = document.querySelector('.cart-empty');
-    
+
     if (!summaryElement) return;
-    
-    const { totalItems, subtotal, brandingTotal, grandTotal } = calculateSummary();
-    
+
+    const {totalItems, subtotal, brandingTotal, grandTotal} = calculateSummary();
+
     // Check if cart is empty
     if (totalItems === 0) {
         // Hide summary and show empty cart message
@@ -59,34 +63,34 @@ export function updateSummary() {
         }
         return;
     }
-    
+
     // Show summary and hide empty cart message
     summaryElement.classList.remove('item-hidden');
     if (emptyCartElement) {
         emptyCartElement.classList.add('item-hidden');
     }
-    
+
     // Update summary values using the existing HTML structure
     const itemsInput = summaryElement.querySelector('.cart-summary__items-input');
     const subtotalInput = summaryElement.querySelector('.cart-summary__subtotal-input');
     const brandingInput = summaryElement.querySelector('.cart-summary__branding-total-input');
     const totalInput = summaryElement.querySelector('.cart-summary__total-input');
-    
+
     if (itemsInput) {
         itemsInput.textContent = totalItems;
         itemsInput.dataset.value = totalItems;
     }
-    
+
     if (subtotalInput) {
         subtotalInput.textContent = formatPrice(subtotal);
         subtotalInput.dataset.value = subtotal.toFixed(2);
     }
-    
+
     if (brandingInput) {
         brandingInput.textContent = formatPrice(brandingTotal);
         brandingInput.dataset.value = brandingTotal.toFixed(2);
     }
-    
+
     if (totalInput) {
         totalInput.textContent = formatPrice(grandTotal);
         totalInput.dataset.value = grandTotal.toFixed(2);
@@ -99,13 +103,13 @@ export function updateSummary() {
 export function initSummaryEvents() {
     const continueButton = document.querySelector('.cart-summary__continue');
     const checkoutButton = document.querySelector('.cart-summary__checkout');
-    
+
     if (continueButton) {
         continueButton.addEventListener('click', () => {
             window.location.href = '/';
         });
     }
-    
+
     if (checkoutButton) {
         checkoutButton.addEventListener('click', () => {
             window.location.href = '/checkout';
@@ -119,10 +123,10 @@ export function initSummaryEvents() {
 export function initSummary() {
     // Update summary initially
     updateSummary();
-    
+
     // Initialize button events
     initSummaryEvents();
-    
+
     // Subscribe to cart update events
     eventBus.subscribe(STORAGE_EVENTS.CART_UPDATED, updateSummary);
 }
