@@ -84,24 +84,24 @@ function updateQuantity(itemId, quantity) {
  * Handle branding remove event
  * @param {Object} data - Event data {itemId, brandingIndex}
  */
-function handleBrandingRemove(data) {
-    const { itemId, brandingIndex } = data;
-    
+async function handleBrandingRemove(data) {
+    const {itemId, brandingIndex} = data;
+
     // Get cart items
     const cartItems = JSON.parse(localStorage.getItem('cart') || '[]');
     const item = cartItems.find(item => item.id === itemId);
-    
+
     if (item && item.branding && item.branding.length > brandingIndex) {
         // Remove branding item
         item.branding.splice(brandingIndex, 1);
-        
+
         // Update storage
         updateCartItemBranding(itemId, item.branding);
-        
+
         // Update canvas
         const canvas = document.querySelector(`.cart-item-canvas[data-item-id="${itemId}"]`);
         if (canvas) {
-            renderCartItem(canvas, item);
+            await renderCartItem(canvas, item);
         }
     }
 }
@@ -110,24 +110,24 @@ function handleBrandingRemove(data) {
  * Handle branding toggle event
  * @param {Object} data - Event data {itemId, brandingIndex}
  */
-function handleBrandingToggle(data) {
-    const { itemId, brandingIndex } = data;
-    
+async function handleBrandingToggle(data) {
+    const {itemId, brandingIndex} = data;
+
     // Get cart items
     const cartItems = JSON.parse(localStorage.getItem('cart') || '[]');
     const item = cartItems.find(item => item.id === itemId);
-    
+
     if (item && item.branding && item.branding.length > brandingIndex) {
         // Toggle second pass
         item.branding[brandingIndex].secondPass = !item.branding[brandingIndex].secondPass;
-        
+
         // Update storage
         updateCartItemBranding(itemId, item.branding);
-        
+
         // Update canvas
         const canvas = document.querySelector(`.cart-item-canvas[data-item-id="${itemId}"]`);
         if (canvas) {
-            renderCartItem(canvas, item);
+            await renderCartItem(canvas, item);
         }
     }
 }
