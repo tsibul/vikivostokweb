@@ -1066,16 +1066,16 @@ export function initCartRendering() {
         let eventCounter = 0; // Counter to identify unique events
         
         // Функция для принудительного сброса и перерисовки канваса по ID товара
-        function resetAndRedrawCanvas(itemId) {
+        async function resetAndRedrawCanvas(itemId) {
             const canvas = document.querySelector(`.cart-item-canvas[data-item-id="${itemId}"]`);
             if (canvas) {
                 // Используем современный метод reset(), если он доступен
                 const ctx = canvas.getContext('2d');
-                
+
                 // Сохраняем текущие размеры
                 const width = canvas.width;
                 const height = canvas.height;
-                
+
                 try {
                     // Пробуем использовать современный метод reset (поддерживается в большинстве современных браузеров)
                     if (ctx.reset && typeof ctx.reset === 'function') {
@@ -1091,12 +1091,12 @@ export function initCartRendering() {
                     // canvas.width = width;
                     console.log('Reset error, fallback to width reset', e.message);
                 }
-                
+
                 // Перерисовываем канвас
                 const cartItems = JSON.parse(localStorage.getItem('cart') || '[]');
                 const item = cartItems.find(i => i.id === itemId);
                 if (item) {
-                    renderCartItem(canvas, item);
+                    await renderCartItem(canvas, item);
                     // console.log('Canvas state reset and redrawn', itemId);
                 }
             }
