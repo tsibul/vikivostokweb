@@ -3028,6 +3028,22 @@ span.text-like {
   margin-left: 5px;
 }
 
+.cart-quantity-input {
+  position: absolute;
+  border: 2px solid #00a3c0;
+  border-radius: 4px;
+  background: #ffffff;
+  color: #0F4880;
+  font-family: "Montserrat", sans-serif;
+  font-size: 14px;
+  padding: 0 4px;
+  margin: 0;
+  text-align: center;
+  box-sizing: border-box;
+  z-index: 1000;
+  outline: none;
+}
+
 /* Модальное окно для добавления в корзину */
 .add-to-cart-modal {
   position: fixed;
