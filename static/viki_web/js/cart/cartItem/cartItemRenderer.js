@@ -30,7 +30,7 @@ const CONFIG = {
     fallbackFont: 'Arial, sans-serif',
     // Размеры шрифтов для разных элементов
     headerFontSize: 16,            // Размер заголовка 
-    textFontSize: 14,              // Размер обычного текста (артикул, описание)
+    textFontSize: 14,              // Размер обычного текста
     priceFontSize: 15              // Размер для цен
 };
 
@@ -114,8 +114,8 @@ function calculateCanvasHeight(item) {
     
     // Add additional height for branding if exists
     if (item.branding && item.branding.length > 0) {
-        // 40px base + 45px per branding item
-        height += 40 + (item.branding.length * 45);
+        // 50px base + 35px per branding item
+        height += 50 + (item.branding.length * 35); // Увеличиваем базовый отступ до брендирования
     }
     
     return height;
@@ -157,23 +157,23 @@ export function createCartItemCanvas(item, index, container) {
  * @param {Object} item - Cart item data
  * @param {HTMLElement} container - Container element
  */
-function initializeCanvas(canvas, item, container) {
-    // Set size based on container width
-    const width = calculateCanvasWidth(container);
-    const height = calculateCanvasHeight(item);
-    
-    // Set canvas size with device pixel ratio for crisp rendering
-    const dpr = window.devicePixelRatio || 1;
-    canvas.width = width * dpr;
-    canvas.height = height * dpr;
-    
-    // Store original dimensions for resize handling
-    canvas.dataset.originalWidth = width;
-    canvas.dataset.originalHeight = height;
-    
-    // Render the canvas
-    renderCartItem(canvas, item);
-}
+// function initializeCanvas(canvas, item, container) {
+//     // Set size based on container width
+//     const width = calculateCanvasWidth(container);
+//     const height = calculateCanvasHeight(item);
+//
+//     // Set canvas size with device pixel ratio for crisp rendering
+//     const dpr = window.devicePixelRatio || 1;
+//     canvas.width = width * dpr;
+//     canvas.height = height * dpr;
+//
+//     // Store original dimensions for resize handling
+//     canvas.dataset.originalWidth = width;
+//     canvas.dataset.originalHeight = height;
+//
+//     // Render the canvas
+//     renderCartItem(canvas, item);
+// }
 
 /**
  * Handle window resize to adjust canvas
@@ -199,7 +199,7 @@ function handleCanvasResize() {
             if (item) {
                 const height = calculateCanvasHeight(item);
                 
-                // Обновляем размер канваса с учетом плотности пикселей
+                // Обновляем размеры канваса с учетом плотности пикселей
                 canvas.width = newWidth * dpr;
                 canvas.height = height * dpr;
                 
@@ -216,6 +216,164 @@ function handleCanvasResize() {
 }
 
 /**
+ * Функция для рисования текста
+ * @param {CanvasRenderingContext2D} ctx - Canvas context
+ * @param {string} text - Text to render
+ * @param {number} x - X position
+ * @param {number} y - Y position
+ * @param {Object} options - Дополнительные опции (align, baseline)
+ */
+function drawTextWithFont(ctx, text, x, y, options = {}) {
+    // Сохраняем состояние контекста
+    ctx.save();
+    
+    // Задаем параметры текста
+    const align = options.align || 'left';
+    const baseline = options.baseline || 'middle';
+    const fontSize = options.fontSize || CONFIG.textFontSize;
+    
+    // Устанавливаем шрифт
+    ctx.font = `400 ${fontSize}px ${getCurrentFont()}`;
+    ctx.fillStyle = options.color || CONFIG.textColor;
+    ctx.textAlign = align;
+    ctx.textBaseline = baseline;
+    
+    // Рисуем текст
+    ctx.fillText(text, x, y);
+    
+    // Восстанавливаем контекст
+    ctx.restore();
+}
+
+/**
+ * Draw branding items for cart item
+ * @param {CanvasRenderingContext2D} ctx - Canvas context
+ * @param {HTMLCanvasElement} canvas - Canvas element
+ * @param {Object} item - Cart item data
+ * @param {number} x - X position
+ * @param {number} y - Y position
+ * @param {number} width - Width of area
+ * @returns {number} Updated Y position
+ */
+function drawBrandingItems(ctx, canvas, item, x, y, width) {
+    if (!item.branding || item.branding.length === 0) {
+        return y;
+    }
+    
+    // Начинаем с отрисовки линии-разделителя
+    ctx.strokeStyle = CONFIG.borderColor;
+    ctx.setLineDash([4, 2]);
+    ctx.beginPath();
+    ctx.moveTo(x, y - 20); // Чуть выше текущей позиции
+    ctx.lineTo(x + width, y - 20);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    
+    // Инициализируем объект для хранения позиций кнопок
+    const brandingBtns = {};
+    
+    // Отрисовываем каждый элемент брендирования
+    item.branding.forEach((brandingItem, index) => {
+        // Формируем строку с типом, местом и цветами через несжимаемый пробел
+        const colorsText = brandingItem.colors === 1 
+            ? '1 цвет' 
+            : (brandingItem.colors > 1 && brandingItem.colors < 5 
+               ? `${brandingItem.colors} цвета` 
+               : `${brandingItem.colors} цветов`);
+        
+        // Добавляем информацию о втором проходе
+        let secondPassText = '';
+        if (brandingItem.secondPass) {
+            secondPassText = ', второй проход';
+        }
+        
+        const typeLocColorsText = `${brandingItem.type} ${brandingItem.location}\u00A0${colorsText}${secondPassText}`;
+        
+        // Колонка 1: Тип, место, цвета и второй проход - с обычным шрифтом
+        drawTextWithFont(ctx, typeLocColorsText, x, y, { 
+            baseline: 'middle', 
+            fontSize: 14
+        });
+        
+        // Колонка 2: "Цена:" цена (через несжимаемый пробел) - с обычным шрифтом
+        const priceText = `Цена:\u00A0${formatPrice(brandingItem.price)} руб.`;
+        drawTextWithFont(ctx, priceText, x + Math.min(350, width * 0.5), y, { 
+            baseline: 'middle', 
+            fontSize: 14
+        });
+        
+        // Колонка 3: "Сумма:" сумма (через несжимаемый пробел) - с обычным шрифтом
+        const total = brandingItem.price * item.quantity;
+        const sumText = `Сумма:\u00A0${formatPrice(total)} руб.`;
+        drawTextWithFont(ctx, sumText, x + width - 40, y, { 
+            align: 'right', 
+            baseline: 'middle', 
+            fontSize: 14
+        });
+        
+        // Колонка 4: Иконка удаления (без фона)
+        const removeX = x + width - 20;
+        
+        // Рисуем иконку удаления (крестик)
+        ctx.strokeStyle = CONFIG.textColor;
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(removeX - 5, y - 5);
+        ctx.lineTo(removeX + 5, y + 5);
+        ctx.moveTo(removeX + 5, y - 5);
+        ctx.lineTo(removeX - 5, y + 5);
+        ctx.stroke();
+        
+        // Сохраняем позицию кнопки удаления для обработки кликов
+        brandingBtns[`remove_${index}`] = {
+            x: removeX - 10,
+            y: y - 10,
+            width: 20,
+            height: 20,
+            index: index
+        };
+        
+        // Увеличиваем Y-координату для следующего элемента
+        y += 35;
+    });
+    
+    // Сохраняем информацию о кнопках в dataset канваса
+    canvas.dataset.brandingBtns = JSON.stringify(brandingBtns);
+    
+    // Если есть брендирование, отрисовываем итоговую сумму
+    if (item.branding.length > 0) {
+        // Отрисовка линии-разделителя
+        ctx.strokeStyle = CONFIG.borderColor;
+        ctx.beginPath();
+        ctx.moveTo(x, y - 10); // Уменьшаем отступ до линии
+        ctx.lineTo(x + width, y - 10);
+        ctx.stroke();
+        
+        // Вычисляем общую стоимость брендирования
+        const totalBrandingCost = item.branding.reduce((sum, branding) => {
+            return sum + (branding.price * item.quantity);
+        }, 0);
+        
+        // Отрисовка строки с общей стоимостью брендирования
+        y += 10; // Уменьшаем отступ после линии
+        
+        drawTextWithFont(ctx, 'Общая стоимость брендирования:', x, y, { 
+            baseline: 'middle', 
+            fontSize: 14
+        });
+        drawTextWithFont(ctx, `${formatPrice(totalBrandingCost)} руб.`, x + width - 20, y, { 
+            align: 'right', 
+            baseline: 'middle', 
+            fontSize: 14
+        });
+        
+        y += 15; // Уменьшаем отступ после итоговой суммы
+    }
+    
+    return y; // Возвращаем обновленную Y-координату
+}
+
+/**
  * Render cart item to canvas
  * @param {HTMLCanvasElement} canvas - Canvas element
  * @param {Object} item - Cart item data
@@ -226,6 +384,19 @@ export async function renderCartItem(canvas, item) {
     
     // Проверяем, находится ли canvas в режиме редактирования количества
     const isEditing = canvas.dataset.isEditing === 'true';
+    
+    // Проверяем, нужно ли обновить размеры canvas на основе содержимого
+    const currentHeight = parseInt(canvas.dataset.originalHeight || 0);
+    const neededHeight = calculateCanvasHeight(item);
+    
+    // Обновляем размеры канваса, если требуется
+    if (currentHeight !== neededHeight) {
+        const dpr = window.devicePixelRatio || 1;
+        const currentWidth = parseInt(canvas.dataset.originalWidth || canvas.width / dpr);
+        
+        canvas.dataset.originalHeight = neededHeight;
+        canvas.height = neededHeight * dpr;
+    }
     
     const ctx = canvas.getContext('2d');
     const dpr = window.devicePixelRatio || 1;
@@ -253,9 +424,6 @@ export async function renderCartItem(canvas, item) {
     ctx.fill();
     ctx.stroke();
     
-    // Определяем базовую высоту для элементов
-    const baseHeight = displayHeight - 2;
-    
     // Определяем базовые координаты
     const imageX = CONFIG.padding;
     const imageY = CONFIG.padding;
@@ -273,7 +441,7 @@ export async function renderCartItem(canvas, item) {
     ctx.fillStyle = CONFIG.textColor;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
-    ctx.font = `30px ${getCurrentFont()}`;
+    ctx.font = `400 30px ${getCurrentFont()}`; 
     ctx.fillText('📷', imageX + imageSize/2, imageY + imageSize/2);
     
     // Load and draw actual image if available
@@ -332,9 +500,9 @@ export async function renderCartItem(canvas, item) {
     const contentX = imageX + imageSize + CONFIG.padding;
     const contentWidth = displayWidth - contentX - CONFIG.padding;
     
-    // Название товара - используем цвет заголовка и размер для заголовка
+    // Название товара - используем цвет заголовка и больший размер
     ctx.fillStyle = CONFIG.headerColor;
-    ctx.font = `bold ${CONFIG.headerFontSize}px ${getCurrentFont()}`; // 16px для заголовка
+    ctx.font = `600 ${CONFIG.headerFontSize}px ${getCurrentFont()}`;
     ctx.textAlign = 'left';
     ctx.textBaseline = 'top';
     
@@ -346,22 +514,20 @@ export async function renderCartItem(canvas, item) {
     const name = truncateText(ctx, item.name, nameMaxWidth);
     ctx.fillText(name, nameX, nameY);
     
-    // Артикул - 14px
+    // Артикул
     ctx.fillStyle = CONFIG.textColor;
-    ctx.font = `${CONFIG.textFontSize}px ${getCurrentFont()}`; // 14px для артикула
+    ctx.font = `400 ${CONFIG.textFontSize}px ${getCurrentFont()}`;
     const articleX = nameX;
     const articleY = nameY + (isMobileLayout ? 24 : 28);
     ctx.fillText(`Артикул: ${item.article}`, articleX, articleY);
     
-    // Описание товара сразу после артикула (без отступа) - 14px
-    // Выравниваем по нижнему краю картинки
+    // Описание товара
     if (item.description) {
         ctx.fillStyle = CONFIG.textColor;
-        ctx.font = `${CONFIG.textFontSize}px ${getCurrentFont()}`; // 14px для описания
+        ctx.font = `400 ${CONFIG.textFontSize}px ${getCurrentFont()}`;
         const descMaxWidth = contentWidth;
         
-        // Если есть описание, размещаем его сразу под артикулом
-        const descriptionY = articleY + CONFIG.textFontSize + 4; // Минимальный отступ только для читаемости
+        const descriptionY = articleY + CONFIG.textFontSize + 4;
         
         // Выводим многострочное описание
         renderMultilineText(ctx, item.description, articleX, descriptionY, descMaxWidth, 2);
@@ -378,15 +544,14 @@ export async function renderCartItem(canvas, item) {
     const qtyColumnWidth = rowWidth * 0.30;
     const totalColumnWidth = rowWidth * 0.35;
     
-    // Цена (левая часть) - 15px
+    // Цена (левая часть)
     ctx.fillStyle = CONFIG.textColor;
-    ctx.font = `${CONFIG.priceFontSize}px ${getCurrentFont()}`; // 15px для цен
+    ctx.font = `400 ${CONFIG.priceFontSize}px ${getCurrentFont()}`;
     ctx.textAlign = 'left';
     ctx.textBaseline = 'middle';
     ctx.fillText(`Цена: ${formatPrice(item.price)} руб/шт.`, CONFIG.padding, priceRowY);
     
     // Блок управления количеством (средняя часть)
-    // Сохраняем флаг редактирования, чтобы не потерять его при перерисовке
     const wasEditing = canvas.dataset.isEditing === 'true';
     
     drawQuantityControls(ctx, canvas, item, CONFIG.padding + priceColumnWidth, priceRowY - 15, qtyColumnWidth);
@@ -396,10 +561,10 @@ export async function renderCartItem(canvas, item) {
         canvas.dataset.isEditing = 'true';
     }
     
-    // Сумма (правая часть) - 15px, без выделения жирным
+    // Сумма (правая часть)
     const total = item.price * item.quantity;
     ctx.fillStyle = CONFIG.textColor;
-    ctx.font = `${CONFIG.priceFontSize}px ${getCurrentFont()}`; // 15px для цен
+    ctx.font = `400 ${CONFIG.priceFontSize}px ${getCurrentFont()}`;
     ctx.textAlign = 'right';
     ctx.fillText(`Сумма: ${formatPrice(total)} руб.`, displayWidth - CONFIG.padding, priceRowY);
     
@@ -427,6 +592,12 @@ export async function renderCartItem(canvas, item) {
     const brandingY = priceRowY + 20;
     drawBrandingButton(ctx, canvas, item, CONFIG.padding, brandingY, displayWidth - 2 * CONFIG.padding, isBrandingAvailable);
     
+    // Отрисовка элементов брендирования, если они есть
+    let currentY = brandingY + 60;
+    if (item.branding && item.branding.length > 0) {
+        currentY = drawBrandingItems(ctx, canvas, item, CONFIG.padding, currentY, displayWidth - 2 * CONFIG.padding);
+    }
+    
     // Кнопка удаления - в правом верхнем углу
     drawRemoveButton(ctx, canvas, displayWidth - 40, CONFIG.padding);
 }
@@ -441,6 +612,9 @@ export async function renderCartItem(canvas, item) {
  * @param {number} width - Width of control area
  */
 function drawQuantityControls(ctx, canvas, item, x, y, width) {
+    // Сохраняем состояние контекста
+    ctx.save();
+    
     const qtyAreaHeight = 30;
     // Увеличиваем ширину блока для шестизначных чисел
     const qtyAreaWidth = Math.min(width, 180); // Увеличено с 150 до 180 для 6 цифр
@@ -466,7 +640,7 @@ function drawQuantityControls(ctx, canvas, item, x, y, width) {
     
     // Draw minus symbol
     ctx.fillStyle = CONFIG.textColor;
-    ctx.font = `${CONFIG.textFontSize}px ${getCurrentFont()}`; // используем стандартный размер текста
+    ctx.font = `400 ${CONFIG.textFontSize}px ${getCurrentFont()}`; 
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('-', qtyAreaX + buttonWidth/2, qtyAreaY + qtyAreaHeight/2);
@@ -477,7 +651,7 @@ function drawQuantityControls(ctx, canvas, item, x, y, width) {
     
     // Draw quantity text
     ctx.fillStyle = CONFIG.textColor;
-    ctx.font = `${CONFIG.textFontSize}px ${getCurrentFont()}`; // используем стандартный размер текста
+    ctx.font = `400 ${CONFIG.textFontSize}px ${getCurrentFont()}`; 
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(item.quantity.toString(), qtyAreaX + buttonWidth + inputWidth/2, qtyAreaY + qtyAreaHeight/2);
@@ -489,7 +663,7 @@ function drawQuantityControls(ctx, canvas, item, x, y, width) {
     
     // Draw plus symbol
     ctx.fillStyle = CONFIG.textColor;
-    ctx.font = `${CONFIG.textFontSize}px ${getCurrentFont()}`; // используем стандартный размер текста
+    ctx.font = `400 ${CONFIG.textFontSize}px ${getCurrentFont()}`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText('+', qtyAreaX + buttonWidth + inputWidth + buttonWidth/2, qtyAreaY + qtyAreaHeight/2);
@@ -526,6 +700,9 @@ function drawQuantityControls(ctx, canvas, item, x, y, width) {
     canvas.dataset.minusBtn = JSON.stringify(minusBtnPos);
     canvas.dataset.plusBtn = JSON.stringify(plusBtnPos);
     canvas.dataset.qtyInput = JSON.stringify(qtyInputPos);
+    
+    // Восстанавливаем состояние контекста
+    ctx.restore();
 }
 
 /**
@@ -625,7 +802,12 @@ function drawBrandingButton(ctx, canvas, item, x, y, width, isAvailable = true) 
     
     // Text
     ctx.fillStyle = isAvailable ? CONFIG.textColor : '#888';
-    ctx.font = isAvailable ? `14px ${getCurrentFont()}` : `12px ${getCurrentFont()}`;
+    
+    // Используем обычный вес шрифта
+    ctx.font = isAvailable 
+        ? `400 14px ${getCurrentFont()}` 
+        : `400 12px ${getCurrentFont()}`;
+    
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     
@@ -673,6 +855,9 @@ function drawBrandingButton(ctx, canvas, item, x, y, width, isAvailable = true) 
 function truncateText(ctx, text, maxWidth) {
     if (!text) return '';
     
+    // Сохраняем текущее состояние контекста
+    const currentFont = ctx.font;
+    
     const ellipsis = '...';
     const ellipsisWidth = ctx.measureText(ellipsis).width;
     
@@ -701,6 +886,12 @@ function truncateText(ctx, text, maxWidth) {
  */
 function renderMultilineText(ctx, text, x, y, maxWidth, maxLines) {
     if (!text) return;
+    
+    // Сохраняем текущее состояние контекста
+    ctx.save();
+    
+    // Устанавливаем шрифт с явным указанием веса 400
+    ctx.font = `400 ${CONFIG.textFontSize}px ${getCurrentFont()}`;
     
     const words = text.split(' ');
     let line = '';
@@ -731,6 +922,9 @@ function renderMultilineText(ctx, text, x, y, maxWidth, maxLines) {
     if (lineCount < maxLines) {
         ctx.fillText(line, x, currentY);
     }
+    
+    // Восстанавливаем состояние контекста
+    ctx.restore();
 }
 
 /**
