@@ -164,9 +164,9 @@ function logInteractiveElements(canvas, x, y) {
             distanceInfo = `, расстояние от центра: ${distance.toFixed(1)}px`;
         }
         
-        console.log(`\n✅ Click hit the ${hitArea.toUpperCase()} area${distanceInfo}`);
+        // console.log(`\n✅ Click hit the ${hitArea.toUpperCase()} area${distanceInfo}`);
     } else {
-        console.log('\n❌ Click did not hit any interactive area');
+        // console.log('\n❌ Click did not hit any interactive area');
         
         // Находим ближайший элемент
         let closestElement = null;
@@ -186,7 +186,7 @@ function logInteractiveElements(canvas, x, y) {
         });
         
         if (closestElement) {
-            console.log(`Closest element: ${closestElement.toUpperCase()}, distance: ${minDistance.toFixed(1)}px`);
+            // console.log(`Closest element: ${closestElement.toUpperCase()}, distance: ${minDistance.toFixed(1)}px`);
         }
     }
     
