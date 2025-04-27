@@ -16,6 +16,9 @@ import { initBranding } from './branding/brandingInit.js';
 import eventBus from './eventBus.js';
 // import { initBrandingAdd } from './branding/brandingAdd.js';
 import initBrandingButtonManager from './branding/brandingButtonManager.js';
+// Импортируем модули синхронизации цен
+import { syncCartPrices, PRICE_SYNC_EVENTS } from './pricing/priceSync.js';
+import { initItemPriceSync } from './pricing/itemPriceSync.js';
 
 // Глобальные данные о возможностях печати
 let printOpportunities = [];
@@ -100,6 +103,9 @@ export function initCart() {
     // Initialize branding button manager
     initBrandingButtonManager();
     
+    // Инициализируем синхронизацию цен брендирования при изменении количества товара
+    initItemPriceSync();
+    
     // Check if we're on the cart page
     const cartContainer = document.querySelector('.cart-page__items');
     
@@ -110,27 +116,36 @@ export function initCart() {
         // Инициализация менеджера обновления цен
         initPriceUpdateManager();
         
-        // Инициализация рендеринга корзины
-        initCartRendering();
+        // Настраиваем подписку на событие завершения синхронизации цен
+        eventBus.subscribe(PRICE_SYNC_EVENTS.SYNC_COMPLETE, () => {
+            // После обновления цен инициализируем рендеринг и все остальное
+            
+            // Инициализация рендеринга корзины
+            initCartRendering();
+            
+            // Инициализация обработчиков событий
+            initCartItemEvents();
+            
+            // Инициализация обработчиков ввода количества
+            initQuantityInputHandlers();
+            
+            // Инициализация калькулятора цен
+            initPriceCalculator();
+            
+            // Инициализация блока суммы корзины
+            initCartSummary();
+            
+            // Инициализация функционала брендирования
+            initBranding();
+            
+            // Регистрируем завершение инициализации
+            registerModuleInit('index.js', { phase: 'completed' });
+        });
         
-        // Инициализация обработчиков событий
-        initCartItemEvents();
-        
-        // Инициализация обработчиков ввода количества
-        initQuantityInputHandlers();
-        
-        // Инициализация калькулятора цен
-        initPriceCalculator();
-        
-        // Инициализация блока суммы корзины
-        initCartSummary();
-        
-        // Инициализация функционала брендирования
-        initBranding();
-        
-        // Регистрируем завершение инициализации
-        registerModuleInit('index.js', { phase: 'completed' });
+        // Запускаем синхронизацию цен перед отображением корзины
+        syncCartPrices();
     } else {
+        // Для страниц без корзины может быть свой код инициализации
     }
     
     // Публикуем событие инициализации корзины
