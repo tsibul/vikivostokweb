@@ -1080,15 +1080,15 @@ export function initCartRendering() {
                     // Пробуем использовать современный метод reset (поддерживается в большинстве современных браузеров)
                     if (ctx.reset && typeof ctx.reset === 'function') {
                         ctx.reset();
-                        console.log('Used ctx.reset() for canvas reset');
+                        // console.log('Used ctx.reset() for canvas reset');
                     } else {
                         // Fallback: используем традиционный метод
                         canvas.width = width;
-                        console.log('Used width reset for canvas');
+                        // console.log('Used width reset for canvas');
                     }
                 } catch (e) {
                     // В случае ошибки с reset(), используем традиционный подход
-                    canvas.width = width;
+                    // canvas.width = width;
                     console.log('Reset error, fallback to width reset', e.message);
                 }
                 
@@ -1097,7 +1097,7 @@ export function initCartRendering() {
                 const item = cartItems.find(i => i.id === itemId);
                 if (item) {
                     renderCartItem(canvas, item);
-                    console.log('Canvas state reset and redrawn', itemId);
+                    // console.log('Canvas state reset and redrawn', itemId);
                 }
             }
         }
