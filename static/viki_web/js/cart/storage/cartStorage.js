@@ -56,10 +56,10 @@ export function addCartItem(item) {
         console.error('Invalid item data, ID is required');
         return getCart();
     }
-    
+
     const cart = getCart();
     const existingItemIndex = cart.findIndex(cartItem => cartItem.id === item.id);
-    
+
     if (existingItemIndex !== -1) {
         // Replace existing item
         cart[existingItemIndex] = item;
@@ -67,7 +67,7 @@ export function addCartItem(item) {
         // Add new item
         cart.push(item);
     }
-    
+
     saveCart(cart);
     return cart;
 }
@@ -84,18 +84,18 @@ export function updateCartItem(item) {
         console.error('Invalid item data, ID is required');
         return null;
     }
-    
+
     const cart = getCart();
     const existingItemIndex = cart.findIndex(cartItem => cartItem.id === item.id);
-    
+
     if (existingItemIndex === -1) {
         console.warn('Item not found in cart, cannot update');
         return null;
     }
-    
+
     // Update item
     cart[existingItemIndex] = item;
-    
+
     saveCart(cart);
     return cart;
 }
@@ -110,36 +110,36 @@ export function removeCartItem(itemId) {
         console.error('Item ID is required');
         return getCart();
     }
-    
+
     const cart = getCart();
     const filteredCart = cart.filter(item => item.id !== itemId);
-    
+
     saveCart(filteredCart);
     return filteredCart;
 }
 
-/**
- * Update item quantity in cart
- * @param {string} itemId - ID of the item to update
- * @param {number} quantity - New quantity
- * @returns {Array} Updated cart
- */
-export function updateCartItemQuantity(itemId, quantity) {
-    if (!itemId) {
-        console.error('Item ID is required');
-        return getCart();
-    }
-    
-    const cart = getCart();
-    const itemIndex = cart.findIndex(item => item.id === itemId);
-    
-    if (itemIndex !== -1) {
-        cart[itemIndex].quantity = parseInt(quantity) || 1;
-        saveCart(cart);
-    }
-    
-    return cart;
-}
+// /**
+//  * Update item quantity in cart
+//  * @param {string} itemId - ID of the item to update
+//  * @param {number} quantity - New quantity
+//  * @returns {Array} Updated cart
+//  */
+// export function updateCartItemQuantity(itemId, quantity) {
+//     if (!itemId) {
+//         console.error('Item ID is required');
+//         return getCart();
+//     }
+//
+//     const cart = getCart();
+//     const itemIndex = cart.findIndex(item => item.id === itemId);
+//
+//     if (itemIndex !== -1) {
+//         cart[itemIndex].quantity = parseInt(quantity) || 1;
+//         saveCart(cart);
+//     }
+//
+//     return cart;
+// }
 
 /**
  * Clear cart
