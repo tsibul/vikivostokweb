@@ -4,8 +4,8 @@
  */
 
 import eventBus from '../eventBus.js';
-import { fetchPrintOpportunities, getBrandingPrice } from '../branding/brandingOptionsManager.js';
-import { STORAGE_EVENTS } from '../cartStorage.js';
+import {fetchPrintOpportunities, getBrandingPrice} from '../branding/brandingOptionsManager.js';
+import {STORAGE_EVENTS} from '../cartStorage.js';
 
 // Событие обновления цен брендирования
 export const BRANDING_PRICE_EVENTS = {
@@ -23,57 +23,59 @@ export async function updateItemBrandingPrices(itemId, quantity) {
         // Получаем товары из корзины
         const cartItems = JSON.parse(localStorage.getItem('cart') || '[]');
         const itemIndex = cartItems.findIndex(item => item.id === itemId);
-        
+
         if (itemIndex === -1) {
             return false;
         }
-        
+
         const item = cartItems[itemIndex];
-        
+        const currentQuantity = quantity;
+
         // Если у товара нет брендирования, нечего обновлять
         if (!item.branding || item.branding.length === 0) {
             return false;
         }
-        
+
         // Получаем возможности печати для товара
         const goodsId = item.goodsId || item.id;
         const opportunities = await fetchPrintOpportunities(goodsId);
-        
+
         if (!opportunities || opportunities.length === 0) {
             return false;
         }
-        
+
         // Флаг изменения цен брендирования
         let brandingUpdated = false;
-        
+
         // Обновляем цены для каждого брендирования
         for (let i = 0; i < item.branding.length; i++) {
             const branding = item.branding[i];
-            
+
             // Получаем актуальную цену брендирования
             const typeId = branding.typeId || branding.type_id;
             const locationId = branding.locationId || branding.location_id;
             const colorCount = branding.colors || 1;
-            
+
             const newPrice = getBrandingPrice(
-                opportunities, 
-                typeId, 
-                locationId, 
-                colorCount, 
+                opportunities,
+                typeId,
+                locationId,
+                colorCount,
                 quantity
             );
-            
+
             // Если цена изменилась, обновляем её
             if (branding.price !== newPrice) {
                 cartItems[itemIndex].branding[i].price = newPrice;
                 brandingUpdated = true;
             }
         }
-        
+
         // Если были изменения, сохраняем обновленную корзину
         if (brandingUpdated) {
+            cartItems[itemIndex].quantity = currentQuantity;
             localStorage.setItem('cart', JSON.stringify(cartItems));
-            
+
             // Публикуем событие об обновлении цен брендирования
             eventBus.publish(BRANDING_PRICE_EVENTS.ITEM_BRANDING_UPDATED, {
                 itemId,
@@ -81,16 +83,16 @@ export async function updateItemBrandingPrices(itemId, quantity) {
                 index: itemIndex,
                 timestamp: Date.now()
             });
-            
+
             // Также публикуем стандартное событие обновления товара в корзине
             eventBus.publish(STORAGE_EVENTS.CART_ITEM_UPDATED, {
                 item: cartItems[itemIndex],
                 index: itemIndex
             });
-            
+
             return true;
         }
-        
+
         return false;
     } catch (error) {
         console.error('Error updating item branding prices:', error);
