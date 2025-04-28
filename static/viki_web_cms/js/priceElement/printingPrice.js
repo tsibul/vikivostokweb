@@ -122,7 +122,7 @@ function buildRowItem(group,volume) {
         e.target.classList.remove('price-row__item_disabled');
     });
     const price = group.prices.find(price => price['print_volume__id'] === volume.print_volume_id);
-    rowItem.dataset.id = price && 'id' in Object.keys(price) ? price['id'] : '';
+    rowItem.dataset.id = price ? price['price__id'] : '';
     rowItem.dataset.print_volume__id = volume.print_volume_id;
     rowItem.dataset.print_price_group__id = group.print_price_group__id;
     rowItem.value = price?.['price'];
