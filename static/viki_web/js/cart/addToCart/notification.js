@@ -96,7 +96,7 @@ export function showErrorNotification(message, duration = 3000) {
         }, duration);
 
         // Setup close button
-        notification.querySelector('.error-notification__close').addEventListener('click', () => {
+        notification.querySelector('.success-notification__close').addEventListener('click', () => {
             notification.classList.remove('active');
             setTimeout(() => notification.remove(), 300);
         });
