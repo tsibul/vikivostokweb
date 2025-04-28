@@ -532,6 +532,24 @@
       padding: 0.75rem 1rem;
       text-align: center;
     }
+    
+    .btn__secondary {
+      background-color: #fff;
+      border: 1px solid $colorPrimary;
+      color: $colorPrimary;
+      transition: background-color 0.2s ease, color 0.2s ease, transform 0.1s ease;
+      
+      &:hover {
+        background-color: $colorSecondary50;
+        transform: translateY(-2px);
+        box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+      }
+      
+      &:active {
+        transform: translateY(0);
+        box-shadow: none;
+      }
+    }
   }
 }
 
