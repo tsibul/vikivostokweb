@@ -56,10 +56,6 @@
     min-width: 100px;
   }
 
-  &__value {
-    color: $colorNeutral500;
-  }
-
   &__company-selection {
     margin-top: 10px;
   }
@@ -267,7 +263,7 @@
   }
 
   &__value {
-    color: $colorNeutral500;
+    //color: $colorNeutral500;
   }
 
   &__actions {

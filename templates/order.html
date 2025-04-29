@@ -18,19 +18,19 @@
                             <div class="order-customer__user">
                                 <div class="order-customer__field">
                                     <span class="order-customer__label">Имя:</span>
-                                    <span class="order-customer__value">{{ user.first_name }} {{ user.last_name }}</span>
+                                    <span>{{ user.first_name }} {{ user.last_name }}</span>
                                 </div>
                                 <div class="order-customer__field">
                                     <span class="order-customer__label">Email:</span>
-                                    <span class="order-customer__value">{{ user.email }}</span>
+                                    <span>{{ user.email }}</span>
                                 </div>
                                 <div class="order-customer__field">
                                     <span class="order-customer__label">Телефон:</span>
-                                    <span class="order-customer__value">{{ user_extension.phone }}</span>
+                                    <span>{{ user_extension.phone }}</span>
                                 </div>
                                 <div class="order-customer__field">
                                     <span class="order-customer__label">Клиент:</span>
-                                    <span class="order-customer__value">{{ customer.name }}</span>
+                                    <span>{{ customer.name }}</span>
                                 </div>
                             </div>
 
@@ -69,13 +69,13 @@
                                 {% if companies %}
                                     <div class="order-customer__field">
                                         <span class="order-customer__label">ИНН/КПП:</span>
-                                        <span class="order-customer__value company-inn-kpp">
+                                        <span class="company-inn-kpp">
                                         {{ companies.0.inn }}{% if companies.0.kpp %}/{{ companies.0.kpp }}{% endif %}
                                     </span>
                                     </div>
                                     <div class="order-customer__field">
                                         <span class="order-customer__label">Адрес:</span>
-                                        <span class="order-customer__value company-address">{{ companies.0.address }}</span>
+                                        <span class="company-address">{{ companies.0.address }}</span>
                                     </div>
                                 {% endif %}
                             </div>
