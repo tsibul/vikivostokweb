@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from .views import quote
 
 app_name = 'viki_web'
 urlpatterns = [
@@ -26,6 +27,8 @@ urlpatterns = [
     path('price', views.price, name='price'),
     path('export-price-csv', views.export_price_csv, name='export_price_csv'),
     path('cart', views.cart, name='cart'),
+    path('quote/', quote.quote_view, name='quote'),
+    path('quote/goods-info/', quote.get_goods_info, name='quote_goods_info'),
     path('api/print-opportunities/<int:goods_id>', views.get_print_opportunities, name='print_opportunities'),
     path('about', views.about, name='about'),
     path('news', views.news, name='news'),

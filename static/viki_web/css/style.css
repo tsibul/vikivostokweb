@@ -2768,6 +2768,21 @@ dialog.company-dialog textarea {
   padding: 0.75rem 1rem;
   text-align: center;
 }
+.cart-summary__actions .btn__secondary {
+  background-color: #fff;
+  border: 1px solid #0F4880;
+  color: #0F4880;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.1s ease;
+}
+.cart-summary__actions .btn__secondary:hover {
+  background-color: #F2FFFF;
+  transform: translateY(-2px);
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+}
+.cart-summary__actions .btn__secondary:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
 
 .cart-empty {
   display: flex;
@@ -3030,11 +3045,9 @@ span.text-like {
 
 .cart-quantity-input {
   position: absolute;
-  border: 2px solid #00a3c0;
   border-radius: 4px;
   background: #ffffff;
   color: #0F4880;
-  font-family: "Montserrat", sans-serif;
   font-size: 14px;
   padding: 0 4px;
   margin: 0;
@@ -3930,6 +3943,263 @@ span.text-like {
 }
 .branding-modal .viki-dropdown__menu {
   top: 100%;
+}
+
+.quote-container {
+  padding: 2rem 0;
+}
+.quote-container .section-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0F4880;
+  margin-bottom: 1.5rem;
+}
+
+.quote-company-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+.quote-company-info__logo {
+  max-width: 200px;
+}
+.quote-company-info__logo img {
+  max-width: 100%;
+  height: auto;
+}
+.quote-company-info__details {
+  text-align: right;
+}
+.quote-company-info__details h3 {
+  font-family: "Montserrat", sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  color: #0F4880;
+  margin-bottom: 0.5rem;
+}
+.quote-company-info__details p {
+  font-family: "Montserrat", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  color: #555;
+  margin: 0.25rem 0;
+}
+
+.quote-items {
+  margin-bottom: 1.25rem;
+}
+
+.quote-item {
+  display: flex;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  border: 1px solid #0F4880;
+  border-radius: 6px;
+}
+.quote-item__image {
+  width: 200px;
+  height: 200px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fff;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.quote-item__image img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+.quote-item__details {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.quote-item__name {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #0F4880;
+  margin: 0 0 0.5rem 0;
+}
+.quote-item__article {
+  font-size: 0.9rem;
+  color: #0F4880;
+  margin: 0;
+}
+.quote-item__description {
+  font-size: 0.9rem;
+  color: #0F4880;
+  margin: 0;
+  line-height: 1.4;
+}
+.quote-item__price-row {
+  display: grid;
+  grid-template-columns: 1.5fr repeat(2, 1fr);
+  gap: 3rem;
+  padding: 0.25rem 0;
+}
+.quote-item__price-row label {
+  font-size: 0.9rem;
+  color: #0F4880;
+}
+.quote-item__price-element {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.quote-item__price-input, .quote-item__branding-price-input {
+  width: 120px;
+  height: 24px;
+  text-align: right;
+  padding-right: 30px;
+  border: 1px solid #0F4880;
+  border-radius: 4px;
+  position: relative;
+}
+.quote-item__price-input::after, .quote-item__branding-price-input::after {
+  content: "руб.";
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.8rem;
+  color: #0F4880;
+}
+.quote-item__price-container, .quote-item__total-container {
+  display: flex;
+  align-items: center;
+}
+.quote-item__price-container span.currency, .quote-item__total-container span.currency {
+  margin-left: 5px;
+}
+.quote-item__branding {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed #0F4880;
+}
+.quote-item__branding-header {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #0F4880;
+}
+.quote-item__branding-item {
+  padding: 0.75rem;
+  margin-bottom: 0.75rem;
+  background-color: #F2FFFF;
+  border-radius: 4px;
+}
+.quote-item__branding-info {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
+}
+.quote-item__branding-info span {
+  color: #0F4880;
+}
+.quote-item__branding-total {
+  margin-top: 0.25rem;
+}
+.quote-item__final-total {
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid #0F4880;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #0F4880;
+}
+@media (max-width: 768px) {
+  .quote-item {
+    flex-direction: column;
+  }
+  .quote-item__image {
+    width: 100%;
+    height: 180px;
+  }
+}
+
+.quote-summary {
+  padding: 1rem;
+  background-color: #fff;
+  border: 1px solid #0F4880;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+.quote-summary__row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+.quote-summary__row.total {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #0F4880;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid #0F4880;
+}
+.quote-summary__label {
+  font-weight: 600;
+  color: #0F4880;
+}
+.quote-summary__value {
+  font-weight: 600;
+  text-align: right;
+  min-width: 120px;
+}
+
+.quote-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2rem;
+}
+.quote-actions button, .quote-actions a {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+}
+
+@media print {
+  header, .header, menu, .menu {
+    display: none !important;
+  }
+  footer, .footer {
+    display: none !important;
+  }
+  .quote-actions {
+    display: none !important;
+  }
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: white;
+  }
+  .container {
+    width: 100%;
+    max-width: none;
+    padding: 0;
+    margin: 0;
+  }
+  .quote-container {
+    width: 100%;
+    padding: 1cm;
+  }
+  .quote-item {
+    page-break-inside: avoid;
+  }
+  .quote-company-info {
+    margin-bottom: 1.5cm;
+  }
+  input {
+    border: none !important;
+    background: transparent !important;
+  }
 }
 
 /*# sourceMappingURL=style.css.map */

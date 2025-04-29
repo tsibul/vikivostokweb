@@ -12,6 +12,7 @@ import {
     updateCartBadge
 } from './cart/index.js';
 import { showAddToCartNotification, showErrorNotification } from './cart/addToCart/notification.js';
+import { getCSRFToken } from './common/getCSRFToken.js';
 
 /**
  * Initialization of cart functions when document loads
@@ -51,21 +52,38 @@ document.addEventListener('DOMContentLoaded', async function () {
  * Generate quote based on cart items
  */
 function generateQuote() {
-    // Get cart data from local storage
-    const cartItems = JSON.parse(localStorage.getItem('cartItems') || '[]');
+    // Получаем данные корзины напрямую из localStorage
+    const cartItems = localStorage.getItem('cart');
     
-    if (cartItems.length === 0) {
+    // Проверяем, есть ли данные в корзине
+    if (!cartItems || cartItems === '[]') {
         showErrorNotification('Корзина пуста. Добавьте товары для формирования КП.');
         return;
     }
     
-    // Here you would typically send a request to the server
-    // For now, we'll just show a notification
-    showAddToCartNotification({
-        name: 'Коммерческое предложение',
-        article: 'КП'
-    }, false, 5000);
+    // Создаем форму для отправки данных (это гарантирует перенаправление)
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '/quote/';
+    form.style.display = 'none';
     
-    // In a real implementation, you would send the cart data to the server
-    // and either redirect to a quote page or download a generated quote file
+    // Создаем поле для данных корзины
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'cart_data';
+    input.value = cartItems;
+    
+    // CSRF токен
+    const csrfInput = document.createElement('input');
+    csrfInput.type = 'hidden';
+    csrfInput.name = 'csrfmiddlewaretoken';
+    csrfInput.value = getCSRFToken();
+    
+    // Добавляем поля в форму
+    form.appendChild(input);
+    form.appendChild(csrfInput);
+    
+    // Добавляем форму в документ и отправляем
+    document.body.appendChild(form);
+    form.submit();
 }

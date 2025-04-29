@@ -1,0 +1,160 @@
+{% extends 'header.html' %}
+{% load static %}
+{% block content %}
+    <script src="{% static 'viki_web/js/quote.js' %}" defer type="module"></script>
+
+    <main>
+        <div class="container">
+            <div class="quote-container">
+                <h1 class="section-title">Коммерческое предложение</h1>
+
+                <!-- Информация о компании -->
+                <div class="quote-company-info">
+                    <div class="quote-company-info__logo">
+                        <img src="{% static 'viki_web/icons/logo.svg' %}" alt="Вики Восток">
+                    </div>
+                    <div class="quote-company-info__details">
+                        <h3>ООО «Вики Восток Сувенир»</h3>
+                        <p>ИНН: 50 01 021 228</p>
+                        <p>ОГРН: 1155001000549</p>
+                        <p>Тел.: 8-926-602-64-41</p>
+                        <p>E-mail: office@vikivostok.ru</p>
+                    </div>
+                </div>
+
+                <!-- Товары КП -->
+                <div class="quote-items" id="quote-items">
+                        {% for item in cart_items %}
+                            <div class="quote-item">
+                                <div class="quote-item__image">
+                                    <img src="{{ item.image }}" alt="{{ item.name }}">
+                                </div>
+                                <div class="quote-item__details">
+                                    <h3 class="quote-item__name">{{ item.name }}</h3>
+                                    <p class="quote-item__article">Артикул: {{ item.article }}</p>
+
+                                    {% if item.db_description %}
+                                        <p class="quote-item__description db-description">{{ item.db_description }}</p>
+                                    {% endif %}
+
+                                    {% if item.description %}
+                                        <p class="quote-item__description local-description">{{ item.description }}</p>
+                                    {% endif %}
+                                    <div class="quote-item__price-row">
+                                        <div class="quote-item__price-element">
+                                            <label>Цена за единицу:</label>
+                                            <div class="quote-item__price-container">
+                                                <input type="number" class="quote-item__price-input"
+                                                       data-item-id="{{ item.id }}" min="0" step="0.01"
+                                                       value="{{ item.price }}">
+                                                <span class="currency">руб.</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="quote-item__price-element">
+                                            <label>Количество:</label>
+                                            <span class="quote-item__quantity">{{ item.quantity }}</span>
+                                        </div>
+
+                                        <div class="quote-item__price-element">
+                                            <label>Стоимость:</label>
+                                            <div class="quote-item__total-container">
+                                                <span class="quote-item__total-value"
+                                                      data-value="{{ item.price|floatformat:2|stringformat:'s'|add:'0'|cut:'.' }}">
+                                                    {{ item.price|floatformat:2|stringformat:'s'|add:'0'|cut:'.'|slice:':-2'|default:'0' }},{{ item.price|floatformat:2|stringformat:'s'|add:'0'|cut:'.'|slice:'-2:'|default:'00' }}</span>
+                                                <span class="currency">руб.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Блок брендирования -->
+                                    {% if item.branding %}
+                                        <div class="quote-item__branding">
+                                            <h4 class="quote-item__branding-header">Брендирование</h4>
+                                            <div class="quote-item__branding-items">
+                                                {% for branding in item.branding %}
+                                                    <div class="quote-item__price-row">
+                                                        <div class="quote-item__price-element">
+                                                            <label>
+                                                                {{ branding.type}}&nbsp;
+                                                                {{ branding.location}}&nbsp;
+                                                                цветов&nbsp;{{ branding.colors}}
+                                                                {%  if branding.secondPass %}
+                                                                &nbsp;второй проход
+                                                                {% endif %}
+                                                            </label>
+                                                        </div>
+                                                        <div class="quote-item__price-element">
+                                                            <label>Цена:</label>
+                                                            <div class="quote-item__price-container">
+                                                                <input type="number"
+                                                                       class="quote-item__branding-price-input"
+                                                                       data-branding-id="{{ forloop.counter0 }}" min="0"
+                                                                       step="0.01"
+                                                                       value="{{ branding.price|default:0 }}">
+                                                                <span class="currency">руб.</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="quote-item__price-element">
+                                                            <label>Стоимость:</label>
+                                                            <div class="quote-item__total-container">
+                                                                <span class="quote-item__branding-item-total"
+                                                                      data-value="{{ branding.price|default:0|floatformat:2|stringformat:'s'|add:'0'|cut:'.' }}">
+                                                                    {{ branding.price|default:0|floatformat:2|stringformat:'s'|add:'0'|cut:'.'|slice:':-2'|default:'0' }},{{ branding.price|default:0|floatformat:2|stringformat:'s'|add:'0'|cut:'.'|slice:'-2:'|default:'00' }}</span>
+                                                                <span class="currency">руб.</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                            <div class="quote-item__branding-total">
+                                                <div class="quote-item__total-row quote-item__price-element">
+                                                    <label>Стоимость брендирования:</label>
+                                                    <div class="quote-item__total-container">
+                                                        <span class="quote-item__branding-total-value" data-value="0">0,00</span>
+                                                        <span class="currency">руб.</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+
+                                    <!-- Итоговая сумма по товару -->
+                                    <div class="quote-item__final-total">
+                                        <div>Итого:&nbsp;</div>
+                                        <div class="quote-item__total-container">
+                                            <span class="quote-item__final-total-value" data-value="0">0,00</span>
+                                            <span class="currency">руб.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                </div>
+
+                <!-- Итоговая информация -->
+                {% if cart_items %}
+                    <div class="quote-summary">
+                        <div class="quote-summary__row">
+                            <div class="quote-summary__label">Всего позиций:</div>
+                            <div class="quote-summary__value" id="quote-total-items">{{ total_items }}</div>
+                        </div>
+                        <div class="quote-summary__row total">
+                            <div class="quote-summary__label">Итоговая сумма:</div>
+                            <div class="quote-summary__value">
+                                <span id="quote-total-sum">0,00</span>
+                                <span class="currency">руб.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Кнопки действий -->
+                    <div class="quote-actions">
+                        <a href="{% url 'viki_web:cart' %}" class="btn btn__cancel">Закрыть</a>
+                        <button id="generate-pdf" class="btn btn__save">Сформировать PDF</button>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+{% endblock %} 
