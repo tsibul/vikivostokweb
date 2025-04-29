@@ -110,11 +110,11 @@ export function initSummaryEvents() {
         });
     }
 
-    if (checkoutButton) {
-        checkoutButton.addEventListener('click', () => {
-            window.location.href = '/checkout';
-        });
-    }
+    // if (checkoutButton) {
+    //     checkoutButton.addEventListener('click', () => {
+    //         window.location.href = '/checkout';
+    //     });
+    // }
 }
 
 /**

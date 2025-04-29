@@ -13,6 +13,7 @@ import {
 } from './cart/index.js';
 import { showAddToCartNotification, showErrorNotification } from './cart/addToCart/notification.js';
 import { getCSRFToken } from './common/getCSRFToken.js';
+import { initAuthCheck } from './cart/checkAuth.js';
 
 /**
  * Initialization of cart functions when document loads
@@ -27,6 +28,9 @@ document.addEventListener('DOMContentLoaded', async function () {
     
     // Initialize recently viewed
     RecentlyViewed.init();
+    
+    // Initialize authentication check for checkout
+    initAuthCheck();
     
     // Initialize quote button
     const quoteButton = document.querySelector('.cart-summary__quote');
