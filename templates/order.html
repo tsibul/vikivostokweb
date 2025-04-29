@@ -1,0 +1,205 @@
+{% extends 'header.html' %}
+{% load static %}
+{% block content %}
+    <script src="{% static 'viki_web/js/order.js' %}" defer type="module"></script>
+
+    <main>
+        <div class="container">
+            <h1 class="section-title">Оформление заказа</h1>
+
+            <div class="order-page">
+                <form class="order-form" method="POST" action="{% url 'viki_web:order' %}">
+                    {% csrf_token %}
+
+                    <!-- Customer Information Section -->
+                    <div class="order-customer">
+                        <h2 class="order-section-title">Информация о покупателе</h2>
+                        <div class="order-customer__info">
+                            <div class="order-customer__user">
+                                <div class="order-customer__field">
+                                    <span class="order-customer__label">Имя:</span>
+                                    <span class="order-customer__value">{{ user.first_name }} {{ user.last_name }}</span>
+                                </div>
+                                <div class="order-customer__field">
+                                    <span class="order-customer__label">Email:</span>
+                                    <span class="order-customer__value">{{ user.email }}</span>
+                                </div>
+                                <div class="order-customer__field">
+                                    <span class="order-customer__label">Телефон:</span>
+                                    <span class="order-customer__value">{{ user_extension.phone }}</span>
+                                </div>
+                                <div class="order-customer__field">
+                                    <span class="order-customer__label">Клиент:</span>
+                                    <span class="order-customer__value">{{ customer.name }}</span>
+                                </div>
+                            </div>
+
+                            <!-- Company Selection Dropdown -->
+                            <div class="order-customer__company-selection">
+                                <div class="order-customer__field">
+                                    <span class="order-customer__label">Компания:</span>
+                                    <div class="order-dropdown">
+                                        <div class="order-dropdown__selected">
+                                            {% if companies %}
+                                                <span class="company-name">{{ companies.0.name }}</span>
+                                                <input type="hidden" name="company_id" value="{{ companies.0.id }}">
+                                                <input type="hidden" name="company_vat" value="{{ companies.0.vat }}">
+                                            {% endif %}
+                                            <i class="fa-solid fa-chevron-down"></i>
+                                        </div>
+                                        <ul class="order-dropdown__options">
+                                            {% for company in companies %}
+                                                <li class="order-dropdown__option"
+                                                    data-id="{{ company.id }}"
+                                                    data-name="{{ company.name }}"
+                                                    data-inn="{{ company.inn }}"
+                                                    data-kpp="{{ company.kpp }}"
+                                                    data-address="{{ company.address }}"
+                                                    data-vat="{{ company.vat }}">
+                                                    {{ company.name }}
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Company Details Display -->
+                            <div class="order-customer__company-details">
+                                {% if companies %}
+                                    <div class="order-customer__field">
+                                        <span class="order-customer__label">ИНН/КПП:</span>
+                                        <span class="order-customer__value company-inn-kpp">
+                                        {{ companies.0.inn }}{% if companies.0.kpp %}/{{ companies.0.kpp }}{% endif %}
+                                    </span>
+                                    </div>
+                                    <div class="order-customer__field">
+                                        <span class="order-customer__label">Адрес:</span>
+                                        <span class="order-customer__value company-address">{{ companies.0.address }}</span>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cart Items Section -->
+                    <div class="order-items">
+                        <h2 class="order-section-title">Товары в заказе</h2>
+
+                        {% if cart_items %}
+                            {% for item in cart_items %}
+                                <div class="order-item">
+                                    <div class="order-item__image">
+                                        <img src="{{ item.image }}" alt="{{ item.article }}">
+                                    </div>
+                                    <div class="order-item__details">
+                                        <div class="order-item__row">
+                                            <h3 class="order-item__name">{{ item.name }}</h3>
+                                        </div>
+                                        <div class="order-item__row">
+                                            <div class="order-item__code">
+                                                <div>Артикул:&nbsp;{{ item.article }}</div>
+                                                <div>{{ item.description|truncatechars:100 }}</div>
+                                            </div>
+                                            <div class="order-item__row order-item__pricing">
+                                                <div class="order-item__price">
+                                                    <span>Цена:</span>
+                                                    <span>{{ item.price }} руб.</span>
+                                                </div>
+                                                <div class="order-item__price">
+                                                    <span>Количество:</span>
+                                                    <span>{{ item.quantity }}</span>
+                                                </div>
+                                                <div class="order-item__price">
+                                                    <span>Сумма:</span>
+                                                    <span>{{ item.total }} руб.</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% if item.branding %}
+                                            <div class="order-item__row">
+                                                <div class="order-item__branding-name">
+                                                    <label for="branding_name_{{ forloop.counter }}"
+                                                           class="order-item__label">Брендирование</label>
+                                                    <input type="text"
+                                                           name="branding_name_{{ item.id }}"
+                                                           id="branding_name_{{ forloop.counter }}"
+                                                           class="order-item__branding-input"
+                                                           required>
+                                                </div>
+                                            </div>
+                                            {% for branding in item.branding %}
+                                                <div class="order-item__row">
+                                                    <div class="order-item__branding">
+                                                        <span class="order-item__value">{{ branding.type }}</span>
+                                                        <span class="order-item__value"> {{ branding.location }},</span>
+                                                        <span class="order-item__value"> цветов:</span>
+                                                        <span class="order-item__value"> {{ branding.colors }}</span>
+                                                        {% if branding.secondPass %}
+                                                            <span class="order-item__value">, второй проход</span>
+                                                        {% endif %}
+                                                    </div>
+                                                    <div class="order-item__branding-price order-item__pricing">
+                                                        <div class="order-item__price">
+                                                            <span>Цена:</span>
+                                                            <span>{{ branding.price }} руб.</span>
+                                                        </div>
+                                                        <div></div>
+                                                        <div class="order-item__price">
+                                                            <span>Сумма:</span>
+                                                            <span>{{ branding.total }} руб.</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="order-empty">
+                                <p>В корзине нет товаров. <a href="{% url 'viki_web:catalogue' %}">Перейти в каталог</a>
+                                </p>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Order Summary Section -->
+                    <div class="order-summary">
+                        <h2 class="order-section-title">Итого</h2>
+
+                        <div class="order-summary__totals">
+                            <div class="order-summary__row">
+                                <span class="order-summary__label">Товаров:</span>
+                                <span class="order-summary__value">{{ cart_items|length }}</span>
+                            </div>
+                            <div class="order-summary__row">
+                                <span class="order-summary__label">Стоимость товаров:</span>
+                                <span class="order-summary__value">
+                                    <span class="goods-total">0</span> руб.
+                                </span>
+                            </div>
+                            <div class="order-summary__row">
+                                <span class="order-summary__label">Стоимость нанесения:</span>
+                                <span class="order-summary__value">
+                                    <span class="branding-total">0</span> руб.
+                                </span>
+                            </div>
+                            <div class="order-summary__row order-summary__grand-total">
+                                <span class="order-summary__label">Итого:</span>
+                                <span class="order-summary__value">
+                                    <span class="order-total">0</span> руб.
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="order-summary__actions">
+                            <a href="{% url 'viki_web:cart' %}" class="btn btn__cancel">Изменить</a>
+                            <button type="submit" class="btn btn__save">Заказать</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+{% endblock %} 

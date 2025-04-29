@@ -4201,5 +4201,382 @@ span.text-like {
     background: transparent !important;
   }
 }
+.order-page {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  padding: 20px 0;
+}
+
+.order-form {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  width: 100%;
+}
+
+.order-section-title {
+  font-size: 22px;
+  color: #0F4880;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.order-customer {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.order-customer__info {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.order-customer__user {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+.order-customer__field {
+  display: flex;
+  align-items: baseline;
+  min-width: 250px;
+  margin-right: 20px;
+}
+.order-customer__label {
+  font-weight: 600;
+  color: #0F4880;
+  margin-right: 10px;
+  min-width: 100px;
+}
+.order-customer__value {
+  color: #4A4A4A;
+}
+.order-customer__company-selection {
+  margin-top: 10px;
+}
+.order-customer__company-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(15, 72, 128, 0.1);
+}
+
+.order-dropdown {
+  position: relative;
+  width: 50%;
+}
+.order-dropdown__selected {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background-color: #fff;
+  border: 1px solid #0F4880;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.order-dropdown__selected i {
+  color: #0F4880;
+  font-size: 14px;
+}
+.order-dropdown__options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 0;
+  overflow: hidden;
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid transparent;
+  border-radius: 0 0 6px 6px;
+  z-index: 10;
+  transition: max-height 0.3s ease, border-color 0.3s ease;
+}
+.order-dropdown__options.active {
+  max-height: 200px;
+  overflow-y: auto;
+}
+.order-dropdown__option {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+.order-dropdown__option:hover {
+  background-color: rgba(0, 158, 163, 0.2);
+}
+
+.order-items {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.order-item {
+  display: flex;
+  padding: 15px 0;
+  border-bottom: 1px solid rgba(15, 72, 128, 0.1);
+}
+.order-item:last-child {
+  border-bottom: none;
+}
+.order-item__image {
+  width: 120px;
+  height: 120px;
+  margin-right: 20px;
+  flex-shrink: 0;
+}
+.order-item__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.order-item__details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.order-item__row {
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.order-item__name {
+  font-size: 18px;
+  color: #0F4880;
+  font-weight: 600;
+  margin: 0;
+}
+.order-item__code {
+  font-size: 14px;
+}
+.order-item__pricing {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.5fr;
+  gap: 30px;
+}
+.order-item__price, .order-item__quantity, .order-item__total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.order-item__branding-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.order-item__branding-input {
+  min-width: 240px;
+  padding: 5px 8px;
+  border: 1px solid #0F4880;
+  border-radius: 4px;
+}
+.order-item__branding-input.invalid {
+  border-color: red;
+  background-color: rgba(255, 0, 0, 0.05);
+}
+.order-item__branding {
+  font-size: 14px;
+}
+.order-item__branding-details {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+}
+.order-item__branding-price {
+  font-size: 14px;
+}
+
+.order-summary {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: this 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.order-summary__totals {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.order-summary__row {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+}
+.order-summary__row:not(:last-child) {
+  border-bottom: 1px solid rgba(15, 72, 128, 0.1);
+}
+.order-summary__grand-total {
+  font-weight: 700;
+  font-size: 18px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 2px solid rgba(15, 72, 128, 0.2);
+}
+.order-summary__label {
+  color: #0F4880;
+}
+.order-summary__value {
+  color: #4A4A4A;
+}
+.order-summary__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 20px;
+}
+.order-summary__actions .btn {
+  min-width: 120px;
+}
+
+@media (max-width: 768px) {
+  .order-customer__field {
+    min-width: 200px;
+  }
+  .order-dropdown {
+    width: 100%;
+  }
+  .order-item {
+    flex-direction: column;
+  }
+  .order-item__image {
+    width: 100%;
+    height: 200px;
+    margin-right: 0;
+    margin-bottom: 15px;
+  }
+  .order-summary__actions {
+    flex-direction: column;
+  }
+  .order-summary__actions .btn {
+    width: 100%;
+  }
+}
+.test {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}
+.test__block {
+  height: 60px;
+  width: 130px;
+  background-color: rgb(150, 160, 150);
+}
+
+.c1 {
+  background-color: rgb(150, 160, 150);
+}
+
+.c2 {
+  background-color: rgb(165, 160, 150);
+}
+
+.c3 {
+  background-color: rgb(150, 176, 150);
+}
+
+.c4 {
+  background-color: rgb(150, 160, 165);
+}
+
+.c5 {
+  background-color: rgb(165, 176, 150);
+}
+
+.c6 {
+  background-color: rgb(150, 176, 165);
+}
+
+.c7 {
+  background-color: rgb(165, 160, 165);
+}
+
+.c8 {
+  background-color: rgb(165, 176, 165);
+}
+
+.c9 {
+  background-color: rgb(135, 160, 150);
+}
+
+.c10 {
+  background-color: rgb(150, 144, 150);
+}
+
+.c11 {
+  background-color: rgb(150, 160, 135);
+}
+
+.c12 {
+  background-color: rgb(135, 144, 150);
+}
+
+.c13 {
+  background-color: rgb(150, 144, 135);
+}
+
+.c14 {
+  background-color: rgb(135, 160, 135);
+}
+
+.c15 {
+  background-color: rgb(135, 144, 135);
+}
+
+.c16 {
+  background-color: rgb(165, 144, 150);
+}
+
+.c17 {
+  background-color: rgb(135, 176, 150);
+}
+
+.c18 {
+  background-color: rgb(150, 176, 135);
+}
+
+.c19 {
+  background-color: rgb(150, 144, 165);
+}
+
+.c20 {
+  background-color: rgb(165, 160, 135);
+}
+
+.c21 {
+  background-color: rgb(135, 160, 165);
+}
+
+.c22 {
+  background-color: rgb(165, 144, 135);
+}
+
+.c23 {
+  background-color: rgb(135, 176, 135);
+}
+
+.c24 {
+  background-color: rgb(135, 144, 165);
+}
+
+.c25 {
+  background-color: rgb(165, 176, 135);
+}
+
+.c26 {
+  background-color: rgb(165, 144, 165);
+}
+
+.c27 {
+  background-color: rgb(135, 176, 165);
+}
 
 /*# sourceMappingURL=style.css.map */

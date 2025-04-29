@@ -6,6 +6,7 @@
 'use strict';
 
 import {modalDnD} from '../common/modalDnD.js';
+import {getCSRFToken} from '../common/getCSRFToken.js';
 
 /**
  * Check if user is authenticated
@@ -65,7 +66,30 @@ export function initAuthCheck() {
             event.preventDefault();
         } else {
             // User is authenticated, proceed with checkout
-            window.location.href = '/order/';
+            // Create a form to submit cart data
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/order/';
+            form.style.display = 'none';
+            
+            // Add cart data from localStorage
+            const cartData = localStorage.getItem('cart') || '[]';
+            const cartInput = document.createElement('input');
+            cartInput.type = 'hidden';
+            cartInput.name = 'cart_data';
+            cartInput.value = cartData;
+            form.appendChild(cartInput);
+            
+            // Add CSRF token
+            const csrfInput = document.createElement('input');
+            csrfInput.type = 'hidden';
+            csrfInput.name = 'csrfmiddlewaretoken';
+            csrfInput.value = getCSRFToken();
+            form.appendChild(csrfInput);
+            
+            // Add form to document and submit
+            document.body.appendChild(form);
+            form.submit();
         }
     });
 

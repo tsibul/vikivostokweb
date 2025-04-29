@@ -10,3 +10,4 @@ from viki_web.views.catalogue import *
 from viki_web.views.cart import *
 from viki_web.views.about import *
 from viki_web.views.quote import *
+from viki_web.views.order import *
