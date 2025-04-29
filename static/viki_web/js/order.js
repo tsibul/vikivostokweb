@@ -128,23 +128,22 @@ function calculateTotals() {
     let brandingTotal = 0;
     
     items.forEach(item => {
-        // Get item total
-        const itemTotalElement = item.querySelector('.order-item__total .order-item__value');
-        if (itemTotalElement) {
-            const itemTotal = parseFloat(itemTotalElement.textContent);
-            if (!isNaN(itemTotal)) {
-                goodsTotal += itemTotal;
-            }
-        }
+        // Get item total (product total)
+        const itemTotalElements = item.querySelectorAll('.order-item__pricing .order-item__price[data-total]');
         
-        // Get branding total
-        const brandingPriceElement = item.querySelector('.order-item__branding-price .order-item__value');
-        if (brandingPriceElement) {
-            const brandingPrice = parseFloat(brandingPriceElement.textContent);
-            if (!isNaN(brandingPrice)) {
-                brandingTotal += brandingPrice;
+        itemTotalElements.forEach(element => {
+            const totalValue = element.querySelector('span:last-child').textContent;
+            const totalAmount = parseFloat(totalValue.replace(/[^\d.-]/g, ''));
+            
+            if (!isNaN(totalAmount)) {
+                // Check if this is a branding element or product element
+                if (element.closest('.order-item__branding-price')) {
+                    brandingTotal += totalAmount;
+                } else {
+                    goodsTotal += totalAmount;
+                }
             }
-        }
+        });
     });
     
     // Update totals in the summary
