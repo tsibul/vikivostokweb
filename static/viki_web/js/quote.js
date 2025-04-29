@@ -11,15 +11,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // Инициализация обработчиков событий
     initEventListeners();
     
-    // Обновление итогов
-    updateTotals();
-    
-    // Обновление общей стоимости брендирования для всех товаров
+    // Обновление брендирования и итогов для всех товаров
     document.querySelectorAll('.quote-item').forEach(item => {
         const itemId = item.querySelector('.quote-item__price-input').getAttribute('data-item-id');
         updateBrandingTotal(itemId);
         updateItemTotal(itemId);
     });
+    
+    // Обновление общих итогов
+    updateTotals();
 });
 
 /**
@@ -79,12 +79,12 @@ function initEventListeners() {
  */
 function updateBrandingTotal(itemId) {
     const itemElement = document.querySelector(`.quote-item__price-input[data-item-id="${itemId}"]`).closest('.quote-item');
-    const brandingItems = itemElement.querySelectorAll('.quote-item__branding-item');
+    const brandingItems = itemElement.querySelectorAll('.quote-item__branding-items .quote-item__price-row');
     const brandingTotalElement = itemElement.querySelector('.quote-item__branding-total-value');
     
     if (!brandingTotalElement) return;
     
-    const quantity = parseInt(itemElement.querySelector('.quote-item__quantity').textContent);
+    const quantity = parseInt(itemElement.querySelector('.quote-item__quantity').textContent) || 0;
     
     let brandingTotal = 0;
     
@@ -115,7 +115,7 @@ function updateItemTotal(itemId) {
     const itemElement = document.querySelector(`.quote-item__price-input[data-item-id="${itemId}"]`).closest('.quote-item');
     const priceInput = itemElement.querySelector('.quote-item__price-input');
     const price = parseFloat(priceInput.value) || 0;
-    const quantity = parseInt(itemElement.querySelector('.quote-item__quantity').textContent);
+    const quantity = parseInt(itemElement.querySelector('.quote-item__quantity').textContent) || 0;
     
     // Обновление стоимости товара
     const totalElement = itemElement.querySelector('.quote-item__total-value');
@@ -127,7 +127,7 @@ function updateItemTotal(itemId) {
     let brandingTotal = 0;
     const brandingTotalElement = itemElement.querySelector('.quote-item__branding-total-value');
     
-    if (brandingTotalElement && brandingTotalElement.style.display !== 'none') {
+    if (brandingTotalElement) {
         brandingTotal = parseFloat(brandingTotalElement.getAttribute('data-value')) || 0;
     }
     
@@ -154,7 +154,8 @@ function updateTotals() {
     // Расчет общей суммы
     let totalSum = 0;
     items.forEach(item => {
-        const finalTotal = parseFloat(item.querySelector('.quote-item__final-total-value').getAttribute('data-value')) || 0;
+        const finalTotalElement = item.querySelector('.quote-item__final-total-value');
+        const finalTotal = parseFloat(finalTotalElement.getAttribute('data-value')) || 0;
         totalSum += finalTotal;
     });
     
