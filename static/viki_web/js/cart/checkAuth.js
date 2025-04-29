@@ -5,7 +5,7 @@
 
 'use strict';
 
-import { modalDnD } from '../common/modalDnD.js';
+import {modalDnD} from '../common/modalDnD.js';
 
 /**
  * Check if user is authenticated
@@ -15,7 +15,7 @@ function isAuthenticated() {
     // Check if user is authenticated by looking at the DOM
     const cabinetMenu = document.querySelector('nav.menu__cabinet');
     if (!cabinetMenu) return false;
-    
+
     // If menu contains "Выйти" link, user is authenticated
     return !!cabinetMenu.querySelector('.log-logout');
 }
@@ -26,7 +26,7 @@ function isAuthenticated() {
 function showAuthDialog() {
     // Create a checkout auth dialog
     const checkoutAuthDialog = document.querySelector('dialog.log-checkout-auth');
-    
+
     if (checkoutAuthDialog) {
         // Show existing dialog
         checkoutAuthDialog.showModal();
@@ -55,21 +55,20 @@ export function checkAuthBeforeCheckout() {
 export function initAuthCheck() {
     // Find checkout button
     const checkoutButton = document.querySelector('.cart-summary__checkout');
-    
+
     if (!checkoutButton) return;
-    
+
     // Add event listener to checkout button
-    checkoutButton.addEventListener('click', function(event) {
+    checkoutButton.addEventListener('click', function (event) {
         if (!checkAuthBeforeCheckout()) {
             // Prevent default action if not authenticated
             event.preventDefault();
         } else {
             // User is authenticated, proceed with checkout
-            // This is where you would add the checkout logic
-            console.log('User is authenticated, proceeding with checkout');
+            window.location.href = '/order/';
         }
     });
-    
+
     // Initialize dialog buttons
     initAuthDialogButtons();
 }
@@ -79,31 +78,31 @@ export function initAuthCheck() {
  */
 function initAuthDialogButtons() {
     const checkoutAuthDialog = document.querySelector('dialog.log-checkout-auth');
-    
+
     if (!checkoutAuthDialog) return;
-    
+
     // Close button
     const closeButton = checkoutAuthDialog.querySelector('.btn__cancel');
     if (closeButton) {
-        closeButton.addEventListener('click', function() {
+        closeButton.addEventListener('click', function () {
             checkoutAuthDialog.close();
         });
     }
-    
+
     // Close on X button
     const closeX = checkoutAuthDialog.querySelector('.login__title div:last-child');
     if (closeX) {
-        closeX.addEventListener('click', function() {
+        closeX.addEventListener('click', function () {
             checkoutAuthDialog.close();
         });
     }
-    
+
     // Login button
     const loginButton = checkoutAuthDialog.querySelector('.checkout-login-btn');
     if (loginButton) {
-        loginButton.addEventListener('click', function() {
+        loginButton.addEventListener('click', function () {
             checkoutAuthDialog.close();
-            
+
             // Open login dialog
             const loginDialog = document.querySelector('dialog.log-login');
             if (loginDialog) {
@@ -112,13 +111,13 @@ function initAuthDialogButtons() {
             }
         });
     }
-    
+
     // Register button
     const registerButton = checkoutAuthDialog.querySelector('.checkout-register-btn');
     if (registerButton) {
-        registerButton.addEventListener('click', function() {
+        registerButton.addEventListener('click', function () {
             checkoutAuthDialog.close();
-            
+
             // Open register dialog
             const registerDialog = document.querySelector('dialog.log-register');
             if (registerDialog) {
