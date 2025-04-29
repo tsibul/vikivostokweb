@@ -23,33 +23,29 @@ def quote_view(request):
             cart_items = data
             print(f"Получены данные из тела запроса: {len(cart_items)} элементов")
         except (json.JSONDecodeError, AttributeError, UnicodeDecodeError) as e:
-            print(f"Ошибка декодирования JSON из тела: {e}")
             # Если не получилось, ищем в POST параметрах
             cart_data = request.POST.get('cart_data')
-            if cart_data:
-                try:
-                    cart_items = json.loads(cart_data)
-                    print(f"Получены данные из POST параметров: {len(cart_items)} элементов")
-                except json.JSONDecodeError as e:
-                    print(f"Ошибка декодирования JSON из POST: {e}")
-                    cart_items = []
-            else:
-                print("Параметр cart_data отсутствует в POST запросе")
+            try:
+                cart_items = json.loads(cart_data)
+            except json.JSONDecodeError as e:
+                print(f"Ошибка декодирования JSON из POST: {e}")
+                cart_items = []
     else:
         print("Получен GET запрос, данные корзины не ожидаются")
     
     # Проверка, что cart_items - это список
-    if not isinstance(cart_items, list):
-        print(f"cart_items не является списком, преобразуем: {type(cart_items)}")
-        cart_items = []
+    # if not isinstance(cart_items, list):
+    #     cart_items = []
     
     # Получение описаний для товаров
     for item in cart_items:
         if isinstance(item, dict) and 'id' in item:
             item['db_description'] = get_goods_description(item.get('goodsId'))
-    
-    print(f"Итоговое количество элементов корзины: {len(cart_items)}")
-    
+            if item['branding']:
+                for branding in item['branding']:
+                    second_pass_mult = 1.3 if branding['secondPass'] else 1
+                    branding['price'] = branding['price'] * branding['colors'] * second_pass_mult
+
     context = {
         'title': 'Коммерческое предложение',
         'cart_items': cart_items,
