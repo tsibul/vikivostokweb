@@ -20,7 +20,32 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Обновление общих итогов
     updateTotals();
+    
+    // Инициализация чекбокса для заголовка
+    initHeaderCheckbox();
 });
+
+/**
+ * Инициализация чекбокса для отображения/скрытия заголовка
+ */
+function initHeaderCheckbox() {
+    const checkbox = document.getElementById('print-header-checkbox');
+    const companyInfo = document.getElementById('quote-company-info');
+    
+    if (!checkbox || !companyInfo) return;
+    
+    // Обработчик изменения состояния чекбокса
+    checkbox.addEventListener('change', function() {
+        if (this.checked) {
+            companyInfo.style.display = 'flex'; // или что-то более подходящее для вашей верстки
+        } else {
+            companyInfo.style.display = 'none';
+        }
+    });
+    
+    // Применить начальное состояние
+    companyInfo.style.display = checkbox.checked ? 'flex' : 'none';
+}
 
 /**
  * Инициализация обработчиков событий
@@ -188,6 +213,19 @@ function formatPrice(price) {
  * Генерация PDF
  */
 function generatePdf() {
+    // Скрыть опции печати при генерации PDF
+    const printOptions = document.querySelector('.quote-print-options');
+    if (printOptions) {
+        printOptions.style.display = 'none';
+    }
+    
     // Использование встроенного механизма печати браузера
     window.print();
+    
+    // Восстановить отображение опций печати после вызова печати
+    setTimeout(function() {
+        if (printOptions) {
+            printOptions.style.display = 'block';
+        }
+    }, 1000);
 } 
