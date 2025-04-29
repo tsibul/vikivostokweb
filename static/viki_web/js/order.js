@@ -20,6 +20,15 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 /**
+ * Format number with thousands separator
+ * @param {number} number - Number to format
+ * @returns {string} Formatted number string
+ */
+function formatNumber(number) {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+}
+
+/**
  * Initialize company dropdown functionality
  */
 function initCompanyDropdown() {
@@ -152,15 +161,35 @@ function calculateTotals() {
     const orderTotalElement = document.querySelector('.order-total');
     
     if (goodsTotalElement) {
-        goodsTotalElement.textContent = goodsTotal.toFixed(2);
+        goodsTotalElement.textContent = formatNumber(goodsTotal.toFixed(2));
     }
     
     if (brandingTotalElement) {
-        brandingTotalElement.textContent = brandingTotal.toFixed(2);
+        brandingTotalElement.textContent = formatNumber(brandingTotal.toFixed(2));
     }
     
     if (orderTotalElement) {
         const orderTotal = goodsTotal + brandingTotal;
-        orderTotalElement.textContent = orderTotal.toFixed(2);
+        orderTotalElement.textContent = formatNumber(orderTotal.toFixed(2));
     }
+    
+    // Also format all price values in the order items
+    formatAllPrices();
+}
+
+/**
+ * Format all price values with thousands separators
+ */
+function formatAllPrices() {
+    // Format product prices
+    const priceElements = document.querySelectorAll('.order-item__price span:last-child');
+    
+    priceElements.forEach(element => {
+        if (element.textContent.includes('руб.')) {
+            const value = parseFloat(element.textContent.replace(/[^\d.-]/g, ''));
+            if (!isNaN(value)) {
+                element.textContent = formatNumber(value.toFixed(2)) + ' руб.';
+            }
+        }
+    });
 } 
