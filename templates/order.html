@@ -102,15 +102,24 @@
                                                 <div>{{ item.description|truncatechars:100 }}</div>
                                             </div>
                                             <div class="order-item__row order-item__pricing">
-                                                <div class="order-item__price">
+                                                <div class="order-item__price"
+                                                     data-item="{{ item.id }}"
+                                                     data-price="{{ item.price }}"
+                                                >
                                                     <span>Цена:</span>
                                                     <span>{{ item.price }} руб.</span>
                                                 </div>
-                                                <div class="order-item__price">
+                                                <div class="order-item__price"
+                                                     data-item="{{ item.id }}"
+                                                     data-quantity="{{ item.quantity }}"
+                                                >
                                                     <span>Количество:</span>
                                                     <span>{{ item.quantity }}</span>
                                                 </div>
-                                                <div class="order-item__price">
+                                                <div class="order-item__price"
+                                                     data-item="{{ item.id }}"
+                                                     data-total="{{ item.total }}"
+                                                >
                                                     <span>Сумма:</span>
                                                     <span>{{ item.total }} руб.</span>
                                                 </div>
@@ -130,7 +139,13 @@
                                             </div>
                                             {% for branding in item.branding %}
                                                 <div class="order-item__row">
-                                                    <div class="order-item__branding">
+                                                    <div class="order-item__branding"
+                                                         data-item="{{ item.id }}"
+                                                         data-type="{{ branding.type_id }}"
+                                                         data-location="{{ branding.location_id }}"
+                                                         data-colors="{{ branding.colors }}"
+                                                         data-second-pass="{{ branding.secondPass }}"
+                                                    >
                                                         <span class="order-item__value">{{ branding.type }}</span>
                                                         <span class="order-item__value"> {{ branding.location }},</span>
                                                         <span class="order-item__value"> цветов:</span>
@@ -140,12 +155,18 @@
                                                         {% endif %}
                                                     </div>
                                                     <div class="order-item__branding-price order-item__pricing">
-                                                        <div class="order-item__price">
+                                                        <div class="order-item__price"
+                                                             data-item="{{ item.id }}i"
+                                                             data-price="{{ branding.price }}"
+                                                        >
                                                             <span>Цена:</span>
                                                             <span>{{ branding.price }} руб.</span>
                                                         </div>
                                                         <div></div>
-                                                        <div class="order-item__price">
+                                                        <div class="order-item__price"
+                                                             data-item="{{ item.id }}"
+                                                             data-total="{{ branding.total }}"
+                                                        >
                                                             <span>Сумма:</span>
                                                             <span>{{ branding.total }} руб.</span>
                                                         </div>
@@ -156,11 +177,11 @@
                                     </div>
                                 </div>
                             {% endfor %}
-                        {% else %}
-                            <div class="order-empty">
-                                <p>В корзине нет товаров. <a href="{% url 'viki_web:catalogue' %}">Перейти в каталог</a>
-                                </p>
-                            </div>
+{#                        {% else %}#}
+{#                            <div class="order-empty">#}
+{#                                <p>В корзине нет товаров. <a href="{% url 'viki_web:catalogue' %}">Перейти в каталог</a>#}
+{#                                </p>#}
+{#                            </div>#}
                         {% endif %}
                     </div>
 
