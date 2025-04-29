@@ -164,12 +164,24 @@ function updateTotals() {
 }
 
 /**
- * Форматирование цены
+ * Форматирование цены с разделителями тысяч
  * @param {number} price - Цена для форматирования
  * @returns {string} Отформатированная цена
  */
 function formatPrice(price) {
-    return price.toFixed(2).replace('.', ',');
+    // Форматируем число с двумя десятичными знаками
+    const fixed = price.toFixed(2);
+    
+    // Разделяем на целую и дробную часть
+    const parts = fixed.split('.');
+    const wholePart = parts[0];
+    const decimalPart = parts[1];
+    
+    // Добавляем разделители тысяч в целую часть
+    const formattedWholePart = wholePart.replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    
+    // Собираем обратно с запятой в качестве десятичного разделителя
+    return formattedWholePart + ',' + decimalPart;
 }
 
 /**
