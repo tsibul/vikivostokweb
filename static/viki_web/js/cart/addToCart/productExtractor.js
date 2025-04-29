@@ -17,13 +17,13 @@ export function extractProductData(element) {
             console.error('Product container not found');
             return null;
         }
-        
+
         // Initialize empty product data
         let productData = {
             quantity: 1, // Default quantity
             branding: [] // Empty branding array
         };
-        
+
         // Extract data based on container type
         if (productContainer.classList.contains('recently-viewed__item')) {
             return extractRecentlyViewedProductData(productContainer, productData);
@@ -50,14 +50,15 @@ function extractRecentlyViewedProductData(container, productData) {
     if (!activeImage) {
         throw new Error('Active image not found in recently viewed item');
     }
-    
+
     // Extract basic information
     return {
         ...productData,
         id: activeImage.dataset.id,
         goodsId: container.dataset.id,
         name: container.querySelector('.recently-viewed__name')?.textContent.trim() || '',
-        article: container.querySelector('.recently-viewed__article')?.textContent.trim() || '',
+        article: container.querySelector('.recently-viewed__article')?.textContent.trim()
+            .replace('Артикул:', '').trim() || '',
         price: parseFloat(container.querySelector('.recently-viewed__price')?.textContent.replace(/[^\d.,]/g, '').replace(',', '.')) || 0,
         image: activeImage.src || '/static/viki_web/icons/logo.svg',
         description: container.querySelector('.recently-viewed__description')?.textContent.trim() || ''
@@ -76,7 +77,7 @@ function extractDetailPageProductData(container, productData) {
     if (!activeImage) {
         throw new Error('Active image not found in detail page');
     }
-    
+
     // Extract data
     return {
         ...productData,
@@ -102,10 +103,10 @@ function extractCatalogProductData(container, productData) {
     if (!activeImageFrame) {
         throw new Error('Active image frame not found in catalog product');
     }
-    
+
     // Get image element
     const imageElement = activeImageFrame.querySelector('img') || activeImageFrame;
-    
+
     // Extract data
     return {
         ...productData,
