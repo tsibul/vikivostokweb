@@ -4234,8 +4234,9 @@ span.text-like {
   gap: 20px;
 }
 .order-customer__user {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  align-items: center;
+  grid-template-columns: repeat(4, 1fr);
   gap: 15px;
 }
 .order-customer__field {
@@ -4248,10 +4249,6 @@ span.text-like {
   font-weight: 600;
   color: #0F4880;
   margin-right: 10px;
-  min-width: 100px;
-}
-.order-customer__value {
-  color: #4A4A4A;
 }
 .order-customer__company-selection {
   margin-top: 10px;
@@ -4307,6 +4304,59 @@ span.text-like {
 }
 .order-dropdown__option:hover {
   background-color: rgba(0, 158, 163, 0.2);
+}
+
+.customer-dropdown, .company-dropdown {
+  position: relative;
+  width: 100%;
+  cursor: pointer;
+}
+.customer-dropdown .dropdown-selected, .company-dropdown .dropdown-selected {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background-color: #fff;
+  border: 1px solid #0F4880;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.customer-dropdown .dropdown-selected i, .company-dropdown .dropdown-selected i {
+  color: #0F4880;
+  font-size: 14px;
+}
+.customer-dropdown .dropdown-options, .company-dropdown .dropdown-options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 0;
+  overflow: hidden;
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid transparent;
+  border-radius: 0 0 6px 6px;
+  z-index: 10;
+  transition: max-height 0.3s ease, border-color 0.3s ease;
+}
+.customer-dropdown .dropdown-options.active, .company-dropdown .dropdown-options.active {
+  max-height: 200px;
+  overflow-y: auto;
+  border-color: #0F4880;
+}
+.customer-dropdown .dropdown-option, .company-dropdown .dropdown-option {
+  padding: 8px 12px;
+  cursor: pointer;
+}
+.customer-dropdown .dropdown-option:hover, .company-dropdown .dropdown-option:hover {
+  background-color: rgba(0, 158, 163, 0.2);
+}
+.customer-dropdown .dropdown-option:last-child, .company-dropdown .dropdown-option:last-child {
+  border-bottom: none;
+}
+
+.customer-dropdown {
+  width: 100%;
 }
 
 .order-items {
@@ -4423,9 +4473,6 @@ span.text-like {
 }
 .order-summary__label {
   color: #0F4880;
-}
-.order-summary__value {
-  color: #4A4A4A;
 }
 .order-summary__actions {
   display: flex;

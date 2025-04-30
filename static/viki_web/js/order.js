@@ -12,6 +12,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize company dropdown
     initCompanyDropdown();
     
+    // Initialize customer dropdown for staff users
+    initCustomerDropdown();
+    
     // Initialize form validation
     initFormValidation();
     
@@ -32,21 +35,24 @@ function formatNumber(number) {
  * Initialize company dropdown functionality
  */
 function initCompanyDropdown() {
-    const dropdown = document.querySelector('.order-dropdown');
+    const dropdown = document.querySelector('.company-dropdown');
     if (!dropdown) return;
     
-    const selected = dropdown.querySelector('.order-dropdown__selected');
-    const options = dropdown.querySelector('.order-dropdown__options');
-    const optionItems = dropdown.querySelectorAll('.order-dropdown__option');
+    const selected = dropdown.querySelector('.dropdown-selected');
+    const options = dropdown.querySelector('.dropdown-options');
+    const optionItems = dropdown.querySelectorAll('.dropdown-option');
     
     // Toggle dropdown on click
-    selected.addEventListener('click', function() {
+    selected.addEventListener('click', function(e) {
+        e.stopPropagation();
         options.classList.toggle('active');
     });
     
     // Handle option selection
     optionItems.forEach(option => {
-        option.addEventListener('click', function() {
+        option.addEventListener('click', function(e) {
+            e.stopPropagation();
+            
             // Update selected text
             const name = this.getAttribute('data-name');
             selected.querySelector('.company-name').textContent = name;
@@ -65,7 +71,7 @@ function initCompanyDropdown() {
     
     // Close dropdown when clicking outside
     document.addEventListener('click', function(event) {
-        if (!dropdown.contains(event.target)) {
+        if (options.classList.contains('active') && !dropdown.contains(event.target)) {
             options.classList.remove('active');
         }
     });
@@ -88,6 +94,74 @@ function updateCompanyDetails(option) {
     if (address) {
         address.textContent = option.getAttribute('data-address');
     }
+}
+
+/**
+ * Initialize customer dropdown functionality for staff users
+ */
+function initCustomerDropdown() {
+    const dropdown = document.querySelector('.customer-dropdown');
+    if (!dropdown) return;
+    
+    const selected = dropdown.querySelector('.dropdown-selected');
+    const options = dropdown.querySelector('.dropdown-options');
+    const optionItems = dropdown.querySelectorAll('.dropdown-option');
+    
+    // Toggle dropdown on click
+    selected.addEventListener('click', function(e) {
+        e.stopPropagation();
+        options.classList.toggle('active');
+    });
+    
+    // Handle option selection
+    optionItems.forEach(option => {
+        option.addEventListener('click', function(e) {
+            e.stopPropagation();
+            
+            // Проверяем, не выбран ли уже этот клиент
+            const currentId = selected.querySelector('input[name="customer_id"]').value;
+            const newId = this.getAttribute('data-id');
+            
+            if (currentId === newId) {
+                options.classList.remove('active');
+                return; // Если выбран тот же клиент, просто закрываем список
+            }
+            
+            // Update selected text
+            const name = this.getAttribute('data-name');
+            selected.querySelector('.customer-name').textContent = name;
+            
+            // Update hidden input
+            selected.querySelector('input[name="customer_id"]').value = newId;
+            
+            // Submit form to update customer
+            const form = document.querySelector('.order-form');
+            if (form) {
+                // Добавляем скрытое поле для указания, что это смена клиента
+                let customerChangeInput = document.getElementById('customer_change_flag');
+                if (!customerChangeInput) {
+                    customerChangeInput = document.createElement('input');
+                    customerChangeInput.type = 'hidden';
+                    customerChangeInput.id = 'customer_change_flag';
+                    customerChangeInput.name = 'customer_change';
+                    customerChangeInput.value = '1';
+                    form.appendChild(customerChangeInput);
+                }
+                
+                form.submit();
+            }
+            
+            // Close dropdown
+            options.classList.remove('active');
+        });
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        if (options.classList.contains('active') && !dropdown.contains(event.target)) {
+            options.classList.remove('active');
+        }
+    });
 }
 
 /**

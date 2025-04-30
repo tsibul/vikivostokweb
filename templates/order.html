@@ -30,7 +30,31 @@
                                 </div>
                                 <div class="order-customer__field">
                                     <span class="order-customer__label">Клиент:</span>
-                                    <span>{{ customer.name }}</span>
+                                    {% if user.is_staff and available_customers %}
+                                        <div class="customer-dropdown">
+                                            <div class="dropdown-selected">
+                                                <span class="customer-name">{{ customer.name }}</span>
+                                                <input type="hidden" name="customer_id" value="{{ customer.id }}">
+                                                <i class="fa-solid fa-chevron-down"></i>
+                                            </div>
+                                            <ul class="dropdown-options">
+                                                <li class="dropdown-option" 
+                                                    data-id="{{ customer.id }}" 
+                                                    data-name="{{ customer.name }}">
+                                                    {{ customer.name }}
+                                                </li>
+                                                {% for cust in available_customers %}
+                                                    <li class="dropdown-option" 
+                                                        data-id="{{ cust.id }}" 
+                                                        data-name="{{ cust.name }}">
+                                                        {{ cust.name }}
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    {% else %}
+                                        <span>{{ customer.name }}</span>
+                                    {% endif %}
                                 </div>
                             </div>
 
@@ -38,8 +62,8 @@
                             <div class="order-customer__company-selection">
                                 <div class="order-customer__field">
                                     <span class="order-customer__label">Компания:</span>
-                                    <div class="order-dropdown">
-                                        <div class="order-dropdown__selected">
+                                    <div class="company-dropdown">
+                                        <div class="dropdown-selected">
                                             {% if companies %}
                                                 <span class="company-name">{{ companies.0.name }}</span>
                                                 <input type="hidden" name="company_id" value="{{ companies.0.id }}">
@@ -47,9 +71,9 @@
                                             {% endif %}
                                             <i class="fa-solid fa-chevron-down"></i>
                                         </div>
-                                        <ul class="order-dropdown__options">
+                                        <ul class="dropdown-options">
                                             {% for company in companies %}
-                                                <li class="order-dropdown__option"
+                                                <li class="dropdown-option"
                                                     data-id="{{ company.id }}"
                                                     data-name="{{ company.name }}"
                                                     data-inn="{{ company.inn }}"

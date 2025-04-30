@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 import json
 
-from viki_web_cms.models import ProductGroup, Customer, Company, UserExtension, Goods
+from viki_web_cms.models import ProductGroup, Customer, Company, UserExtension, Goods, StandardPriceType
 
 
 @login_required
@@ -16,6 +16,19 @@ def order(request):
     categories = ProductGroup.objects.filter(deleted=False)
     user_extension = UserExtension.objects.get(user=request.user)
     customer = user_extension.customer
+    
+    # Обработка смены клиента для staff-пользователей
+    if request.method == 'POST' and request.user.is_staff and 'customer_id' in request.POST and 'customer_change' in request.POST:
+        new_customer_id = request.POST.get('customer_id')
+        try:
+            new_customer = Customer.objects.get(id=new_customer_id)
+            # Проверяем, имеет ли новый клиент тот же тип цены
+            if customer and customer.standard_price_type == new_customer.standard_price_type:
+                customer = new_customer
+        except Customer.DoesNotExist:
+            pass
+    
+    # Получаем компании выбранного клиента
     companies = Company.objects.filter(customer=customer, deleted=False)
     
     # Default context
@@ -27,8 +40,17 @@ def order(request):
         'companies': list(companies),
         'cart_items': [],
     }
-
-    # Process cart data if POST request
+    
+    # If user is staff, get customers with the same price_type
+    if request.user.is_staff and customer and customer.standard_price_type:
+        price_type = customer.standard_price_type
+        available_customers = Customer.objects.filter(
+            standard_price_type=price_type,
+            deleted=False
+        ).exclude(id=customer.id)
+        context['available_customers'] = available_customers
+    
+    # Process cart data if POST request (корзина присутствует в обоих видах POST запросов)
     if request.method == 'POST' and 'cart_data' in request.POST:
         cart_data = json.loads(request.POST.get('cart_data', '[]'))
         for item in cart_data:
