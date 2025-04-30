@@ -101,7 +101,7 @@ class OurBank(SettingsDictionary):
                 'field': 'our_company',
                 'type': 'foreign',
                 'foreignClass': 'OurCompany',
-                'label': 'код',
+                'label': 'компания',
                 'null': False,
             },
             {
