@@ -28,7 +28,10 @@ class CustomerMenu:
     def menu_set():
         menu_list = [
             CustomerMenu("Клиенты", str(json.dumps([
-
+                CustomerSection('Наши компании', [
+                    CustomerSetting('Юр. лица', 'OurCompany', False, False),
+                    CustomerSetting('Банковские реквизиты', 'OurBank', False, False),
+                ]),
                 CustomerSection('Компании', [
                     CustomerSetting('Клиенты', 'Customer', False, True),
                     CustomerSetting('Юр. лица', 'Company', False, True),
