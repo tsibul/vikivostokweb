@@ -6,6 +6,9 @@
 'use strict';
 
 import { initOrderFormHandler } from './order/formHandler.js';
+import { collectOrderData } from './order/dataCollector.js';
+import { validateOrderForm } from './order/validation.js';
+import { showErrorNotification } from './cart/addToCart/notification.js';
 
 /**
  * Initialize the order page functionality
@@ -17,8 +20,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize customer dropdown for staff users
     initCustomerDropdown();
     
-    // Initialize form validation and submission handler
-    initOrderFormHandler();
+    // Initialize submit button for order submission
+    initOrderSubmitButton();
     
     // Calculate totals
     calculateTotals();
@@ -136,22 +139,14 @@ function initCustomerDropdown() {
             // Update hidden input
             selected.querySelector('input[name="customer_id"]').value = newId;
             
-            // Submit form to update customer
-            const form = document.querySelector('.order-form');
-            if (form) {
-                // Добавляем скрытое поле для указания, что это смена клиента
-                let customerChangeInput = document.getElementById('customer_change_flag');
-                if (!customerChangeInput) {
-                    customerChangeInput = document.createElement('input');
-                    customerChangeInput.type = 'hidden';
-                    customerChangeInput.id = 'customer_change_flag';
-                    customerChangeInput.name = 'customer_change';
-                    customerChangeInput.value = '1';
-                    form.appendChild(customerChangeInput);
-                }
-                
-                form.submit();
+            // Update customer_id data attribute on section title for data collection
+            const sectionTitle = document.querySelector('.order-section-title');
+            if (sectionTitle) {
+                sectionTitle.setAttribute('data-customer-id', newId);
             }
+            
+            // Update customer on server to refresh company list
+            updateCustomerOnServer(newId);
             
             // Close dropdown
             options.classList.remove('active');
@@ -163,6 +158,150 @@ function initCustomerDropdown() {
         if (options.classList.contains('active') && !dropdown.contains(event.target)) {
             options.classList.remove('active');
         }
+    });
+}
+
+/**
+ * Update customer on server without full page reload
+ * @param {string} customerId - New customer ID
+ */
+function updateCustomerOnServer(customerId) {
+    // Get CSRF token
+    const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+    
+    // Create FormData
+    const formData = new FormData();
+    formData.append('customer_id', customerId);
+    formData.append('customer_change', '1');
+    
+    // Use fetch API to update customer
+    fetch(window.location.href, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': csrfToken
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.text();
+    })
+    .then(html => {
+        // Process the response to update the company dropdown
+        updateCompanyDropdown(html);
+    })
+    .catch(error => {
+        console.error('Error updating customer:', error);
+    });
+}
+
+/**
+ * Update company dropdown from HTML response
+ * @param {string} html - HTML response from server
+ */
+function updateCompanyDropdown(html) {
+    // Create a temporary div to parse the HTML
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = html;
+    
+    // Extract company dropdown HTML from response
+    const newCompanySelection = tempDiv.querySelector('.order-customer__company-selection');
+    const newCompanyDetails = tempDiv.querySelector('.order-customer__company-details');
+    
+    if (newCompanySelection) {
+        // Update company dropdown HTML
+        const currentCompanySelection = document.querySelector('.order-customer__company-selection');
+        if (currentCompanySelection) {
+            currentCompanySelection.innerHTML = newCompanySelection.innerHTML;
+        }
+    }
+    
+    if (newCompanyDetails) {
+        // Update company details HTML
+        const currentCompanyDetails = document.querySelector('.order-customer__company-details');
+        if (currentCompanyDetails) {
+            currentCompanyDetails.innerHTML = newCompanyDetails.innerHTML;
+        }
+    }
+    
+    // Re-initialize company dropdown functionality
+    initCompanyDropdown();
+}
+
+/**
+ * Initialize submit button for order submission
+ */
+function initOrderSubmitButton() {
+    const submitButton = document.querySelector('.order-form .btn__save');
+    const form = document.querySelector('.order-form');
+    
+    if (!submitButton || !form) return;
+    
+    submitButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // Validate form
+        if (!validateOrderForm(form)) {
+            return; // Form validation failed
+        }
+        
+        // Collect form data
+        const orderData = collectOrderData(form);
+        
+        // Submit order data to server
+        submitOrderToServer(orderData, form);
+    });
+}
+
+/**
+ * Submit order data to server
+ * @param {Object} orderData - Collected order data
+ * @param {HTMLFormElement} form - The order form
+ */
+function submitOrderToServer(orderData, form) {
+    // Get CSRF token
+    const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+    
+    // Convert order data to FormData
+    const formData = new FormData();
+    
+    // Add user data
+    formData.append('user_extension_id', orderData.user_extension_id);
+    formData.append('customer_id', orderData.customer_id);
+    formData.append('company_id', orderData.company_id);
+    formData.append('company_vat', orderData.company_vat);
+    
+    // Add items data as JSON
+    formData.append('items', JSON.stringify(orderData.items));
+    
+    // Use fetch API to submit order
+    fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': csrfToken
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.status === 'ok') {
+            // Redirect to success page or handle success
+            window.location.href = data.redirect_url || '/order/success/';
+        } else {
+            // Display error message
+            showErrorNotification(data.message || 'Ошибка при оформлении заказа');
+        }
+    })
+    .catch(error => {
+        console.error('Error submitting order:', error);
+        showErrorNotification('Произошла ошибка при отправке заказа');
     });
 }
 
