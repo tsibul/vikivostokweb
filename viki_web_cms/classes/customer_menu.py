@@ -37,6 +37,9 @@ class CustomerMenu:
                     CustomerSetting('Юр. лица', 'Company', False, True),
                     CustomerSetting('Банковские реквизиты', 'BankAccount', False, False),
                 ]),
+                CustomerSection('Доставка', [
+                    CustomerSetting('Опции доставки', 'DeliveryOption', False, False),
+                ]),
             ], default=lambda o: o.__dict__,
                 sort_keys=True)), 'Standard'),
             CustomerMenu('Контакты', str(json.dumps([
