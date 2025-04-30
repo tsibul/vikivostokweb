@@ -8,7 +8,7 @@ class OurCompany(SettingsDictionary):
     short_name = models.CharField(max_length=4)
     address = models.CharField(max_length=255)
     inn = models.CharField(max_length=12)
-    kpp = models.CharField(max_length=7)
+    kpp = models.CharField(max_length=9)
     ogrn = models.CharField(max_length=13)
     vat = models.BooleanField(default=False)
     priority = models.IntegerField()
@@ -32,12 +32,6 @@ class OurCompany(SettingsDictionary):
                 'field': 'short_name',
                 'type': 'string',
                 'label': 'код',
-                'null': False,
-            },
-            {
-                'field': 'address',
-                'type': 'textarea',
-                'label': 'адрес',
                 'null': False,
             },
             {
@@ -67,6 +61,12 @@ class OurCompany(SettingsDictionary):
                 'field': 'priority',
                 'type': 'number',
                 'label': 'приоритет',
+                'null': False,
+            },
+            {
+                'field': 'address',
+                'type': 'textarea',
+                'label': 'адрес',
                 'null': False,
             },
         ]
