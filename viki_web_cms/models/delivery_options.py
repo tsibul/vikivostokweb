@@ -17,7 +17,7 @@ class DeliveryOption(SettingsDictionary):
 
     @staticmethod
     def order_default():
-        return ['priority']
+        return ['name']
 
 
     @staticmethod
