@@ -13,23 +13,8 @@ import { showErrorNotification } from '../cart/addToCart/notification.js';
  * @returns {boolean} Whether the form is valid
  */
 export function validateOrderForm(form) {
-    const brandingInputs = form.querySelectorAll('.order-item__branding-input');
     const companyId = form.querySelector('input[name="company_id"]');
     let isValid = true;
-    
-    // Validate branding name inputs (only if they exist)
-    if (brandingInputs.length > 0) {
-        brandingInputs.forEach(input => {
-            if (!validateBrandingInput(input)) {
-                isValid = false;
-                highlightInvalidField(input);
-            }
-        });
-        
-        if (!isValid) {
-            showErrorNotification('Пожалуйста, заполните названия нанесений для всех товаров');
-        }
-    }
     
     // Validate company selection
     if (!companyId || !companyId.value) {
@@ -42,33 +27,6 @@ export function validateOrderForm(form) {
     }
     
     return isValid;
-}
-
-/**
- * Validate branding input
- * @param {HTMLInputElement} input - The branding input element
- * @returns {boolean} Whether the input is valid
- */
-function validateBrandingInput(input) {
-    const value = input.value.trim();
-    // Check if input is not empty and contains valid characters (letters, numbers, spaces)
-    const regex = /^[а-яА-ЯёЁa-zA-Z0-9\s]+$/;
-    return value.length > 0 && regex.test(value);
-}
-
-/**
- * Highlight invalid field with red border
- * @param {HTMLInputElement} input - The invalid input element
- */
-function highlightInvalidField(input) {
-    input.classList.add('invalid');
-    
-    // Remove invalid class on focus
-    input.addEventListener('focus', function onFocus() {
-        this.classList.remove('invalid');
-        // Remove event listener after first focus to avoid multiple listeners
-        this.removeEventListener('focus', onFocus);
-    }, { once: true });
 }
 
 /**

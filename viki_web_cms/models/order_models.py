@@ -15,34 +15,36 @@ class Order(models.Model):
     days_to_deliver = models.IntegerField(null=True)
     total_amount = models.FloatField()
     delivery_date = models.DateField(null=True)
-    approved = models.BooleanField(default=False)
-    started = models.BooleanField(default=False)
-    deleted = models.BooleanField(default=False)
-    delivered = models.BooleanField(default=False)
+    customer_comment = models.CharField(max_length=400, null=True)
+    branding = models.FileField(storage=fs_branding, null=True)
+    # approved = models.BooleanField(default=False)
+    # started = models.BooleanField(default=False)
+    # deleted = models.BooleanField(default=False)
+    # delivered = models.BooleanField(default=False)
 
 
     def __str__(self):
         return self.order_no
 
     class Meta:
-        verbose_name = 'Раздел каталога'
-        verbose_name_plural = 'Разделы каталога'
-        db_table_comment = 'catalogue sections'
-        db_table = 'product_group'
-        ordering = ['priority', 'name']
+        verbose_name = 'Заказ'
+        verbose_name_plural = 'Заказы'
+        db_table_comment = 'order'
+        db_table = 'order'
+        ordering = ['-order_date', 'order_no']
 
 
     @property
     def file_url(self):
-        return f"/static/viki_web_cms/files/cover/{self.cover.name}" if self.cover else None
+        return f"/static/viki_web_cms/files/branding/{self.branding.name}" if self.branding else None
 
     @staticmethod
     def storage_url():
-        return '/static/viki_web_cms/files/cover/'
+        return '/static/viki_web_cms/files/branding/'
 
     @staticmethod
     def order_default():
-        return ['priority', 'name']
+        return ['-order_date', 'order_no']
 
 
     @staticmethod

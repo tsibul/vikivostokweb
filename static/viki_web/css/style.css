@@ -4417,21 +4417,6 @@ span.text-like {
   justify-content: space-between;
   gap: 20px;
 }
-.order-item__branding-name {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.order-item__branding-input {
-  min-width: 240px;
-  padding: 5px 8px;
-  border: 1px solid #0F4880;
-  border-radius: 4px;
-}
-.order-item__branding-input.invalid {
-  border-color: red;
-  background-color: rgba(255, 0, 0, 0.05);
-}
 .order-item__branding {
   font-size: 14px;
 }

@@ -253,24 +253,6 @@
     gap: 20px;
   }
 
-  &__branding-name {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  &__branding-input {
-    min-width: 240px;
-    padding: 5px 8px;
-    border: 1px solid $colorPrimary;
-    border-radius: 4px;
-
-    &.invalid {
-      border-color: red;
-      background-color: rgba(255, 0, 0, 0.05);
-    }
-  }
-
   &__branding {
     font-size: 14px;
   }
@@ -285,7 +267,6 @@
   &__branding-price {
     font-size: 14px
   }
-
 
 }
 
