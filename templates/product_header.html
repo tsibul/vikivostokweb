@@ -69,7 +69,7 @@
                             {% endif %}
                         </div>
                         <ul class="catalogue__item">
-                            <li>Заказы</li>
+                            <li><a href="{%  url "viki_web:order_list" %}">Заказы</a></li>
                             <li><a href="{% url 'viki_web:cabinet' %}">Настройка</a></li>
                             <li class="log-logout">Выйти</li>
                         </ul>
