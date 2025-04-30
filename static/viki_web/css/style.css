@@ -4236,7 +4236,7 @@ span.text-like {
 .order-customer__user {
   display: grid;
   align-items: center;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr) 1.5fr;
   gap: 15px;
 }
 .order-customer__field {
