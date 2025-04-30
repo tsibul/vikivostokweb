@@ -5,6 +5,8 @@
 
 'use strict';
 
+import { initOrderFormHandler } from './order/formHandler.js';
+
 /**
  * Initialize the order page functionality
  */
@@ -15,8 +17,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize customer dropdown for staff users
     initCustomerDropdown();
     
-    // Initialize form validation
-    initFormValidation();
+    // Initialize form validation and submission handler
+    initOrderFormHandler();
     
     // Calculate totals
     calculateTotals();
@@ -161,44 +163,6 @@ function initCustomerDropdown() {
         if (options.classList.contains('active') && !dropdown.contains(event.target)) {
             options.classList.remove('active');
         }
-    });
-}
-
-/**
- * Initialize form validation
- */
-function initFormValidation() {
-    const form = document.querySelector('.order-form');
-    if (!form) return;
-    
-    form.addEventListener('submit', function(event) {
-        const brandingInputs = document.querySelectorAll('.order-item__branding-input');
-        let valid = true;
-        
-        // Validate branding name inputs
-        brandingInputs.forEach(input => {
-            if (!input.value.trim()) {
-                valid = false;
-                input.classList.add('invalid');
-            } else {
-                input.classList.remove('invalid');
-            }
-        });
-        
-        if (!valid) {
-            event.preventDefault();
-            alert('Пожалуйста, заполните название нанесения для всех товаров');
-        }
-    });
-    
-    // Remove invalid class on input
-    const brandingInputs = document.querySelectorAll('.order-item__branding-input');
-    brandingInputs.forEach(input => {
-        input.addEventListener('input', function() {
-            if (this.value.trim()) {
-                this.classList.remove('invalid');
-            }
-        });
     });
 }
 

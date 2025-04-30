@@ -4484,6 +4484,45 @@ span.text-like {
   min-width: 120px;
 }
 
+.company-warning-dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.company-warning-dialog__content {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 30px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+.company-warning-dialog__title {
+  color: #0F4880;
+  font-size: 20px;
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+.company-warning-dialog__message {
+  margin-bottom: 25px;
+  line-height: 1.5;
+}
+.company-warning-dialog__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+}
+.company-warning-dialog__actions .btn {
+  min-width: 120px;
+}
+
 @media (max-width: 768px) {
   .order-customer__field {
     min-width: 200px;
@@ -4504,6 +4543,12 @@ span.text-like {
     flex-direction: column;
   }
   .order-summary__actions .btn {
+    width: 100%;
+  }
+  .company-warning-dialog__actions {
+    flex-direction: column;
+  }
+  .company-warning-dialog__actions .btn {
     width: 100%;
   }
 }

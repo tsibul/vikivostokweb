@@ -13,7 +13,7 @@
 
                     <!-- Customer Information Section -->
                     <div class="order-customer">
-                        <h2 class="order-section-title">Информация о покупателе</h2>
+                        <h2 class="order-section-title" data-id="{{ user_extension.id }}" data-customer-id="{{ customer.id }}">Информация о покупателе</h2>
                         <div class="order-customer__info">
                             <div class="order-customer__user">
                                 <div class="order-customer__field">
@@ -158,7 +158,7 @@
                                                            name="branding_name_{{ item.id }}"
                                                            id="branding_name_{{ forloop.counter }}"
                                                            class="order-item__branding-input"
-                                                           required>
+                                                    >
                                                 </div>
                                             </div>
                                             {% for branding in item.branding %}
