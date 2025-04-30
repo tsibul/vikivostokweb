@@ -150,17 +150,6 @@
                                             </div>
                                         </div>
                                         {% if item.branding %}
-                                            <div class="order-item__row">
-                                                <div class="order-item__branding-name">
-                                                    <label for="branding_name_{{ forloop.counter }}"
-                                                           class="order-item__label">Брендирование</label>
-                                                    <input type="text"
-                                                           name="branding_name_{{ item.id }}"
-                                                           id="branding_name_{{ forloop.counter }}"
-                                                           class="order-item__branding-input"
-                                                    >
-                                                </div>
-                                            </div>
                                             {% for branding in item.branding %}
                                                 <div class="order-item__row">
                                                     <div class="order-item__branding"
