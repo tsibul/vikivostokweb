@@ -26,7 +26,45 @@ export function validateOrderForm(form) {
         }
     }
     
+    // Validate customer comment if it exists
+    const customerComment = form.querySelector('textarea[name="customer_comment"]');
+    if (customerComment && !validateCustomerComment(customerComment.value)) {
+        isValid = false;
+        highlightInvalidField(customerComment);
+        showErrorNotification('Недопустимые символы в комментарии');
+    }
+    
     return isValid;
+}
+
+/**
+ * Validate customer comment text
+ * @param {string} comment - The comment text to validate
+ * @returns {boolean} Whether the comment is valid
+ */
+function validateCustomerComment(comment) {
+    if (!comment || comment.trim() === '') {
+        return true; // Empty comment is valid
+    }
+    
+    // Allow letters, numbers, spaces, punctuation, and @
+    const regex = /^[а-яА-ЯёЁa-zA-Z0-9\s.,!?;:()"'\-_@]+$/;
+    return regex.test(comment);
+}
+
+/**
+ * Highlight invalid field with red border
+ * @param {HTMLElement} element - The invalid input element
+ */
+function highlightInvalidField(element) {
+    element.classList.add('invalid');
+    
+    // Remove invalid class on focus
+    element.addEventListener('focus', function onFocus() {
+        this.classList.remove('invalid');
+        // Remove event listener after first focus to avoid multiple listeners
+        this.removeEventListener('focus', onFocus);
+    }, { once: true });
 }
 
 /**

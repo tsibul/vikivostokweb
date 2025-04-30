@@ -4,6 +4,7 @@ from django.http import JsonResponse
 import json
 
 from viki_web_cms.models import ProductGroup, Customer, Company, UserExtension, Goods, StandardPriceType
+from viki_web_cms.models.delivery_options import DeliveryOption
 
 
 @login_required
@@ -31,6 +32,9 @@ def order(request):
     # Получаем компании выбранного клиента
     companies = Company.objects.filter(customer=customer, deleted=False)
     
+    # Получаем опции доставки
+    delivery_options = DeliveryOption.objects.filter(deleted=False)
+    
     # Default context
     context = {
         'categories': categories,
@@ -39,6 +43,7 @@ def order(request):
         'customer': customer,
         'companies': list(companies),
         'cart_items': [],
+        'delivery_options': delivery_options,
     }
     
     # If user is staff, get customers with the same price_type

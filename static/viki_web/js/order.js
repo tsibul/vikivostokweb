@@ -20,6 +20,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize customer dropdown for staff users
     initCustomerDropdown();
     
+    // Initialize delivery dropdown
+    initDeliveryDropdown();
+    
     // Initialize submit button for order submission
     initOrderSubmitButton();
     
@@ -162,6 +165,81 @@ function initCustomerDropdown() {
 }
 
 /**
+ * Initialize delivery options dropdown
+ */
+function initDeliveryDropdown() {
+    const dropdown = document.querySelector('.delivery-dropdown');
+    if (!dropdown) return;
+    
+    const selected = dropdown.querySelector('.delivery-dropdown__selected');
+    const options = dropdown.querySelector('.delivery-dropdown__options');
+    const optionItems = dropdown.querySelectorAll('.delivery-dropdown__option');
+    
+    // Initialize delivery cost display
+    updateDeliveryCostDisplay();
+    
+    // Toggle dropdown on click
+    selected.addEventListener('click', function(e) {
+        e.stopPropagation();
+        options.classList.toggle('active');
+    });
+    
+    // Handle option selection
+    optionItems.forEach(option => {
+        option.addEventListener('click', function(e) {
+            e.stopPropagation();
+            
+            // Update selected text
+            const name = this.getAttribute('data-name');
+            selected.querySelector('.delivery-name').textContent = name;
+            
+            // Get delivery price
+            const price = parseFloat(this.getAttribute('data-price')) || 0;
+            
+            // Update hidden inputs
+            selected.querySelector('input[name="delivery_option_id"]').value = this.getAttribute('data-id');
+            selected.querySelector('input[name="delivery_price"]').value = price;
+            
+            // Update delivery cost display and recalculate totals
+            updateDeliveryCostDisplay();
+            calculateTotals();
+            
+            // Close dropdown
+            options.classList.remove('active');
+        });
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        if (options.classList.contains('active') && !dropdown.contains(event.target)) {
+            options.classList.remove('active');
+        }
+    });
+}
+
+/**
+ * Update delivery cost display in order summary
+ */
+function updateDeliveryCostDisplay() {
+    const deliveryPriceInput = document.querySelector('input[name="delivery_price"]');
+    const deliveryCostRow = document.querySelector('.delivery-cost-row');
+    const deliveryTotalElement = document.querySelector('.delivery-total');
+    
+    if (deliveryPriceInput && deliveryCostRow && deliveryTotalElement) {
+        const deliveryPrice = parseFloat(deliveryPriceInput.value) || 0;
+        
+        if (deliveryPrice > 0) {
+            // Show delivery cost row and update value
+            deliveryCostRow.style.display = '';
+            deliveryTotalElement.textContent = formatNumber(deliveryPrice.toFixed(2));
+        } else {
+            // Hide delivery cost row if price is 0
+            deliveryCostRow.style.display = 'none';
+        }
+    }
+}
+
+/**
  * Update customer on server without full page reload
  * @param {string} customerId - New customer ID
  */
@@ -273,6 +351,10 @@ function submitOrderToServer(orderData, form) {
     formData.append('company_id', orderData.company_id);
     formData.append('company_vat', orderData.company_vat);
     
+    // Add additional data
+    formData.append('customer_comment', orderData.customer_comment);
+    formData.append('delivery_option_id', orderData.delivery_option_id);
+    
     // Add items data as JSON
     formData.append('items', JSON.stringify(orderData.items));
     
@@ -332,9 +414,14 @@ function calculateTotals() {
         });
     });
     
+    // Get delivery cost
+    const deliveryPriceInput = document.querySelector('input[name="delivery_price"]');
+    const deliveryPrice = deliveryPriceInput ? parseFloat(deliveryPriceInput.value) || 0 : 0;
+    
     // Update totals in the summary
     const goodsTotalElement = document.querySelector('.goods-total');
     const brandingTotalElement = document.querySelector('.branding-total');
+    const deliveryTotalElement = document.querySelector('.delivery-total');
     const orderTotalElement = document.querySelector('.order-total');
     
     if (goodsTotalElement) {
@@ -345,8 +432,12 @@ function calculateTotals() {
         brandingTotalElement.textContent = formatNumber(brandingTotal.toFixed(2));
     }
     
+    if (deliveryTotalElement && deliveryPrice > 0) {
+        deliveryTotalElement.textContent = formatNumber(deliveryPrice.toFixed(2));
+    }
+    
     if (orderTotalElement) {
-        const orderTotal = goodsTotal + brandingTotal;
+        const orderTotal = goodsTotal + brandingTotal + deliveryPrice;
         orderTotalElement.textContent = formatNumber(orderTotal.toFixed(2));
     }
     

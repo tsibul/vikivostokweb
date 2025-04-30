@@ -13,9 +13,11 @@
 export function collectOrderData(form) {
     const userData = collectUserData(form);
     const items = collectItemsData(form);
+    const additionalData = collectAdditionalData(form);
     
     return {
         ...userData,
+        ...additionalData,
         items
     };
 }
@@ -54,6 +56,26 @@ function collectUserData(form) {
         customer_id: customerId,
         company_id: companyId,
         company_vat: companyVat
+    };
+}
+
+/**
+ * Collect additional order data like comment and delivery option
+ * @param {HTMLFormElement} form - The order form element
+ * @returns {Object} Additional data
+ */
+function collectAdditionalData(form) {
+    // Get customer comment
+    const customerComment = form.querySelector('textarea[name="customer_comment"]')?.value || '';
+    
+    // Get delivery option
+    const deliveryOptionId = form.querySelector('input[name="delivery_option_id"]')?.value || '';
+    const deliveryPrice = parseFloat(form.querySelector('input[name="delivery_price"]')?.value || '0');
+    
+    return {
+        customer_comment: customerComment,
+        delivery_option_id: deliveryOptionId,
+        delivery_price: deliveryPrice
     };
 }
 

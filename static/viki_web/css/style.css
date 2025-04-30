@@ -4430,6 +4430,101 @@ span.text-like {
   font-size: 14px;
 }
 
+.order-additional {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.order-additional__comment {
+  margin-bottom: 20px;
+}
+.order-additional__label {
+  display: block;
+  font-weight: 600;
+  color: #0F4880;
+  margin-bottom: 10px;
+}
+.order-additional__textarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 10px;
+  border: 1px solid #0F4880;
+  border-radius: 6px;
+  resize: vertical;
+  font-family: inherit;
+  font-size: 14px;
+}
+.order-additional__textarea.invalid {
+  border-color: red;
+  background-color: rgba(255, 0, 0, 0.05);
+}
+.order-additional__help-text {
+  display: block;
+  font-size: 12px;
+  color: #666;
+  margin-top: 5px;
+}
+.order-additional__delivery {
+  margin-top: 20px;
+}
+
+.delivery-dropdown {
+  position: relative;
+  width: 100%;
+}
+.delivery-dropdown__selected {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background-color: #fff;
+  border: 1px solid #0F4880;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.delivery-dropdown__selected i {
+  color: #0F4880;
+  font-size: 14px;
+}
+.delivery-dropdown__options {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 0;
+  overflow: hidden;
+  background-color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid transparent;
+  border-radius: 0 0 6px 6px;
+  z-index: 10;
+  transition: max-height 0.3s ease, border-color 0.3s ease;
+}
+.delivery-dropdown__options.active {
+  max-height: 200px;
+  overflow-y: auto;
+  border-color: #0F4880;
+}
+.delivery-dropdown__option {
+  padding: 8px 12px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+}
+.delivery-dropdown__option .option-name {
+  font-weight: normal;
+}
+.delivery-dropdown__option .option-price {
+  color: #0F4880;
+}
+.delivery-dropdown__option:hover {
+  background-color: rgba(0, 158, 163, 0.2);
+}
+.delivery-dropdown__option:last-child {
+  border-bottom: none;
+}
+
 .order-summary {
   background-color: #fff;
   border-radius: 8px;
@@ -4535,6 +4630,9 @@ span.text-like {
   }
   .company-warning-dialog__actions .btn {
     width: 100%;
+  }
+  .order-additional__textarea {
+    min-height: 80px;
   }
 }
 .test {
