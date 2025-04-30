@@ -543,30 +543,41 @@ export async function renderCartItem(canvas, item) {
     // Равномерно распределяем элементы в строке
     const rowWidth = displayWidth - 2 * CONFIG.padding;
 
-    // Разделяем строку на три части: цена, селектор количества, сумма
-    const priceColumnWidth = rowWidth * 0.35;
-    const qtyColumnWidth = rowWidth * 0.30;
-    const totalColumnWidth = rowWidth * 0.35;
+    // Инициализируем цену со скидкой, если её ещё нет
+    if (item.discountPrice === undefined) {
+        item.discountPrice = item.price;
+    }
+
+    // Разделяем строку на четыре части: цена, цена со скидкой, селектор количества, сумма
+    const priceColumnWidth = rowWidth * 0.25;
+    const discountPriceColumnWidth = rowWidth * 0.25;
+    const qtyColumnWidth = rowWidth * 0.25;
+    const totalColumnWidth = rowWidth * 0.25;
 
     // Цена (левая часть)
     ctx.fillStyle = CONFIG.textColor;
     ctx.font = `400 ${CONFIG.priceFontSize}px ${getCurrentFont()}`;
     ctx.textAlign = 'left';
     ctx.textBaseline = 'middle';
-    ctx.fillText(`Цена: ${formatPrice(item.price)} руб/шт.`, CONFIG.padding, priceRowY);
+    ctx.fillText(`Цена: ${formatPrice(item.price)} руб.`, CONFIG.padding, priceRowY);
+
+    // Цена со скидкой (после обычной цены)
+    ctx.fillStyle = item.discountPrice < item.price ? '#d40000' : CONFIG.textColor;
+    ctx.textAlign = 'left';
+    ctx.fillText(`Цена со скидкой: ${formatPrice(item.discountPrice)} руб.`, CONFIG.padding + priceColumnWidth - 60, priceRowY);
 
     // Блок управления количеством (средняя часть)
     const wasEditing = canvas.dataset.isEditing === 'true';
 
-    drawQuantityControls(ctx, canvas, item, CONFIG.padding + priceColumnWidth, priceRowY - 15, qtyColumnWidth);
+    drawQuantityControls(ctx, canvas, item, CONFIG.padding + priceColumnWidth + discountPriceColumnWidth, priceRowY - 15, qtyColumnWidth);
 
     // Восстанавливаем флаг режима редактирования, если он был активен
     if (wasEditing) {
         canvas.dataset.isEditing = 'true';
     }
 
-    // Сумма (правая часть)
-    const total = item.price * item.quantity;
+    // Сумма (правая часть) - используем цену со скидкой
+    const total = item.discountPrice * item.quantity;
     ctx.fillStyle = CONFIG.textColor;
     ctx.font = `400 ${CONFIG.priceFontSize}px ${getCurrentFont()}`;
     ctx.textAlign = 'right';

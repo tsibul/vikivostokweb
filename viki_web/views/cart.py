@@ -4,12 +4,38 @@ from django.utils import timezone
 from django.db.models import Max, Q
 
 from viki_web_cms.models import ProductGroup, PrintOpportunity, Goods, Price, PriceGoodsStandard, PriceItemStandard, PriceGoodsVolume, StandardPriceType, UserExtension, Customer, CatalogueItem, PrintGroupToGoods, PrintPrice, PrintVolume
+from viki_web_cms.models.discount_models import VolumeDiscount
 
 
 def cart(request):
     categories = ProductGroup.objects.filter(deleted=False)
     context = {'categories': categories, 'user': request.user}
     return render(request, 'cart.html', context)
+
+
+def get_volume_discounts(request):
+    """
+    Возвращает данные о скидках за объем в формате JSON
+    """
+    try:
+        # Get all active volume discounts
+        volume_discounts = VolumeDiscount.objects.filter(deleted=False)
+        
+        result = []
+        for discount in volume_discounts:
+            discount_data = {
+                'id': discount.id,
+                'name': discount.name,
+                'price_type_id': discount.price_name.id,
+                'price_type_name': discount.price_name.name,
+                'discount': discount.discount,
+                'volume': discount.volume
+            }
+            result.append(discount_data)
+            
+        return JsonResponse({'success': True, 'discounts': result})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})
 
 
 def get_print_opportunities(request, goods_id):

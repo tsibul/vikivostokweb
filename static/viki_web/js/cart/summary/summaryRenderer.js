@@ -20,7 +20,10 @@ export function calculateSummary() {
 
     cart.forEach(item => {
         totalItems += item.quantity;
-        subtotal += item.price * item.quantity;
+        
+        // Use discountPrice if available, otherwise fall back to regular price
+        const priceToUse = item.discountPrice !== undefined ? item.discountPrice : item.price;
+        subtotal += priceToUse * item.quantity;
 
         // Calculate branding total
         if (item.branding && item.branding.length > 0) {

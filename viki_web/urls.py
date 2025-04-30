@@ -32,6 +32,7 @@ urlpatterns = [
     path('quote/', quote.quote_view, name='quote'),
     path('quote/goods-info/', quote.get_goods_info, name='quote_goods_info'),
     path('api/print-opportunities/<int:goods_id>', views.get_print_opportunities, name='print_opportunities'),
+    path('api/volume-discounts/', views.get_volume_discounts, name='volume_discounts'),
     path('about', views.about, name='about'),
     path('news', views.news, name='news'),
     path('privacy', views.privacy, name='privacy'),

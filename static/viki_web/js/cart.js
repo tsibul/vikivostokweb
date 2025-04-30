@@ -16,12 +16,45 @@ import { getCSRFToken } from './common/getCSRFToken.js';
 import { initAuthCheck } from './cart/checkAuth.js';
 
 /**
+ * Load and cache volume discounts from the server
+ * @returns {Promise<Array>} Promise that resolves with volume discounts data
+ */
+async function loadVolumeDiscounts() {
+    try {
+        const response = await fetch('/api/volume-discounts/');
+        if (!response.ok) {
+            throw new Error('Failed to fetch volume discounts');
+        }
+        
+        const data = await response.json();
+        
+        if (!data.success) {
+            throw new Error(data.error || 'Error fetching volume discounts');
+        }
+        
+        // Cache the discounts in localStorage
+        localStorage.setItem('volumeDiscounts', JSON.stringify(data.discounts));
+        
+        console.log('Volume discounts loaded and cached');
+        return data.discounts;
+    } catch (error) {
+        console.error('Error loading volume discounts:', error);
+        // If there's an error, try to return cached data
+        const cachedDiscounts = localStorage.getItem('volumeDiscounts');
+        return cachedDiscounts ? JSON.parse(cachedDiscounts) : [];
+    }
+}
+
+/**
  * Initialization of cart functions when document loads
  * Now using Canvas-based rendering
  */
 document.addEventListener('DOMContentLoaded', async function () {
     // Load print opportunities data first
     await loadPrintOpportunities();
+    
+    // Load and cache volume discounts
+    await loadVolumeDiscounts();
     
     // Initialize cart
     initCart();
@@ -38,6 +71,15 @@ document.addEventListener('DOMContentLoaded', async function () {
         quoteButton.addEventListener('click', function() {
             // Handle quote generation
             generateQuote();
+        });
+    }
+    
+    // Initialize apply discounts button (currently disabled)
+    const applyDiscountsButton = document.querySelector('.cart-summary__apply-discounts');
+    if (applyDiscountsButton) {
+        applyDiscountsButton.addEventListener('click', function() {
+            // Will handle discounts in future implementations
+            console.log('Apply discounts functionality will be implemented in the future');
         });
     }
     
