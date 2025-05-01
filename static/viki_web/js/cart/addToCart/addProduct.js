@@ -6,9 +6,49 @@
 import { addCartItem, getCartItem, updateCartItem, getCart } from '../storage/cartStorage.js';
 import { showAddToCartNotification, showErrorNotification } from './notification.js';
 import { fetchProductPrice, calculateProductPrice } from '../pricing/productPriceCalculator.js';
+import { initCartItemCanvases } from '../cartItem/cartItemRenderer.js';
+import { updateSummary } from '../summary/summaryRenderer.js';
 
 // Custom event for tracking add to cart actions
 export const ADD_TO_CART_EVENT = 'product:added_to_cart';
+
+/**
+ * Update cart UI directly without waiting for events
+ * Ensures that the cart UI is updated immediately after adding a product
+ */
+function updateCartUIDirectly() {
+    // Only proceed if we're on the cart page
+    const cartContainer = document.querySelector('.cart-page__items');
+    if (!cartContainer) return;
+    
+    try {
+        // Update cart items rendering
+        initCartItemCanvases(cartContainer);
+        
+        // Update cart summary
+        updateSummary();
+        
+        // Update discount button state
+        const applyDiscountsButton = document.querySelector('.cart-summary__apply-discounts');
+        if (applyDiscountsButton) {
+            applyDiscountsButton.disabled = false;
+        }
+        
+        // Hide empty cart message
+        const emptyCart = document.querySelector('.cart-empty');
+        if (emptyCart) {
+            emptyCart.classList.add('item-hidden');
+        }
+        
+        // Show cart summary
+        const summary = document.querySelector('.cart-summary');
+        if (summary) {
+            summary.classList.remove('item-hidden');
+        }
+    } catch (error) {
+        console.error('Error updating cart UI directly:', error);
+    }
+}
 
 /**
  * Add product to cart
@@ -29,6 +69,10 @@ export async function addProductToCart(productData) {
         // If the exact same product exists, show notification and return it
         if (existingProduct) {
             showAddToCartNotification(existingProduct, true);
+            
+            // We still update the UI even for existing products (quantity change)
+            setTimeout(updateCartUIDirectly, 50);
+            
             return existingProduct;
         }
         
@@ -55,6 +99,9 @@ export async function addProductToCart(productData) {
         // This is a new product (not previously in the cart), so show "added" notification
         showAddToCartNotification(product, false);
         
+        // Directly update cart UI without waiting for events
+        setTimeout(updateCartUIDirectly, 50);
+        
         // Dispatch custom event for tracking
         document.dispatchEvent(new CustomEvent(ADD_TO_CART_EVENT, {
             detail: { product }
@@ -77,7 +124,8 @@ export async function addProductToCart(productData) {
                     // Update product in cart
                     updateCartItem(product);
                     
-                    // console.log(`Price updated for ${product.name}: ${originalPrice} -> ${calculatedPrice}`);
+                    // Update UI again with new price
+                    setTimeout(updateCartUIDirectly, 50);
                 }
             }
         } catch (priceError) {

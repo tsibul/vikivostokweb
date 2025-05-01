@@ -5,7 +5,7 @@
 
 import eventBus from '../eventBus.js';
 import {formatPrice} from '../pricing/priceFormatter.js';
-import {STORAGE_EVENTS} from '../cartStorage.js';
+import {STORAGE_EVENTS, getCartItems} from '../cartStorage.js';
 import {logCanvasReadyEvent} from './eventDebugger.js';
 import {UPDATE_EVENTS} from './priceUpdateManager.js';
 
@@ -1095,15 +1095,12 @@ export function initCartRendering() {
                     // Пробуем использовать современный метод reset (поддерживается в большинстве современных браузеров)
                     if (ctx.reset && typeof ctx.reset === 'function') {
                         ctx.reset();
-                        // console.log('Used ctx.reset() for canvas reset');
                     } else {
                         // Fallback: используем традиционный метод
                         canvas.width = width;
-                        // console.log('Used width reset for canvas');
                     }
                 } catch (e) {
                     // В случае ошибки с reset(), используем традиционный подход
-                    // canvas.width = width;
                     console.log('Reset error, fallback to width reset', e.message);
                 }
 
@@ -1112,7 +1109,6 @@ export function initCartRendering() {
                 const item = cartItems.find(i => i.id === itemId);
                 if (item) {
                     await renderCartItem(canvas, item);
-                    // console.log('Canvas state reset and redrawn', itemId);
                 }
             }
         }
@@ -1143,6 +1139,28 @@ export function initCartRendering() {
                 eventBus.publish('canvas:ready', eventData);
             }, READY_EVENT_DELAY);
         }
+        
+        // Подписываемся на событие добавления товара в корзину - важно сделать это сразу
+        eventBus.subscribe(STORAGE_EVENTS.CART_ITEM_ADDED, (data) => {
+            if (container && data && data.item) {
+                // Принудительно вызываем обновление всех товаров в корзине
+                setTimeout(() => {
+                    // Обновляем канвасы с новым товаром
+                    const updatedCanvases = initCartItemCanvases(container);
+                    
+                    // Отправляем событие о готовности
+                    notifyCanvasReady('cart-item-added', updatedCanvases);
+                    
+                    // Обновляем расположение кнопок "скидка" и прочие
+                    try {
+                        // Принудительно вызываем событие обновления для всех связанных модулей
+                        eventBus.publish(STORAGE_EVENTS.CART_UPDATED, getCartItems());
+                    } catch (error) {
+                        console.error('Error publishing cart updated event:', error);
+                    }
+                }, 50); // Небольшая задержка для завершения других операций
+            }
+        });
 
         // Load font first, then initialize canvases
         ensureFontLoaded().then(() => {
@@ -1162,7 +1180,7 @@ export function initCartRendering() {
                     notifyCanvasReady('cart-update', updatedCanvases);
                 }
             });
-
+            
             // Подписываемся на событие обновления цены, чтобы перерисовать canvas
             eventBus.subscribe(UPDATE_EVENTS.PRICE_CALCULATION_COMPLETE, (data) => {
                 if (data && data.item) {

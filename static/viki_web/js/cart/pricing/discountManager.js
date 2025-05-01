@@ -5,7 +5,7 @@
 
 import eventBus from '../eventBus.js';
 import { STORAGE_EVENTS } from '../cartStorage.js';
-import { priceCache } from './productPriceCalculator.js';
+import { priceCache, fetchProductPrice } from './productPriceCalculator.js';
 import { formatPrice } from './priceFormatter.js';
 
 // Constants for discount-related events
@@ -157,7 +157,26 @@ function findApplicableDiscount(totalPrice) {
  * @returns {Promise<boolean>} - Success status
  */
 export async function applyDiscountsToItems() {
-    // Calculate total for standard price items
+    // Убедимся, что для всех товаров в корзине получены данные о ценах
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    
+    // Получаем данные о ценах для всех товаров, которых ещё нет в кэше
+    const fetchPromises = [];
+    
+    for (const item of cart) {
+        const itemId = Number.parseInt(item.id);
+        if (!priceCache.has(itemId)) {
+            // Добавляем промис для получения данных о цене
+            fetchPromises.push(fetchProductPrice(itemId));
+        }
+    }
+    
+    // Ждем, пока все данные будут получены
+    if (fetchPromises.length > 0) {
+        await Promise.all(fetchPromises);
+    }
+    
+    // Теперь рассчитываем общую сумму стандартных товаров
     const totalStandardPrice = calculateStandardPriceItemsTotal();
     
     // Find applicable discount
@@ -168,8 +187,7 @@ export async function applyDiscountsToItems() {
         return false;
     }
     
-    // Get cart items
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    // Применяем скидки к стандартным товарам
     let discountsApplied = false;
     
     // Apply discount to items with standard price
