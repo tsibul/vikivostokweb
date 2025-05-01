@@ -16,7 +16,7 @@ class Order(models.Model):
     total_amount = models.FloatField()
     delivery_date = models.DateField(null=True)
     customer_comment = models.CharField(max_length=400, null=True)
-    branding = models.FileField(storage=fs_branding, null=True)
+    branding_file = models.FileField(storage=fs_branding, null=True)
     # approved = models.BooleanField(default=False)
     # started = models.BooleanField(default=False)
     # deleted = models.BooleanField(default=False)
