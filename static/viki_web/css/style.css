@@ -4027,6 +4027,23 @@ span.text-like {
   top: 100%;
 }
 
+/* Стили для опций печати */
+.quote-print-options {
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #f5f5f5;
+  border-radius: 5px;
+}
+
+.quote-print-option {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.quote-print-option input {
+  margin-right: 10px;
+}
+
 .quote-container {
   padding: 2rem 0;
 }
@@ -4248,19 +4265,37 @@ span.text-like {
 }
 
 @media print {
-  header, .header, menu, .menu {
-    display: none !important;
-  }
-  footer, .footer {
-    display: none !important;
-  }
+  .quote-print-options,
   .quote-actions {
     display: none !important;
   }
-  body {
+  .cookie-banner,
+  .cookie-policy,
+  #cookie-banner,
+  #cookie-policy,
+  .cookie-consent,
+  .cookie-notice,
+  [id*=cookie],
+  [class*=cookie] {
+    display: none !important;
+    visibility: hidden !important;
+  }
+  input[type=number].quote-item__price-input,
+  input[type=number].quote-item__branding-price-input {
+    border: none;
+    background: transparent;
+    -moz-appearance: textfield;
+    -webkit-appearance: none;
+    pointer-events: none;
+  }
+  input[type=number]::-webkit-outer-spin-button,
+  input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
     margin: 0;
-    padding: 0;
-    background-color: white;
+  }
+  body {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
   }
   .container {
     width: 100%;
@@ -4268,12 +4303,26 @@ span.text-like {
     padding: 0;
     margin: 0;
   }
+  .quote-item {
+    page-break-inside: avoid;
+  }
+  *:focus {
+    outline: none !important;
+  }
+  header, .header, menu, .menu {
+    display: none !important;
+  }
+  footer, .footer {
+    display: none !important;
+  }
+  body {
+    margin: 0;
+    padding: 0;
+    background-color: white;
+  }
   .quote-container {
     width: 100%;
     padding: 1cm;
-  }
-  .quote-item {
-    page-break-inside: avoid;
   }
   .quote-company-info {
     margin-bottom: 1.5cm;

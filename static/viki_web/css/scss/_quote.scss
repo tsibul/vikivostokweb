@@ -1,6 +1,24 @@
 @import "vars";
 @import "mixins";
 
+/* Стили для опций печати */
+.quote-print-options {
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #f5f5f5;
+  border-radius: 5px;
+}
+
+.quote-print-option {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  
+  input {
+    margin-right: 10px;
+  }
+}
+
 .quote-container {
   padding: 2rem 0;
   
@@ -259,6 +277,65 @@
 
 // Стили для печати
 @media print {
+  // Скрываем опции печати при печати
+  .quote-print-options, 
+  .quote-actions {
+    display: none !important;
+  }
+  
+  // Скрываем сообщение о cookie
+  .cookie-banner,
+  .cookie-policy,
+  #cookie-banner,
+  #cookie-policy,
+  .cookie-consent,
+  .cookie-notice,
+  [id*="cookie"],
+  [class*="cookie"] {
+    display: none !important;
+    visibility: hidden !important;
+  }
+  
+  // Преобразуем поля ввода в обычный текст
+  input[type="number"].quote-item__price-input,
+  input[type="number"].quote-item__branding-price-input {
+    border: none;
+    background: transparent;
+    -moz-appearance: textfield;
+    -webkit-appearance: none;
+    pointer-events: none;
+  }
+  
+  // Скрываем стрелки у input[type="number"]
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  
+  // Улучшаем стиль печати
+  body {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+  
+  .container {
+    width: 100%;
+    max-width: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  // Добавляем разрывы страниц между товарами
+  .quote-item {
+    page-break-inside: avoid;
+  }
+  
+  // Убираем подсветку фокуса
+  *:focus {
+    outline: none !important;
+  }
+  
   // Скрыть header и меню
   header, .header, menu, .menu {
     display: none !important;
@@ -269,11 +346,6 @@
     display: none !important;
   }
   
-  // Скрыть кнопки действий
-  .quote-actions {
-    display: none !important;
-  }
-  
   // Основные стили для печати
   body {
     margin: 0;
@@ -281,21 +353,9 @@
     background-color: white;
   }
   
-  .container {
-    width: 100%;
-    max-width: none;
-    padding: 0;
-    margin: 0;
-  }
-  
   .quote-container {
     width: 100%;
     padding: 1cm;
-  }
-  
-  // Стили для предотвращения разрывов
-  .quote-item {
-    page-break-inside: avoid;
   }
   
   // Улучшенный вид для печати
