@@ -17,9 +17,14 @@ def get_volume_discounts(request):
     """
     Возвращает данные о скидках за объем в формате JSON
     """
+
     try:
+        price_type = get_user_price_type(request)
         # Get all active volume discounts
-        volume_discounts = VolumeDiscount.objects.filter(deleted=False)
+        volume_discounts = VolumeDiscount.objects.filter(
+            deleted=False,
+            price_name=price_type
+        ).order_by('volume')
         
         result = []
         for discount in volume_discounts:
@@ -144,21 +149,9 @@ def get_item_price(request, item_id):
     """
     try:
         current_date = timezone.now().date()
-        
-        # Get user and determine price type
-        user = request.user
-        price_type = None
-        
-        # Try to get user extension
-        if user.is_authenticated:
-            user_extension = UserExtension.objects.filter(user=user).first()
-            if user_extension and user_extension.customer:
-                price_type = user_extension.customer.standard_price_type
-        
-        # If no price type found, get default (priority 1)
-        if not price_type:
-            price_type = StandardPriceType.objects.filter(priority=1).first()
-        
+
+        price_type = get_user_price_type(request)
+
         # Get item and goods
         item = CatalogueItem.objects.get(id=item_id)
         goods = item.goods
@@ -250,3 +243,21 @@ def get_item_price(request, item_id):
         return JsonResponse({'success': False, 'error': 'Товар не найден'})
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)})
+
+
+def get_user_price_type(request):
+    # Get user and determine price type
+    user = request.user
+    price_type = None
+
+    # Try to get user extension
+    if user.is_authenticated:
+        user_extension = UserExtension.objects.filter(user=user).first()
+        if user_extension and user_extension.customer:
+            price_type = user_extension.customer.standard_price_type
+
+    # If no price type found, get default (priority 1)
+    if not price_type:
+        price_type = StandardPriceType.objects.filter(priority=1).first()
+
+    return price_type
