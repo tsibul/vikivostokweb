@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
-from django.db import models
+from django.db import models, transaction
+from django.utils import timezone
 
 from viki_web_cms.models import UserExtension, Customer, Company, SettingsDictionary, OurCompany, CatalogueItem, \
     PrintType, PrintPlace
@@ -87,11 +88,13 @@ class Order(models.Model):
     def order_default():
         return ['-order_date', 'order_no']
 
+    @transaction.atomic
     def save(self, *args, **kwargs):
         is_new = self.pk is None
 
         if not is_new:
-            old_instance = Order.objects.get(pk=self.pk)
+            # Оптимизируем запрос для получения предыдущего состояния
+            old_instance = Order.objects.select_related('state').only('state').get(pk=self.pk)
             old_state = old_instance.state
         else:
             old_state = None
@@ -101,22 +104,55 @@ class Order(models.Model):
 
         # Если состояние изменилось, выполняем действие
         if not is_new and old_state != self.state and self.state.action:
-            self.execute_state_action(self.state.action)
+            # Обновляем поля без повторного сохранения всего объекта
+            Order.objects.filter(pk=self.pk).update(
+                previous_state=old_state,
+                state_changed_at=timezone.now()
+            )
+            
+            # Выполняем действие (асинхронно или синхронно в зависимости от настроек)
+            try:
+                # Проверяем, настроен ли Celery
+                from django.conf import settings
+                if hasattr(settings, 'CELERY_ENABLED') and settings.CELERY_ENABLED:
+                    # Асинхронный запуск
+                    from viki_web_cms.tasks import execute_order_state_action
+                    execute_order_state_action.delay(self.pk, self.state.action)
+                else:
+                    # Синхронное выполнение, если Celery не настроен
+                    self.execute_state_action(self.state.action)
+            except (ImportError, AttributeError):
+                # Fallback на синхронное выполнение, если не удалось импортировать модули
+                self.execute_state_action(self.state.action)
+            except Exception as e:
+                # Обработка прочих ошибок
+                import logging
+                logger = logging.getLogger('order_processing')
+                logger.error(f"Error handling state change for order {self.order_no}: {str(e)}")
 
     def execute_state_action(self, action_name):
         """Выполняет предопределенное действие по имени"""
-        # Стандартные операции
-        match action_name:
-            case 'send_confirmation_email':
-                self.send_confirmation_email()
-            case 'create_production_task':
-                self.create_production_task()
-            case 'notify_customer_ready':
-                self.notify_customer_ready()
-            case 'complete_and_archive':
-                self.complete_and_archive()
-            case 'cancel_and_refund':
-                self.cancel_and_refund()
+        try:
+            # Стандартные операции
+            match action_name:
+                case 'send_confirmation_email':
+                    self.send_confirmation_email()
+                case 'create_production_task':
+                    self.create_production_task()
+                case 'notify_customer_ready':
+                    self.notify_customer_ready()
+                case 'complete_and_archive':
+                    self.complete_and_archive()
+                case 'cancel_and_refund':
+                    self.cancel_and_refund()
+                case 'send_branding_email':
+                    self.send_branding_email()
+        except Exception as e:
+            # Логирование ошибок выполнения
+            import logging
+            logger = logging.getLogger('order_processing')
+            logger.error(f"Error executing action '{action_name}' for order {self.order_no}: {str(e)}")
+            # В реальном коде здесь может быть отправка уведомления администраторам
 
     # Конкретные методы для каждого действия
     def send_branding_email(self):
@@ -142,6 +178,41 @@ class Order(models.Model):
     def cancel_and_refund(self):
         # Логика отмены и возврата средств
         pass
+        
+    # Методы для оптимизированной загрузки данных
+    @classmethod
+    def get_order_with_items(cls, order_id):
+        """Получить заказ со всеми товарами и брендированием"""
+        return cls.objects.select_related(
+            'state', 'previous_state', 'customer', 'company', 'our_company', 'user_extension'
+        ).prefetch_related(
+            'orderitem_set',  # Все товары заказа
+            'orderitem_set__item',  # Данные товаров из каталога
+            'orderitem_set__orderitembranding_set',  # Брендирование для каждого товара
+            'orderitem_set__orderitembranding_set__print_type',  # Типы печати
+            'orderitem_set__orderitembranding_set__print_place'  # Места печати
+        ).get(pk=order_id)
+    
+    @classmethod
+    def get_orders_for_list(cls, **filters):
+        """Оптимизированная загрузка списка заказов для отображения в таблице"""
+        return cls.objects.select_related(
+            'state', 'customer', 'company'
+        ).filter(**filters).order_by(*cls.order_default())
+    
+    @classmethod
+    def get_orders_by_state(cls, state_code):
+        """Получить все заказы в определенном состоянии"""
+        return cls.objects.select_related(
+            'state', 'customer', 'company'
+        ).filter(state__code=state_code).order_by(*cls.order_default())
+    
+    @classmethod
+    def get_orders_for_customer(cls, customer_id):
+        """Получить все заказы определенного клиента"""
+        return cls.objects.select_related(
+            'state', 'customer', 'company'
+        ).filter(customer_id=customer_id).order_by(*cls.order_default())
 
 
 class OrderItem(models.Model):
@@ -158,7 +229,7 @@ class OrderItem(models.Model):
         verbose_name_plural = 'Товары в заказе'
         db_table_comment = 'order item'
         db_table = 'order_item'
-        ordering = ['-order.order_date', 'order.order_no', 'item.item_article']
+        ordering = ['-order__order_date', 'order__order_no', 'item__item_article']
 
     def __str__(self):
         return self.item.item_article + ' ' + self.item.name
@@ -168,7 +239,7 @@ class OrderItem(models.Model):
 
     @staticmethod
     def order_default():
-        return ['-order.order_date', 'order.order_no', 'item.item_article']
+        return ['-order__order_date', 'order__order_no', 'item__item_article']
 
 
 class OrderItemBranding(models.Model):
@@ -186,7 +257,7 @@ class OrderItemBranding(models.Model):
         verbose_name_plural = 'Брендирования товара в заказе'
         db_table_comment = 'order item branding'
         db_table = 'order_item_branding'
-        ordering = ['-order_item.order.order_date', 'order_item.order.order_no', 'order_item.item.item_article',
+        ordering = ['-order_item__order__order_date', 'order_item__order__order_no', 'order_item__item__item_article',
                     'print_type', 'print_place']
 
     def __str__(self):
@@ -199,5 +270,5 @@ class OrderItemBranding(models.Model):
 
     @staticmethod
     def order_default():
-        return ['-order_item.order.order_date', 'order_item.order.order_no', 'order_item.item.item_article',
+        return ['-order_item__order__order_date', 'order_item__order__order_no', 'order_item__item__item_article',
                     'print_type', 'print_place']
