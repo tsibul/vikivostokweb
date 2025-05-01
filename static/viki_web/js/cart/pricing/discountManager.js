@@ -113,7 +113,7 @@ function calculateStandardPriceItemsTotal() {
             if (item.branding && item.branding.length > 0) {
                 item.branding.forEach(branding => {
                     const secondPassMultiplier = branding.secondPass ? 1.3 : 1;
-                    const brandingPrice = branding.price * branding.colors * secondPassMultiplier;
+                    const brandingPrice = Math.round((branding.price * branding.colors * secondPassMultiplier) * 100) / 100;
                     totalStandardPrice += brandingPrice * item.quantity;
                 });
             }

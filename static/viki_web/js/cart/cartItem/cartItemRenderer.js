@@ -354,7 +354,7 @@ function drawBrandingItems(ctx, canvas, item, x, y, width) {
         // Вычисляем общую стоимость брендирования
         const totalBrandingCost = item.branding.reduce((sum, branding) => {
             const secondPassMultiplier = branding.secondPass ? 1.3 : 1;
-            const currentPrice = branding.price * branding.colors * secondPassMultiplier;
+            const currentPrice = Math.round((branding.price * branding.colors * secondPassMultiplier) * 100) / 100;
             return sum + (currentPrice * item.quantity);
         }, 0);
 

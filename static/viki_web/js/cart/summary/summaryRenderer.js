@@ -29,7 +29,7 @@ export function calculateSummary() {
         if (item.branding && item.branding.length > 0) {
             brandingTotal += item.branding.reduce((sum, b) => {
                 const secondPassMultiplier = b.secondPass ? 1.3 : 1;
-                const currentPrice = b.price * b.colors * secondPassMultiplier;
+                const currentPrice = Math.round((b.price * b.colors * secondPassMultiplier) * 100) / 100;
                 return sum + (currentPrice * item.quantity);
             }, 0);
         }
