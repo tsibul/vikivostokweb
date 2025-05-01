@@ -95,6 +95,13 @@ async function syncProductPrice(item, cartItems, index) {
         // Рассчитываем цену на основе количества
         const newPrice = calculateProductPrice(priceData, item.quantity);
         
+        // Проверяем, изменилась ли скидка
+        const oldDiscountPrice = item.discountPrice;
+        const discountChanged = oldDiscountPrice !== undefined && oldDiscountPrice !== newPrice;
+        
+        // Сбрасываем цену со скидкой до базовой всегда
+        cartItems[index].discountPrice = newPrice;
+        
         // Если цена изменилась, обновляем данные
         if (item.price !== newPrice) {
             cartItems[index].price = newPrice;
@@ -102,6 +109,12 @@ async function syncProductPrice(item, cartItems, index) {
             // Сохраняем обновленную корзину
             localStorage.setItem('cart', JSON.stringify(cartItems));
             
+            return true;
+        }
+        
+        // Сохраняем корзину, если была сброшена скидка
+        if (discountChanged) {
+            localStorage.setItem('cart', JSON.stringify(cartItems));
             return true;
         }
         

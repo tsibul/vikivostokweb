@@ -1177,6 +1177,19 @@ export function initCartRendering() {
                     }
                 }
             });
+            
+            // Подписываемся на событие обновления скидок для перерисовки интерфейса
+            import('../pricing/discountManager.js').then(({ DISCOUNT_EVENTS }) => {
+                eventBus.subscribe(DISCOUNT_EVENTS.DISCOUNTS_UI_UPDATE, () => {
+                    // Перерисовываем все канвасы после применения скидок
+                    const updatedCanvases = initCartItemCanvases(container);
+                    
+                    // Отправляем событие о готовности
+                    notifyCanvasReady('discount-update', updatedCanvases);
+                });
+            }).catch(error => {
+                console.error('Error importing discount events:', error);
+            });
 
             // Подписываемся на события связанные с брендированием
             eventBus.subscribe('cart:branding:add', (data) => {

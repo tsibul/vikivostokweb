@@ -19,6 +19,8 @@ import initBrandingButtonManager from './branding/brandingButtonManager.js';
 // Импортируем модули синхронизации цен
 import { syncCartPrices, PRICE_SYNC_EVENTS } from './pricing/priceSync.js';
 import { initItemPriceSync } from './pricing/itemPriceSync.js';
+// Импортируем модуль управления скидками
+import { initDiscountManager } from './pricing/discountManager.js';
 
 // Глобальные данные о возможностях печати
 let printOpportunities = [];
@@ -105,6 +107,9 @@ export function initCart() {
     
     // Инициализируем синхронизацию цен брендирования при изменении количества товара
     initItemPriceSync();
+    
+    // Инициализируем модуль управления скидками
+    initDiscountManager();
     
     // Check if we're on the cart page
     const cartContainer = document.querySelector('.cart-page__items');

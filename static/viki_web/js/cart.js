@@ -11,9 +11,10 @@ import {
     loadPrintOpportunities,
     updateCartBadge
 } from './cart/index.js';
-import { showAddToCartNotification, showErrorNotification } from './cart/addToCart/notification.js';
+import { showAddToCartNotification, showErrorNotification, showDiscountNotification } from './cart/addToCart/notification.js';
 import { getCSRFToken } from './common/getCSRFToken.js';
 import { initAuthCheck } from './cart/checkAuth.js';
+import { applyDiscountsToItems } from './cart/pricing/discountManager.js';
 
 /**
  * Load and cache volume discounts from the server
@@ -74,12 +75,24 @@ document.addEventListener('DOMContentLoaded', async function () {
         });
     }
     
-    // Initialize apply discounts button (currently disabled)
+    // Initialize apply discounts button
     const applyDiscountsButton = document.querySelector('.cart-summary__apply-discounts');
     if (applyDiscountsButton) {
-        applyDiscountsButton.addEventListener('click', function() {
-            // Will handle discounts in future implementations
-            console.log('Apply discounts functionality will be implemented in the future');
+        // Enable the button if cart has items
+        const cartItems = JSON.parse(localStorage.getItem('cart') || '[]');
+        if (cartItems.length > 0) {
+            applyDiscountsButton.disabled = false;
+        }
+        
+        applyDiscountsButton.addEventListener('click', async function() {
+            // Apply discounts to cart items
+            const discountsApplied = await applyDiscountsToItems();
+            
+            if (discountsApplied) {
+                showDiscountNotification('Скидки успешно применены к товарам');
+            } else {
+                showDiscountNotification('Нет подходящих товаров для скидок или сумма заказа недостаточна.');
+            }
         });
     }
     

@@ -5,6 +5,7 @@
 
 import eventBus from '../eventBus.js';
 import { STORAGE_EVENTS } from '../cartStorage.js';
+import { DISCOUNT_EVENTS } from '../pricing/discountManager.js';
 import { updateSummary } from './summaryRenderer.js';
 
 /**
@@ -17,4 +18,7 @@ export function initSummaryUpdateEvents() {
     eventBus.subscribe(STORAGE_EVENTS.CART_ITEM_REMOVED, updateSummary);
     eventBus.subscribe(STORAGE_EVENTS.CART_ITEM_UPDATED, updateSummary);
     
+    // Subscribe to discount events
+    eventBus.subscribe(DISCOUNT_EVENTS.DISCOUNTS_APPLIED, updateSummary);
+    eventBus.subscribe(DISCOUNT_EVENTS.DISCOUNTS_RESET, updateSummary);
 }

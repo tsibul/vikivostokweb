@@ -127,3 +127,42 @@ export function notificationClose(notification) {
     }, 10);
 
 }
+
+/**
+ * Show discount notification
+ * @param {string} message - Discount message
+ * @param {number} [duration=3000] - Duration in ms to show notification
+ */
+export function showDiscountNotification(message, duration = 3000) {
+    try {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = 'success-notification active';
+
+        notification.innerHTML = `
+            <i class="fa-solid fa-percent success-notification__icon"></i>
+            <div class="success-notification__content">
+                <h4 class="success-notification__title">Скидки</h4>
+                <p class="success-notification__message">${message}</p>
+            </div>
+            <button class="success-notification__close">×</button>
+        `;
+
+        // Add to DOM
+        document.body.appendChild(notification);
+
+        // Setup auto-close
+        setTimeout(() => {
+            notification.classList.remove('active');
+            setTimeout(() => notification.remove(), 300);
+        }, duration);
+
+        // Setup close button
+        notification.querySelector('.success-notification__close').addEventListener('click', () => {
+            notification.classList.remove('active');
+            setTimeout(() => notification.remove(), 300);
+        });
+    } catch (error) {
+        console.error('Error showing discount notification:', error);
+    }
+}
