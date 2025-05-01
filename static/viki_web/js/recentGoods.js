@@ -1,6 +1,7 @@
 'use strict';
 
 import CartAlert from './cart_alert.js';
+import { initAddToCart } from './cart/addToCart/index.js';
 
 /**
  * Class for handling the Recently Viewed Products functionality
@@ -28,6 +29,9 @@ class RecentlyViewed {
       
       // Initialize event listeners
       this.initEventListeners();
+      
+      // Initialize add to cart functionality
+      initAddToCart();
     }
   }
   
@@ -328,28 +332,9 @@ class RecentlyViewed {
     });
 
     // Add to cart buttons
-    const addToCartButtons = document.querySelectorAll('.recently-viewed__cart-btn');
-
-    addToCartButtons.forEach(btn => {
-      btn.addEventListener('click', function () {
-        const item = this.closest('.recently-viewed__item');
-        const name = item.querySelector('.recently-viewed__name').textContent;
-        const article = item.querySelector('.recently-viewed__article').textContent.replace('Артикул: ', '');
-        const selectedColor = item.querySelector('.square[style*="outline: 1px solid"]');
-
-        if (selectedColor) {
-          const colorName = selectedColor.querySelector('.tooltip-text').textContent;
-
-          // Show confirmation modal
-          const product = {name, article, color: colorName};
-
-          CartAlert.showAddToCartModal(product, function (product) {
-            // Show success notification
-            CartAlert.showSuccessMessage(product);
-          });
-        }
-      });
-    });
+    // Убираем собственный обработчик, чтобы работал стандартный механизм из eventHandler.js
+    // Кнопки уже имеют класс add-to-cart, поэтому будут автоматически обрабатываться
+    // через extractProductData и addProductToCart
   }
 }
 

@@ -51,17 +51,23 @@ function extractRecentlyViewedProductData(container, productData) {
         throw new Error('Active image not found in recently viewed item');
     }
 
+    // Get the selected color square (with outline)
+    const selectedColorSquare = container.querySelector('.square[style*="outline: 1px solid"]');
+    const colorDescription = selectedColorSquare ? 
+        selectedColorSquare.querySelector('.tooltip-text')?.textContent.trim() : '';
+
     // Extract basic information
     return {
         ...productData,
-        id: activeImage.dataset.id,
+        id: activeImage.dataset.id, // ID текущего цвета/варианта
         goodsId: container.dataset.id,
         name: container.querySelector('.recently-viewed__name')?.textContent.trim() || '',
         article: container.querySelector('.recently-viewed__article')?.textContent.trim()
             .replace('Артикул:', '').trim() || '',
         price: parseFloat(container.querySelector('.recently-viewed__price')?.textContent.replace(/[^\d.,]/g, '').replace(',', '.')) || 0,
         image: activeImage.src || '/static/viki_web/icons/logo.svg',
-        description: container.querySelector('.recently-viewed__description')?.textContent.trim() || ''
+        description: container.querySelector('.recently-viewed__description')?.textContent.trim() || colorDescription || '',
+        colorDescription: colorDescription
     };
 }
 
