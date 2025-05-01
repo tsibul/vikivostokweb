@@ -44,7 +44,7 @@ def quote_view(request):
             if item['branding']:
                 for branding in item['branding']:
                     second_pass_mult = 1.3 if branding['secondPass'] else 1
-                    branding['price'] = branding['price'] * branding['colors'] * second_pass_mult
+                    branding['price'] = round(branding['price'] * branding['colors'] * second_pass_mult, 2)
 
     context = {
         'title': 'Коммерческое предложение',
