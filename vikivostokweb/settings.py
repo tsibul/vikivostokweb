@@ -137,3 +137,38 @@ RECAPTCHA_SECRET_KEY = recaptcha_secret_key
 
 # Email для получения сообщений с контактной формы
 CONTACT_EMAIL = 'office@vikivostok.ru'
+
+# Celery Configuration
+CELERY_ENABLED = True
+CELERY_BROKER_URL = 'redis://localhost:6379/0'  # Используем Redis как брокер сообщений
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'  # Хранилище результатов
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'  # Убедитесь, что это соответствует TIME_ZONE в настройках Django
+
+# Настройки логирования для order_processing
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'WARNING',  # Повышаем уровень до WARNING, чтобы уменьшить количество сообщений
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+    },
+    'loggers': {
+        'order_processing': {
+            'handlers': ['console'],
+            'level': 'WARNING',  # Только предупреждения и ошибки
+            'propagate': True,
+        },
+    },
+}

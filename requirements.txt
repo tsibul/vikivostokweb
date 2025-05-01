@@ -1,5 +1,5 @@
 asgiref==3.8.1
-Django==5.1.5
+Django==5.1.8
 mysqlclient==2.2.7
 sqlparse==0.5.3
 tzdata==2025.1
@@ -8,3 +8,5 @@ django-ratelimit~=4.1.0
 pillow~=11.1.0
 requests~=2.32.3
 dadata~=24.10.0
+transliterate~=1.10.2
+celery~=5.5.2
