@@ -47,6 +47,46 @@ async function loadVolumeDiscounts() {
 }
 
 /**
+ * Очистить корзину полностью
+ * Показывает стилизованный диалог подтверждения и очищает корзину при подтверждении
+ */
+function clearCart() {
+    // Находим диалог подтверждения
+    const confirmDialog = document.querySelector('.cart-clear-confirm');
+    if (!confirmDialog) return;
+    
+    // Получаем элементы диалога
+    const closeBtn = confirmDialog.querySelector('.confirm-dialog__close');
+    const cancelBtn = confirmDialog.querySelector('.confirm-dialog__cancel-btn');
+    const confirmBtn = confirmDialog.querySelector('.confirm-dialog__confirm-btn');
+    
+    // Функция закрытия диалога
+    const closeDialog = () => {
+        confirmDialog.close();
+    };
+    
+    // Функция подтверждения очистки
+    const confirmClear = () => {
+        // Удаляем данные корзины из localStorage
+        localStorage.removeItem('cart');
+        
+        // Закрываем диалог
+        closeDialog();
+        
+        // Перезагружаем страницу для обновления интерфейса
+        window.location.reload();
+    };
+    
+    // Добавляем обработчики событий
+    closeBtn.addEventListener('click', closeDialog, { once: true });
+    cancelBtn.addEventListener('click', closeDialog, { once: true });
+    confirmBtn.addEventListener('click', confirmClear, { once: true });
+    
+    // Открываем диалог
+    confirmDialog.showModal();
+}
+
+/**
  * Initialization of cart functions when document loads
  * Now using Canvas-based rendering
  */
@@ -94,6 +134,19 @@ document.addEventListener('DOMContentLoaded', async function () {
                 showDiscountNotification('Нет подходящих товаров для скидок или сумма заказа недостаточна.');
             }
         });
+    }
+    
+    // Инициализация кнопки очистки корзины
+    const clearCartButton = document.querySelector('.cart-clear-btn');
+    if (clearCartButton) {
+        // Отображаем кнопку только если в корзине есть товары
+        const cartItems = JSON.parse(localStorage.getItem('cart') || '[]');
+        if (cartItems.length === 0) {
+            clearCartButton.parentElement.style.display = 'none';
+        }
+        
+        // Добавляем обработчик нажатия
+        clearCartButton.addEventListener('click', clearCart);
     }
     
     // Expose CartManager for external use

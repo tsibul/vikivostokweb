@@ -5,7 +5,16 @@
 
     <main>
         <div class="container">
-            <h1 class="section-title">Корзина</h1>
+            <div class="cart-title">
+                <h1 class="section-title">Корзина</h1>
+
+                <!-- Кнопка очистки корзины -->
+                <div class="cart-clear-container">
+                    <button class="btn btn__cancel cart-clear-btn">
+                        <i class="fa-solid fa-trash"></i> Очистить корзину
+                    </button>
+                </div>
+            </div>
 
             <div class="cart-page">
                 <!-- Cart items -->
@@ -46,7 +55,8 @@
                         <a href="{% url "viki_web:catalogue" %}">
                             <button class="btn btn__cancel cart-summary__continue">Продолжить покупки</button>
                         </a>
-                        <button class="btn btn__neutral cart-summary__apply-discounts" disabled>Применить скидки</button>
+                        <button class="btn btn__neutral cart-summary__apply-discounts" disabled>Применить скидки
+                        </button>
                         <button class="btn btn__neutral cart-summary__quote">Сформировать КП</button>
                         <button class="btn btn__save cart-summary__checkout">Оформить заказ</button>
                     </div>
@@ -89,7 +99,31 @@
                 <div class="login__btn-block">
                     <button type="button" class="btn btn__cancel login__btn">Закрыть</button>
                     <button type="button" class="btn btn__secondary login__btn checkout-login-btn">Войти</button>
-                    <button type="button" class="btn btn__save login__btn checkout-register-btn">Зарегистрироваться</button>
+                    <button type="button" class="btn btn__save login__btn checkout-register-btn">Зарегистрироваться
+                    </button>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Диалог подтверждения очистки корзины -->
+    <dialog class="confirm-dialog cart-clear-confirm">
+        <div class="confirm-dialog__body">
+            <div class="confirm-dialog__title">
+                <div>Очистка корзины</div>
+                <div class="confirm-dialog__close">&times;</div>
+            </div>
+            <div class="confirm-dialog__content">
+                <div class="confirm-dialog__icon">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <div class="confirm-dialog__text">
+                    Вы уверены, что хотите очистить корзину полностью?<br>
+                    Это действие нельзя отменить.
+                </div>
+                <div class="confirm-dialog__btn-block">
+                    <button type="button" class="btn btn__cancel confirm-dialog__cancel-btn">Отмена</button>
+                    <button type="button" class="btn btn__save confirm-dialog__confirm-btn">Очистить</button>
                 </div>
             </div>
         </div>

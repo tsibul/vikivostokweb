@@ -2321,11 +2321,10 @@ dialog.company-dialog textarea {
   width: fit-content;
 }
 
-.cart-page__title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #0F4880;
-  margin-bottom: 1rem;
+.cart-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .cart-page {
@@ -3055,6 +3054,89 @@ span.text-like {
   box-sizing: border-box;
   z-index: 1000;
   outline: none;
+}
+
+/* Стили для кнопки очистки корзины */
+.cart-clear-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1.5rem;
+}
+.cart-clear-container .cart-clear-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+.cart-clear-container .cart-clear-btn i {
+  font-size: 1rem;
+}
+
+/* Стили для диалога подтверждения */
+.confirm-dialog {
+  padding: 0;
+  border: 1px solid #0F4880;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background-color: #fff;
+  width: 450px;
+  max-width: 95vw;
+}
+.confirm-dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+.confirm-dialog__body {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.confirm-dialog__title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid #F2FFFF;
+  font-weight: 600;
+  font-size: 1.2rem;
+  color: #0F4880;
+}
+.confirm-dialog__title div:last-child {
+  cursor: pointer;
+  font-size: 1.5rem;
+  line-height: 0.8;
+}
+.confirm-dialog__title div:last-child:hover {
+  color: #009EA3;
+}
+.confirm-dialog__content {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+.confirm-dialog__icon {
+  display: flex;
+  justify-content: center;
+  font-size: 2.5rem;
+  color: #ffcc00;
+}
+.confirm-dialog__text {
+  text-align: center;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #0F4880;
+}
+.confirm-dialog__btn-block {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+.confirm-dialog__btn-block button {
+  padding: 0.6rem 1.5rem;
+  font-size: 0.95rem;
 }
 
 /* Модальное окно для добавления в корзину */
