@@ -59,11 +59,11 @@ def order(request):
     if request.method == 'POST' and 'cart_data' in request.POST:
         cart_data = json.loads(request.POST.get('cart_data', '[]'))
         for item in cart_data:
-            item['total'] = item['quantity'] * item['price']
+            item['total'] = item['quantity'] * item['discountPrice']
             if item['branding']:
                 for branding in item['branding']:
                     second_pass_mult = 1.3 if branding['secondPass'] else 1
-                    branding['price'] = branding['price'] * branding['colors'] * second_pass_mult
+                    branding['price'] = round(branding['price'] * branding['colors'] * second_pass_mult, 2)
                     branding['total'] = branding['price'] * item['quantity']
         context['cart_items'] = cart_data
 
