@@ -613,28 +613,6 @@ function handleRemoveItem(canvas) {
     
     // If cart is empty, show empty message
     const cartItems = JSON.parse(localStorage.getItem('cart') || '[]');
-    if (cartItems.length === 0) {
-        const container = document.querySelector('.cart-page__items');
-        if (container) {
-            const emptyCart = document.createElement('div');
-            emptyCart.className = 'cart-empty';
-            emptyCart.innerHTML = `
-                <div class="cart-empty__icon">
-                    <i class="fa-solid fa-cart-shopping"></i>
-                </div>
-                <h2 class="cart-empty__title">Ваша корзина пуста</h2>
-                <p class="cart-empty__text">Добавьте товары в корзину, чтобы оформить заказ</p>
-                <a href="/catalog/" class="btn btn-primary cart-empty__button">Перейти в каталог</a>
-            `;
-            container.appendChild(emptyCart);
-            
-            // Hide summary
-            const summary = document.querySelector('.cart-summary');
-            if (summary) {
-                summary.classList.add('item-hidden');
-            }
-        }
-    }
 }
 
 /**
