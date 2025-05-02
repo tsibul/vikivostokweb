@@ -32,7 +32,12 @@ def edit_dictionary(request, class_name, element_id):
     field_list = dict_model.dictionary_fields()
     fields_out = ['id']
     for field in field_list:
-        current_field = field['field'] + '__name' if field['type'] == 'foreign' else field['field']
+        if field['type'] == 'foreign' and field['foreignClass'] == 'User':
+            current_field = field['field'] + '__username'
+        elif field['type'] == 'foreign':
+            current_field = field['field'] + '__name'
+        else:
+            current_field = field['field']
         fields_out.append(current_field)
         if not 'property_off' in field:
             if field['type'] == 'boolean':

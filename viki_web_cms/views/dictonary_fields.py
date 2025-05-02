@@ -41,9 +41,14 @@ def field_values(request, class_name, deleted, new_item, first_record, search_st
     fields_out = ['id']
     fields_search = []
     for field in field_list:
-        current_field = field['field'] + '__name' if field['type'] == 'foreign' else field['field']
+        if field['type'] == 'foreign' and field['foreignClass'] == 'User':
+            current_field = field['field'] + '__username'
+        elif field['type'] == 'foreign':
+            current_field = field['field'] + '__name'
+        else:
+            current_field = field['field']
         fields_out.append(current_field)
-        if field['type'] not in {'boolean', 'image'}:
+        if field['type'] not in {'boolean', 'image'}: #or ('foreignClass' in field and field['foreignClass'] != 'User')
             fields_search.append(current_field + '__icontains')
     order = dict_model.order_default()
     if search_string == 'None':
@@ -114,6 +119,10 @@ def dropdown_list(request, class_name):
             option_list = (dict_model.objects.filter(~Q(name='cms_staff'))
                        .annotate(value=F('name'))
                        .values('id', 'value'))
+        case 'User':
+            option_list = (dict_model.objects.filter(is_staff=True)
+                           .annotate(value=Concat(F('first_name'), Value(' '), F('last_name')))
+                           .values('id', 'value'))
         case _:
             option_list = (dict_model.objects.filter(deleted=False)
                            .annotate(value=F('name'))
