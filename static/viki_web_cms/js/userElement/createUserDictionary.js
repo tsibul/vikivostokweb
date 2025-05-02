@@ -5,8 +5,8 @@
 
 'use strict';
 
-import { createUserHeader } from './createUserHeader.js';
-import { createUserRows } from './createUserRows.js';
+import {createUserHeader} from './createUserHeader.js';
+import {createUserRows} from './createUserRows.js';
 
 /**
  * Creates the complete user dictionary content with header and rows
@@ -16,17 +16,17 @@ import { createUserRows } from './createUserRows.js';
  * @param {boolean} newOnly - Whether to show only new users
  * @returns {Promise<HTMLElement>} Container with user dictionary content
  */
-export async function createUserDictionary(className, lastRecord = 0, searchString = '', newOnly = false) {
+export async function createUserDictionary(lastRecord = 0, searchString = '', newOnly = false) {
     const container = document.createElement('div');
     container.classList.add('dictionary-content');
-    
-    // Создаем заголовок
+
     const header = createUserHeader();
     container.appendChild(header);
-    
-    // Создаем строки
-    const rows = await createUserRows(className, lastRecord, searchString, newOnly);
+
+    const rows = document.createElement('div');
+    rows.classList.add('dictionary-content__rows');
+    await createUserRows(rows, lastRecord, searchString, newOnly);
     container.appendChild(rows);
-    
+
     return container;
 } 
