@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.db import models
 
 from viki_web_cms.functions.dadata_parse_inn import dadata_parse_inn
@@ -11,6 +12,7 @@ class Customer(SettingsDictionary):
     standard_price_type = models.ForeignKey(StandardPriceType, on_delete=models.SET_NULL, null=True, blank=True)
     new = models.BooleanField(default=True)
     vat = models.BooleanField(default=False)
+    manager = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
     class Meta(SettingsDictionary.Meta):
         verbose_name = 'Клиент (группа)'
@@ -44,6 +46,14 @@ class Customer(SettingsDictionary):
                 'type': 'boolean',
                 'label': 'с НДС',
             },
+            {
+                'field': 'manager',
+                'type': 'foreign',
+                'label': 'User',
+                'foreignClass': 'User',
+                'null': True,
+            },
+
         ]
 
 

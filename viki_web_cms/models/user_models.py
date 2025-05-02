@@ -12,6 +12,7 @@ class UserExtension(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)
     alias = models.CharField(max_length=140)
     new = models.BooleanField(default=True)
+    manager_letter = models.CharField(max_length=1, null=True, blank=True)
 
 
     def save(self, *args, **kwargs):
