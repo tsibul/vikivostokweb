@@ -99,6 +99,7 @@ def collect_personal_data(user):
         'phone': phone,
         'customer': customer_name,
         'customer_id': customer_id,
+        'manager_letter': user_extension.manager_letter,
     }
 
 
@@ -161,6 +162,10 @@ def save_personal_data(request):
                 user_phone.save()
         except StandardPriceType.DoesNotExist:
             return JsonResponse({'status': 'error', 'message': 'Указанный прайс-лист не найден', 'field': 'price_id'})
+    
+    # Обработка manager_letter
+    user_phone.manager_letter = request.POST['manager_letter']
+    user_phone.save()
     
     user.save()
     return JsonResponse({'status': 'ok'})

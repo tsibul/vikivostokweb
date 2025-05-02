@@ -49,7 +49,7 @@ class Customer(SettingsDictionary):
             {
                 'field': 'manager',
                 'type': 'foreign',
-                'label': 'User',
+                'label': 'менеджер',
                 'foreignClass': 'User',
                 'null': True,
             },

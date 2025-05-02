@@ -44,6 +44,14 @@
                                data-name="customer"
                                disabled>
                     </div>
+                    {#                     дополнительное поле#}
+                    <div class="personal-data__block">
+                        <label for="customer" class="personal-data__label">Код менеджера</label>
+                        <input type="text" id="customer"
+                               class="personal-data__input input-disabled"
+                               data-name="manager_letter"
+                               name="manager_letter">
+                    </div>
                     <div class="personal-data__block price-block">
                         <label for="price" class="personal-data__label">Прайс-лист</label>
                         <input type="text" id="price"
@@ -53,7 +61,7 @@
                         <input type="hidden" id="price_id"
                                name="price_id"
                                data-name="price_id">
-                        
+
                         <!-- Кастомный выпадающий список вместо select -->
                         <div id="price_dropdown" class="viki-dropdown personal-data__dropdown item-hidden">
                             <div class="viki-dropdown__trigger">
@@ -178,10 +186,10 @@
                     Адрес
                 </label>
                 <textarea
-                       id="company-dialog-save-address"
-                       class="company-dialog__text multiline"
-                       name="address"
-                       readonly></textarea>
+                        id="company-dialog-save-address"
+                        class="company-dialog__text multiline"
+                        name="address"
+                        readonly></textarea>
             </div>
             <div class="company-dialog__btn-block">
                 <button class="btn btn__cancel legal-btn" type="reset">Закрыть</button>
