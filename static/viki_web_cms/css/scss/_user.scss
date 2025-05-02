@@ -1,0 +1,67 @@
+@import "vars";
+@import "mixins";
+
+// Специфичные стили для элемента пользователя
+// В основном используем существующие стили из _dictionary.scss
+
+/* Полное переопределение стиля заголовка для отображения в строку */
+.user-element__header {
+  display: grid;
+  grid-template-columns: 1fr 0.6fr 1.5fr 1fr 1fr 0.4fr 1fr 1fr 0.5fr;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+
+/* Стили для заголовков столбцов */
+.user-element__header-item {
+  display: block;
+  text-align: left;
+  padding: 4px 8px;
+  white-space: nowrap;
+  //overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.user-element {
+  /* Стили для строк */
+  //&__row {
+  //  display: grid;
+  //grid-template-columns: 1fr 1fr 2fr 1fr 1fr 1fr 0.6fr 1fr 1fr;
+  //  gap: 6px;
+  //  margin-bottom: 4px;
+  //  border-bottom: 1px solid rgba($colorPrimary, 0.1);
+  //
+  //  &:hover {
+  //    background-color: rgba($colorNeutral500, 0.05);
+  //  }
+  //}
+  
+  /* Стили для ячеек */
+  &__cell {
+    padding: 4px 8px;
+    //white-space: nowrap;
+    //overflow: hidden;
+    //text-overflow: ellipsis;
+  }
+  
+  &__cell-no-results {
+    grid-column: 1 / -1;
+    text-align: center;
+    font-style: italic;
+    padding: 12px;
+    font-size: 16px;
+    color: $colorNeutral500;
+  }
+  
+  /* Индикатор нового пользователя */
+  &__new-indicator {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background-color: $colorSecondary500;
+    margin: 0 auto;
+  }
+} 

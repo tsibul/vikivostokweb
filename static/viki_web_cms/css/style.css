@@ -1,3 +1,4 @@
+@charset "UTF-8";
 * {
   padding: 0;
   margin: 0;
@@ -797,6 +798,49 @@ body {
   border-radius: 12px;
   padding: 6px;
   width: 100%;
+}
+
+/* Полное переопределение стиля заголовка для отображения в строку */
+.user-element__header {
+  display: grid;
+  grid-template-columns: 1fr 0.6fr 1.5fr 1fr 1fr 0.4fr 1fr 1fr 0.5fr;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* Стили для заголовков столбцов */
+.user-element__header-item {
+  display: block;
+  text-align: left;
+  padding: 4px 8px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.user-element {
+  /* Стили для строк */
+  /* Стили для ячеек */
+  /* Индикатор нового пользователя */
+}
+.user-element__cell {
+  padding: 4px 8px;
+}
+.user-element__cell-no-results {
+  grid-column: 1/-1;
+  text-align: center;
+  font-style: italic;
+  padding: 12px;
+  font-size: 16px;
+  color: #4A4A4A;
+}
+.user-element__new-indicator {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: #009EA3;
+  margin: 0 auto;
 }
 
 /*# sourceMappingURL=style.css.map */
