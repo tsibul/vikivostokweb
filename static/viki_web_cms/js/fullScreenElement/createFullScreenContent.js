@@ -10,7 +10,8 @@ export async function createFullScreenContent(content, menuCode, pageName) {
         const className = menuContent.cms_settings[0].setting_class;
         const upload = menuContent.cms_settings[0].upload;
         const itemNew = menuContent.cms_settings[0].new;
-        const header = createHeader(className, headingTitle, upload, itemNew);
+        const deleteNeeded = menuContent.cms_settings[0].delete;
+        const header = createHeader(className, headingTitle, upload, itemNew, deleteNeeded);
         content.appendChild(header);
         const pageContent = await cmsPages[pageName](className);
         content.appendChild(pageContent);
