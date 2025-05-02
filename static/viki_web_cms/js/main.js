@@ -12,6 +12,9 @@ import {createPriceElement} from "./priceElement/createPriceElement.js";
 import {fetchJsonData} from "./fetchJsonData.js";
 import {checkUserData} from "./authentification/checkUserData.js";
 import {login} from "./authentification/login.js";
+import {createUserElement} from "./userElement/createUserElement.js";
+import {createOrderElement} from "./orderElement/createOrderElement.js";
+import {createGroupElement} from "./groupElement/createGroupElement.js";
 
 /**
  * Base URL for JSON data
@@ -27,6 +30,9 @@ export const cmsPages = {
     'Goods': createGoodsElement,
     'Catalogue': createCatalogueElement,
     'PriceList': createPriceElement,
+    'UserExtension': createUserElement,
+    'Order': createOrderElement,
+    'CustomerGroup': createGroupElement,
 }
 
 const checkUserUrl = jsonUrl + 'userdata';
