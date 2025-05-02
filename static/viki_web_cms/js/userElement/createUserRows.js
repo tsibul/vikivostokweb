@@ -75,14 +75,15 @@ export async function createUserRows(className, lastRecord = 0, searchString = '
                 aliasCell.textContent = user.alias || '';
                 row.appendChild(aliasCell);
                 
-                // Столбец с индикатором нового пользователя
+                // Столбец с индикатором нового пользователя (чекбокс)
                 const newCell = document.createElement('div');
                 newCell.classList.add('dictionary-content__row_item', 'user-element__cell', 'user-element__cell-new');
-                if (user.new) {
-                    const newIndicator = document.createElement('div');
-                    newIndicator.classList.add('dictionary-content__square', 'user-element__new-indicator');
-                    newCell.appendChild(newIndicator);
-                }
+                const newCheckbox = document.createElement('input');
+                newCheckbox.type = 'checkbox';
+                newCheckbox.classList.add('check');
+                newCheckbox.checked = user.new || false;
+                newCheckbox.disabled = true; // Только для отображения
+                newCell.appendChild(newCheckbox);
                 row.appendChild(newCell);
                 
                 // Столбец с менеджером
