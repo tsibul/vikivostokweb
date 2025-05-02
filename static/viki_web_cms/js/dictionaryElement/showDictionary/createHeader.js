@@ -17,9 +17,10 @@ import {newFilter} from "../newFilter.js";
  * @param dictionaryName class name for title
  * @param fileUpload if load file button needed
  * @param itemNew if new item checkbox needed
+ * @param deletedNeeded if deleted checkbox needed
  * @returns {HTMLDivElement}
  */
-export function createHeader(dictionaryClass, dictionaryName, fileUpload, itemNew) {
+export function createHeader(dictionaryClass, dictionaryName, fileUpload, itemNew, deletedNeeded = true) {
     const frameHeader = document.createElement('div');
     frameHeader.classList.add('dictionary-frame__header');
     const headerLeft = document.createElement('div');
@@ -46,16 +47,18 @@ export function createHeader(dictionaryClass, dictionaryName, fileUpload, itemNe
         headerRight.appendChild(newLabel);
 
     }
-    const deletedCheck = createCheckbox(true);
-    deletedCheck.id = dictionaryClass + '-deleted';
-    deletedCheck.addEventListener('change', () => deletedFilter(dictionaryClass, deletedCheck))
-    deletedCheck.classList.add('check-deleted');
-    headerRight.appendChild(deletedCheck);
-    const checkLabel = document.createElement('label');
-    checkLabel.htmlFor = dictionaryClass + '-deleted';
-    checkLabel.classList.add('dictionary-frame__label');
-    checkLabel.textContent = 'скрыть удаленные';
-    headerRight.appendChild(checkLabel);
+    if (deletedNeeded) {
+        const deletedCheck = createCheckbox(true);
+        deletedCheck.id = dictionaryClass + '-deleted';
+        deletedCheck.addEventListener('change', () => deletedFilter(dictionaryClass, deletedCheck))
+        deletedCheck.classList.add('check-deleted');
+        headerRight.appendChild(deletedCheck);
+        const checkLabel = document.createElement('label');
+        checkLabel.htmlFor = dictionaryClass + '-deleted';
+        checkLabel.classList.add('dictionary-frame__label');
+        checkLabel.textContent = 'скрыть удаленные';
+        headerRight.appendChild(checkLabel);
+    }
     headerRight.insertAdjacentHTML('beforeend', searchIcon);
     const searchInput = document.createElement('input');
     searchInput.classList.add('dictionary-frame__input');
