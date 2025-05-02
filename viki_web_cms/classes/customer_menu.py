@@ -1,11 +1,12 @@
 import json
 
 class CustomerSetting:
-    def __init__(self, setting: str, setting_class: str, upload: bool, new: bool):
+    def __init__(self, setting: str, setting_class: str, upload: bool, new: bool, delete: bool = True):
         self.setting = setting
         self.setting_class = setting_class
         self.upload = upload
         self.new = new
+        self.delete = delete
 
     @staticmethod
     def cms_set(setting):
@@ -47,10 +48,10 @@ class CustomerMenu:
                 sort_keys=True)), 'Standard'),
             CustomerMenu('Контакты', str(json.dumps([
                 CustomerSection('Контакты', [
-                    CustomerSetting('Контакты', 'Manager', True, True),
+                    CustomerSetting('Контакты', 'UserExtension', True, True, False),
                 ]),
             ], default=lambda o: o.__dict__,
-                sort_keys=True)), 'Contact'),
+                sort_keys=True)), 'UserExtension'),
             CustomerMenu('Заказы', str(json.dumps([
                 CustomerSection('Заказы', [
                     CustomerSetting('Заказы', 'Order', False, True),
@@ -62,6 +63,6 @@ class CustomerMenu:
                     CustomerSetting('Состав групп', 'CustomerGroup', False, True),
                 ]),
             ], default=lambda o: o.__dict__,
-                sort_keys=True)), 'Group'),
+                sort_keys=True)), 'CustomerGroup'),
         ]
         return menu_list
