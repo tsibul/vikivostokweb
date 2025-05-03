@@ -50,13 +50,22 @@ export async function createUserRows(container, lastRecord = 0, searchString = '
 
 
 function createUserRow(row, user) {
-    createTextField(row, user.last_name)
-    createTextField(row, user.first_name)
-    createTextField(row, user.email)
-    createTextField(row, user.phone)
-    createTextField(row, user.alias)
+    let tmpField;
+    tmpField = createTextField(user.last_name);
+    row.appendChild(tmpField);
+    tmpField = createTextField(user.first_name);
+    row.appendChild(tmpField);
+    tmpField = createTextField(user.email);
+    row.appendChild(tmpField);
+    tmpField = createTextField(user.phone);
+    row.appendChild(tmpField);
+    tmpField = createTextField(user.alias);
+    tmpField.classList.add('alias')
+    row.appendChild(tmpField);
     row.appendChild(createNewCheckBox(user.new));
-    createTextField(row, user.customer)
+    tmpField = createTextField(user.customer);
+    tmpField.classList.add('customer')
+    row.appendChild(tmpField);
 
     const button = createSaveButton('Изм')
     button.dataset.id = user.id;
@@ -66,11 +75,11 @@ function createUserRow(row, user) {
     row.appendChild(button);
 }
 
-function createTextField (row, text){
+function createTextField (text){
     const cell =  document.createElement('div');
     cell.classList.add('dictionary-content__row_item', 'user-element__cell');
     cell.textContent = text || '';
-    row.appendChild(cell);
+    return cell;
 
 }
 
