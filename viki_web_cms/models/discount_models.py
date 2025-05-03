@@ -35,6 +35,7 @@ class CustomerDiscount(SettingsDictionary):
     """ discounts on standard price """
     price_name = models.ForeignKey(StandardPriceType, on_delete=models.CASCADE, unique=True)
     discount = models.FloatField(null=False, blank=False, validators=[MaxValueValidator(1), MinValueValidator(0)])
+    discount_code = models.CharField(max_length=1, null=True, blank=True)
 
     class Meta(SettingsDictionary.Meta):
         verbose_name = 'Скидка партнера'
@@ -76,6 +77,12 @@ class CustomerDiscount(SettingsDictionary):
                 'field': 'discount',
                 'type': 'precise',
                 'label': 'доля от конечника',
+                'null': False,
+            },
+            {
+                'field': 'discount_code',
+                'type': 'string',
+                'label': 'код',
                 'null': False,
             },
         ]
