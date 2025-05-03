@@ -417,6 +417,7 @@ body {
   grid-auto-flow: row;
   gap: 12px;
   height: 100%;
+  align-items: center;
 }
 .modal__content_item {
   display: flex;
@@ -451,7 +452,7 @@ body {
 .modal__content_checkbox {
   accent-color: #009EA3;
   cursor: pointer;
-  transform: scale(0.7);
+  height: 16px;
 }
 .modal__content_file-frame {
   border: 1px solid #0F4880;
