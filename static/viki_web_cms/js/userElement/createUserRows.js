@@ -56,12 +56,13 @@ function createUserRow(row, user) {
     createTextField(row, user.phone)
     createTextField(row, user.alias)
     row.appendChild(createNewCheckBox(user.new));
-    createTextField(row, user.manager_letter)
     createTextField(row, user.customer)
 
     const button = createSaveButton('Изм')
     button.dataset.id = user.id;
-    button.addEventListener('click', (e) => editUser);
+    button.addEventListener('click', async (e) => {
+        await editUser(e);
+    });
     row.appendChild(button);
 }
 

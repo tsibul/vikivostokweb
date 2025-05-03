@@ -21,7 +21,6 @@ export function createUserHeader() {
         { title: 'Телефон' },
         { title: 'Email-алиас' },
         { title: 'Новый' },
-        { title: 'Менеджер' },
         { title: 'Клиент' },
         { title: '' } // Столбец с кнопкой
     ];
