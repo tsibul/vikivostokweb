@@ -28,6 +28,8 @@ urlpatterns = [
     path('json/delete_item_price_row/<int:row_id>', views.delete_item_price_row),
     path('json/userdata', views.userdata),
     path('json/user_extension', views.user_extension),
+    path('json/user_extension_item/<int:user_id>', views.user_extension_item),
+    path('json/update_user_extension/<int:user_id>', views.update_user_extension),
     path('user_login', views.user_login),
 
 ]
