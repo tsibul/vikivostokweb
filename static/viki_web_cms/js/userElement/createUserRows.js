@@ -7,6 +7,8 @@
 
 import {getUserExtensionData} from './getUserExtensionData.js';
 import {loadMoreUsers} from './loadMoreUsers.js';
+import {editUser} from './editUser.js';
+import {createSaveButton} from "../createStandardElements/createSaveButton.js";
 
 /**
  * Creates user rows for the dictionary display
@@ -48,56 +50,34 @@ export async function createUserRows(container, lastRecord = 0, searchString = '
 
 
 function createUserRow(row, user) {
-    const lastNameCell = document.createElement('div');
-    lastNameCell.classList.add('dictionary-content__row_item', 'user-element__cell', 'user-element__cell-lastname');
-    lastNameCell.textContent = user.last_name || '';
-    row.appendChild(lastNameCell);
+    createTextField(row, user.last_name)
+    createTextField(row, user.first_name)
+    createTextField(row, user.email)
+    createTextField(row, user.phone)
+    createTextField(row, user.alias)
+    row.appendChild(createNewCheckBox(user.new));
+    createTextField(row, user.manager_letter)
+    createTextField(row, user.customer)
 
-    const firstNameCell = document.createElement('div');
-    firstNameCell.classList.add('dictionary-content__row_item', 'user-element__cell', 'user-element__cell-firstname');
-    firstNameCell.textContent = user.first_name || '';
-    row.appendChild(firstNameCell);
+    const button = createSaveButton('Изм')
+    button.dataset.id = user.id;
+    button.addEventListener('click', (e) => editUser);
+    row.appendChild(button);
+}
 
-    const emailCell = document.createElement('div');
-    emailCell.classList.add('dictionary-content__row_item', 'user-element__cell', 'user-element__cell-email');
-    emailCell.textContent = user.email || '';
-    row.appendChild(emailCell);
+function createTextField (row, text){
+    const cell =  document.createElement('div');
+    cell.classList.add('dictionary-content__row_item', 'user-element__cell');
+    cell.textContent = text || '';
+    row.appendChild(cell);
 
-    const phoneCell = document.createElement('div');
-    phoneCell.classList.add('dictionary-content__row_item', 'user-element__cell', 'user-element__cell-phone');
-    phoneCell.textContent = user.phone || '';
-    row.appendChild(phoneCell);
+}
 
-    const aliasCell = document.createElement('div');
-    aliasCell.classList.add('dictionary-content__row_item', 'user-element__cell', 'user-element__cell-alias');
-    aliasCell.textContent = user.alias || '';
-    row.appendChild(aliasCell);
-
-    const newCell = document.createElement('div');
-    newCell.classList.add('dictionary-content__row_item', 'user-element__cell', 'user-element__cell-new');
+export function createNewCheckBox(checked){
     const newCheckbox = document.createElement('input');
     newCheckbox.type = 'checkbox';
-    newCheckbox.classList.add('check');
-    newCheckbox.checked = user.new || false;
-    newCheckbox.disabled = true; // Только для отображения
-    newCell.appendChild(newCheckbox);
-    row.appendChild(newCell);
-
-    const managerCell = document.createElement('div');
-    managerCell.classList.add('dictionary-content__row_item', 'user-element__cell', 'user-element__cell-manager');
-    managerCell.textContent = user.manager_letter || '';
-    row.appendChild(managerCell);
-
-    const customerCell = document.createElement('div');
-    customerCell.classList.add('dictionary-content__row_item', 'user-element__cell', 'user-element__cell-customer');
-    customerCell.textContent = user.customer || '';
-    row.appendChild(customerCell);
-
-    const buttonCell = document.createElement('div');
-    buttonCell.classList.add('user-element__cell');
-    const button = document.createElement('button');
-    button.classList.add('btn', 'btn__save');
-    button.textContent = 'Изм.';
-    buttonCell.appendChild(button);
-    row.appendChild(buttonCell);
+    newCheckbox.classList.add('check', 'user-element__check');
+    newCheckbox.checked = checked || false;
+    newCheckbox.disabled = true;
+    return newCheckbox
 }
