@@ -69,7 +69,8 @@ class Order(models.Model):
     state = models.ForeignKey(OrderState, on_delete=models.PROTECT, related_name='orders')
     previous_state = models.ForeignKey(OrderState, on_delete=models.SET_NULL, null=True, related_name='previous_orders')
     state_changed_at = models.DateTimeField(auto_now=False, null=True)
-    user_edited =  models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    user_edited =  models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='user_edited')
+    user_responsible =  models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='user_responsible')
 
     class Meta:
         verbose_name = 'Заказ'
