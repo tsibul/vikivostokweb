@@ -43,7 +43,7 @@ class OrderState(SettingsDictionary):
                 'null': True,
             },
             {
-                'field': 'short_name',
+                'field': 'order',
                 'type': 'number',
                 'label': 'порядковый номер',
                 'null': False,
