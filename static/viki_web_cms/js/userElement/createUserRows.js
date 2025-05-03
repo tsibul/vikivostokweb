@@ -70,7 +70,7 @@ function createUserRow(row, user) {
     const button = createSaveButton('Изм')
     button.dataset.id = user.id;
     button.addEventListener('click', async (e) => {
-        await editUser(e);
+        await editUser(e, row);
     });
     row.appendChild(button);
 }
