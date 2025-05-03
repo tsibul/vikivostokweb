@@ -121,29 +121,30 @@ def update_user_extension(request, user_id):
 
     try:
         # Get POST parameters
-        new_status = request.POST.get('new_status') == '1'
-        manager_letter = request.POST.get('manager_letter', '')
-        customer_id = request.POST.get('customer_id', '')
+        new_status = request.POST.get('new') == 'on'
+        alias = request.POST.get('alias', '')
+        customer_id = request.POST.get('customer', '')
         # Get user extension record
         user_ext = UserExtension.objects.get(user_id=user_id)
 
         # Update fields
         user_ext.new = new_status
-        user_ext.manager_letter = manager_letter
-
+        user_ext.alias = alias
         # Update customer if provided
         if customer_id:
-            try:
-                customer = Customer.objects.get(id=customer_id, deleted=False)
-                user_ext.customer = customer
-            except Customer.DoesNotExist:
-                user_ext.customer = None
+            customer = Customer.objects.get(id=customer_id, deleted=False)
+            user_ext.customer = customer
         else:
             user_ext.customer = None
-
         # Save changes
         user_ext.save()
+        context = {
+            "success": True,
+            'new': new_status,
+            'alias': alias,
+            'customer': user_ext.customer.name if user_ext.customer else '',
+        }
 
-        return JsonResponse({"success": True})
+        return JsonResponse(context)
     except Exception as e:
         return JsonResponse({"error": str(e), "success": False}, status=500)
