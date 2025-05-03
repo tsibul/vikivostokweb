@@ -45,13 +45,15 @@
                                disabled>
                     </div>
                     {#                     дополнительное поле#}
-                    <div class="personal-data__block">
-                        <label for="customer" class="personal-data__label">Код менеджера</label>
-                        <input type="text" id="customer"
-                               class="personal-data__input input-disabled"
-                               data-name="manager_letter"
-                               name="manager_letter">
-                    </div>
+                    {% if user.is_staff %}
+                        <div class="personal-data__block">
+                            <label for="manager_letter" class="personal-data__label">Код менеджера</label>
+                            <input type="text" id="manager_letter"
+                                   class="personal-data__input input-disabled"
+                                   data-name="manager_letter"
+                                   name="manager_letter">
+                        </div>
+                    {% endif %}
                     <div class="personal-data__block price-block">
                         <label for="price" class="personal-data__label">Прайс-лист</label>
                         <input type="text" id="price"

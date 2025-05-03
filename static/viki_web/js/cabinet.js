@@ -67,8 +67,8 @@ const isStaff = dataInitial['isStaff'] || false;
 const priceTypes = dataInitial['priceTypes'] || [];
 
 // Управление видимостью поля manager_letter
-const managerLetterField = document.querySelector('input[data-name="manager_letter"]').closest('.personal-data__block');
-managerLetterField.style.display = isStaff ? 'block' : 'none';
+// const managerLetterField = document.querySelector('input[data-name="manager_letter"]').closest('.personal-data__block');
+// managerLetterField.style.display = isStaff ? 'grid' : 'none';
 
 // Initialize price list handler for staff users
 initPriceListHandler(isStaff, priceTypes, personalDataInitial.price_id);
