@@ -359,7 +359,7 @@ function submitOrderToServer(orderData, form) {
     formData.append('items', JSON.stringify(orderData.items));
     
     // Use fetch API to submit order
-    fetch(form.action, {
+    fetch('/create_order/', {
         method: 'POST',
         body: formData,
         headers: {
@@ -375,7 +375,7 @@ function submitOrderToServer(orderData, form) {
     .then(data => {
         if (data.status === 'ok') {
             // Redirect to success page or handle success
-            window.location.href = data.redirect_url || '/order/success/';
+            window.location.href = data.redirect_url || '/cart/';
         } else {
             // Display error message
             showErrorNotification(data.message || 'Ошибка при оформлении заказа');

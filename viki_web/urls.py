@@ -29,6 +29,7 @@ urlpatterns = [
     path('cart', views.cart, name='cart'),
     path('order/', views.order, name='order'),
     path('order_list/', views.order, name='order_list'),
+    path('create_order/', views.create_order, name='create_order'),
     path('quote/', quote.quote_view, name='quote'),
     path('quote/goods-info/', quote.get_goods_info, name='quote_goods_info'),
     path('api/print-opportunities/<int:goods_id>', views.get_print_opportunities, name='print_opportunities'),
