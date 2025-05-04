@@ -142,6 +142,10 @@ class Order(models.Model):
                     self.order_created()
                 case 'branding_request':
                     self.branding_request()
+                case 'wait_branding_approve':
+                    self.wait_branding_approve()
+                case 'branding_approved':
+                    self.branding_approved()
                 case 'price_changed':
                     self.price_changed()
                 case 'order_approved':
@@ -167,6 +171,12 @@ class Order(models.Model):
         pass
 
     def branding_request(self):
+        pass
+
+    def wait_branding_approve(self):
+        pass
+
+    def branding_approved(self):
         pass
 
     def price_changed(self):
