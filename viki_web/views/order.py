@@ -84,7 +84,7 @@ def generate_short_number ():
     )
     return existing_number.order_short_number + 1 if existing_number else 1
 
-def generate_order_number(user_extension, company, has_branding, short_number):
+def generate_order_number(manager, user_extension,  company, has_branding, short_number):
     """
     Generate order number with format:
     ddmmyy_XXX_M_D_R_B
@@ -103,8 +103,12 @@ def generate_order_number(user_extension, company, has_branding, short_number):
     sequence_number = f"{short_number:03d}"
     
     # Manager letter (use 'О' if empty)
-    manager_letter = user_extension.manager_letter or 'О'
-    
+    if manager:
+        manager_ext = UserExtension.objects.filter(user=manager).first()
+        manager_letter = manager_ext.manager_letter
+    else:
+        manager_letter = 'О'
+
     # Get discount code
     discount_code = "К"
     try:
@@ -221,9 +225,10 @@ def create_order(request):
             }, status=500)
         
         # Generate order number
+        manager = customer.manager
         order_short_number = generate_short_number()
-        order_no = generate_order_number(user_extension, company, has_branding, order_short_number)
-        
+        order_no = generate_order_number(manager, user_extension, company, has_branding, order_short_number)
+
         # Create order record
         new_order = Order.objects.create(
             order_no=order_no,
@@ -237,7 +242,8 @@ def create_order(request):
             customer_comment=customer_comment,
             state=initial_state,
             delivery_option = delivery_option,
-            user_responsible = request.user,
+            user_edited = request.user,
+            user_responsible=manager,
         )
 
         # new_order.save()

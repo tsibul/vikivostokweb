@@ -11,6 +11,45 @@ import { validateOrderForm } from './order/validation.js';
 import { showErrorNotification } from './cart/addToCart/notification.js';
 
 /**
+ * Shows a success notification for an order
+ * @param {string} orderNo - Order number
+ * @param {number} [duration=3000] - Duration in ms to show notification
+ */
+function showOrderSuccessNotification(orderNo, duration = 3000) {
+    try {
+        // Create notification element
+        const notification = document.createElement('div');
+        notification.className = 'success-notification active';
+
+        notification.innerHTML = `
+            <i class="fa-solid fa-check success-notification__icon"></i>
+            <div class="success-notification__content">
+                <h4 class="success-notification__title">Заказ успешно создан</h4>
+                <p class="success-notification__message">Номер заказа: ${orderNo}</p>
+            </div>
+            <button class="success-notification__close">×</button>
+        `;
+
+        // Add to DOM
+        document.body.appendChild(notification);
+
+        // Setup auto-close
+        setTimeout(() => {
+            notification.classList.remove('active');
+            setTimeout(() => notification.remove(), 300);
+        }, duration);
+
+        // Setup close button
+        notification.querySelector('.success-notification__close').addEventListener('click', () => {
+            notification.classList.remove('active');
+            setTimeout(() => notification.remove(), 300);
+        });
+    } catch (error) {
+        console.error('Error showing order success notification:', error);
+    }
+}
+
+/**
  * Initialize the order page functionality
  */
 document.addEventListener('DOMContentLoaded', function() {
@@ -374,8 +413,13 @@ function submitOrderToServer(orderData, form) {
     })
     .then(data => {
         if (data.status === 'ok') {
-            // Redirect to success page or handle success
-            window.location.href = data.redirect_url || '/cart';
+            // Show success notification with order number
+            showOrderSuccessNotification(data.order_no);
+            
+            // Redirect with delay
+            setTimeout(() => {
+                window.location.href = data.redirect_url || '/cart';
+            }, 3000); // 3 second delay
         } else {
             // Display error message
             showErrorNotification(data.message || 'Ошибка при оформлении заказа');
