@@ -4,7 +4,7 @@ from django.db import models, transaction
 from django.utils import timezone
 
 from viki_web_cms.models import UserExtension, Customer, Company, SettingsDictionary, OurCompany, CatalogueItem, \
-    PrintType, PrintPlace
+    PrintType, PrintPlace, DeliveryOption
 
 fs_branding = FileSystemStorage(location='viki_web_cms/files/order/branding')
 fs_invoice = FileSystemStorage(location='viki_web_cms/files/order/invoice')
@@ -71,6 +71,7 @@ class Order(models.Model):
     state_changed_at = models.DateTimeField(auto_now=False, null=True)
     user_edited =  models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='user_edited')
     user_responsible =  models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='user_responsible')
+    delivery_option = models.ForeignKey(DeliveryOption, on_delete=models.SET_NULL, null=True, related_name='delivery_option')
 
     class Meta:
         verbose_name = 'Заказ'
