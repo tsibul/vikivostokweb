@@ -138,18 +138,23 @@ class Order(models.Model):
         try:
             # Стандартные операции
             match action_name:
-                case 'send_confirmation_email':
-                    self.send_confirmation_email()
-                case 'create_production_task':
-                    self.create_production_task()
-                case 'notify_customer_ready':
-                    self.notify_customer_ready()
-                case 'complete_and_archive':
-                    self.complete_and_archive()
-                case 'cancel_and_refund':
-                    self.cancel_and_refund()
-                case 'send_branding_email':
-                    self.send_branding_email()
+                case 'order_created':
+                    self.order_created()
+                case 'branding_request':
+                    self.branding_request()
+                case 'price_changed':
+                    self.price_changed()
+                case 'order_approved':
+                    self.order_approved()
+                case 'order_in_work':
+                    self.order_in_work()
+                case 'order_ready':
+                    self.order_ready()
+                case'order_delivered':
+                    self.order_delivered()
+                case'order_cancelled':
+                    self.order_cancelled()
+
         except Exception as e:
             # Логирование ошибок выполнения
             import logging
@@ -158,30 +163,30 @@ class Order(models.Model):
             # В реальном коде здесь может быть отправка уведомления администраторам
 
     # Конкретные методы для каждого действия
-    def send_branding_email(self):
-        # Логика отправки email подтверждения
+    def order_created(self):
         pass
 
-    def send_confirmation_email(self):
-        # Логика отправки email подтверждения
+    def branding_request(self):
         pass
 
-    def create_production_task(self):
-        # Логика создания задачи на производство
+    def price_changed(self):
         pass
 
-    def notify_customer_ready(self):
-        # Логика уведомления клиента о готовности
+    def order_approved(self):
         pass
 
-    def complete_and_archive(self):
-        # Логика завершения и архивирования заказа
+    def order_in_work(self):
         pass
 
-    def cancel_and_refund(self):
-        # Логика отмены и возврата средств
+    def order_ready(self):
         pass
-        
+
+    def order_delivered(self):
+        pass
+
+    def order_cancelled(self):
+        pass
+
     # Методы для оптимизированной загрузки данных
     @classmethod
     def get_order_with_items(cls, order_id):

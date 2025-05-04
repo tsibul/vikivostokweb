@@ -375,7 +375,7 @@ function submitOrderToServer(orderData, form) {
     .then(data => {
         if (data.status === 'ok') {
             // Redirect to success page or handle success
-            window.location.href = data.redirect_url || '/cart/';
+            window.location.href = data.redirect_url || '/cart';
         } else {
             // Display error message
             showErrorNotification(data.message || 'Ошибка при оформлении заказа');

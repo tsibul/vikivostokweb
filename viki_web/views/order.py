@@ -74,7 +74,17 @@ def order(request):
     return render(request, 'order.html', context)
 
 
-def generate_order_number(user_extension, company, has_branding):
+def generate_short_number ():
+    today = datetime.today()
+    existing_number = Order.objects.filter(
+        order_date__month=today.month,
+        order_date__year=today.year
+    ).order_by(
+        '-order_short_number').first(
+    )
+    return existing_number.order_short_number + 1 if existing_number else 1
+
+def generate_order_number(user_extension, company, has_branding, short_number):
     """
     Generate order number with format:
     ddmmyy_XXX_M_D_R_B
@@ -90,26 +100,20 @@ def generate_order_number(user_extension, company, has_branding):
     # Current date part
     today = datetime.today()
     date_part = today.strftime('%d%m%y')
-    
-    # Get sequential number for this month
-    current_month_orders = Order.objects.filter(
-        order_date__month=today.month,
-        order_date__year=today.year
-    ).count()
-    sequence_number = f"{current_month_orders + 1:03d}"
+    sequence_number = f"{short_number:03d}"
     
     # Manager letter (use 'О' if empty)
     manager_letter = user_extension.manager_letter or 'О'
     
     # Get discount code
-    discount_code = ""
+    discount_code = "К"
     try:
         if user_extension.customer and user_extension.customer.standard_price_type:
             customer_discount = CustomerDiscount.objects.filter(
                 price_name=user_extension.customer.standard_price_type
             ).first()
             if customer_discount:
-                discount_code = customer_discount.discount_code or ""
+                discount_code = customer_discount.discount_code or "К"
     except (ObjectDoesNotExist, AttributeError):
         pass
     
@@ -157,6 +161,7 @@ def create_order(request):
         company_vat = request.POST.get('company_vat') == 'true'
         customer_comment = request.POST.get('customer_comment', '')
         delivery_option_id = request.POST.get('delivery_option_id', '')
+        delivery_option = DeliveryOption.objects.get(id=delivery_option_id)
         
         # Parse items data
         items_json = request.POST.get('items', '[]')
@@ -201,7 +206,8 @@ def create_order(request):
                 has_branding = True
                 for branding in item['branding']:
                     total_amount += float(branding['total'])
-        
+        total_amount = round(total_amount, 2)
+
         # Determine our company based on total and VAT status
         if total_amount > 20000 and company_vat:
             our_company = OurCompany.objects.filter(vat=True, deleted=False).order_by('priority').first()
@@ -215,11 +221,13 @@ def create_order(request):
             }, status=500)
         
         # Generate order number
-        order_no = generate_order_number(user_extension, company, has_branding)
+        order_short_number = generate_short_number()
+        order_no = generate_order_number(user_extension, company, has_branding, order_short_number)
         
         # Create order record
-        order = Order.objects.create(
+        new_order = Order.objects.create(
             order_no=order_no,
+            order_short_number=order_short_number,
             order_date=datetime.today().date(),
             user_extension=user_extension,
             customer=customer,
@@ -228,9 +236,12 @@ def create_order(request):
             total_amount=total_amount,
             customer_comment=customer_comment,
             state=initial_state,
-            delivery_option__id = delivery_option_id
+            delivery_option = delivery_option,
+            user_responsible = request.user,
         )
-        
+
+        # new_order.save()
+
         # Create order items and branding records
         for item_data in items_data:
             try:
@@ -238,7 +249,7 @@ def create_order(request):
                 
                 # Create order item
                 order_item = OrderItem.objects.create(
-                    order=order,
+                    order=new_order,
                     item=catalogue_item,
                     price=float(item_data['price']),
                     quantity=int(item_data['quantity']),
@@ -271,15 +282,15 @@ def create_order(request):
         
         # Execute state action if available
         if initial_state.action:
-            order.execute_state_action(initial_state.action)
+            new_order.execute_state_action(initial_state.action)
                 
         # Return success response
         return JsonResponse({
             'status': 'ok',
             'message': 'Order created successfully',
-            'order_id': order.id,
-            'order_no': order.order_no,
-            'redirect_url': '/cart/'  # Redirect to cart page
+            'order_id': new_order.id,
+            'order_no': new_order.order_no,
+            'redirect_url': '/cart'  # Redirect to cart page
         })
         
     except Exception as e:
