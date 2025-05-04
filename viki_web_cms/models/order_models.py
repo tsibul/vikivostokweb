@@ -72,6 +72,7 @@ class Order(models.Model):
     user_edited =  models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='user_edited')
     user_responsible =  models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='user_responsible')
     delivery_option = models.ForeignKey(DeliveryOption, on_delete=models.SET_NULL, null=True, related_name='delivery_option')
+    order_short_number = models.IntegerField()
 
     class Meta:
         verbose_name = 'Заказ'
