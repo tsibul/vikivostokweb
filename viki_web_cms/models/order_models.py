@@ -231,6 +231,73 @@ class Order(models.Model):
         return cls.objects.select_related(
             'state', 'customer', 'company'
         ).filter(customer_id=customer_id).order_by(*cls.order_default())
+    
+    @classmethod
+    def get_active_orders_for_user(cls, user_extension):
+        """Получить активные заказы пользователя (не доставлены/не отменены)"""
+        return cls.objects.select_related(
+            'state', 'company', 'user_extension', 'user_responsible', 'delivery_option'
+        ).filter(
+            user_extension=user_extension
+        ).exclude(
+            state__action__in=['order_delivered', 'order_cancelled']
+        ).order_by('-order_date')
+    
+    @classmethod
+    def get_completed_orders_for_user(cls, user_extension):
+        """Получить завершенные заказы пользователя (доставлены/отменены)"""
+        return cls.objects.select_related(
+            'state', 'company', 'user_extension', 'user_responsible', 'delivery_option'
+        ).filter(
+            user_extension=user_extension,
+            state__action__in=['order_delivered', 'order_cancelled']
+        ).order_by('-order_date')
+    
+    @classmethod
+    def has_price_changes(cls, order, current_date=None):
+        """
+        Проверяет наличие изменений цен для заказа
+        Не изменяет состояние заказа, только проверяет
+        
+        :param order: Объект заказа
+        :param current_date: Дата для проверки (по умолчанию текущая)
+        :return: bool - True если найдены изменения цен, False в противном случае
+        """
+        from viki_web_cms.models import Price
+        
+        if current_date is None:
+            from django.utils import timezone
+            current_date = timezone.now().date()
+        
+        # Проверка стандартных обновлений цен
+        has_price_updates = Price.objects.filter(
+            deleted=False,
+            price_list_date__gte=order.order_date,
+            price_list_date__lte=current_date
+        ).exists()
+        
+        # Если обычных обновлений не найдено, проверяем промо-цены
+        if not has_price_updates:
+            # Проверка появления новых промо-цен после даты заказа
+            new_promo_prices = Price.objects.filter(
+                deleted=False,
+                promotion_price=True,
+                price_list_date__gt=order.order_date,
+                price_list_date__lte=current_date
+            ).exists()
+            
+            # Проверка окончания действия промо-цен, которые действовали на дату заказа
+            ended_promo_prices = Price.objects.filter(
+                deleted=False,
+                promotion_price=True,
+                price_list_date__lte=order.order_date,
+                promotion_end_date__lt=current_date,
+                promotion_end_date__gte=order.order_date
+            ).exists()
+            
+            has_price_updates = new_promo_prices or ended_promo_prices
+            
+        return has_price_updates
 
 
 class OrderItem(models.Model):
