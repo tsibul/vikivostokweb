@@ -1,5 +1,8 @@
+@import "vars";
+@import "mixins";
+
 .legal {
-    padding: 40px 0;
+    //padding: 40px 0;
 
     &__title {
         @include typo-h2;
@@ -8,7 +11,7 @@
     }
 
     &__content {
-        max-width: 800px;
+        //max-width: 800px;
         margin: 0 auto;
         background-color: $colorSecondary50;
         padding: 30px;
