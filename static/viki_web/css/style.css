@@ -4766,11 +4766,9 @@ span.text-like {
   border-bottom: 1px solid #969696;
   font-size: 14px;
 }
-.order-list__item__empty {
-  grid-column: 1/-1;
-  padding: 15px;
+.order-list__empty {
+  padding: 8px;
   text-align: center;
-  background-color: #F2FFFF;
   font-size: 14px;
 }
 

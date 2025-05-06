@@ -38,14 +38,15 @@
       font-size: 14px;
     }
 
-    &__empty {
-      grid-column: 1 / -1;
-      padding: 15px;
-      text-align: center;
-      background-color: $colorSecondary50;
-      font-size: 14px;
-    }
   }
+
+  &__empty {
+    padding: 8px;
+    text-align: center;
+    //background-color: $colorSecondary50;
+    font-size: 14px;
+  }
+
 }
 
 

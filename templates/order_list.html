@@ -123,15 +123,14 @@
                     </div>
 
                     {% for order in completed_orders %}
-                        <details class="" data-order-id="{{ order.id }}">
-                            <summary class="order-summary__row_closed">
+                        <details class="order-list__item" data-order-id="{{ order.id }}">
+                            <summary class="order-summary order-summary__row_closed">
                                 <div class="order-summary__cell">{{ order.order_no }}</div>
                                 <div class="order-summary__cell">{{ order.order_date|date:"d.m.Y" }}</div>
                                 <div class="order-summary__cell">{{ order.company.name }}</div>
                                 <div class="order-summary__cell">{{ order.total_amount|floatformat:2 }} руб.</div>
 
-                                <div class="order-state_{{ order.state.order }}
-                                    order-summary__cell_status">
+                                <div class="order-state_{{ order.state.order }} order-summary__cell_status">
                                     {{ order.state.name }}
                                 </div>
 
