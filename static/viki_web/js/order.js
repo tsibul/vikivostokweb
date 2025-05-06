@@ -418,7 +418,7 @@ function submitOrderToServer(orderData, form) {
             
             // Redirect with delay
             setTimeout(() => {
-                window.location.href = data.redirect_url || '/cart';
+                window.location.href = data.redirect_url || '/order_list/';
             }, 3000); // 3 second delay
         } else {
             // Display error message

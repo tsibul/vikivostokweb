@@ -296,7 +296,7 @@ def create_order(request):
             'message': 'Order created successfully',
             'order_id': new_order.id,
             'order_no': new_order.order_no,
-            'redirect_url': '/cart'  # Redirect to cart page
+            'redirect_url': '/order_list/'  # Redirect to order list page instead of cart
         })
         
     except Exception as e:
