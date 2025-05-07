@@ -1,77 +1,67 @@
 <div class="order-details__content">
     <!-- Товары заказа -->
-    <div class="order-items">
-        <h3 class="order-items__title">Товары в заказе</h3>
-        <div class="order-items__grid">
-            <div class="order-items__header">
-                <div class="order-items__cell">Артикул</div>
-                <div class="order-items__cell">Наименование</div>
-                <div class="order-items__cell">Цена</div>
-                <div class="order-items__cell">Количество</div>
-                <div class="order-items__cell">Сумма</div>
+    <div class="order-list-items">
+        {#        <h3 class="order-list-items__title">Товары в заказе</h3>#}
+        <div class="order-list-items__grid">
+            <div class="order-list-items__header">
+                <div class="order-list-items__cell">Артикул</div>
+                <div class="order-list-items__cell">Наименование</div>
+                <div class="order-list-items__cell">Нанесение</div>
+                <div class="order-list-items__cell price-cell">Цена</div>
+                <div class="order-list-items__cell price-cell">Количество</div>
+                <div class="order-list-items__cell price-cell">Сумма</div>
             </div>
-            
+
             {% for item in order.orderitem_set.all %}
-            <div class="order-items__row">
-                <div class="order-items__cell">{{ item.item.item_article }}</div>
-                <div class="order-items__cell">{{ item.item.name }}</div>
-                <div class="order-items__cell">{{ item.price|floatformat:2 }} руб.</div>
-                <div class="order-items__cell">{{ item.quantity }}</div>
-                <div class="order-items__cell">{{ item.total_price|floatformat:2 }} руб.</div>
-            </div>
-            
-            <!-- Брендирование -->
-            {% if item.orderitembranding_set.exists %}
-            <div class="order-branding">
-                <div class="order-branding__header">
-                    <div class="order-branding__title">Брендирование: {{ item.branding_name }}</div>
+                <div class="order-list-items__row">
+                    <div class="order-list-items__cell">{{ item.item.item_article }}</div>
+                    <div class="order-list-items__cell">{{ item.item.name }}</div>
+                    <div class="order-list-items__cell">
+                        {% if item.branding_name %}{{ item.branding_name }}{% endif %}</div>
+                    <div class="order-list-items__cell price-cell">{{ item.price|floatformat:2 }}</div>
+                    <div class="order-list-items__cell price-cell">{{ item.quantity }}</div>
+                    <div class="order-list-items__cell price-cell">{{ item.total_price|floatformat:2 }}</div>
                 </div>
-                <div class="order-branding__grid">
-                    <div class="order-branding__row order-branding__row_header">
-                        <div class="order-branding__cell">Тип печати</div>
-                        <div class="order-branding__cell">Место</div>
-                        <div class="order-branding__cell">Цветов</div>
-                        <div class="order-branding__cell">Второй проход</div>
-                        <div class="order-branding__cell">Цена</div>
-                        <div class="order-branding__cell">Сумма</div>
+
+                <!-- Брендирование -->
+                {% if item.orderitembranding_set.exists %}
+                    <div class="order-branding">
+                        <div class="order-branding__grid">
+                            {% for branding in item.orderitembranding_set.all %}
+                                <div class="order-branding__row">
+                                    <div></div>
+                                    <div class="order-branding__cell">{{ branding.print_type.name }}&nbsp;
+                                        {{ branding.print_place.name }},&nbsp;цветов:&nbsp;{{ branding.colors }}
+                                        {% if branding.second_pass %}&nbsp;второй проход{% endif %}
+                                    </div>
+                                    <div></div>
+                                    <div class="order-branding__cell price-cell">{{ branding.price|floatformat:2 }}</div>
+                                    <div></div>
+                                    <div class="order-branding__cell price-cell">{{ branding.total_price|floatformat:2 }}</div>
+                                </div>
+                            {% endfor %}
+                        </div>
                     </div>
-                    
-                    {% for branding in item.orderitembranding_set.all %}
-                    <div class="order-branding__row">
-                        <div class="order-branding__cell">{{ branding.print_type.name }}</div>
-                        <div class="order-branding__cell">{{ branding.print_place.name }}</div>
-                        <div class="order-branding__cell">{{ branding.colors }}</div>
-                        <div class="order-branding__cell">{{ branding.second_pass|yesno:"Да,Нет" }}</div>
-                        <div class="order-branding__cell">{{ branding.price|floatformat:2 }} руб.</div>
-                        <div class="order-branding__cell">{{ branding.total_price|floatformat:2 }} руб.</div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-            {% endif %}
+                {% endif %}
             {% endfor %}
         </div>
-    </div>
-    
-    <!-- Доставка -->
-    <div class="order-delivery">
-        <h3 class="order-delivery__title">Доставка</h3>
-        <div class="order-delivery__info">
-            <div class="order-delivery__row">
-                <div class="order-delivery__label">Способ доставки:</div>
-                <div class="order-delivery__value">{% if order.delivery_option %}{{ order.delivery_option.name }}{% else %}Не указан{% endif %}</div>
-            </div>
-            <div class="order-delivery__row">
-                <div class="order-delivery__label">Планируемая дата доставки:</div>
-                <div class="order-delivery__value">{{ order.delivery_date|date:"d.m.Y" }}</div>
+        <div class="order-delivery">
+            <div class="order-delivery__info">
+                <div class="order-delivery__row">
+                    <div class="">Доставка:
+                        {% if order.delivery_option %}{{ order.delivery_option.name }}{% else %}Не
+                            указано{% endif %}
+                    </div>
+                    <div>{{ order.delivery_option.price| floatformat:2 }}</div>
+                </div>
             </div>
         </div>
+
+
+        {% if order.customer_comment %}
+            <div class="order-comment">
+                <h3 class="order-comment__title">Комментарий к заказу</h3>
+                <div class="order-comment__text">{{ order.customer_comment }}</div>
+            </div>
+        {% endif %}
     </div>
-    
-    {% if order.customer_comment %}
-    <div class="order-comment">
-        <h3 class="order-comment__title">Комментарий к заказу</h3>
-        <div class="order-comment__text">{{ order.customer_comment }}</div>
-    </div>
-    {% endif %}
-</div> 

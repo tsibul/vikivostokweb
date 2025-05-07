@@ -4758,7 +4758,7 @@ span.text-like {
 .order-list__dropdown li {
   text-align: start;
 }
-.order-list__item[open] .order-summary__toggle::after {
+.order-list__item[open] .order-list-summary__toggle::after {
   transform: rotate(180deg);
 }
 .order-list__item__cell {
@@ -4772,19 +4772,21 @@ span.text-like {
   font-size: 14px;
 }
 
-.order-summary {
+.order-list-summary {
   cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  border-radius: 6px;
 }
-.order-summary__row {
+.order-list-summary__row {
   display: grid;
   grid-template-columns: 150px 80px 2fr 0.7fr 0.2fr 80px 0.8fr 0.8fr 0.6fr 0.1fr;
   align-items: center;
-  border-bottom: 1px solid #969696;
   gap: 16px;
   padding: 8px;
   font-size: 14px;
 }
-.order-summary__row_closed {
+.order-list-summary__row_closed {
   display: grid;
   grid-template-columns: 150px 80px 2fr 0.7fr 0.8fr 80px 0.8fr 0.6fr 0.6fr 0.1fr;
   align-items: center;
@@ -4793,18 +4795,18 @@ span.text-like {
   padding: 8px;
   font-size: 14px;
 }
-.order-summary__cell {
+.order-list-summary__cell {
   padding: 8px 0;
 }
-.order-summary__cell_status {
+.order-list-summary__cell_status {
   padding: 8px 2px;
   border-radius: 6px;
   width: fit-content;
 }
-.order-summary__toggle {
+.order-list-summary__toggle {
   position: relative;
 }
-.order-summary__toggle::after {
+.order-list-summary__toggle::after {
   content: "⯆";
   position: absolute;
   left: 50%;
@@ -4881,47 +4883,48 @@ span.text-like {
   border-color: #0F4880;
 }
 
-.order-items {
-  margin-bottom: 20px;
+.order-list-items {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  border-radius: 6px;
 }
-.order-items__title {
+.order-list-items__title {
   margin-bottom: 10px;
   font-size: 16px;
   color: #0F4880;
 }
-.order-items__grid {
+.order-list-items__grid {
   display: grid;
-  grid-template-columns: 0.8fr 2fr 0.8fr 0.6fr 0.8fr;
+  grid-template-columns: 0.8fr 2.5fr 0.8fr 0.8fr 0.6fr 0.8fr;
   width: 100%;
   gap: 5px;
   max-height: 400px;
   overflow-y: auto;
 }
-.order-items__header {
+.order-list-items__header {
   display: contents;
   position: sticky;
   top: 0;
+  background-color: #F2FFFF;
 }
-.order-items__row {
+.order-list-items__header * {
+  font-weight: bold;
+}
+.order-list-items__row {
   display: contents;
 }
-.order-items__cell {
+.order-list-items__cell {
   padding: 8px;
-  border-bottom: 1px solid #969696;
   font-size: 13px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.order-items__header .order-items__cell {
-  font-weight: bold;
-  background-color: #F2FFFF;
-  z-index: 1;
-}
 
 .order-branding {
   grid-column: 1/-1;
-  margin: 5px 0 15px 20px;
+  margin-top: -8px;
+  background-color: #F2FFFF;
 }
 .order-branding__header {
   margin-bottom: 5px;
@@ -4933,7 +4936,7 @@ span.text-like {
 }
 .order-branding__grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 0.6fr 0.8fr 0.8fr 0.8fr;
+  grid-template-columns: 0.8fr 2.5fr 0.8fr 0.8fr 0.6fr 0.8fr;
   gap: 5px;
 }
 .order-branding__row {
@@ -4943,8 +4946,7 @@ span.text-like {
   font-weight: bold;
 }
 .order-branding__cell {
-  padding: 6px;
-  border-bottom: 1px solid #969696;
+  padding: 2px 8px;
   font-size: 13px;
   white-space: nowrap;
   overflow: hidden;
@@ -4954,21 +4956,19 @@ span.text-like {
   background-color: #F2FFFF;
 }
 
+.price-cell {
+  text-align: end;
+}
+
 .order-delivery {
   margin-bottom: 20px;
 }
-.order-delivery__title {
-  margin-bottom: 10px;
-  font-size: 16px;
-  color: #0F4880;
-}
 .order-delivery__row {
   display: flex;
-  margin-bottom: 5px;
-}
-.order-delivery__label {
-  width: 200px;
-  font-weight: bold;
+  padding: 8px;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
 }
 
 .order-comment__title {
@@ -4983,7 +4983,7 @@ span.text-like {
   border-radius: 4px;
 }
 
-.modal {
+.order-list-modal {
   display: none;
   position: fixed;
   top: 0;
@@ -4993,12 +4993,12 @@ span.text-like {
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 1000;
 }
-.modal.modal_active {
+.order-list-modal.modal_active {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-.modal__content {
+.order-list-modal__content {
   background-color: white;
   border-radius: 4px;
   width: 90%;
@@ -5006,7 +5006,7 @@ span.text-like {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   position: relative;
 }
-.modal__header {
+.order-list-modal__header {
   padding: 15px;
   border-bottom: 1px solid #969696;
   display: flex;
@@ -5016,28 +5016,19 @@ span.text-like {
   color: white;
   border-radius: 4px 4px 0 0;
 }
-.modal__title {
+.order-list-modal__title {
   margin: 0;
   font-size: 16px;
 }
-.modal__close {
+.order-list-modal__close {
   background: none;
   border: none;
   font-size: 24px;
   cursor: pointer;
   color: white;
 }
-.modal__body {
+.order-list-modal__body {
   padding: 15px;
-}
-
-.manager-info__row {
-  display: flex;
-  margin-bottom: 10px;
-}
-.manager-info__label {
-  width: 100px;
-  font-weight: bold;
 }
 
 .files-list {
@@ -5065,28 +5056,28 @@ span.text-like {
   color: #4A4A4A;
 }
 
-.comment-form__field {
+.oder-list-comment-form__field {
   margin-bottom: 15px;
 }
-.comment-form__label {
+.oder-list-comment-form__label {
   display: block;
   margin-bottom: 5px;
   font-weight: bold;
 }
-.comment-form__textarea {
+.oder-list-comment-form__textarea {
   width: 100%;
   padding: 8px;
   border: 1px solid #969696;
   border-radius: 4px;
 }
-.comment-form__actions {
+.oder-list-comment-form__actions {
   text-align: right;
 }
 
-.cancel-modal__text {
+.order-list-cancel-modal__text {
   margin-bottom: 20px;
 }
-.cancel-modal__actions {
+.order-list-cancel-modal__actions {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
@@ -5122,25 +5113,25 @@ span.text-like {
   .order-list__header {
     display: none;
   }
-  .order-item {
+  .order-list-item {
     display: block;
     margin-bottom: 15px;
     border: 1px solid #969696;
     border-radius: 4px;
   }
-  .order-summary {
+  .order-list-summary {
     display: block;
   }
-  .order-summary__row {
+  .order-list-summary__row {
     display: flex;
     flex-wrap: wrap;
   }
-  .order-summary__cell {
+  .order-list-summary__cell {
     width: 50%;
     position: relative;
     padding-left: 45%;
   }
-  .order-summary__cell:before {
+  .order-list-summary__cell:before {
     content: attr(data-label);
     position: absolute;
     left: 10px;

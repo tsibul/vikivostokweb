@@ -23,7 +23,7 @@
             <section class="order-section">
                 <h2 class="order-section__title">Текущие заказы</h2>
                 <div>
-                    <div class="order-summary__row">
+                    <div class="order-list-summary__row">
                         <div class="order-list__cell">Номер</div>
                         <div class="order-list__cell">Дата</div>
                         <div class="order-list__cell">Компания</div>
@@ -40,31 +40,31 @@
 
                     {% for order in active_orders %}
                         <details class="order-list__item" data-order-id="{{ order.id }}">
-                            <summary class="order-summary order-summary__row">
+                            <summary class="order-list-summary order-list-summary__row">
                                 {#                        <div class="order-summary__row">#}
-                                <div class="order-summary__cell">{{ order.order_no }}</div>
-                                <div class="order-summary__cell">{{ order.order_date|date:"d.m.Y" }}</div>
-                                <div class="order-summary__cell">{{ order.company.name }}</div>
-                                <div class="order-summary__cell">{{ order.total_amount|floatformat:2 }}</div>
-                                <div class="order-summary__cell">
+                                <div class="order-list-summary__cell">{{ order.order_no }}</div>
+                                <div class="order-list-summary__cell">{{ order.order_date|date:"d.m.Y" }}</div>
+                                <div class="order-list-summary__cell">{{ order.company.name }}</div>
+                                <div class="order-list-summary__cell">{{ order.total_amount|floatformat:2 }}</div>
+                                <div class="order-list-summary__cell">
                                     {% if order.days_to_deliver %}
                                         {{ order.days_to_deliver }}
                                     {% endif %}
                                 </div>
-                                <div class="order-summary__cell">
+                                <div class="order-list-summary__cell">
                                     {% if order.delivery_date %}
                                         {{ order.delivery_date }}
                                     {% endif %}
                                 </div>
 
-                                <div class="order-state_{{ order.state.order }} tooltip order-summary__cell_status">
+                                <div class="order-state_{{ order.state.order }} tooltip order-list-summary__cell_status">
                                     {{ order.state.name }}
                                     {% if order.state.order == 3 or order.state.order == 5 %}
                                         <p class="tooltip-text">требует дополнительного подтверждения</p>
                                     {% endif %}
                                 </div>
 
-                                <div class="order-summary__cell tooltip">
+                                <div class="order-list-summary__cell tooltip">
                                     {{ order.user_responsible.first_name }} {{ order.user_responsible.last_name }}
                                     <div class="tooltip-text">
                                         <p>{{ order.user_responsible.userextension.phone }}</p>
@@ -90,7 +90,7 @@
 
                                 </button>
 
-                                <div class="order-summary__cell order-summary__toggle"></div>
+                                <div class="order-list-summary__cell order-list-summary__toggle"></div>
                                 {#                        </div>#}
                             </summary>
 
@@ -109,7 +109,7 @@
             <section class="order-section">
                 <h2 class="order-section__title">Завершенные заказы</h2>
                 <div class="order-list">
-                    <div class="order-summary__row_closed">
+                    <div class="order-list-summary__row_closed">
                         <div class="order-list__cell">Номер</div>
                         <div class="order-list__cell">Дата</div>
                         <div class="order-list__cell">Компания</div>
@@ -124,21 +124,21 @@
 
                     {% for order in completed_orders %}
                         <details class="order-list__item" data-order-id="{{ order.id }}">
-                            <summary class="order-summary order-summary__row_closed">
-                                <div class="order-summary__cell">{{ order.order_no }}</div>
-                                <div class="order-summary__cell">{{ order.order_date|date:"d.m.Y" }}</div>
-                                <div class="order-summary__cell">{{ order.company.name }}</div>
-                                <div class="order-summary__cell">{{ order.total_amount|floatformat:2 }} руб.</div>
+                            <summary class="order-list-summary order-list-summary__row_closed">
+                                <div class="order-list-summary__cell">{{ order.order_no }}</div>
+                                <div class="order-list-summary__cell">{{ order.order_date|date:"d.m.Y" }}</div>
+                                <div class="order-list-summary__cell">{{ order.company.name }}</div>
+                                <div class="order-list-summary__cell">{{ order.total_amount|floatformat:2 }} руб.</div>
 
-                                <div class="order-state_{{ order.state.order }} order-summary__cell_status">
+                                <div class="order-state_{{ order.state.order }} order-list-summary__cell_status">
                                     {{ order.state.name }}
                                 </div>
 
-                                <div class="order-summary__cell">
+                                <div class="order-list-summary__cell">
                                     {{ order.state_changed_at| date:"d.m.y" }}
                                 </div>
 
-                                <div class="order-summary__cell tooltip">
+                                <div class="order-list-summary__cell tooltip">
                                     {{ order.user_responsible.first_name }} {{ order.user_responsible.last_name }}
                                     <div class="tooltip-text">
                                         <p>{{ order.user_responsible.userextension.phone }}</p>
@@ -156,7 +156,7 @@
                                     Повторить
                                 </button>
 
-                                <div class="order-summary__cell order-summary__toggle"></div>
+                                <div class="order-list-summary__cell order-summary__toggle"></div>
                             </summary>
 
                             <!-- Включаем шаблон деталей заказа -->
@@ -206,51 +206,26 @@
     </div>
 
     <!-- Модальные окна -->
-    <div class="modal" id="manager-modal">
-        <div class="modal__content">
-            <div class="modal__header">
-                <h3 class="modal__title">Информация о менеджере</h3>
-                <button class="modal__close">&times;</button>
+    <div class="order-list-modal" id="files-modal">
+        <div class="order-list-modal__content">
+            <div class="order-list-modal__header">
+                <h3 class="order-list-modal__title">Файлы заказа</h3>
+                <button class="order-list-modal__close">&times;</button>
             </div>
-            <div class="modal__body">
-                <div class="manager-info">
-                    <div class="manager-info__row">
-                        <div class="manager-info__label">Имя:</div>
-                        <div class="manager-info__value" id="manager-name"></div>
-                    </div>
-                    <div class="manager-info__row">
-                        <div class="manager-info__label">Email:</div>
-                        <div class="manager-info__value" id="manager-email"></div>
-                    </div>
-                    <div class="manager-info__row">
-                        <div class="manager-info__label">Телефон:</div>
-                        <div class="manager-info__value" id="manager-phone"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal" id="files-modal">
-        <div class="modal__content">
-            <div class="modal__header">
-                <h3 class="modal__title">Файлы заказа</h3>
-                <button class="modal__close">&times;</button>
-            </div>
-            <div class="modal__body">
+            <div class="order-list-modal__body">
                 <ul class="files-list" id="files-list"></ul>
                 <p class="files-empty" id="files-empty">Нет доступных файлов</p>
             </div>
         </div>
     </div>
 
-    <div class="modal" id="comments-modal">
-        <div class="modal__content">
-            <div class="modal__header">
-                <h3 class="modal__title">Комментарий к заказу</h3>
-                <button class="modal__close">&times;</button>
+    <div class="order-list-modal" id="comments-modal">
+        <div class="order-list-modal__content">
+            <div class="order-list-modal__header">
+                <h3 class="order-list-modal__title">Комментарий к заказу</h3>
+                <button class="order-list-modal__close">&times;</button>
             </div>
-            <div class="modal__body">
+            <div class="order-list-modal__body">
                 <form class="comment-form" id="comment-form">
                     <input type="hidden" id="comment-order-id" name="order_id">
                     <div class="comment-form__field">
@@ -265,13 +240,13 @@
         </div>
     </div>
 
-    <div class="modal" id="cancel-modal">
-        <div class="modal__content">
-            <div class="modal__header">
-                <h3 class="modal__title">Отмена заказа</h3>
-                <button class="modal__close">&times;</button>
+    <div class="order-list-modal" id="cancel-modal">
+        <div class="order-list-modal__content">
+            <div class="order-list-modal__header">
+                <h3 class="order-list-modal__title">Отмена заказа</h3>
+                <button class="order-list-modal__close">&times;</button>
             </div>
-            <div class="modal__body">
+            <div class="order-list-modal__body">
                 <p class="cancel-modal__text">Вы уверены, что хотите отменить заказ?</p>
                 <div class="cancel-modal__actions">
                     <button class="btn btn__cancel" id="cancel-order-no">Нет</button>

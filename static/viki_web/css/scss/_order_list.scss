@@ -27,7 +27,7 @@
     //display: contents; // Important to maintain the grid layout
 
     &[open] {
-      .order-summary__toggle::after {
+      .order-list-summary__toggle::after {
         transform: rotate(180deg);
       }
     }
@@ -51,15 +51,19 @@
 
 
 // Order summary (visible part of the order)
-.order-summary {
+.order-list-summary {
   cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  border-radius: 6px;
+
   //list-style: none; // Remove default list style
 
   &__row {
     display: grid;
     grid-template-columns: 150px 80px 2fr 0.7fr 0.2fr 80px 0.8fr 0.8fr  0.6fr 0.1fr;
     align-items: center;
-    border-bottom: 1px solid $colorNeutral50;
+    //border-bottom: 1px solid $colorNeutral50;
     gap: 16px;
     padding: 8px;
     font-size: 14px;
@@ -209,8 +213,11 @@
 }
 
 // Order items
-.order-items {
-  margin-bottom: 20px;
+.order-list-items {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  border-radius: 6px;
+  //margin-bottom: 20px;
 
   &__title {
     margin-bottom: 10px;
@@ -220,7 +227,7 @@
 
   &__grid {
     display: grid;
-    grid-template-columns: 0.8fr 2fr 0.8fr 0.6fr 0.8fr;
+    grid-template-columns: 0.8fr 2.5fr 0.8fr 0.8fr 0.6fr 0.8fr;
     width: 100%;
     gap: 5px;
     max-height: 400px;
@@ -231,6 +238,13 @@
     display: contents;
     position: sticky;
     top: 0;
+    background-color: $colorSecondary50;
+
+    & * {
+      font-weight: bold;
+
+    }
+
   }
 
   &__row {
@@ -239,24 +253,25 @@
 
   &__cell {
     padding: 8px;
-    border-bottom: 1px solid $colorNeutral50;
+    //border-bottom: 1px solid $colorNeutral50;
     font-size: 13px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 
-    .order-items__header & {
-      font-weight: bold;
-      background-color: $colorSecondary50;
-      z-index: 1;
-    }
+    //.order-items__header & {
+    //  font-weight: bold;
+    //  z-index: 1;
+    //}
   }
 }
 
 // Order branding
 .order-branding {
   grid-column: 1 / -1;
-  margin: 5px 0 15px 20px;
+  margin-top: -8px;
+  background-color: $colorSecondary50;
+  //margin: 5px 0 15px 20px;
 
   &__header {
     margin-bottom: 5px;
@@ -270,7 +285,7 @@
 
   &__grid {
     display: grid;
-    grid-template-columns: 1fr 1fr 0.6fr 0.8fr 0.8fr 0.8fr;
+    grid-template-columns: 0.8fr 2.5fr 0.8fr 0.8fr 0.6fr 0.8fr;
     gap: 5px;
   }
 
@@ -283,12 +298,13 @@
   }
 
   &__cell {
-    padding: 6px;
-    border-bottom: 1px solid $colorNeutral50;
+    padding: 2px 8px;
+    //border-bottom: 1px solid $colorNeutral50;
     font-size: 13px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+
 
     .order-branding__row_header & {
       background-color: $colorSecondary50;
@@ -296,25 +312,22 @@
   }
 }
 
+.price-cell{
+  text-align: end;
+}
+
 // Delivery details
 .order-delivery {
   margin-bottom: 20px;
 
-  &__title {
-    margin-bottom: 10px;
-    font-size: 16px;
-    color: $colorPrimary;
-  }
-
   &__row {
     display: flex;
-    margin-bottom: 5px;
+    padding: 8px;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
   }
 
-  &__label {
-    width: 200px;
-    font-weight: bold;
-  }
 }
 
 // Comment section
@@ -334,7 +347,7 @@
 }
 
 // Modal windows
-.modal {
+.order-list-modal {
   display: none;
   position: fixed;
   top: 0;
@@ -388,19 +401,6 @@
   }
 }
 
-// Manager info
-.manager-info {
-  &__row {
-    display: flex;
-    margin-bottom: 10px;
-  }
-
-  &__label {
-    width: 100px;
-    font-weight: bold;
-  }
-}
-
 // Files list
 .files-list {
   list-style: none;
@@ -431,7 +431,7 @@
 }
 
 // Comment form
-.comment-form {
+.oder-list-comment-form {
   &__field {
     margin-bottom: 15px;
   }
@@ -455,7 +455,7 @@
 }
 
 // Cancel modal
-.cancel-modal {
+.order-list-cancel-modal {
   &__text {
     margin-bottom: 20px;
   }
@@ -504,14 +504,14 @@
     }
   }
 
-  .order-item {
+  .order-list-item {
     display: block;
     margin-bottom: 15px;
     border: 1px solid $colorNeutral50;
     border-radius: 4px;
   }
 
-  .order-summary {
+  .order-list-summary {
     display: block;
 
     &__row {
