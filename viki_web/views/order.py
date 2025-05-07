@@ -260,7 +260,7 @@ def create_order(request):
                     price=float(item_data['price']),
                     quantity=int(item_data['quantity']),
                     total_price=float(item_data['total']),
-                    branding_name=catalogue_item.name
+                    # branding_name=catalogue_item.name
                 )
                 
                 # Create branding records if any
