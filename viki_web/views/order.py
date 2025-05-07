@@ -210,6 +210,8 @@ def create_order(request):
                 has_branding = True
                 for branding in item['branding']:
                     total_amount += float(branding['total'])
+        if delivery_option.price:
+            total_amount += delivery_option.price
         total_amount = round(total_amount, 2)
 
         # Determine our company based on total and VAT status
