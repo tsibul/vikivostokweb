@@ -1,84 +1,46 @@
 /**
- * Модуль для работы с модальным окном отмены заказа
+ * @fileoverview Module for handling order cancellation modal window
+ * @module order_list/cancelModal
  */
-import { getCSRFToken } from '../common/getCSRFToken.js';
+
+'use strict';
+
+import {modalDnD} from '../common/modalDnD.js';
+import {handleOrderAction} from './orderActions.js';
+import {showErrorNotification} from "../cart/addToCart/notification.js";
 
 /**
- * Показать модальное окно подтверждения отмены заказа
- * @param {string} orderId - ID заказа
+ * Shows modal window to confirm order cancellation
+ * @param {string} orderId - Order ID to cancel
  */
 export function confirmOrderCancel(orderId) {
-    // Получение элементов DOM
-    const modal = document.getElementById('cancel-modal');
-    const confirmButton = document.getElementById('cancel-order-yes');
-    const cancelButton = document.getElementById('cancel-order-no');
-    const closeButton = modal.querySelector('.modal__close');
-    
-    // Установка ID заказа для кнопки подтверждения
-    confirmButton.dataset.orderId = orderId;
-    
-    // Показ модального окна
-    modal.classList.add('modal_active');
-    
-    // Обработчик подтверждения отмены
-    const handleConfirm = () => {
-        // Подготовка данных
-        const formData = new FormData();
-        formData.append('action', 'cancel-order');
-        formData.append('order_id', orderId);
-        
-        // Отправка запроса
-        fetch('/order_action/', {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': getCSRFToken(),
-            },
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 'success') {
-                // Обновление страницы для отражения изменений
-                location.reload();
-            } else {
-                alert(`Ошибка: ${data.message || 'Не удалось отменить заказ'}`);
-                closeModal();
-            }
-        })
-        .catch(error => {
-            console.error('Ошибка при отмене заказа:', error);
-            alert('Произошла ошибка при отмене заказа');
-            closeModal();
-        });
+    const modal = document.getElementById('cancelModal');
+    const confirmButton = document.getElementById('confirmCancel');
+    const closeButton = document.getElementById('closeCancelModal');
+    const cancelBtn = modal.querySelector('.btn__cancel');
+
+    // Show modal
+    modal.showModal();
+    modalDnD(modal);
+
+    // Confirm cancel handler
+    const handleConfirm = async () => {
+        try {
+            await handleOrderAction('cancel-order', orderId);
+            modal.close();
+        } catch (error) {
+            console.error('Error cancelling order:', error);
+            showErrorNotification('Ошибка при отмене заказа');
+        }
     };
-    
-    // Обработчик закрытия
-    const closeModal = () => {
-        modal.classList.remove('modal_active');
-        confirmButton.removeEventListener('click', handleConfirm);
-        cancelButton.removeEventListener('click', closeModal);
-        closeButton.removeEventListener('click', closeModal);
-        document.removeEventListener('keydown', handleEscape);
-    };
-    
-    // Регистрация обработчиков
+
+    // Add event listeners
     confirmButton.addEventListener('click', handleConfirm);
-    cancelButton.addEventListener('click', closeModal);
-    closeButton.addEventListener('click', closeModal);
-    
-    // Закрытие по клику вне модального окна
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            closeModal();
-        }
+    closeButton.addEventListener('click', () =>{
+        modal.close()
     });
-    
-    // Закрытие по нажатию Escape
-    const handleEscape = (e) => {
-        if (e.key === 'Escape') {
-            closeModal();
-        }
-    };
-    
-    document.addEventListener('keydown', handleEscape);
-} 
+    cancelBtn.addEventListener('click', () =>{
+        modal.close()
+    });
+
+}

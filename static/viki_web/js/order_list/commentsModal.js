@@ -1,92 +1,82 @@
 /**
- * Модуль для работы с модальным окном комментариев к заказу
+ * @fileoverview Module for handling order comments modal window
+ * @module order_list/commentsModal
  */
-import { getCSRFToken } from '../common/getCSRFToken.js';
+
+'use strict';
+
+import {modalDnD} from '../common/modalDnD.js';
+import {showErrorNotification} from "../cart/addToCart/notification.js";
+import {getCSRFToken} from "../common/getCSRFToken.js";
+import {validateCustomerComment} from "../order/validation.js";
 
 /**
- * Показать модальное окно с формой комментариев
- * @param {string} orderId - ID заказа
+ * Shows modal window for adding comments to order
+ * @param {string} orderId - Order ID to add comment to
  */
 export function showCommentsForm(orderId) {
-    // Получение элементов DOM
-    const modal = document.getElementById('comments-modal');
-    const form = document.getElementById('comment-form');
-    const orderIdField = document.getElementById('comment-order-id');
-    const commentText = document.getElementById('comment-text');
-    const closeButton = modal.querySelector('.modal__close');
-    
-    // Заполнение данными
-    orderIdField.value = orderId;
+    const modal = document.getElementById('commentsModal');
+    const form = modal.querySelector('form');
+    const orderIdInput = document.getElementById('commentOrderId');
+    const commentText = document.getElementById('commentText');
+    const closeButton = modal.querySelector('.order-list-modal__close');
+    const cancelBtn = modal.querySelector(".btn__cancel")
+    const title = modal.querySelector('.login__title');
+
+    // Set modal title based on comment type
+    title.firstElementChild.textContent = 'Комментарий к заказу'
+
+    // Set order ID
+    orderIdInput.value = orderId;
+
+    // Clear previous comment
     commentText.value = '';
-    
-    // Показ модального окна
-    modal.classList.add('modal_active');
+
+    // Show modal
+    modal.showModal();
+    modalDnD(modal);
     commentText.focus();
-    
-    // Обработчик отправки формы
-    const handleSubmit = (e) => {
+
+    // Form submit handler
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        
-        // Проверка на пустой комментарий
-        if (!commentText.value.trim()) {
-            alert('Пожалуйста, введите комментарий');
-            return;
+
+
+        if (!validateCustomerComment(commentText.value)) {
+            showErrorNotification('Недопустимые символы в комментарии');
+            return
         }
-        
-        // Подготовка данных для отправки
-        const formData = new FormData();
-        formData.append('action', 'send-comment');
-        formData.append('order_id', orderId);
-        formData.append('comment', commentText.value);
-        
-        // Отправка на сервер
-        fetch('/order_action/', {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': getCSRFToken(),
-            },
-            body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
+
+        try {
+            const formData = new FormData(form);
+            formData.append('action', 'send-comment');
+
+            const response = await fetch('/order_action/', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    "X-CSRFToken": getCSRFToken(),
+                },
+            });
+
+            const data = await response.json()
+
             if (data.status === 'success') {
-                alert('Комментарий успешно отправлен');
-                closeModal();
+                modal.close()
             } else {
-                alert(`Ошибка: ${data.message || 'Не удалось отправить комментарий'}`);
+                showErrorNotification(data.message || 'Не удалось отправить комментарий');
             }
-        })
-        .catch(error => {
-            console.error('Ошибка при отправке комментария:', error);
-            alert('Ошибка при отправке комментария');
-        });
+        } catch (error) {
+            console.error('Error sending comment:', error);
+            showErrorNotification('Ошибка при отправке комментария');
+        }
     };
-    
-    // Обработчик закрытия
-    const closeModal = () => {
-        modal.classList.remove('modal_active');
-        form.removeEventListener('submit', handleSubmit);
-        closeButton.removeEventListener('click', closeModal);
-        document.removeEventListener('keydown', handleEscape);
-    };
-    
-    // Регистрация обработчиков
+
     form.addEventListener('submit', handleSubmit);
-    closeButton.addEventListener('click', closeModal);
-    
-    // Закрытие по клику вне модального окна
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            closeModal();
-        }
+    closeButton.addEventListener('click', () => {
+        modal.close();
     });
-    
-    // Закрытие по нажатию Escape
-    const handleEscape = (e) => {
-        if (e.key === 'Escape') {
-            closeModal();
-        }
-    };
-    
-    document.addEventListener('keydown', handleEscape);
-} 
+    cancelBtn.addEventListener('click', () => {
+        modal.close();
+    });
+}
