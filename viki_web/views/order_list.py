@@ -109,38 +109,18 @@ def order_action(request):
         )
         
         # Perform requested action
-        if action == 'approve-branding' and order.state.action == 'wait_branding_approve':
-            branding_approved_state = OrderState.objects.get(action='branding_approved')
-            order.previous_state = order.state
-            order.state = branding_approved_state
-            order.state_changed_at = timezone.now()
-            order.save()
+        if order.state.action == 'wait_branding_approve':
+            action_change_state(order, 'branding_approved')
             return JsonResponse({'status': 'success'})
-            
+
         elif action == 'approve-price' and order.state.action == 'price_changed':
-            new_price_state = OrderState.objects.get(action='new_price_approved')
-            order.previous_state = order.state
-            order.state = new_price_state
-            order.state_changed_at = timezone.now()
-            order.save()
+            action_change_state(order, 'new_price_approved')
             return JsonResponse({'status': 'success'})
-            
-        elif action == 'cancel-price' and order.state.action == 'price_changed':
-            cancelled_state = OrderState.objects.get(action='order_cancelled')
-            order.previous_state = order.state
-            order.state = cancelled_state
-            order.state_changed_at = timezone.now()
-            order.save()
-            return JsonResponse({'status': 'success'})
-            
+
         elif action == 'cancel-order' and order.state.order < 8:
-            cancelled_state = OrderState.objects.get(action='order_cancelled')
-            order.previous_state = order.state
-            order.state = cancelled_state
-            order.state_changed_at = timezone.now()
-            order.save()
+            action_change_state(order, 'order_cancelled')
             return JsonResponse({'status': 'success'})
-            
+
         elif action == 'send-comment':
             # Process comment (not stored in DB, just sent as notification)
             comment = request.POST.get('comment', '')
@@ -151,13 +131,22 @@ def order_action(request):
             # This is a placeholder for future implementation
             
             return JsonResponse({'status': 'success'})
-            
-        return JsonResponse({'status': 'error', 'message': 'Недопустимое действие или состояние'})
+        else:
+            return JsonResponse({'status': 'error', 'message': 'Недопустимое действие или состояние'})
         
     except Order.DoesNotExist:
         return JsonResponse({'status': 'error', 'message': 'Заказ не найден'})
     except Exception as e:
         return JsonResponse({'status': 'error', 'message': str(e)})
+
+
+def action_change_state(order: Order, state: str):
+    approved_state = OrderState.objects.get(action=state)
+    order.previous_state = order.state
+    order.state = approved_state
+    order.state_changed_at = timezone.now()
+    order.save()
+    return JsonResponse({'status': 'success'})
 
 
 @login_required
