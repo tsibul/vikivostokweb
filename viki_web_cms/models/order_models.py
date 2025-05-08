@@ -433,3 +433,32 @@ class OrderComment(models.Model):
     @staticmethod
     def order_default():
         return ['-order__order_date', 'order__order_no', '-comment_date']
+
+
+class OrderMailLog(models.Model):
+    email_date = models.DateField()
+    email_recipient = models.CharField(max_length=200)
+    comment = models.CharField(max_length=400)
+    attachments = models.CharField(max_length=400)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = 'Почтовое сообщение к заказу'
+        verbose_name_plural = 'Почтовые сообщения к заказу'
+        db_table_comment = 'order mail log'
+        db_table = 'order_mail_log'
+        ordering = ['-order__order_date', 'order__order_no', '-email_date']
+
+    def __str__(self):
+        return self.order.order_no + ' ' + datetime.strftime(self.email_date, '%d.%m.%y')
+
+    def __repr__(self):
+        return self.order.order_no + ' ' + datetime.strftime(self.email_date, '%d.%m.%y')
+
+    def save(self, *args, **kwargs):
+        self.email_date = timezone.now().date()
+        super(OrderMailLog, self).save(*args, **kwargs)
+
+    @staticmethod
+    def order_default():
+        return ['-order__order_date', 'order__order_no', '-email_date']
