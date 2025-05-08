@@ -61,7 +61,7 @@
 
   &__row {
     display: grid;
-    grid-template-columns: 150px 80px 2fr 0.7fr 0.2fr 80px 0.8fr 0.8fr  0.6fr 0.1fr;
+    grid-template-columns: 150px 80px 2fr 0.7fr 0.2fr 80px 0.1fr  0.8fr 0.8fr  0.6fr 0.1fr;
     align-items: center;
     //border-bottom: 1px solid $colorNeutral50;
     gap: 16px;
@@ -70,7 +70,7 @@
 
     &_closed {
       display: grid;
-      grid-template-columns: 150px 80px 2fr 0.7fr  0.8fr 80px 0.8fr  0.6fr 0.6fr 0.1fr;
+      grid-template-columns: 150px 80px 2fr 0.7fr  0.1fr 0.5fr 80px 0.8fr 0.6fr 0.6fr 0.1fr;
       align-items: center;
       border-bottom: 1px solid $colorNeutral50;
       gap: 16px;
@@ -85,13 +85,6 @@
 
   &__cell {
     padding: 8px 0;
-    //font-size: 14px;
-    &_status {
-      padding: 8px 2px;
-      border-radius: 6px;
-      width: fit-content;
-    }
-
   }
 
   // Add custom toggle indicator in the last cell
@@ -132,64 +125,44 @@
 
   // создан
   &_1 {
-    background-color: lighten($colorSecondary, 40%);
+    background-color: rgba($colorSecondary, 0.4);
   }
 
   // запрошен макет
   &_2, &_3, &_5 {
-    background-color: lighten(red, 30%);
-    color: #fff;
+    background-color: rgba(red, 0.8);
   }
 
   // макет подтвержден
-  &_4 {
-    background-color: lighten($colorPrimary, 60%);
-  }
-
-  // новая цена подтверждена
-  &_6 {
-    background-color: lighten($colorPrimary, 40%);
+  &_4, &_6  {
+    background-color: rgba($colorSecondary, 0.6);
   }
 
   // подтвержден
   &_7 {
-    background-color: lighten($colorPrimary, 30%);
+    background-color: $colorSecondary;
   }
 
   // в работе
   &_8 {
-    background-color: lighten($colorPrimary, 20%);
+    background-color: rgba($colorPrimary, 0.4);
   }
 
   // готов
   &_9 {
-    background-color: $colorPrimary;
-    color: white;
+    background-color: rgba($colorPrimary, 0.6);
   }
 
   // доставлен
   &_10 {
-    background-color: $colorNeutral800;
-    color: white;
+    background-color: $colorPrimary;
   }
 
   // отменен
   &_11 {
     background-color: red;
-    color: white;
   }
 }
-
-// Order action buttons
-//.order-action {
-//  display: none; // Hide by default, will be shown when status is clicked
-//  gap: 5px;
-//  margin-top: 5px;
-//
-//  &_visible {
-//    display: flex;
-//  }
-//}
 
 // Order buttons
 .order-button {
@@ -312,7 +285,7 @@
   }
 }
 
-.price-cell{
+.price-cell {
   text-align: end;
 }
 
@@ -348,56 +321,44 @@
 
 // Modal windows
 .order-list-modal {
-  display: none;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1000;
-
-  &.modal_active {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  &__content {
-    background-color: white;
-    border-radius: 4px;
-    width: 90%;
-    max-width: 500px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    position: relative;
-  }
-
-  &__header {
-    padding: 15px;
-    border-bottom: 1px solid $colorNeutral50;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: $colorSecondary;
-    color: white;
-    border-radius: 4px 4px 0 0;
-  }
-
-  &__title {
-    margin: 0;
-    font-size: 16px;
-  }
 
   &__close {
     background: none;
     border: none;
     font-size: 24px;
     cursor: pointer;
-    color: white;
+    //color: white;
+    padding: 0;
+    line-height: 1;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s;
   }
 
-  &__body {
-    padding: 15px;
+  &__textarea {
+    padding: 8px;
+    margin-top: 16px;
+    min-width: 440px;
+    border-radius: 6px;
+
+    &:focus {
+      border: 1px solid $colorSecondary;
+    }
+  }
+
+  &__btn-block {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 16px;
+    margin: 12px 0;
+
+    & * {
+      width: 100%;
+    }
   }
 }
 
