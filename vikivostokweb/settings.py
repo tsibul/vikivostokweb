@@ -146,6 +146,7 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'UTC'  # Убедитесь, что это соответствует TIME_ZONE в настройках Django
+CELERY_WORKER_POOL = 'solo'
 
 # Настройки логирования для order_processing
 LOGGING = {
