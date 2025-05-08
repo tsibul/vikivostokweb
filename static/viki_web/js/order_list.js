@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Кнопка сброса поиска
     document.querySelector('form.layout__header-right .btn__cancel').addEventListener('click', () => {
         document.querySelector(`input[name="search"]`).value = null;
-        window.location.href = window.location.pathname;
+        window.location.href = '/order_list/';
     });
 });
 
