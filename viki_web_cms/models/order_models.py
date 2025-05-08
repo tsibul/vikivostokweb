@@ -385,7 +385,7 @@ class OrderItemBranding(models.Model):
 
 
 class OrderComment(models.Model):
-    comment_date = models.DateTimeField()
+    comment_date = models.DateField()
     comment = models.CharField(max_length=400)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
 
@@ -405,6 +405,30 @@ class OrderComment(models.Model):
     def save(self, *args, **kwargs):
         self.comment_date = timezone.now().date()
         super(OrderComment, self).save(*args, **kwargs)
+        self.send_comment_notification()
+
+    def send_comment_notification(self):
+        """
+        Отправляет уведомление о комментарии на email.
+        """
+        from viki_web_cms.tasks import send_comment_email
+
+        # Получаем заказ
+        order = self.order
+
+        # Формируем список получателей
+        recipients = ['office@vikivostok.ru']
+        if order.user_responsible and order.user_responsible.email:
+            recipients.append(order.user_responsible.email)
+
+        # Формируем тему письма
+        subject = f"сообщение по заказу {order.order_no}"
+
+        # Текст письма
+        message = self.comment
+
+        # Отправляем письмо асинхронно
+        send_comment_email.delay(recipients, subject, message, 'web-orders@vikivostok.ru')
 
     @staticmethod
     def order_default():
