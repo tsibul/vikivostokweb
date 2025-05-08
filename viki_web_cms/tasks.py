@@ -1,5 +1,6 @@
 from celery import shared_task
 import logging
+from django.core.mail import EmailMessage
 
 logger = logging.getLogger('order_processing')
 
@@ -15,12 +16,12 @@ def execute_order_state_action(order_id, action_name):
         
         # Вызываем внутренний метод выполнения действия
         method_mapping = {
-            'send_confirmation_email': order.send_confirmation_email,
-            'create_production_task': order.create_production_task,
-            'notify_customer_ready': order.notify_customer_ready,
-            'complete_and_archive': order.complete_and_archive,
-            'cancel_and_refund': order.cancel_and_refund,
-            'send_branding_email': order.send_branding_email
+            # 'send_confirmation_email': order.send_confirmation_email,
+            # 'create_production_task': order.create_production_task,
+            # 'notify_customer_ready': order.notify_customer_ready,
+            # 'complete_and_archive': order.complete_and_archive,
+            # 'cancel_and_refund': order.cancel_and_refund,
+            # 'send_branding_email': order.send_branding_email
         }
         
         # Выполняем действие, если оно определено в маппинге
@@ -33,4 +34,17 @@ def execute_order_state_action(order_id, action_name):
             logger.warning(f"Unknown action '{action_name}' for order {order_id}")
         
     except Exception as e:
-        logger.error(f"Error in async execution of '{action_name}' for order {order_id}: {str(e)}") 
+        logger.error(f"Error in async execution of '{action_name}' for order {order_id}: {str(e)}")
+
+@shared_task
+def send_comment_email(recipients, subject, message, from_email):
+    """
+    Отправляет email с комментарием к заказу.
+    """
+    email = EmailMessage(
+        subject=subject,
+        body=message,
+        from_email=from_email,
+        to=recipients,
+    )
+    email.send() 
