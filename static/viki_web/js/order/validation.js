@@ -42,7 +42,7 @@ export function validateOrderForm(form) {
  * @param {string} comment - The comment text to validate
  * @returns {boolean} Whether the comment is valid
  */
-function validateCustomerComment(comment) {
+export function validateCustomerComment(comment) {
     if (!comment || comment.trim() === '') {
         return true; // Empty comment is valid
     }
