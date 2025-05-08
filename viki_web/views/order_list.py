@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.core.paginator import Paginator
 from django.utils import timezone
 
-from viki_web_cms.models import UserExtension, Order, OrderState
+from viki_web_cms.models import UserExtension, Order, OrderState, OrderComment
 
 
 @login_required
@@ -124,13 +124,17 @@ def order_action(request):
             return JsonResponse({'status': 'success'})
 
         elif action == 'send-comment':
-            # Process comment (not stored in DB, just sent as notification)
+            # Process comment
             comment = request.POST.get('comment', '')
             if not comment.strip():
                 return JsonResponse({'status': 'error', 'message': 'Комментарий не может быть пустым'})
                 
-            # Here would be code to send email or notification with the comment
-            # This is a placeholder for future implementation
+            # Create and save comment
+            comment = OrderComment(
+                order=order,
+                comment=comment
+            )
+            comment.save()
             
             return JsonResponse({'status': 'success'})
         else:
