@@ -441,6 +441,7 @@ class OrderMailLog(models.Model):
     comment = models.CharField(max_length=400)
     attachments = models.CharField(max_length=400)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = 'Почтовое сообщение к заказу'
