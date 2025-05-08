@@ -69,9 +69,10 @@ class Order(models.Model):
     state = models.ForeignKey(OrderState, on_delete=models.PROTECT, related_name='orders')
     previous_state = models.ForeignKey(OrderState, on_delete=models.SET_NULL, null=True, related_name='previous_orders')
     state_changed_at = models.DateTimeField(auto_now=False, null=True)
-    user_edited =  models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='user_edited')
-    user_responsible =  models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='user_responsible')
-    delivery_option = models.ForeignKey(DeliveryOption, on_delete=models.SET_NULL, null=True, related_name='delivery_option')
+    user_edited = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='user_edited')
+    user_responsible = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='user_responsible')
+    delivery_option = models.ForeignKey(DeliveryOption, on_delete=models.SET_NULL, null=True,
+                                        related_name='delivery_option')
     order_short_number = models.IntegerField()
 
     class Meta:
@@ -112,7 +113,7 @@ class Order(models.Model):
                 previous_state=old_state,
                 state_changed_at=timezone.now()
             )
-            
+
             # Выполняем действие (асинхронно или синхронно в зависимости от настроек)
             try:
                 # Проверяем, настроен ли Celery
@@ -154,9 +155,9 @@ class Order(models.Model):
                     self.order_in_work()
                 case 'order_ready':
                     self.order_ready()
-                case'order_delivered':
+                case 'order_delivered':
                     self.order_delivered()
-                case'order_cancelled':
+                case 'order_cancelled':
                     self.order_cancelled()
 
         except Exception as e:
@@ -210,28 +211,28 @@ class Order(models.Model):
             'orderitem_set__orderitembranding_set__print_type',  # Типы печати
             'orderitem_set__orderitembranding_set__print_place'  # Места печати
         ).get(pk=order_id)
-    
+
     @classmethod
     def get_orders_for_list(cls, **filters):
         """Оптимизированная загрузка списка заказов для отображения в таблице"""
         return cls.objects.select_related(
             'state', 'customer', 'company'
         ).filter(**filters).order_by(*cls.order_default())
-    
+
     @classmethod
     def get_orders_by_state(cls, state_code):
         """Получить все заказы в определенном состоянии"""
         return cls.objects.select_related(
             'state', 'customer', 'company'
         ).filter(state__code=state_code).order_by(*cls.order_default())
-    
+
     @classmethod
     def get_orders_for_customer(cls, customer_id):
         """Получить все заказы определенного клиента"""
         return cls.objects.select_related(
             'state', 'customer', 'company'
         ).filter(customer_id=customer_id).order_by(*cls.order_default())
-    
+
     @classmethod
     def get_active_orders_for_user(cls, user_extension):
         """Получить активные заказы пользователя (не доставлены/не отменены)"""
@@ -242,7 +243,7 @@ class Order(models.Model):
         ).exclude(
             state__action__in=['order_delivered', 'order_cancelled']
         ).order_by('-order_date')
-    
+
     @classmethod
     def get_completed_orders_for_user(cls, user_extension):
         """Получить завершенные заказы пользователя (доставлены/отменены)"""
@@ -252,7 +253,28 @@ class Order(models.Model):
             user_extension=user_extension,
             state__action__in=['order_delivered', 'order_cancelled']
         ).order_by('-order_date')
-    
+
+    @classmethod
+    def get_active_orders_for_customer(cls, customer):
+        """Получить активные заказы пользователя (не доставлены/не отменены)"""
+        return cls.objects.select_related(
+            'state', 'customer', 'company', 'user_extension', 'user_responsible', 'delivery_option'
+        ).filter(
+            customer=customer
+        ).exclude(
+            state__action__in=['order_delivered', 'order_cancelled']
+        ).order_by('-order_date')
+
+    @classmethod
+    def get_completed_orders_for_customer(cls, customer):
+        """Получить завершенные заказы пользователя (доставлены/отменены)"""
+        return cls.objects.select_related(
+            'state', 'customer', 'company', 'user_extension', 'user_responsible', 'delivery_option'
+        ).filter(
+            customer=customer,
+            state__action__in=['order_delivered', 'order_cancelled']
+        ).order_by('-order_date')
+
     @classmethod
     def has_price_changes(cls, order, current_date=None):
         """
@@ -264,18 +286,18 @@ class Order(models.Model):
         :return: bool - True если найдены изменения цен, False в противном случае
         """
         from viki_web_cms.models import Price
-        
+
         if current_date is None:
             from django.utils import timezone
             current_date = timezone.now().date()
-        
+
         # Проверка стандартных обновлений цен
         has_price_updates = Price.objects.filter(
             deleted=False,
             price_list_date__gte=order.order_date,
             price_list_date__lte=current_date
         ).exists()
-        
+
         # Если обычных обновлений не найдено, проверяем промо-цены
         if not has_price_updates:
             # Проверка появления новых промо-цен после даты заказа
@@ -285,7 +307,7 @@ class Order(models.Model):
                 price_list_date__gt=order.order_date,
                 price_list_date__lte=current_date
             ).exists()
-            
+
             # Проверка окончания действия промо-цен, которые действовали на дату заказа
             ended_promo_prices = Price.objects.filter(
                 deleted=False,
@@ -294,9 +316,9 @@ class Order(models.Model):
                 promotion_end_date__lt=current_date,
                 promotion_end_date__gte=order.order_date
             ).exists()
-            
+
             has_price_updates = new_promo_prices or ended_promo_prices
-            
+
         return has_price_updates
 
 
@@ -356,4 +378,4 @@ class OrderItemBranding(models.Model):
     @staticmethod
     def order_default():
         return ['-order_item__order__order_date', 'order_item__order__order_no', 'order_item__item__item_article',
-                    'print_type', 'print_place']
+                'print_type', 'print_place']
