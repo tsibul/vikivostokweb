@@ -3,12 +3,14 @@ import logging
 from datetime import datetime
 from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
+from django.core.mail import EmailMessage
 from django.db import models, transaction
 from django.utils import timezone
 from django.conf import settings
 
 from viki_web_cms.models import UserExtension, Customer, Company, SettingsDictionary, OurCompany, CatalogueItem, \
     PrintType, PrintPlace, DeliveryOption
+from viki_web_cms.functions.order_state_actions import *
 
 fs_branding = FileSystemStorage(location='viki_web_cms/files/order/branding')
 fs_invoice = FileSystemStorage(location='viki_web_cms/files/order/invoice')
@@ -138,31 +140,77 @@ class Order(models.Model):
                 logger = logging.getLogger('order_processing')
                 logger.error(f"Error handling state change for order {self.order_no}: {str(e)}")
 
+    @staticmethod
+    def send_order_mail(order, recipients, from_email, subject, message, user, attachment_fields=None):
+        """
+        Отправляет письмо и создает записи в логе.
+        Args:
+            :param order: (Order): объект заказа
+            :param recipients: (list) список получателей
+            :param from_email: (str): адрес отправителя
+            :param subject: (str): тема письма
+            :param message: (str): текст письма
+            attachment_fields (list): список имен полей из модели Order для вложений
+            :param attachment_fields: (list) список имен полей из модели Order для вложений
+            :param user:  (User)
+        """
+        # Отправляем письмо
+        email = EmailMessage(
+            subject=subject,
+            body=message,
+            from_email=from_email,
+            to=recipients
+        )
+
+        # Добавляем вложения из указанных полей
+        attachments = []
+        if attachment_fields:
+            for field_name in attachment_fields:
+                file_field = getattr(order, field_name, None)
+                if file_field and file_field.name:
+                    email.attach_file(file_field.path)
+                    attachments.append(file_field.name)
+
+        email.send()
+
+        # Логируем отправку для каждого получателя
+        for recipient in recipients:
+            OrderMailLog.objects.create(
+                order=order,
+                email_date=timezone.now().date(),
+                email_recipient=recipient,
+                comment=message,
+                attachments=", ".join(attachments) if attachments else None,
+                user=user
+            )
+
     def execute_state_action(self, action_name):
         """Выполняет предопределенное действие по имени"""
         try:
             # Стандартные операции
             match action_name:
                 case 'order_created':
-                    self.order_created()
+                    order_created(self)
                 case 'branding_request':
-                    self.branding_request()
+                    branding_request(self)
                 case 'wait_branding_approve':
-                    self.wait_branding_approve()
+                    wait_branding_approve(self)
                 case 'branding_approved':
-                    self.branding_approved()
+                    branding_approved(self)
                 case 'price_changed':
-                    self.price_changed()
+                    price_changed(self)
+                case 'new_price_approved':
+                    new_price_approved(self)
                 case 'order_approved':
-                    self.order_approved()
+                    order_approved(self)
                 case 'order_in_work':
-                    self.order_in_work()
+                    order_in_work(self)
                 case 'order_ready':
-                    self.order_ready()
+                    order_ready(self)
                 case 'order_delivered':
-                    self.order_delivered()
+                    order_delivered(self)
                 case 'order_cancelled':
-                    self.order_cancelled()
+                    order_cancelled(self)
 
         except Exception as e:
             # Логирование ошибок выполнения
@@ -172,35 +220,6 @@ class Order(models.Model):
             # В реальном коде здесь может быть отправка уведомления администраторам
 
     # Конкретные методы для каждого действия
-    def order_created(self):
-        pass
-
-    def branding_request(self):
-        pass
-
-    def wait_branding_approve(self):
-        pass
-
-    def branding_approved(self):
-        pass
-
-    def price_changed(self):
-        pass
-
-    def order_approved(self):
-        pass
-
-    def order_in_work(self):
-        pass
-
-    def order_ready(self):
-        pass
-
-    def order_delivered(self):
-        pass
-
-    def order_cancelled(self):
-        pass
 
     # Методы для оптимизированной загрузки данных
     @classmethod
