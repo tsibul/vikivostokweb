@@ -17,7 +17,7 @@ def order_list(request):
     user_extension = get_object_or_404(UserExtension, user=request.user)
     
     # Get search parameter for order number
-    search_query = request.GET.get('order_no', '').strip()
+    search_query = request.POST.get('search', '').strip()
     
     # Get active orders using optimized method
     active_orders = Order.get_active_orders_for_user(user_extension)
@@ -46,7 +46,9 @@ def order_list(request):
         'active_orders': active_orders,
         'completed_orders': completed_page,
         'search_query': search_query,
-        'price_changes_found': price_changes_found
+        'price_changes_found': price_changes_found,
+        'search': search_query,
+
     }
     
     return render(request, 'order_list.html', context)
