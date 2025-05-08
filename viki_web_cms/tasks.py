@@ -16,12 +16,16 @@ def execute_order_state_action(order_id, action_name):
         
         # Вызываем внутренний метод выполнения действия
         method_mapping = {
-            # 'send_confirmation_email': order.send_confirmation_email,
-            # 'create_production_task': order.create_production_task,
-            # 'notify_customer_ready': order.notify_customer_ready,
-            # 'complete_and_archive': order.complete_and_archive,
-            # 'cancel_and_refund': order.cancel_and_refund,
-            # 'send_branding_email': order.send_branding_email
+            'order_created': order.order_created,
+            'branding_request': order.branding_request,
+            'wait_branding_approve': order.wait_branding_approve,
+            'branding_approved': order.branding_approved,
+            'price_changed': order.price_changed,
+            'order_approved': order.order_approved,
+            'order_in_work': order.order_in_work,
+            'order_ready': order.order_ready,
+            'order_delivered': order.order_delivered,
+            'order_cancelled': order.order_cancelled
         }
         
         # Выполняем действие, если оно определено в маппинге
