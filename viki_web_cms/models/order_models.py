@@ -1,7 +1,11 @@
+import logging
+
+from datetime import datetime
 from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
 from django.db import models, transaction
 from django.utils import timezone
+from django.conf import settings
 
 from viki_web_cms.models import UserExtension, Customer, Company, SettingsDictionary, OurCompany, CatalogueItem, \
     PrintType, PrintPlace, DeliveryOption
@@ -117,7 +121,7 @@ class Order(models.Model):
             # Выполняем действие (асинхронно или синхронно в зависимости от настроек)
             try:
                 # Проверяем, настроен ли Celery
-                from django.conf import settings
+                # from django.conf import settings
                 if hasattr(settings, 'CELERY_ENABLED') and settings.CELERY_ENABLED:
                     # Асинхронный запуск
                     from viki_web_cms.tasks import execute_order_state_action
@@ -130,7 +134,7 @@ class Order(models.Model):
                 self.execute_state_action(self.state.action)
             except Exception as e:
                 # Обработка прочих ошибок
-                import logging
+                # import logging
                 logger = logging.getLogger('order_processing')
                 logger.error(f"Error handling state change for order {self.order_no}: {str(e)}")
 
@@ -162,7 +166,7 @@ class Order(models.Model):
 
         except Exception as e:
             # Логирование ошибок выполнения
-            import logging
+            # import logging
             logger = logging.getLogger('order_processing')
             logger.error(f"Error executing action '{action_name}' for order {self.order_no}: {str(e)}")
             # В реальном коде здесь может быть отправка уведомления администраторам
@@ -288,7 +292,6 @@ class Order(models.Model):
         from viki_web_cms.models import Price
 
         if current_date is None:
-            from django.utils import timezone
             current_date = timezone.now().date()
 
         # Проверка стандартных обновлений цен
@@ -379,3 +382,30 @@ class OrderItemBranding(models.Model):
     def order_default():
         return ['-order_item__order__order_date', 'order_item__order__order_no', 'order_item__item__item_article',
                 'print_type', 'print_place']
+
+
+class OrderComment(models.Model):
+    comment_date = models.DateTimeField()
+    comment = models.CharField(max_length=400)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = 'Комментарий к заказу'
+        verbose_name_plural = 'Комментарии к заказу'
+        db_table_comment = 'order comment'
+        db_table = 'order_comment'
+        ordering = ['-order__order_date', 'order__order_no', '-comment_date']
+
+    def __str__(self):
+        return self.order.order_no + ' ' + datetime.strftime(self.comment_date, '%d.%m.%y')
+
+    def __repr__(self):
+        return self.order.order_no + ' ' + datetime.strftime(self.comment_date, '%d.%m.%y')
+
+    def save(self, *args, **kwargs):
+        self.comment_date = timezone.now().date()
+        super(OrderComment, self).save(*args, **kwargs)
+
+    @staticmethod
+    def order_default():
+        return ['-order__order_date', 'order__order_no', '-comment_date']
