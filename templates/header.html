@@ -86,7 +86,7 @@
                         <ul class="catalogue__item">
                             <li><a href="{%  url "viki_web:order_list" %}">Заказы</a></li>
                             <li><a href="{% url 'viki_web:cabinet' %}">Настройка</a></li>
-                            {% if request.resolver_match.url_name != 'order' %}
+                            {% if request.resolver_match.url_name != 'order' and request.resolver_match.url_name != 'order_list' %}
                             <li class="log-logout">Выйти</li>
                             {% endif %}
                         </ul>
