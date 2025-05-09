@@ -21,6 +21,7 @@ def execute_order_state_action(order_id, action_name):
             'wait_branding_approve': order.wait_branding_approve,
             'branding_approved': order.branding_approved,
             'price_changed': order.price_changed,
+            'new_price_approved': order.new_price_approved,
             'order_approved': order.order_approved,
             'order_in_work': order.order_in_work,
             'order_ready': order.order_ready,
