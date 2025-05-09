@@ -10,7 +10,6 @@ from django.conf import settings
 
 from viki_web_cms.models import UserExtension, Customer, Company, SettingsDictionary, OurCompany, CatalogueItem, \
     PrintType, PrintPlace, DeliveryOption
-from viki_web_cms.functions.order_state_actions import *
 
 fs_branding = FileSystemStorage(location='viki_web_cms/files/order/branding')
 fs_invoice = FileSystemStorage(location='viki_web_cms/files/order/invoice')
@@ -190,27 +189,27 @@ class Order(models.Model):
             # Стандартные операции
             match action_name:
                 case 'order_created':
-                    order_created(self)
+                    self.order_created()
                 case 'branding_request':
-                    branding_request(self)
+                    self.branding_request()
                 case 'wait_branding_approve':
-                    wait_branding_approve(self)
+                    self.wait_branding_approve()
                 case 'branding_approved':
-                    branding_approved(self)
+                    self.branding_approved()
                 case 'price_changed':
-                    price_changed(self)
+                    self.price_changed()
                 case 'new_price_approved':
-                    new_price_approved(self)
+                    self.new_price_approved()
                 case 'order_approved':
-                    order_approved(self)
+                    self.order_approved()
                 case 'order_in_work':
-                    order_in_work(self)
+                    self.order_in_work()
                 case 'order_ready':
-                    order_ready(self)
+                    self.order_ready()
                 case 'order_delivered':
-                    order_delivered(self)
+                    self.order_delivered()
                 case 'order_cancelled':
-                    order_cancelled(self)
+                    self.order_cancelled()
 
         except Exception as e:
             # Логирование ошибок выполнения
@@ -219,7 +218,199 @@ class Order(models.Model):
             logger.error(f"Error executing action '{action_name}' for order {self.order_no}: {str(e)}")
             # В реальном коде здесь может быть отправка уведомления администраторам
 
-    # Конкретные методы для каждого действия
+
+    def order_created (self):
+        """Действие при создании заказа"""
+        # Формируем список получателей
+        recipients = ['office@vikivostok.ru']
+        if self.user_responsible:
+            recipients.append(self.user_responsible.email)
+
+        # Формируем текст сообщения
+        message_lines = [
+            f"Заказ {self.order_no} создан",
+            f"Клиент: {self.customer.name}",
+            f"Менеджер: {self.user_extension.user.get_full_name()}"
+        ]
+
+        if self.user_extension.phone:
+            message_lines.append(f"Телефон: {self.user_extension.phone}")
+
+        message_lines.append(f"Почта: {self.user_extension.user.email}")
+
+        message = "\n".join(message_lines)
+
+        # Отправляем письмо
+        Order.send_order_mail(
+            order=self,
+            recipients=recipients,
+            from_email='web-orders@vikivostok.ru',
+            subject=f"Заказ {self.order_no} создан",
+            message=message,
+            user=self.user_extension.user
+        )
+
+    def branding_request(self):
+        """Действие при запросе макета"""
+        # Определяем отправителя
+        from_email = self.user_responsible.email if self.user_responsible else 'office@vikivostok.ru'
+
+        # Получатель - email пользователя, создавшего заказ
+        recipients = [self.user_extension.user.email]
+
+        # Формируем текст сообщения
+        message = """Добрый день!
+    для подтверждения заказа просим прислать макет нанесения в векторном формате:
+     pdf или Corel (не выше 18 версии) или eps
+
+    заранее спасибо
+    команда Вики Восток"""
+
+        # Отправляем письмо
+        Order.send_order_mail(
+            order=self,
+            recipients=recipients,
+            from_email=from_email,
+            subject=f"запрос макета по заказу {self.order_no}",
+            message=message,
+            user=self.user_edited
+        )
+
+    def wait_branding_approve(self):
+        """Действие при ожидании подтверждения макета"""
+        # Определяем отправителя
+        from_email = self.user_responsible.email if self.user_responsible else 'office@vikivostok.ru'
+
+        # Получатель - email пользователя, создавшего заказ
+        recipients = [self.user_extension.user.email]
+
+        # Формируем текст сообщения
+        message = f"""Добрый день!
+    Готов макет по вашему заказу {self.order_no}.
+    Просьба ознакомиться и подтвердить его на странице списка заказов:
+    Кнопка "Действия" - "подтвердить макет"
+    Если требуется доработка - отправьте сообщение:
+    Кнопка "Действия" - "отправить соощение"
+
+    заранее спасибо
+    команда Вики Восток"""
+
+        # Отправляем письмо с вложением макета
+        Order.send_order_mail(
+            order=self,
+            recipients=recipients,
+            from_email=from_email,
+            subject=f"подтвердите макет по заказу {self.order_no}",
+            message=message,
+            user=self.user_edited,
+            attachment_fields=['branding_file']
+        )
+
+    def branding_approved(self):
+        """Действие при подтверждении макета"""
+        # Первое письмо - уведомление в офис
+        office_recipients = ['office@vikivostok.ru']
+        if self.user_responsible:
+            office_recipients.append(self.user_responsible.email)
+
+        office_message = f"""макет по заказу {self.order_no} подтвержден
+    клиент: {self.customer.name}"""
+
+        Order.send_order_mail(
+            order=self,
+            recipients=office_recipients,
+            from_email='web-orders@vikivostok.ru',
+            subject=f"заказ {self.order_no} подтвержден",
+            message=office_message,
+            user=self.user_edited
+        )
+
+            # Второе письмо - уведомление клиенту
+        client_message = f"""Добрый день!
+        Вы подтвердили макет по вашему заказу {self.order_no}.
+
+        Команда Вики Восток"""
+
+        Order.send_order_mail(
+            order=self,
+            recipients=[self.user_extension.user.email],
+            from_email=self.user_responsible.email if self.user_responsible else 'office@vikivostok.ru',
+            subject=f"вы подтвердили макет по заказу {self.order_no}",
+            message=client_message,
+            user=self.user_edited
+        )
+
+    def price_changed(self):
+        """Действие при изменении цены"""
+        # Формируем список получателей
+        recipients = ['office@vikivostok.ru']
+        if self.user_responsible:
+            recipients.append(self.user_responsible.email)
+
+        # Формируем текст сообщения
+        message = f"""по заказу {self.order_no} изменилась цена
+    клиент: {self.customer.name}"""
+
+        # Отправляем письмо
+        Order.send_order_mail(
+            order=self,
+            recipients=recipients,
+            from_email='web-orders@vikivostok.ru',
+            subject=f"по заказу {self.order_no} изменилась цена",
+            message=message,
+            user=self.user_extension.user
+        )
+
+    def new_price_approved(self):
+        """Действие при подтверждении новых цен"""
+        # Первое письмо - уведомление в офис
+        office_recipients = ['office@vikivostok.ru']
+        if self.user_responsible:
+            office_recipients.append(self.user_responsible.email)
+
+        office_message = f"""новые цены по заказу {self.order_no} подтверждены
+    клиент: {self.customer.name}"""
+
+        Order.send_order_mail(
+            order=self,
+            recipients=office_recipients,
+            from_email='web-orders@vikivostok.ru',
+            subject=f"новые цены по заказу {self.order_no} подтверждены",
+            message=office_message,
+            user=self.user_extension.user
+        )
+
+        # Второе письмо - уведомление клиенту
+        client_message = f"""Добрый день!
+    Вы подтвердили новые цены по заказу {self.order_no}.
+
+    Команда Вики Восток"""
+
+        Order.send_order_mail(
+            order=self,
+            recipients=[self.user_extension.user.email],
+            from_email=self.user_responsible.email if self.user_responsible else 'office@vikivostok.ru',
+            subject=f"вы подтвердили новые цены по заказу {self.order_no}",
+            message=client_message,
+            user=self.user_extension.user
+        )
+
+    def order_approved(self):
+        pass
+
+    def order_in_work(self):
+        pass
+
+    def order_ready(self):
+        pass
+
+    def order_delivered(self):
+        pass
+
+    def order_cancelled(self):
+        pass
+
+
 
     # Методы для оптимизированной загрузки данных
     @classmethod
