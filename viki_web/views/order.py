@@ -289,8 +289,8 @@ def create_order(request):
                 }, status=400)
         
         # Execute state action if available
-        if initial_state.action:
-            new_order.execute_state_action(initial_state.action)
+        if initial_state:
+            new_order.change_state_action(initial_state)
                 
         # Return success response
         return JsonResponse({
