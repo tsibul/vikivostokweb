@@ -551,3 +551,60 @@ class OrderMailLog(models.Model):
     @staticmethod
     def order_default():
         return ['-order__order_date', 'order__order_no', '-email_date']
+
+
+class Invoice(SettingsDictionary):
+    invoice_date = models.DateField()
+    invoice_no = models.CharField(max_length=400)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+
+    class Meta(SettingsDictionary.Meta):
+        verbose_name = 'Счет'
+        verbose_name_plural = 'Счета'
+        db_table_comment = 'invoice'
+        db_table = 'invoice'
+        ordering = ['-order__order_date', 'order__order_no', '-invoice_date']
+
+    def __str__(self):
+        return self.invoice_no + ' ' + datetime.strftime(self.invoice_date, '%d.%m.%y')
+
+    def __repr__(self):
+        return self.invoice_no + ' ' + datetime.strftime(self.invoice_date, '%d.%m.%y')
+
+    def save(self, *args, **kwargs):
+        self.name = self.order.order_no + ' ' + self.order.customer.name
+        super(Invoice, self).save(*args, **kwargs)
+
+    @staticmethod
+    def order_default():
+        return ['-order__order_date', 'order__order_no', '-invoice_date']
+
+
+    @staticmethod
+    def dictionary_fields():
+        return [
+            {
+                'field': 'name',
+                'type': 'string',
+                'label': 'заказ',
+                'null': True,
+            },
+            {
+                'field': 'deleted',
+                'type': 'boolean',
+                'label': 'уд.',
+            },
+            {
+                'field': 'invoice_no',
+                'type': 'string',
+                'label': 'номер',
+                'null': False,
+            },
+            {
+                'field': 'invoice_no',
+                'type': 'date',
+                'label': 'дата',
+                'null': False,
+            },
+
+        ]

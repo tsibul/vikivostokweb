@@ -32,6 +32,9 @@ class CustomerMenu:
                 CustomerSection('Состояния заказов', [
                     CustomerSetting('Состояния заказов', 'OrderState', False, False),
                 ]),
+                CustomerSection('Счета', [
+                    CustomerSetting('Счета', 'Invoice', False, False),
+                ]),
                 CustomerSection('Наши компании', [
                     CustomerSetting('Юр. лица', 'OurCompany', False, False),
                     CustomerSetting('Банковские реквизиты', 'OurBank', False, False),
