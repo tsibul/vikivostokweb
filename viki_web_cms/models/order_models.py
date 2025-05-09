@@ -180,13 +180,13 @@ class Order(models.Model):
                 if hasattr(settings, 'CELERY_ENABLED') and settings.CELERY_ENABLED:
                     # Асинхронный запуск
                     from viki_web_cms.tasks import execute_order_state_action
-                    execute_order_state_action.delay(self.pk, self.state.action)
+                    execute_order_state_action.delay(self.pk)
                 else:
                     # Синхронное выполнение, если Celery не настроен
-                    self.execute_state_action(self.state.action)
+                    self.change_state_action(self.state)
             except (ImportError, AttributeError):
                 # Fallback на синхронное выполнение, если не удалось импортировать модули
-                self.execute_state_action(self.state.action)
+                self.change_state_action(self.state)
             except Exception as e:
                 # Обработка прочих ошибок
                 # import logging
@@ -237,40 +237,93 @@ class Order(models.Model):
                 user=user
             )
 
-    def execute_state_action(self, action_name):
-        """Выполняет предопределенное действие по имени"""
-        try:
-            # Стандартные операции
-            match action_name:
-                case 'order_created':
-                    self.order_created()
-                case 'branding_request':
-                    self.branding_request()
-                case 'wait_branding_approve':
-                    self.wait_branding_approve()
-                case 'branding_approved':
-                    self.branding_approved()
-                case 'price_changed':
-                    self.price_changed()
-                case 'new_price_approved':
-                    self.new_price_approved()
-                case 'order_approved':
-                    self.order_approved()
-                case 'order_in_work':
-                    self.order_in_work()
-                case 'order_ready':
-                    self.order_ready()
-                case 'order_delivered':
-                    self.order_delivered()
-                case 'order_cancelled':
-                    self.order_cancelled()
+    def change_state_action(self, action: OrderState):
+        customer_manager = self.user_extension.user
+        customer_manager_mail = customer_manager.email
+        our_mail = self.user_responsible.email if self.user_responsible else 'office@vikivostok.ru'
+        subject = f"заказ {self.order_no} {action.name}"
+        if action.from_client:
+            message = f"статус по заказу {self.order_no} {action.name} \n {action.message_text}"
+            from_email = 'web-order@vikivostok.ru'
+            user_created = customer_manager
+            if self.user_responsible:
+                email_recipient = [our_mail, 'office@vikivostok.ru']
+            else:
+                email_recipient = [our_mail]
+        else:
+            message = f"Добрый день,\n\nстатус по заказу {self.order_no} {action.name} \n {action.message_text}\n\nВики Восток"
+            from_email = our_mail
+            user_created = self.user_edited
+            email_recipient = [customer_manager_mail]
+        attachment_names = []
+        if action.attachments:
+            if action.branding:
+                attachment_names.append('branding_file')
+            if action.invoice:
+                attachment_names.append('invoice_file')
+            if action.order_file:
+                attachment_names.append('order_file')
+            if action.delivery:
+                attachment_names.append('delivery_file')
+        Order.send_order_mail(
+            order=self,
+            recipients=email_recipient,
+            from_email=from_email,
+            subject=subject,
+            message=message,
+            user=user_created,
+            attachment_fields=attachment_names if attachment_names else None,
+        )
+        if action.two_messages:
+            message_2 = f"Добрый день,\n\nстатус по заказу {self.order_no} {action.name} \n {action.alternate_message_text}\n\nВики Восток"
+            from_email_2 = our_mail
+            user_created_2 = customer_manager
+            email_recipient_2 = [customer_manager_mail]
+            Order.send_order_mail(
+                order=self,
+                recipients=email_recipient_2,
+                from_email=from_email_2,
+                subject=subject,
+                message=message_2,
+                user=user_created_2,
+                attachment_fields=None,
+            )
 
-        except Exception as e:
-            # Логирование ошибок выполнения
-            # import logging
-            logger = logging.getLogger('order_processing')
-            logger.error(f"Error executing action '{action_name}' for order {self.order_no}: {str(e)}")
-            # В реальном коде здесь может быть отправка уведомления администраторам
+
+    # def execute_state_action(self, action_name):
+    #     """Выполняет предопределенное действие по имени"""
+    #     try:
+    #         # Стандартные операции
+    #         match action_name:
+    #             case 'order_created':
+    #                 self.order_created()
+    #             case 'branding_request':
+    #                 self.branding_request()
+    #             case 'wait_branding_approve':
+    #                 self.wait_branding_approve()
+    #             case 'branding_approved':
+    #                 self.branding_approved()
+    #             case 'price_changed':
+    #                 self.price_changed()
+    #             case 'new_price_approved':
+    #                 self.new_price_approved()
+    #             case 'order_approved':
+    #                 self.order_approved()
+    #             case 'order_in_work':
+    #                 self.order_in_work()
+    #             case 'order_ready':
+    #                 self.order_ready()
+    #             case 'order_delivered':
+    #                 self.order_delivered()
+    #             case 'order_cancelled':
+    #                 self.order_cancelled()
+    #
+    #     except Exception as e:
+    #         # Логирование ошибок выполнения
+    #         # import logging
+    #         logger = logging.getLogger('order_processing')
+    #         logger.error(f"Error executing action '{action_name}' for order {self.order_no}: {str(e)}")
+    #         # В реальном коде здесь может быть отправка уведомления администраторам
 
 
     def order_created (self):
@@ -703,7 +756,7 @@ class OrderMailLog(models.Model):
     email_date = models.DateField()
     email_recipient = models.CharField(max_length=200)
     comment = models.CharField(max_length=400)
-    attachments = models.CharField(max_length=400)
+    attachments = models.CharField(max_length=400, null=True, blank=True)
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
