@@ -14,12 +14,22 @@ from viki_web_cms.models import UserExtension, Customer, Company, SettingsDictio
 fs_branding = FileSystemStorage(location='viki_web_cms/files/order/branding')
 fs_invoice = FileSystemStorage(location='viki_web_cms/files/order/invoice')
 fs_order = FileSystemStorage(location='viki_web_cms/files/order/order')
+fs_delivery = FileSystemStorage(location='viki_web_cms/files/order/delivery')
 
 
 class OrderState(SettingsDictionary):
     """ navigation sections"""
     order = models.IntegerField(default=1)
     action = models.CharField(max_length=50, blank=True, null=True)
+    message_text = models.CharField(max_length=400, blank=True, null=True)
+    alternate_message_text = models.CharField(max_length=400, blank=True, null=True)
+    two_messages = models.BooleanField(default=False)
+    from_client = models.BooleanField(default=False)
+    attachments = models.BooleanField(default=False)
+    branding = models.BooleanField(default=False)
+    order_file = models.BooleanField(default=False)
+    invoice = models.BooleanField(default=False)
+    delivery = models.BooleanField(default=False)
 
     class Meta(SettingsDictionary.Meta):
         verbose_name = 'Состояние заказа'
@@ -53,6 +63,49 @@ class OrderState(SettingsDictionary):
                 'label': 'порядковый номер',
                 'null': False,
             },
+            {
+                'field': 'message_text',
+                'type': 'textarea',
+                'label': 'сообщение',
+                'null': True,
+            },
+            {
+                'field': 'two_messages',
+                'type': 'boolean',
+                'label': '2 сообщения',
+            },
+            {
+                'field': 'alternate_message_text',
+                'type': 'textarea',
+                'label': 'второе сообщение',
+                'null': True,
+            },
+            {
+                'field': 'from_client',
+                'type': 'boolean',
+                'label': 'от клиента',
+            },
+            {
+                'field': 'branding',
+                'type': 'boolean',
+                'label': 'макет',
+            },
+            {
+                'field': 'order_file',
+                'type': 'boolean',
+                'label': 'заказ',
+            },
+            {
+                'field': 'invoice',
+                'type': 'boolean',
+                'label': 'счет',
+            },
+            {
+                'field': 'delivery',
+                'type': 'boolean',
+                'label': 'накладная',
+            },
+
         ]
 
 
@@ -71,6 +124,7 @@ class Order(models.Model):
     branding_file = models.FileField(storage=fs_branding, null=True)
     invoice_file = models.FileField(storage=fs_invoice, null=True)
     order_file = models.FileField(storage=fs_order, null=True)
+    delivery_file = models.FileField(storage=fs_delivery, null=True)
     state = models.ForeignKey(OrderState, on_delete=models.PROTECT, related_name='orders')
     previous_state = models.ForeignKey(OrderState, on_delete=models.SET_NULL, null=True, related_name='previous_orders')
     state_changed_at = models.DateTimeField(auto_now=False, null=True)
