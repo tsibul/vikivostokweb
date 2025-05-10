@@ -13,7 +13,6 @@ from viki_web_cms.models import UserExtension, Customer, Company, SettingsDictio
 
 fs_branding = FileSystemStorage(location='viki_web_cms/files/order/branding')
 fs_invoice = FileSystemStorage(location='viki_web_cms/files/order/invoice')
-fs_order = FileSystemStorage(location='viki_web_cms/files/order/order')
 fs_delivery = FileSystemStorage(location='viki_web_cms/files/order/delivery')
 
 
@@ -27,7 +26,6 @@ class OrderState(SettingsDictionary):
     from_client = models.BooleanField(default=False)
     attachments = models.BooleanField(default=False)
     branding = models.BooleanField(default=False)
-    order_file = models.BooleanField(default=False)
     invoice = models.BooleanField(default=False)
     delivery = models.BooleanField(default=False)
 
@@ -91,11 +89,6 @@ class OrderState(SettingsDictionary):
                 'label': 'макет',
             },
             {
-                'field': 'order_file',
-                'type': 'boolean',
-                'label': 'заказ',
-            },
-            {
                 'field': 'invoice',
                 'type': 'boolean',
                 'label': 'счет',
@@ -123,7 +116,6 @@ class Order(models.Model):
     customer_comment = models.CharField(max_length=400, null=True)
     branding_file = models.FileField(storage=fs_branding, null=True)
     invoice_file = models.FileField(storage=fs_invoice, null=True)
-    order_file = models.FileField(storage=fs_order, null=True)
     delivery_file = models.FileField(storage=fs_delivery, null=True)
     state = models.ForeignKey(OrderState, on_delete=models.PROTECT, related_name='orders')
     previous_state = models.ForeignKey(OrderState, on_delete=models.SET_NULL, null=True, related_name='previous_orders')
@@ -216,13 +208,12 @@ class Order(models.Model):
         )
 
         # Добавляем вложения из указанных полей
-        attachments = []
+        attachments = None
         if attachment_fields:
-            for field_name in attachment_fields:
-                file_field = getattr(order, field_name, None)
-                if file_field and file_field.name:
-                    email.attach_file(file_field.path)
-                    attachments.append(file_field.name)
+            file_field = getattr(order, attachment_fields, None)
+            if file_field and file_field.name:
+                email.attach_file(file_field.path)
+                attachments = file_field.name
 
         email.send()
 
@@ -233,7 +224,7 @@ class Order(models.Model):
                 email_date=timezone.now().date(),
                 email_recipient=recipient,
                 comment=message,
-                attachments=", ".join(attachments) if attachments else None,
+                attachments=attachments,
                 user=user
             )
 
@@ -258,13 +249,11 @@ class Order(models.Model):
         attachment_names = []
         if action.attachments:
             if action.branding:
-                attachment_names.append('branding_file')
+                attachment_names = 'branding_file'
             if action.invoice:
-                attachment_names.append('invoice_file')
-            if action.order_file:
-                attachment_names.append('order_file')
+                attachment_names = 'invoice_file'
             if action.delivery:
-                attachment_names.append('delivery_file')
+                attachment_names = 'delivery_file'
         Order.send_order_mail(
             order=self,
             recipients=email_recipient,
