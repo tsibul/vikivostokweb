@@ -1,23 +1,23 @@
 @import "vars";
 @import "mixins";
 
-.user-element__header {
-  display: grid;
-  grid-template-columns: 1fr 0.6fr 1.5fr 1fr 1fr 0.4fr 1fr 0.5fr;
-  padding: 4px 16px 2px 4px;
-  gap: 8px;
-}
-
-
-.user-element__header-item {
-  text-align: left;
-  font-weight: 600;
-  font-size: 14px;
-}
-
 .user-element {
   &__check {
     width: 16px;
+  }
+
+  &__header {
+    display: grid;
+    grid-template-columns: 1fr 0.6fr 1.5fr 1fr 1fr 0.4fr 1fr 0.5fr;
+    padding: 4px 16px 2px 4px;
+    gap: 8px;
+
+    &-item {
+      text-align: left;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
   }
 
 
