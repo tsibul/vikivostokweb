@@ -1,0 +1,17 @@
+@import "vars";
+@import "mixins";
+
+.order-content{
+
+}
+
+.order-element{
+
+  &__header{
+    display: grid;
+    grid-template-columns: 0.8fr 80px 50px 1.5fr 0.6fr 50px 80px 50px 50px 0.4fr;
+    padding: 4px 16px 2px 4px;
+    gap: 8px;
+
+  }
+}
