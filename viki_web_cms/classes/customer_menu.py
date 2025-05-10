@@ -57,7 +57,7 @@ class CustomerMenu:
                 sort_keys=True)), 'UserExtension'),
             CustomerMenu('Заказы', str(json.dumps([
                 CustomerSection('Заказы', [
-                    CustomerSetting('Заказы', 'Order', False, True),
+                    CustomerSetting('Заказы', 'Order', False, True, False),
                 ]),
             ], default=lambda o: o.__dict__,
                 sort_keys=True)), 'Order'),
