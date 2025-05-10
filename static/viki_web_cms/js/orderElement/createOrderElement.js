@@ -19,6 +19,7 @@ export async function createOrderElement(className) {
         {title: 'от'},
         {title: 'клиент'},
         {title: 'статус'},
+        {title: 'менеджер'},
         {title: 'дней'},
         {title: 'срок'},
         {title: 'макет'},
