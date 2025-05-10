@@ -27,7 +27,7 @@ export async function createRows(container, lastRecord = 0, searchString = '',
     const data = await getData(lastRecord, searchString, newOnly);
 
     // Проверяем структуру полученных данных
-    const dataList = data.dataList || [];
+    const dataList = data && data.dataList ? data.dataList : [];
 
     if (dataList && dataList.length > 0) {
         let counter = 1;
