@@ -36,6 +36,7 @@ export async function createRows(container, lastRecord = 0, searchString = '',
             const row = document.createElement('div');
             row.classList.add('dictionary-content__row', rowStyle);
             row.dataset.id = item.id;
+            container.appendChild(row);
             createRow(row, item);
             counter++;
             if (counter === 20) {
@@ -45,7 +46,6 @@ export async function createRows(container, lastRecord = 0, searchString = '',
                         createRow, rowStyle, fetchUrl);
                 })
             }
-            container.appendChild(row);
         });
     }
 }
