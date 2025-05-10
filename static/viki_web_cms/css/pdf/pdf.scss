@@ -79,46 +79,6 @@
     gap: 1rem
   }
 
-  &__info {
-    margin-bottom: 1cm;
-
-    &--grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 2cm;
-    }
-  }
-
-  &__grid {
-    display: grid;
-    gap: 1px;
-    background: #000;
-    margin-bottom: 1cm;
-    border: 1px solid #000;
-
-    &-header {
-      background: #f0f0f0;
-      padding: 5px;
-      font-weight: 600;
-    }
-
-    &-cell {
-      background: #fff;
-      padding: 5px;
-    }
-
-    &-row {
-      display: contents;
-    }
-
-    &--order {
-      grid-template-columns: 40px 3fr 60px 60px 100px 120px;
-    }
-
-    &--invoice {
-      grid-template-columns: 40px 3fr 60px 60px 100px 120px;
-    }
-  }
 
   &__total {
     text-align: right;
@@ -129,16 +89,18 @@
     margin-bottom: 0.25rem;
   }
 
-  &__footer {
-    margin-top: 2cm;
-    font-size: 0.9em;
-  }
 
   &__sign-block {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2cm;
-    margin-top: 2cm;
+    grid-template-columns: 1fr 3fr;
+    gap: 4rem;
+    margin-top: 2rem;
+  }
+
+  &__sign{
+    width: 68%;
+    display: flex;
+    justify-content: space-between;
   }
 
   &__sign-cell {
@@ -198,3 +160,4 @@
 .border-right {
   border-right: 1px solid;
 }
+
