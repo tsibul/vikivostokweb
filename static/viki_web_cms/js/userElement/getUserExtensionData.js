@@ -24,16 +24,16 @@ export async function getUserExtensionData(lastRecord = 0, searchString = '', ne
         const response = await fetchJsonData(`/cms/json/user_extension?${params.toString()}`);
         
         if (!response || typeof response !== 'object') {
-            return {userList: [], last_record: lastRecord};
+            return {dataList: [], last_record: lastRecord};
         }
         
-        if (!Array.isArray(response.userList)) {
-            response.userList = [];
+        if (!Array.isArray(response.dataList)) {
+            response.dataList = [];
         }
         
         return response;
     } catch (error) {
         console.error('Failed to fetch user data:', error);
-        return {userList: [], last_record: lastRecord};
+        return {dataList: [], last_record: lastRecord};
     }
 } 
