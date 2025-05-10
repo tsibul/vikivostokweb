@@ -1,6 +1,6 @@
 'use strict';
 
-import {createSaveButton} from "../createStandardElements/createSaveButton";
+import {createSaveButton} from "../createStandardElements/createSaveButton.js";
 import {editOrder} from "./editOrder.js";
 
 /**
