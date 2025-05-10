@@ -21,7 +21,7 @@ export async function createPageContent (cssName, columns, headerStyle,
     container.appendChild(header);
 
     const rows = document.createElement('div');
-    rows.classList.add(cssName + '__rows');
+    rows.classList.add('dictionary-content__rows');
     await createRows(rows, 0, '', false, createRow, headerStyle, fetchUrl);
     container.appendChild(rows);
 
