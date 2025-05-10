@@ -18,7 +18,7 @@ def user_extension(request):
     """
     # Проверяем аутентификацию пользователя
     if user_check(request):
-        return JsonResponse({"userList": [], "last_record": 0})
+        return JsonResponse({"dataList": [], "last_record": 0})
 
     search_string = request.GET.get('search', '')
     new_filter = request.GET.get('new', '')
@@ -65,7 +65,7 @@ def user_extension(request):
         })
 
     return JsonResponse({
-        'userList': result,
+        'dataList': result,
         'last_record': last_record + len(result)
     })
 

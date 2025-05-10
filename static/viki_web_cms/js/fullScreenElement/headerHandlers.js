@@ -1,10 +1,14 @@
 'use strict';
 
+import {createRows} from "./createRows.js";
+
 /**
  * Change header handlers for fullScreen element
- * @param {function} createContent
+ * @param {function} getData
+ * @param {function} createRow
+ * @param {string} rowStyle
  */
-export function setupHeaderHandlers(createContent) {
+export function setupHeaderHandlers(getData, createRow, rowStyle) {
 
     const oldHeader = document.querySelector(`.dictionary-frame__header`);
     const header = oldHeader.cloneNode(true);
@@ -24,23 +28,23 @@ export function setupHeaderHandlers(createContent) {
 
     newCheckbox.addEventListener('change', async () => {
         const searchValue = searchInput.value;
-        await updateContent(searchValue, newCheckbox.checked, createContent);
+        await updateContent(searchValue, newCheckbox.checked, getData, createRow, rowStyle);
     });
 
     searchBtn.addEventListener('click', async () => {
         const searchValue = searchInput.value;
-        await updateContent(searchValue, newCheckbox.checked, createContent);
+        await updateContent(searchValue, newCheckbox.checked, getData, createRow, rowStyle);
     });
 
     clearBtn.addEventListener('click', async () => {
         searchInput.value = '';
-        await updateContent('', newCheckbox.checked, createContent);
+        await updateContent('', newCheckbox.checked, getData, createRow, rowStyle);
     });
 
     searchInput.addEventListener('keypress', async (e) => {
         if (e.key === 'Enter') {
             const searchValue = searchInput.value;
-            await updateContent(searchValue, newCheckbox.checked, createContent);
+            await updateContent(searchValue, newCheckbox.checked, getData, createRow, rowStyle);
         }
     });
 }
@@ -49,11 +53,13 @@ export function setupHeaderHandlers(createContent) {
  * Update fullScreen content (start with record 0)
  * @param {string} searchString
  * @param {boolean} newOnly
- * @param {function} createContent
+ * @param {function} getData
+ * @param {function} createRow
+ * @param {string} rowStyle
  * @returns {Promise<void>}
  */
-export async function updateContent(searchString, newOnly, createContent) {
+export async function updateContent(searchString, newOnly, getData, createRow, rowStyle) {
     let contentRows = document.querySelector('.dictionary-content__rows');
     contentRows.innerHTML = '';
-    await createContent (contentRows, 0, searchString, newOnly)
+    await createRows (contentRows, 0, searchString, newOnly, getData, createRow, rowStyle)
 }
