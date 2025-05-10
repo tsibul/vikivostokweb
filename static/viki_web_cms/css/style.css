@@ -1,3 +1,4 @@
+@charset "UTF-8";
 * {
   padding: 0;
   margin: 0;
@@ -823,11 +824,58 @@ body {
   color: #4A4A4A;
 }
 
+.order-element {
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.order-element[open] {
+  border: 1px solid rgba(150, 150, 150, 0.4);
+}
+.order-element[open] .order-element__header {
+  background-color: #fff;
+}
+.order-element[open] .order-element__toggle::after {
+  transform: rotate(180deg);
+}
+.order-element__toggle {
+  position: relative;
+}
+.order-element__toggle::after {
+  content: "⯆";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  transition: transform 0.3s;
+}
 .order-element__header {
   display: grid;
-  grid-template-columns: 0.8fr 80px 50px 1.5fr 0.6fr 80px 50px 80px 50px 50px 0.4fr;
+  grid-template-columns: 0.7fr 70px 40px 1.1fr 80px 0.6fr 0.5fr 80px 40px 70px 40px 40px 40px 70px 80px 10px;
   padding: 4px 16px 2px 4px;
   gap: 8px;
+}
+.order-element__item {
+  display: grid;
+  grid-template-columns: 1fr 1fr 3fr 2fr 100px 140px 140px 80px 10px;
+  padding: 4px 16px 2px 4px;
+  gap: 8px;
+  background-color: #fff;
+}
+.order-element__branding {
+  display: grid;
+  grid-template-columns: 1fr 6fr 100px 140px 140px 80px 10px;
+  padding: 4px 16px 2px 4px;
+  gap: 8px;
+  background-color: #fff;
+}
+
+.delivery-row {
+  background-color: #F2FFFF;
+}
+
+.align-right {
+  text-align: end;
 }
 
 /*# sourceMappingURL=style.css.map */

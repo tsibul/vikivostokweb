@@ -1,17 +1,70 @@
 @import "vars";
 @import "mixins";
 
-.order-content{
+.order-content {
 
 }
 
-.order-element{
+.order-element {
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 
-  &__header{
+  &[open] {
+    border: 1px solid rgba($colorNeutral50, 0.4);
+
+    .order-element__header{
+      background-color: #fff;
+    }
+    .order-element__toggle::after {
+      transform: rotate(180deg);
+    }
+  }
+
+  &__toggle {
+    position: relative;
+
+    &::after {
+      content: "⯆";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      transition: transform 0.3s;
+    }
+  }
+
+
+  &__header {
     display: grid;
-    grid-template-columns: 0.8fr 80px 50px 1.5fr 0.6fr 80px 50px 80px 50px 50px 0.4fr;
+    grid-template-columns: 0.7fr 70px 40px 1.1fr 80px 0.6fr 0.5fr 80px 40px 70px 40px 40px 40px 70px 80px 10px;
     padding: 4px 16px 2px 4px;
     gap: 8px;
-
   }
+
+  &__item {
+    display: grid;
+    grid-template-columns: 1fr 1fr 3fr 2fr 100px 140px 140px 80px 10px;
+    padding: 4px 16px 2px 4px;
+    gap: 8px;
+    background-color: #fff;
+  }
+
+
+  &__branding {
+    display: grid;
+    grid-template-columns: 1fr 6fr 100px 140px 140px 80px 10px;
+    padding: 4px 16px 2px 4px;
+    gap: 8px;
+    background-color: #fff;
+  }
+
+}
+
+.delivery-row {
+  background-color: $colorSecondary50;
+}
+
+.align-right {
+  text-align: end;
 }
