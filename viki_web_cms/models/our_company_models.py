@@ -1,6 +1,8 @@
+from django.core.files.storage import FileSystemStorage
 from django.db import models
 
 from viki_web_cms.models import SettingsDictionary
+fs_signature = FileSystemStorage(location='viki_web_cms/files/our_company/signature')
 
 
 class OurCompany(SettingsDictionary):
@@ -12,6 +14,8 @@ class OurCompany(SettingsDictionary):
     ogrn = models.CharField(max_length=13)
     vat = models.BooleanField(default=False)
     priority = models.IntegerField()
+    signature =models.FileField(storage=fs_signature, null=True)
+
 
     class Meta(SettingsDictionary.Meta):
         verbose_name = 'Наша компания'
@@ -68,6 +72,12 @@ class OurCompany(SettingsDictionary):
                 'type': 'textarea',
                 'label': 'адрес',
                 'null': False,
+            },
+            {
+                'field': 'signature',
+                'type': 'file',
+                'label': 'подписи',
+                'null': True,
             },
         ]
 
