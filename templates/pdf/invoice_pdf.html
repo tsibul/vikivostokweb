@@ -45,53 +45,55 @@
 </div>
 <!-- СЧЕТ -->
 
-<h1 class="pdf__header">СЧЕТ-ЗАКАЗ №&nbsp;{{ invoice_no }} от {{ state_changed_at_str }}</h1>
+<h1 class="pdf__header">СЧЕТ-ОФЕРТА №&nbsp;{{ invoice_no }} от {{ state_changed_at_str }}</h1>
 <!-- Исполнитель, заказчик, заказ -->
 <div class="pdf__meta">
-    <div >
-        <div><strong>Поставщик:</strong> {{ order.our_company.name }}, ИНН/КПП {{ order.our_company.inn }}/{{ order.our_company.kpp }}</div>
+    <div>
+        <div><strong>Поставщик:</strong> {{ order.our_company.name }},
+            ИНН/КПП {{ order.our_company.inn }}/{{ order.our_company.kpp }}</div>
         <div>адрес:{{ order.our_company.address }}</div>
     </div>
-    <div >
-        <div><strong>Покупатель:</strong> {{ order.company.name }}, ИНН/КПП {{ order.company.inn }}/{{ order.company.kpp }}</div>
+    <div>
+        <div><strong>Покупатель:</strong> {{ order.company.name }},
+            ИНН/КПП {{ order.company.inn }}/{{ order.company.kpp }}</div>
         <div>адрес: {{ order.company.address }}</div>
     </div>
     <div><strong>Внутренний номер заказа:</strong> {{ order.order_no }} от {{ order_date_str }}</div>
 </div>
 <!-- Таблица товаров -->
 <div class="pdf-goods">
-<div class="pdf-goods__row pdf-goods__row_title">
-    <div class="">№</div>
-    <div class="">Артикул</div>
-    <div class="">Наименование</div>
-    <div class="">Нанесение</div>
-    <div class="pdf-goods__num">Кол-во, шт.</div>
-    <div class="pdf-goods__num">Цена</div>
-    <div class="pdf-goods__num">Сумма</div>
-</div>
+    <div class="pdf-goods__row pdf-goods__row_title">
+        <div class="">№</div>
+        <div class="">Артикул</div>
+        <div class="">Наименование</div>
+        <div class="">Нанесение</div>
+        <div class="pdf-goods__num">Кол-во, шт.</div>
+        <div class="pdf-goods__num">Цена</div>
+        <div class="pdf-goods__num">Сумма</div>
+    </div>
     {% for item in items %}
         <div class="pdf-goods__row">
-        <div class="">{{ forloop.counter }}</div>
-        <div class="">{{ item.item.item_article }}</div>
-        <div class="">{{ item.item.name }}</div>
-        <div class="">{{ item.branding_name }}</div>
-        <div class="pdf-goods__num">{{ item.quantity_str }}</div>
-        <div class="pdf-goods__num">{{ item.price_str }}</div>
-        <div class="pdf-goods__num">{{ item.total_price_str }}</div>
+            <div class="">{{ forloop.counter }}</div>
+            <div class="">{{ item.item.item_article }}</div>
+            <div class="">{{ item.item.name }}</div>
+            <div class="">{{ item.branding_name }}</div>
+            <div class="pdf-goods__num">{{ item.quantity_str }}</div>
+            <div class="pdf-goods__num">{{ item.price_str }}</div>
+            <div class="pdf-goods__num">{{ item.total_price_str }}</div>
         </div>
         {% for branding in item.brandings %}
-        <div class="pdf-goods__row">
-            <div class=""></div>
-            <div class=""></div>
-            <div class="">
-                {{ branding.print_type.name }} {{ branding.print_place.name }}, {{ branding.colors }} цв.
-                {% if branding.second_pass %}, второй проход{% endif %}
+            <div class="pdf-goods__row">
+                <div class=""></div>
+                <div class=""></div>
+                <div class="">
+                    {{ branding.print_type.name }} {{ branding.print_place.name }}, {{ branding.colors }} цв.
+                    {% if branding.second_pass %}, второй проход{% endif %}
+                </div>
+                <div class=""></div>
+                <div class="pdf-goods__num">{{ item.quantity_str }}</div>
+                <div class="pdf-goods__num">{{ branding.price_str }}</div>
+                <div class="pdf-goods__num">{{ branding.total_price_str }}</div>
             </div>
-            <div class=""></div>
-            <div class="pdf-goods__num">{{ item.quantity_str }}</div>
-            <div class="pdf-goods__num">{{ branding.price_str }}</div>
-            <div class="pdf-goods__num">{{ branding.total_price_str }}</div>
-        </div>
         {% endfor %}
     {% endfor %}
     {% if order.delivery_option and order.delivery_option.price > 0 %}
@@ -107,11 +109,39 @@
 </div>
 <!-- Итоги -->
 <div class="pdf__total">
-    <div>Всего:<span class="pdf__cell--num">{{ total_amount_str }}</span> руб.</div>
-    <div>в том числе НДС:<span class="pdf__cell--num">{{ vat_amount_str }}</span> руб.</div>
-    <div>К оплате:<span class="pdf__cell--num">{{ total_amount_str }}</span> руб.</div>
+    <div>Всего:&nbsp;<span class="pdf__cell--num">{{ total_amount_str }}</span> руб.</div>
+    <div>в том числе НДС:&nbsp;<span class="pdf__cell--num">{{ vat_amount_str }}</span> руб.</div>
+    <div>К оплате:&nbsp;<span class="pdf__cell--num">{{ total_amount_str }}</span> руб.</div>
 </div>
-    <div>Всего наименований {{ items_count }}, на сумму {{ total_amount_words }}</div>
+
+<div class="">Всего наименований {{ items_count }}, на сумму: {{ total_amount_words }}</div>
+
+<div class="pdf-delivery__title">Условия поставки</div>
+<div class="pdf-delivery">
+    <div class="pdf-delivery__row">
+        <div>срок поставки (рабочих дней с момента оплаты настоящего счета)</div>
+        <div>{{ order.days_to_deliver }}</div>
+    </div>
+    <div class="pdf-delivery__row">
+        <div>условия поставки</div>
+        <div>{{ order.delivery_option.name }}</div>
+    </div>
+    <div class="pdf-delivery__row">
+        <div>макет утвержден</div>
+        <div>{{ branding_approved }}</div>
+    </div>
+    <div class="pdf-delivery__row">
+        <div>упаковка</div>
+        <div>стандартная</div>
+    </div>
+    <div class="pdf-delivery__row">
+        <div>маркировка</div>
+        <div>стандартная</div>
+    </div>
+</div>
+<div class="pdf-delivery__title">Оплата настоящего счета означает согласие с условиями оферты. Настоящая оферта
+    действительна в течение 10 рабочих дней. При изменении условий поставки Поставщик имеет право изменить сумму счета.
+</div>
 
 <!-- Подписи -->
 <div class="pdf__sign-block">
