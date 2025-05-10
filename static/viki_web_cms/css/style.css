@@ -800,21 +800,19 @@ body {
   width: 100%;
 }
 
+.user-element__check {
+  width: 16px;
+}
 .user-element__header {
   display: grid;
   grid-template-columns: 1fr 0.6fr 1.5fr 1fr 1fr 0.4fr 1fr 0.5fr;
   padding: 4px 16px 2px 4px;
   gap: 8px;
 }
-
 .user-element__header-item {
   text-align: left;
   font-weight: 600;
   font-size: 14px;
-}
-
-.user-element__check {
-  width: 16px;
 }
 .user-element__cell-no-results {
   grid-column: 1/-1;
@@ -823,6 +821,13 @@ body {
   padding: 12px;
   font-size: 16px;
   color: #4A4A4A;
+}
+
+.order-element__header {
+  display: grid;
+  grid-template-columns: 0.8fr 80px 50px 1.5fr 0.6fr 50px 80px 50px 50px 0.4fr;
+  padding: 4px 16px 2px 4px;
+  gap: 8px;
 }
 
 /*# sourceMappingURL=style.css.map */
