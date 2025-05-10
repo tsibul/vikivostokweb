@@ -8,12 +8,12 @@ import {createPageHeader} from "./createPageHeader.js";
  * @param {string} cssName
  * @param {Array} columns
  * @param {string} headerStyle
- * @param {function} getData
  * @param {function} createRow
+ * @param {string} fetchUrl
  * @returns {Promise<HTMLDivElement>}
  */
 export async function createPageContent (cssName, columns, headerStyle,
-                                         getData, createRow) {
+                                         createRow, fetchUrl) {
     const container = document.createElement('div');
     container.classList.add(cssName);
 
@@ -22,7 +22,7 @@ export async function createPageContent (cssName, columns, headerStyle,
 
     const rows = document.createElement('div');
     rows.classList.add(cssName + '__rows');
-    await createRows(rows, 0, '', false, getData, createRow, headerStyle);
+    await createRows(rows, 0, '', false, createRow, headerStyle, fetchUrl);
     container.appendChild(rows);
 
     return container;

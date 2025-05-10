@@ -17,7 +17,7 @@ import {getUserExtensionData} from "./getUserExtensionData.js";
  */
 export async function createUserElement(className) {
     const headerStyle = 'user-element__header';
-    setupHeaderHandlers(getUserExtensionData, createUserRow, headerStyle);
+    setupHeaderHandlers(createUserRow, headerStyle, '/cms/json/user_extension');
     const columns = [
         {title: 'Фамилия'},
         {title: 'Имя'},
@@ -29,7 +29,7 @@ export async function createUserElement(className) {
         {title: ''} // Столбец с кнопкой
     ];
     const userDictionary = await createPageContent('dictionary-content', columns, headerStyle,
-        getUserExtensionData, createUserRow);
+        createUserRow, '/cms/json/user_extension');
     userDictionary.id = className;
     return userDictionary;
 }

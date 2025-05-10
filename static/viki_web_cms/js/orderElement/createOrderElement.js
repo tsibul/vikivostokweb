@@ -3,7 +3,6 @@
 import {setupHeaderHandlers} from "../fullScreenElement/headerHandlers.js";
 import {createOrderRow} from "./createOrderRows.js";
 import {createPageContent} from "../fullScreenElement/createPageContent.js";
-import {getOrderData} from "./getOrderData.js";
 
 /**
  * Creates user element with specified grid layout
@@ -12,7 +11,7 @@ import {getOrderData} from "./getOrderData.js";
  */
 export async function createOrderElement(className) {
     const headerStyle = 'order-element__header';
-    setupHeaderHandlers(getOrderData, createOrderRow, headerStyle);
+    setupHeaderHandlers(createOrderRow, headerStyle, '/cms/json/order_list');
     const columns = [
         {title: 'номер'},
         {title: 'дата'},
@@ -28,6 +27,6 @@ export async function createOrderElement(className) {
         {title: ''},
     ];
     return await createPageContent('order-content', columns, headerStyle,
-        getOrderData, createOrderRow);
+        createOrderRow, '/cms/json/order_list');
 }
 
