@@ -1,0 +1,96 @@
+from django.template.loader import render_to_string
+from django.conf import settings
+from django.utils import timezone
+from datetime import datetime
+import os
+from viki_web_cms.models import Order, OrderMailLog, Invoice
+
+
+def get_branding_approved_date(order):
+    """Получает дату утверждения макета из лога"""
+    try:
+        log_entry = OrderMailLog.objects.filter(
+            order=order,
+            comment__contains=f"статус по заказу {order.order_no} макет подтвержден"
+        ).first()
+        return log_entry.email_date if log_entry else None
+    except:
+        return None
+
+def generate_invoice_number(order):
+    """Генерирует номер счета в формате NNNN/XXXXXX"""
+    # Получаем первый день текущего года
+    year_start = timezone.now().replace(month=1, day=1)
+    
+    # Считаем количество счетов текущего года для данной компании
+    invoice_count = Invoice.objects.filter(
+        order__our_company=order.our_company,
+        invoice_date__gte=year_start,
+        deleted=False
+    ).count()
+    
+    # Формируем номер
+    number = str(invoice_count + 1).zfill(4)  # 4 цифры с ведущими нулями
+    order_suffix = order.order_no[-6:]  # последние 6 символов номера заказа
+    
+    return f"{number}W/{order_suffix}"
+
+def generate_order_pdf(order, items, branding_items=None):
+    """
+    Генерирует PDF файл заказа
+    
+    :param order: Объект заказа
+    :param items: Список товаров заказа
+    :param branding_items: Список товаров с брендированием (опционально)
+    :return: Путь к сгенерированному файлу
+    """
+    # Рендерим HTML шаблон
+    html_string = render_to_string('pdf/order_pdf.html', {
+        'order': order,
+        'items': items,
+        'branding_items': branding_items,
+        'branding_approved_at': get_branding_approved_date(order)
+    })
+    
+    # Создаем PDF
+    html = HTML(string=html_string)
+    pdf = html.write_pdf()
+    
+    # Формируем путь для сохранения
+    filename = f'order_{order.order_no}.pdf'
+    filepath = os.path.join(settings.MEDIA_ROOT, 'viki_web_cms/files/order/order', filename)
+    
+    # Сохраняем файл
+    with open(filepath, 'wb') as f:
+        f.write(pdf)
+    
+    return filepath
+
+def generate_invoice_pdf(order, items):
+    """
+    Генерирует PDF файл счета
+    
+    :param order: Объект заказа
+    :param items: Список товаров заказа
+    :return: Путь к сгенерированному файлу
+    """
+    # Рендерим HTML шаблон
+    html_string = render_to_string('pdf/invoice_pdf.html', {
+        'order': order,
+        'items': items,
+        'invoice_no': generate_invoice_number(order)
+    })
+    
+    # Создаем PDF
+    html = HTML(string=html_string)
+    pdf = html.write_pdf()
+    
+    # Формируем путь для сохранения
+    filename = f'invoice_{order.order_no}.pdf'
+    filepath = os.path.join(settings.MEDIA_ROOT, 'viki_web_cms/files/order/invoice', filename)
+    
+    # Сохраняем файл
+    with open(filepath, 'wb') as f:
+        f.write(pdf)
+    
+    return filepath 

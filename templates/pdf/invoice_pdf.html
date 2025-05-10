@@ -1,0 +1,126 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Счет №{{ invoice_no }}</title>
+    <link rel="stylesheet" href="{% static 'viki_web_cms/css/pdf/pdf.css' %}">
+</head>
+<body class="pdf">
+<!-- Банковские реквизиты -->
+<div class="pdf__top-table">
+    <div class="pdf__bank">
+        <div class="pdf__bank_name border-bottom">
+            <div class="pdf__bank_cell">{{ our_bank.name }}</div>
+            <div class="pdf__bank_cell">Банк получателя</div>
+        </div>
+        <div class="pdf__bank_details border-bottom">
+            <div class="border-right">
+                <div class="border-bottom pdf__bank_cell">БИК</div>
+                <div class="pdf__bank_cell">Сч.&nbsp;№</div>
+            </div>
+            <div>
+                <div class="pdf__bank_cell">{{ our_bank.bic }}</div>
+                <div class="pdf__bank_cell">{{ our_bank.corr_account }}</div>
+            </div>
+        </div>
+
+    </div>
+    <div class="pdf__bank">
+        <div class="pdf__bank_company">
+            <div class="border-bottom pdf__bank_inn">
+                <div class="pdf__bank_cell border-right">ИНН&nbsp;{{ order.our_company.inn }}</div>
+                <div class="pdf__bank_cell">КПП&nbsp;{{ order.our_company.kpp }}</div>
+            </div>
+            <div class="pdf__bank_name">
+                <div class="pdf__bank_cell">{{ order.our_company.name }}</div>
+                <div class="pdf__bank_cell">Получатель</div>
+            </div>
+        </div>
+        <div class="pdf__bank_details">
+            <div class="pdf__bank_cell border-right">Сч. №</div>
+            <div class="pdf__bank_cell" style="grid-column: 2/5;">{{ our_bank.bank_account }}</div>
+        </div>
+    </div>
+</div>
+<!-- СЧЕТ -->
+
+<h1 class="pdf__header">СЧЕТ-ЗАКАЗ №&nbsp;{{ invoice_no }} от {{ state_changed_at_str }}</h1>
+<!-- Исполнитель, заказчик, заказ -->
+<div class="pdf__meta">
+    <div >
+        <div><strong>Поставщик:</strong> {{ order.our_company.name }}, ИНН/КПП {{ order.our_company.inn }}/{{ order.our_company.kpp }}</div>
+        <div>адрес:{{ order.our_company.address }}</div>
+    </div>
+    <div >
+        <div><strong>Покупатель:</strong> {{ order.company.name }}, ИНН/КПП {{ order.company.inn }}/{{ order.company.kpp }}</div>
+        <div>адрес: {{ order.company.address }}</div>
+    </div>
+    <div><strong>Внутренний номер заказа:</strong> {{ order.order_no }} от {{ order_date_str }}</div>
+</div>
+<!-- Таблица товаров -->
+<div class="pdf-goods">
+<div class="pdf-goods__row pdf-goods__row_title">
+    <div class="">№</div>
+    <div class="">Артикул</div>
+    <div class="">Наименование</div>
+    <div class="">Нанесение</div>
+    <div class="pdf-goods__num">Кол-во, шт.</div>
+    <div class="pdf-goods__num">Цена</div>
+    <div class="pdf-goods__num">Сумма</div>
+</div>
+    {% for item in items %}
+        <div class="pdf-goods__row">
+        <div class="">{{ forloop.counter }}</div>
+        <div class="">{{ item.item.item_article }}</div>
+        <div class="">{{ item.item.name }}</div>
+        <div class="">{{ item.branding_name }}</div>
+        <div class="pdf-goods__num">{{ item.quantity_str }}</div>
+        <div class="pdf-goods__num">{{ item.price_str }}</div>
+        <div class="pdf-goods__num">{{ item.total_price_str }}</div>
+        </div>
+        {% for branding in item.brandings %}
+        <div class="pdf-goods__row">
+            <div class=""></div>
+            <div class=""></div>
+            <div class="">
+                {{ branding.print_type.name }} {{ branding.print_place.name }}, {{ branding.colors }} цв.
+                {% if branding.second_pass %}, второй проход{% endif %}
+            </div>
+            <div class=""></div>
+            <div class="pdf-goods__num">{{ item.quantity_str }}</div>
+            <div class="pdf-goods__num">{{ branding.price_str }}</div>
+            <div class="pdf-goods__num">{{ branding.total_price_str }}</div>
+        </div>
+        {% endfor %}
+    {% endfor %}
+    {% if order.delivery_option and order.delivery_option.price > 0 %}
+        <div class="pdf__goods-cell">{{ items|length|add:1 }}</div>
+        <div class="pdf__goods-cell"></div>
+        <div class="pdf__goods-cell">{{ order.delivery_option.name }}</div>
+        <div class="pdf__goods-cell"></div>
+        <div class="pdf__goods-cell pdf__cell--num">1</div>
+        <div class="pdf__goods-cell">шт.</div>
+        <div class="pdf__goods-cell pdf__cell--num">{{ delivery_price_str }}</div>
+        <div class="pdf__goods-cell pdf__cell--num">{{ delivery_price_str }}</div>
+    {% endif %}
+</div>
+<!-- Итоги -->
+<div class="pdf__total">
+    <div>Всего:<span class="pdf__cell--num">{{ total_amount_str }}</span> руб.</div>
+    <div>в том числе НДС:<span class="pdf__cell--num">{{ vat_amount_str }}</span> руб.</div>
+    <div>К оплате:<span class="pdf__cell--num">{{ total_amount_str }}</span> руб.</div>
+</div>
+    <div>Всего наименований {{ items_count }}, на сумму {{ total_amount_words }}</div>
+
+<!-- Подписи -->
+<div class="pdf__sign-block">
+    <div class="pdf__sign-cell">
+        <p>Руководитель ____________________</p>
+    </div>
+    <div class="pdf__sign-cell">
+        <p>Бухгалтер ____________________</p>
+    </div>
+</div>
+</body>
+</html> 

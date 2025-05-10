@@ -32,4 +32,7 @@ urlpatterns = [
     path('json/update_user_extension/<int:user_id>', views.update_user_extension),
     path('user_login', views.user_login),
 
+    # Debug endpoints for PDF viewing
+    path('debug/order-pdf/<int:order_id>/', views.debug_order_pdf, name='debug_order_pdf'),
+    path('debug/invoice-pdf/<int:order_id>/', views.debug_invoice_pdf, name='debug_invoice_pdf'),
 ]
