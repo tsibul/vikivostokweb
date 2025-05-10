@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from .views.order import order_list
 
 app_name = 'viki_web_cms'
 urlpatterns = [
@@ -35,4 +36,5 @@ urlpatterns = [
     # Debug endpoints for PDF viewing
     path('debug/order-pdf/<int:order_id>/', views.debug_order_pdf, name='debug_order_pdf'),
     path('debug/invoice-pdf/<int:order_id>/', views.debug_invoice_pdf, name='debug_invoice_pdf'),
+    path('json/order_list',views.order_list )
 ]

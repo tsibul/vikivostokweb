@@ -7,3 +7,4 @@ from viki_web_cms.views.catalogue_csv import *
 from viki_web_cms.views.price import *
 from viki_web_cms.views.user_extension import *
 from viki_web_cms.views.pdf_view import *
+from viki_web_cms.views.order import *
