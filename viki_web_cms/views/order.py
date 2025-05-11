@@ -109,7 +109,7 @@ def order_modal_request(request):
 
     match edit_type:
         case 'editDelivery':
-            delivery = DeliveryOption.objects.get(id=int(element_id))
+            delivery = Order.objects.get(id=int(element_id)).delivery_option
             return JsonResponse(delivery.get_delivery_options(), safe=False)
         case 'editItem':
             order_item = OrderItem.objects.get(id=int(element_id))
@@ -124,3 +124,32 @@ def order_modal_request(request):
             order = Order.objects.get(id=int(element_id))
             return JsonResponse(order.get_order_modal_data())
     return JsonResponse({})
+
+
+@login_required
+def order_edit(request):
+    if user_check(request):
+        return JsonResponse({})
+    edit_type = request.POST.get('type')
+    element_id = request.POST.get('id')
+
+    match edit_type:
+        case 'editDelivery':
+            delivery = DeliveryOption.objects.get(id=int(element_id))
+            context = {}
+        case 'editItem':
+            order_item = OrderItem.objects.get(id=int(element_id))
+            context = {}
+        case 'editBranding':
+                branding_item = OrderItemBranding.objects.get(id=int(element_id))
+                context = {}
+        case 'editOrder':
+            order = Order.objects.get(id=int(element_id))
+            context = {}
+        case _:
+            context = {}
+
+
+    return JsonResponse(context)
+
+
