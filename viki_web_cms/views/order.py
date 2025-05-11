@@ -116,8 +116,8 @@ def order_modal_request(request):
             return JsonResponse({'price': order_item.price, 'branding_name': order_item.branding_name})
         case 'editBranding':
             branding_item = OrderItemBranding.objects.get(id=int(element_id))
-            return JsonResponse({})
+            return JsonResponse(branding_item.get_branding_modal_data())
         case 'editOrder':
             order = Order.objects.get(id=int(element_id))
-            return JsonResponse({})
+            return JsonResponse(order.get_order_modal_data())
     return JsonResponse({})
