@@ -7,6 +7,7 @@ import {modalDnD} from "../modalFunction/modalDnD.js";
 import {fetchJsonData} from "../fetchJsonData.js";
 import {createOrderDropdown} from "./createOrderDropdown.js";
 import {createModalInput} from "../dictionaryElement/createInput/createModalInput.js";
+import {checkChangeForm} from "../dictionaryElement/createInput/createModalWindow.js";
 
 export const orderEditOptions = {
     'editOrder': {
@@ -105,7 +106,10 @@ async function createOrderModalWindow(fieldObj, elementId, row, orderRow) {
     modalWindow.appendChild(form);
     const initialData = new FormData(form)
     const buttonSubmit = form.querySelector('.submit');
-    buttonSubmit.addEventListener('click', (e) => sendOrderForm(e, fieldObj, form, initialData))
+    buttonSubmit.type = 'submit'
+    form.addEventListener('submit', (e) => {
+        sendOrderForm(e, fieldObj, form, initialData, modalWindow);
+    });
     return modalWindow;
 }
 
@@ -127,8 +131,13 @@ async function createOrderModalContent(fieldObj, elementId) {
 }
 
 
-async function sendOrderForm(e, fieldObj, form, initialData) {
-
+async function sendOrderForm(e, fieldObj, form, initialData, modalWindow) {
+    e.preventDefault();
+    const formData = new FormData(form);
+    if (!checkChangeForm(formData, initialData)) {
+        formData.append('type', fieldObj.type);
+    }
+    closeModal(modalWindow);
 }
 
 /**
@@ -138,6 +147,44 @@ async function sendOrderForm(e, fieldObj, form, initialData) {
  * @param {string} elementId
  * */
 function editOrderContent(data, modalContent, elementId) {
+    const stateLabel = document.createElement('div');
+    stateLabel.textContent = 'статус';
+    stateLabel.classList.add('modal__content_label');
+    stateLabel.htmlFor = `state_${elementId}`;
+    modalContent.appendChild(stateLabel);
+    const stateDropDown = createOrderDropdown(data.available_states, data.current_state_id, 'state__id')
+    stateDropDown.id = `state_${elementId}`
+    modalContent.appendChild(stateDropDown);
+    const daysLabel = document.createElement('label');
+    daysLabel.htmlFor = `days_${elementId}`
+    daysLabel.textContent = 'рабочих дней';
+    daysLabel.classList.add('modal__content_label')
+    modalContent.appendChild(daysLabel);
+    const days = createModalInput('number');
+    days.id = `days_${elementId}`;
+    days.name = 'days_to_deliver';
+    days.value = data.days_to_deliver;
+    modalContent.appendChild(days);
+    const userLabel = document.createElement('div');
+    userLabel.textContent = 'ответственный';
+    userLabel.classList.add('modal__content_label');
+    userLabel.htmlFor = `user_${elementId}`;
+    modalContent.appendChild(userLabel);
+    const userDropDown = createOrderDropdown(data.available_users, data.user_responsible_id, 'user_responsible__id')
+    userDropDown.id = `user_${elementId}`
+    modalContent.appendChild(userDropDown);
+    const dateLabel = document.createElement('label');
+    dateLabel.htmlFor = `date_${elementId}`
+    dateLabel.textContent = 'контрольный срок';
+    dateLabel.classList.add('modal__content_label')
+    modalContent.appendChild(dateLabel);
+    const date = createModalInput('date');
+    date.id = `date_${elementId}`;
+    date.name = 'delivery_date';
+    date.value = data.delivery_date;
+    modalContent.appendChild(date);
+
+
     return modalContent;
 }
 
@@ -158,7 +205,6 @@ function editItemContent(data, modalContent, elementId) {
     priceInput.name = 'price';
     priceInput.step = '0.01';
     priceInput.value = data.price;
-    priceInput.classList.add('modal__content_number');
     modalContent.appendChild(priceInput);
     if (Object.keys(data).includes('branding_name')) {
         const brandingLabel = document.createElement('label');
@@ -170,7 +216,6 @@ function editItemContent(data, modalContent, elementId) {
         brandingInput.id = `itemBranding_${elementId}`;
         brandingInput.name = 'branding_name';
         brandingInput.value = data.branding_name;
-        brandingInput.classList.add('modal__content_text');
         modalContent.appendChild(brandingInput);
     }
     return modalContent;
@@ -204,7 +249,7 @@ function editBrandingContent(data, modalContent, elementId) {
     colorLabel.classList.add('modal__content_label');
     colorLabel.htmlFor = `color_${elementId}`;
     modalContent.appendChild(colorLabel);
-    const colorDropDown = createOrderDropdown(data.available_colors, data.colors, 'print_place__id');
+    const colorDropDown = createOrderDropdown(data.available_colors, data.colors, 'colors');
     colorDropDown.id = `color_${elementId}`;
     modalContent.appendChild(colorDropDown);
     const passLabel = document.createElement('div');
