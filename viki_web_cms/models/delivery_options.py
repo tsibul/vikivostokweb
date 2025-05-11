@@ -19,7 +19,6 @@ class DeliveryOption(SettingsDictionary):
     def order_default():
         return ['name']
 
-
     @staticmethod
     def dictionary_fields():
         return SettingsDictionary.dictionary_fields() + [
@@ -30,3 +29,32 @@ class DeliveryOption(SettingsDictionary):
                 'null': True,
             },
         ]
+
+    def get_delivery_options(self):
+        """
+        Get delivery options data for a specific object and current option.
+
+        Args:
+            obj: Object to get delivery options for
+
+        Returns:
+            dict: Dictionary containing current option and available options
+        """
+        # Get current option data
+        current_option = {
+            'id': self.id,
+            'name': self.name,
+            'price': self.price
+        }
+
+        # Get all available options except current
+        available_options = list(
+            DeliveryOption.objects.filter(deleted=False)
+            .values('id', 'name', 'price')
+        )
+
+        return {
+            'current_option': current_option,
+            'available_options': available_options
+        }
+
