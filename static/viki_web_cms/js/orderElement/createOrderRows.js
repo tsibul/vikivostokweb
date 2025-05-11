@@ -28,10 +28,12 @@ export function createOrderRow(oldRow, order) {
     row.appendChild(tmpField);
     tmpField = createTextField(parseFloat(order.total_amount).toLocaleString('ru-RU',
         {minimumFractionDigits: 2, maximumFractionDigits: 2}));
+    tmpField.name = 'total_amount'
     tmpField.classList.add('align-right')
     row.appendChild(tmpField);
     tmpField = createTextField(order.state);
     tmpField.dataset.id = order.state_id
+    tmpField.name = 'state'
     row.appendChild(tmpField);
     tmpField = createTextField(order.manager);
     tmpField.dataset.id = order.manager_id;
@@ -39,10 +41,13 @@ export function createOrderRow(oldRow, order) {
     row.appendChild(tmpField);
     tmpField = createTextField(order.responsible);
     tmpField.dataset.id = order.responsible_id
+    tmpField.name = 'user_responsible'
     row.appendChild(tmpField);
     tmpField = createTextField(order.days_to_deliver);
+    tmpField.name = 'days_to_deliver'
     row.appendChild(tmpField);
     tmpField = createTextField(order.delivery_date);
+    tmpField.name = 'delivery_date'
     row.appendChild(tmpField);
     tmpField = createNewCheckBox(order.branding === 'True');
     row.appendChild(tmpField);
@@ -80,6 +85,7 @@ function createItemRow(item, details, orderRow) {
     tmpField = createTextField(item.name);
     itemRow.appendChild(tmpField);
     tmpField = createTextField(item.branding_name);
+    tmpField.name = 'branding_name';
     itemRow.appendChild(tmpField);
     tmpField = createTextField(parseFloat(item.price).toLocaleString('ru-RU',
         {minimumFractionDigits: 2, maximumFractionDigits: 2}));
@@ -90,6 +96,7 @@ function createItemRow(item, details, orderRow) {
     itemRow.appendChild(tmpField);
     tmpField = createTextField(parseFloat(item.total_price).toLocaleString('ru-RU',
         {minimumFractionDigits: 2, maximumFractionDigits: 2}));
+    tmpField.name = 'total_amount'
     tmpField.classList.add('align-right');
     itemRow.appendChild(tmpField);
     const button = createSaveButton('Изм');
@@ -118,10 +125,12 @@ function createBranding(branding, quantity, details, article, orderRow) {
         brandingText += ', второй проход';
     }
     tmpField = createTextField(brandingText);
+    tmpField.name = 'branding_text';
     brandingRow.appendChild(tmpField);
 
     tmpField = createTextField(parseFloat(branding.price).toLocaleString('ru-RU',
         {minimumFractionDigits: 2, maximumFractionDigits: 2}));
+    tmpField.name = 'price'
     tmpField.classList.add('align-right');
     brandingRow.appendChild(tmpField);
     tmpField = createTextField(quantity.toLocaleString('ru-RU',));
@@ -129,6 +138,7 @@ function createBranding(branding, quantity, details, article, orderRow) {
     brandingRow.appendChild(tmpField);
     tmpField = createTextField(parseFloat(branding.total_price).toLocaleString('ru-RU',
         {minimumFractionDigits: 2, maximumFractionDigits: 2}));
+    tmpField.name = 'total_amount'
     tmpField.classList.add('align-right');
     brandingRow.appendChild(tmpField);
     const button = createSaveButton('Изм');
