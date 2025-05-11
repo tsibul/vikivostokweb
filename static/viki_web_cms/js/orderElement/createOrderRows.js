@@ -168,7 +168,7 @@ function createDeliveryRow(order, details, orderRow) {
     tmpField.classList.add('align-right');
     deliveryRow.appendChild(tmpField);
     const button = createSaveButton('Изм');
-    button.dataset.id = order.delivery_option_id;
+    button.dataset.id = order.id;
     button.dataset.order = order.order_no;
     button.addEventListener('click', async (e) => {
         await editDelivery(e, deliveryRow, orderRow);
