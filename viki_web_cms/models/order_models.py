@@ -533,7 +533,7 @@ class OrderItemBranding(models.Model):
     def get_branding_modal_data(self):
         """
         Get current branding data and available options.
-
+        
         Returns:
             dict: Dictionary containing:
                 - print_type_id: Current print type ID
@@ -551,34 +551,40 @@ class OrderItemBranding(models.Model):
             'colors': self.colors,
             'second_pass': self.second_pass
         }
-
-        # Get available print types and places from PrintOpportunities
-        opportunities = self.order_item.item.goods.printopportunities_set.all()
-
+        
+        # Get available options through PrintOpportunity -> PrintData
+        opportunities = self.order_item.item.goods.printopportunity_set.filter(
+            deleted=False,
+            print_data__deleted=False
+        ).select_related('print_data__print_type', 'print_data__print_place')
+        
         # Get available print types
         available_print_types = list(opportunities.values(
-            'print_type'
+            'print_data__print_type'
         ).annotate(
-            id=F('print_type'),
-            value=F('print_type__name')
+            id=F('print_data__print_type_id'),
+            value=F('print_data__print_type__name')
         ).values('id', 'value').distinct())
-
+        
         # Get available print places
         available_print_places = list(opportunities.values(
-            'print_place'
+            'print_data__print_place'
         ).annotate(
-            id=F('print_place'),
-            value=F('print_place__name')
+            id=F('print_data__print_place_id'),
+            value=F('print_data__print_place__name')
         ).values('id', 'value').distinct())
-
-        # Get available colors
-        available_colors = list(opportunities.values(
-            'colors'
-        ).annotate(
-            id=F('colors'),
-            value=F('colors')
-        ).values('id', 'value').distinct().order_by('colors'))
-
+        
+        # Get max colors
+        max_colors = opportunities.aggregate(
+            max_colors=models.Max('print_data__color_quantity')
+        )['max_colors'] or 1
+        
+        # Create list of available colors from 1 to max_colors
+        available_colors = [
+            {'id': i, 'value': i} 
+            for i in range(1, max_colors + 1)
+        ]
+        
         return {
             **current_data,
             'available_print_types': available_print_types,
