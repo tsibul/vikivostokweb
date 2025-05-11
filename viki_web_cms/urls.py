@@ -34,4 +34,5 @@ urlpatterns = [
     path('debug/invoice-pdf/<int:order_id>/', views.debug_invoice_pdf, name='debug_invoice_pdf'),
     path('json/order_list',views.order_list ),
     path('json/order_modal_request', views.order_modal_request),
+    path('json/order_edit', views.order_edit),
 ]
