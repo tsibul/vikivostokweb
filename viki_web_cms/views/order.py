@@ -3,7 +3,8 @@ from django.http import JsonResponse
 from django.db.models import Prefetch
 
 from viki_web_cms.functions.user_validation import user_check
-from viki_web_cms.models import Order, OrderItem, OrderItemBranding
+from viki_web_cms.models import Order, OrderItem, OrderItemBranding, DeliveryOption
+
 
 @login_required
 def order_list(request):
@@ -16,18 +17,18 @@ def order_list(request):
     search_query = request.GET.get('search', '')
     new_only = request.GET.get('new', '') == '1'
     last_record = int(request.GET.get('last_record', 0))
-    
+
     if new_only:
         orders = Order.objects.filter(state__order__lte=9)
     else:
         orders = Order.objects.all()
-        
+
     if search_query:
         orders = orders.filter(order_no__icontains=search_query)
-    
+
     # Сортировка по дате и номеру заказа по убыванию
     orders = orders.order_by('-order_date', '-order_no')
-    
+
     # Оптимизируем запросы с помощью prefetch_related
     orders = orders.prefetch_related(
         Prefetch(
@@ -40,7 +41,7 @@ def order_list(request):
             )
         )
     )[last_record:last_record + 20]
-            
+
     orders_data = []
     for order in orders:
         order_items = []
@@ -64,7 +65,7 @@ def order_list(request):
                 } for branding in item.orderitembranding_set.all()]
             }
             order_items.append(item_data)
-            
+
         order_data = {
             'id': order.id,
             'order_no': order.order_no,
@@ -91,8 +92,32 @@ def order_list(request):
             'items': order_items
         }
         orders_data.append(order_data)
-        
+
     return JsonResponse({
         'dataList': orders_data,
         'last_record': last_record + len(orders_data),
     })
+
+
+@login_required
+def order_modal_request(request):
+    if user_check(request):
+        return JsonResponse({})
+
+    edit_type = request.GET.get('type', '')
+    element_id = request.GET.get('id', '')
+
+    match edit_type:
+        case 'editDelivery':
+            delivery = DeliveryOption.objects.get(id=int(element_id))
+            return JsonResponse(delivery.get_delivery_options(), safe=False)
+        case 'editItem':
+            order_item = OrderItem.objects.get(id=int(element_id))
+            return JsonResponse({'price': order_item.price, 'branding_name': order_item.branding_name})
+        case 'editBranding':
+            branding_item = OrderItemBranding.objects.get(id=int(element_id))
+            return JsonResponse({})
+        case 'editOrder':
+            order = Order.objects.get(id=int(element_id))
+            return JsonResponse({})
+    return JsonResponse({})

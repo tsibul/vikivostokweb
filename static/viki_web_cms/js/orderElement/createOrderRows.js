@@ -1,7 +1,7 @@
 'use strict';
 
 import {createSaveButton} from "../createStandardElements/createSaveButton.js";
-import {editDelivery, editItem, editOrder} from "./editOrder.js";
+import {editBranding, editDelivery, editItem, editOrder} from "./editOrder.js";
 
 /**
  *
@@ -53,6 +53,7 @@ export function createOrderRow(oldRow, order) {
     tmpField = createTextField(order.state_changed_at);
     row.appendChild(tmpField);
     const button = createSaveButton('Изм')
+    button.dataset.order = order.order_no;
     button.dataset.id = order.id;
     button.addEventListener('click', async (e) => {
         await editOrder(e, row);
@@ -62,12 +63,12 @@ export function createOrderRow(oldRow, order) {
     tmpField.classList.add('order-element__toggle');
     row.appendChild(tmpField);
     order.items.forEach(item => {
-        createItemRow(item, details);
+        createItemRow(item, details, row);
     })
-    createDeliveryRow(order, details);
+    createDeliveryRow(order, details, row);
 }
 
-function createItemRow(item, details) {
+function createItemRow(item, details, orderRow) {
     const itemRow = document.createElement('div')
     itemRow.classList.add('dictionary-content__row', 'order-element__item');
     itemRow.dataset.id = item.id;
@@ -93,19 +94,20 @@ function createItemRow(item, details) {
     itemRow.appendChild(tmpField);
     const button = createSaveButton('Изм');
     button.dataset.id = item.id;
+    button.dataset.article = item.article;
     button.addEventListener('click', async (e) => {
-        await editItem(e, itemRow);
+        await editItem(e, itemRow, orderRow);
     });
     itemRow.appendChild(button);
     details.appendChild(itemRow);
     if (item.brandings) {
         item.brandings.forEach(branding => {
-            createBranding(branding, item.quantity, details);
+            createBranding(branding, item.quantity, details, item.article, orderRow);
         });
     }
 }
 
-function createBranding(branding, quantity, details) {
+function createBranding(branding, quantity, details, article, orderRow) {
     const brandingRow = document.createElement('div');
     brandingRow.classList.add('dictionary-content__row', 'order-element__branding');
     let tmpField;
@@ -131,14 +133,15 @@ function createBranding(branding, quantity, details) {
     brandingRow.appendChild(tmpField);
     const button = createSaveButton('Изм');
     button.dataset.id = brandingRow.id;
+    button.dataset.article = article;
     button.addEventListener('click', async (e) => {
-        await editItem(e, brandingRow);
+        await editBranding(e, brandingRow, orderRow);
     });
     brandingRow.appendChild(button);
     details.appendChild(brandingRow);
 }
 
-function createDeliveryRow(order, details) {
+function createDeliveryRow(order, details, orderRow) {
     const deliveryRow = document.createElement('div');
     deliveryRow.classList.add('dictionary-content__row', 'order-element__branding', 'delivery-row');
     let tmpField
@@ -156,8 +159,9 @@ function createDeliveryRow(order, details) {
     deliveryRow.appendChild(tmpField);
     const button = createSaveButton('Изм');
     button.dataset.id = order.delivery_option_id;
+    button.dataset.order = order.order_no;
     button.addEventListener('click', async (e) => {
-        await editDelivery(e, brandingRow);
+        await editDelivery(e, deliveryRow, orderRow);
     });
     deliveryRow.appendChild(button);
     details.appendChild(deliveryRow);

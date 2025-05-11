@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import F
 
 from viki_web_cms.models import SettingsDictionary
 
@@ -43,14 +44,15 @@ class DeliveryOption(SettingsDictionary):
         # Get current option data
         current_option = {
             'id': self.id,
-            'name': self.name,
-            'price': self.price
+            'value': self.name,
         }
 
         # Get all available options except current
         available_options = list(
-            DeliveryOption.objects.filter(deleted=False)
-            .values('id', 'name', 'price')
+            DeliveryOption.objects.filter(deleted=False).annotate(
+                value=F('name'),
+            )
+            .values('id', 'value')
         )
 
         return {
