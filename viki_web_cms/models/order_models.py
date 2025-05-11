@@ -5,6 +5,8 @@ from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
 from django.core.mail import EmailMessage
 from django.db import models, transaction
+from django.db.models import F, Value
+from django.db.models.functions import Concat
 from django.utils import timezone
 from django.conf import settings
 
@@ -278,7 +280,6 @@ class Order(models.Model):
                 attachment_fields=None,
             )
 
-
     # Методы для оптимизированной загрузки данных
     @classmethod
     def get_order_with_items(cls, order_id):
@@ -409,6 +410,57 @@ class Order(models.Model):
         """
         return self.orderitem_set.filter(orderitembranding__isnull=False).exists()
 
+    def get_order_modal_data(self):
+        """
+        Get order state data, delivery info and responsible users.
+
+        Returns:
+            dict: Dictionary containing:
+                - current_state_id: ID of current state
+                - available_states: List of available states
+                - days_to_deliver: Days to delivery
+                - user_responsible_id: ID of responsible user
+                - available_users: List of available staff users
+                - delivery_date: Delivery date
+        """
+        from django.contrib.auth.models import User
+
+        # Get current state ID
+        current_state_id = self.state.id
+
+        # Get available states
+        available_states = list(OrderState.objects.filter(
+            deleted=False
+        ).annotate(
+            value=F('name')
+        ).values('id', 'value').order_by('order'))
+
+        # Get days to deliver
+        days_to_deliver = self.days_to_deliver
+
+        # Get responsible user ID
+        user_responsible_id = self.user_responsible.id if self.user_responsible else None
+
+        # Get available staff users
+        available_users = list(User.objects.filter(
+            is_staff=True,
+            is_active=True
+        ).annotate(
+            value=Concat(F('first_name'), Value(' '), F('last_name'))
+        ).values('id', 'value'))
+
+        # Get delivery date
+        delivery_date = self.delivery_date.isoformat() if self.delivery_date else None
+
+        return {
+            'current_state_id': current_state_id,
+            'available_states': available_states,
+            'days_to_deliver': days_to_deliver,
+            'user_responsible_id': user_responsible_id,
+            'available_users': available_users,
+            'delivery_date': delivery_date
+        }
+
 
 class OrderItem(models.Model):
     """ order"""
@@ -436,6 +488,15 @@ class OrderItem(models.Model):
     def order_default():
         return ['-order__order_date', 'order__order_no', 'item__item_article']
 
+    def has_branding(self):
+        """
+        Check if the order item has any branding.
+
+        Returns:
+            bool: True if the item has any branding records, False otherwise
+        """
+        return self.orderitembranding_set.exists()
+
 
 class OrderItemBranding(models.Model):
     """ order"""
@@ -446,6 +507,7 @@ class OrderItemBranding(models.Model):
     second_pass = models.BooleanField()
     price = models.FloatField()
     total_price = models.FloatField()
+
 
     class Meta:
         verbose_name = 'Брендирование товара в заказе'
@@ -467,6 +529,62 @@ class OrderItemBranding(models.Model):
     def order_default():
         return ['-order_item__order__order_date', 'order_item__order__order_no', 'order_item__item__item_article',
                 'print_type', 'print_place']
+
+    def get_branding_modal_data(self):
+        """
+        Get current branding data and available options.
+
+        Returns:
+            dict: Dictionary containing:
+                - print_type_id: Current print type ID
+                - print_place_id: Current print place ID
+                - colors: Current number of colors
+                - second_pass: Current second pass status
+                - available_print_types: List of available print types
+                - available_print_places: List of available print places
+                - available_colors: List of available color counts
+        """
+        # Get current values
+        current_data = {
+            'print_type_id': self.print_type.id if self.print_type else None,
+            'print_place_id': self.print_place.id if self.print_place else None,
+            'colors': self.colors,
+            'second_pass': self.second_pass
+        }
+
+        # Get available print types and places from PrintOpportunities
+        opportunities = self.order_item.item.goods.printopportunities_set.all()
+
+        # Get available print types
+        available_print_types = list(opportunities.values(
+            'print_type'
+        ).annotate(
+            id=F('print_type'),
+            value=F('print_type__name')
+        ).values('id', 'value').distinct())
+
+        # Get available print places
+        available_print_places = list(opportunities.values(
+            'print_place'
+        ).annotate(
+            id=F('print_place'),
+            value=F('print_place__name')
+        ).values('id', 'value').distinct())
+
+        # Get available colors
+        available_colors = list(opportunities.values(
+            'colors'
+        ).annotate(
+            id=F('colors'),
+            value=F('colors')
+        ).values('id', 'value').distinct().order_by('colors'))
+
+        return {
+            **current_data,
+            'available_print_types': available_print_types,
+            'available_print_places': available_print_places,
+            'available_colors': available_colors
+        }
 
 
 class OrderComment(models.Model):
@@ -575,7 +693,6 @@ class Invoice(SettingsDictionary):
     @staticmethod
     def order_default():
         return ['-order__order_date', 'order__order_no', '-invoice_date']
-
 
     @staticmethod
     def dictionary_fields():
