@@ -401,6 +401,14 @@ class Order(models.Model):
 
         return has_price_updates
 
+    def has_branding(self):
+        """
+        Проверяет наличие брендирования в заказе.
+        Returns:
+            bool: True если в заказе есть хотя бы один товар с брендированием, False в противном случае
+        """
+        return self.orderitem_set.filter(orderitembranding__isnull=False).exists()
+
 
 class OrderItem(models.Model):
     """ order"""
