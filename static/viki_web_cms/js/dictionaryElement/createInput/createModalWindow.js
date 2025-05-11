@@ -112,7 +112,7 @@ async function sendForm(event, form, className, initialData) {
  * @param initialData
  * @returns {boolean}
  */
-function checkChangeForm(formData, initialData) {
+export function checkChangeForm(formData, initialData) {
     const valuesInitial = Array.from(initialData.values());
     const valuesCurrent = Array.from(formData.values());
     valuesInitial.sort();
