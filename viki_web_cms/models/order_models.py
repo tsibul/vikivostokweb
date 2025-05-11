@@ -556,23 +556,23 @@ class OrderItemBranding(models.Model):
         opportunities = self.order_item.item.goods.printopportunity_set.filter(
             deleted=False,
             print_data__deleted=False
-        ).select_related('print_data__print_type', 'print_data__print_place')
+        )
         
         # Get available print types
-        available_print_types = list(opportunities.values(
-            'print_data__print_type'
-        ).annotate(
-            id=F('print_data__print_type_id'),
-            value=F('print_data__print_type__name')
-        ).values('id', 'value').distinct())
+        available_print_types = list(PrintType.objects.filter(
+            printdata__printopportunity__in=opportunities,
+            printdata__deleted=False
+        ).distinct().values('id', 'name').annotate(
+            value=F('name')
+        ).values('id', 'value'))
         
         # Get available print places
-        available_print_places = list(opportunities.values(
-            'print_data__print_place'
-        ).annotate(
-            id=F('print_data__print_place_id'),
-            value=F('print_data__print_place__name')
-        ).values('id', 'value').distinct())
+        available_print_places = list(PrintPlace.objects.filter(
+            printdata__printopportunity__in=opportunities,
+            printdata__deleted=False
+        ).distinct().values('id', 'name').annotate(
+            value=F('name')
+        ).values('id', 'value'))
         
         # Get max colors
         max_colors = opportunities.aggregate(
