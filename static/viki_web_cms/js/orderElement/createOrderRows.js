@@ -132,7 +132,7 @@ function createBranding(branding, quantity, details, article, orderRow) {
     tmpField.classList.add('align-right');
     brandingRow.appendChild(tmpField);
     const button = createSaveButton('Изм');
-    button.dataset.id = brandingRow.id;
+    button.dataset.id = branding.id;
     button.dataset.article = article;
     button.addEventListener('click', async (e) => {
         await editBranding(e, brandingRow, orderRow);
