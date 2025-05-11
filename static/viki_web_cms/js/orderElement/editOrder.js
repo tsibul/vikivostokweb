@@ -8,6 +8,7 @@ import {fetchJsonData} from "../fetchJsonData.js";
 import {createOrderDropdown} from "./createOrderDropdown.js";
 import {createModalInput} from "../dictionaryElement/createInput/createModalInput.js";
 import {checkChangeForm} from "../dictionaryElement/createInput/createModalWindow.js";
+import {getCSRFToken} from "../getCSRFToken.js";
 
 export const orderEditOptions = {
     'editOrder': {
@@ -108,7 +109,7 @@ async function createOrderModalWindow(fieldObj, elementId, row, orderRow) {
     const buttonSubmit = form.querySelector('.submit');
     buttonSubmit.type = 'submit'
     form.addEventListener('submit', (e) => {
-        sendOrderForm(e, fieldObj, form, initialData, modalWindow);
+        sendOrderForm(e, fieldObj, form, initialData, modalWindow, elementId);
     });
     return modalWindow;
 }
@@ -131,11 +132,20 @@ async function createOrderModalContent(fieldObj, elementId) {
 }
 
 
-async function sendOrderForm(e, fieldObj, form, initialData, modalWindow) {
+async function sendOrderForm(e, fieldObj, form, initialData, modalWindow, elementId) {
     e.preventDefault();
     const formData = new FormData(form);
     if (!checkChangeForm(formData, initialData)) {
         formData.append('type', fieldObj.type);
+        formData.append('element_id', elementId);
+        const response = await fetch('/cms/json/order_edit', {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": getCSRFToken(),
+            },
+            body: formData
+        });
+        const data = await response.json();
     }
     closeModal(modalWindow);
 }
@@ -276,7 +286,7 @@ function editDeliveryContent(data, modalContent, elementId) {
     label.textContent = 'доставка';
     label.classList.add('modal__content_label')
     modalContent.appendChild(label);
-    const dropDown = createOrderDropdown(data.available_options, elementId, 'id')
+    const dropDown = createOrderDropdown(data.available_options, data.current_option.id, 'id')
     modalContent.appendChild(dropDown);
     return modalContent;
 }
