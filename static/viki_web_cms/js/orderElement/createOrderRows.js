@@ -138,7 +138,7 @@ function createBranding(branding, quantity, details, article, orderRow) {
     brandingRow.appendChild(tmpField);
     tmpField = createTextField(parseFloat(branding.total_price).toLocaleString('ru-RU',
         {minimumFractionDigits: 2, maximumFractionDigits: 2}));
-    tmpField.dataset.name = 'total_amount'
+    tmpField.dataset.name = 'total_price'
     tmpField.classList.add('align-right');
     brandingRow.appendChild(tmpField);
     const button = createSaveButton('Изм');
