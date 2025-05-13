@@ -241,3 +241,12 @@ def order_edit(request):
             context = {}
 
     return JsonResponse(context)
+
+
+def order_duplicate(request, order_id):
+    try:
+        source_order = Order.objects.get(id=order_id)
+        new_order = source_order.order_duplicate()
+        return JsonResponse({'status': 'ok'})
+    except Order.DoesNotExist:
+        return JsonResponse({'status': 'error'})

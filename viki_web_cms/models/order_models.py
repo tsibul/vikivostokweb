@@ -470,6 +470,134 @@ class Order(models.Model):
         self.save(update_fields=['total_amount'])
 
 
+    def recalculate_prices(self, change_state=True):
+        """
+        Пересчитывает цены в заказе если статус < 8
+        """
+        # Проверяем статус заказа
+        if self.state.order >= 8:
+            return False
+
+        prices_changed = False
+
+        # Пересчет цен товаров
+        for item in self.orderitem_set.all():
+            # Получаем текущую цену товара
+            current_price = item.get_current_price()
+
+            # Если цена изменилась
+            if current_price and current_price != item.price:
+                item.price = current_price
+                item.save()
+                prices_changed = True
+
+        # Пересчет цен брендирования
+        for item in self.orderitem_set.all():
+            for branding in item.orderitembranding_set.all():
+                # Получаем базовую цену
+                base_price = branding.get_print_base_price()
+                if base_price:
+                    # Рассчитываем новую цену
+                    new_price = base_price * branding.colors
+                    if branding.second_pass:
+                        new_price *= 1.3
+                    new_price = round(new_price, 2)
+
+                    # Если цена изменилась
+                    if new_price != branding.price:
+                        branding.price = new_price
+                        branding.save()
+                        prices_changed = True
+
+        # Пересчет цены доставки
+        if self.delivery_option:
+            current_delivery_price = self.delivery_option.price
+            if current_delivery_price != self.delivery_option.price:
+                self.delivery_option.price = current_delivery_price
+                prices_changed = True
+
+        # Если были изменения цен
+        if prices_changed:
+            # Пересчитываем общую сумму заказа
+            self.recalculate_order_partial()
+
+            # Устанавливаем новое состояние
+            if change_state:
+                new_state = OrderState.objects.filter(order=5).first()
+                if new_state:
+                    self.state = new_state
+                    self.save()
+
+        return prices_changed
+
+    def order_duplicate(self):
+        """
+        Создает копию заказа с текущими ценами
+
+        Returns:
+            Order: новый заказ
+        """
+        from django.utils import timezone
+
+        # Создаем новый заказ
+        new_date = timezone.now().date()
+        existing_number = Order.objects.filter(
+            order_date__month=new_date.month,
+            order_date__year=new_date.year
+        ).order_by(
+            '-order_short_number').first(
+        )
+        new_short_number = existing_number.order_short_number + 1 if existing_number else 1
+        new_order_no = f"{new_date.strftime('%d%m%y')}_{new_short_number:03d}_{self.order_no[-6:]}"
+        new_order = Order.objects.create(
+            order_short_number=new_short_number,
+            order_no=new_order_no,
+            order_date=new_date,
+            user_extension=self.user_extension,
+            user_responsible=self.user_responsible,
+            customer=self.customer,
+            company=self.company,
+            our_company=self.our_company,
+            days_to_deliver=self.days_to_deliver,
+            customer_comment=self.customer_comment,
+            delivery_option=self.delivery_option,
+            total_amount=self.total_amount,
+            # Устанавливаем начальный статус
+            state=OrderState.objects.filter(order=1).first()
+        )
+        # new_order.save()
+
+        # Копируем товары
+        for source_item in self.orderitem_set.all():
+            # Создаем новый товар
+            new_item = OrderItem(
+                order=new_order,
+                item=source_item.item,
+                price=source_item.price,
+                quantity=source_item.quantity,
+                branding_name=source_item.branding_name
+            )
+            new_item.save()
+
+            # Копируем брендирование
+            for source_branding in source_item.orderitembranding_set.all():
+                new_branding = OrderItemBranding(
+                    order_item=new_item,
+                    print_type=source_branding.print_type,
+                    print_place=source_branding.print_place,
+                    colors=source_branding.colors,
+                    price=source_branding.price,
+                    second_pass=source_branding.second_pass
+                )
+                new_branding.save()
+
+        # Пересчитываем все цены в новом заказе
+        new_order.recalculate_prices(False)
+        new_order.change_state_action(new_order.state)
+
+        return new_order
+
+
 class OrderItem(models.Model):
     """ order"""
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
@@ -496,6 +624,7 @@ class OrderItem(models.Model):
         self.total_price = self.price * self.quantity
         super().save(*args, **kwargs)
 
+
     @staticmethod
     def order_default():
         return ['-order__order_date', 'order__order_no', 'item__item_article']
@@ -508,6 +637,83 @@ class OrderItem(models.Model):
             bool: True if the item has any branding records, False otherwise
         """
         return self.orderitembranding_set.exists()
+
+    def get_current_price(self):
+        """
+        Получает текущую цену товара
+
+        Returns:
+            float: текущая цена или None если цена не найдена
+        """
+        from viki_web_cms.models import PriceItemStandard, PriceGoodsStandard, PriceGoodsVolume
+        from django.utils import timezone
+
+        current_date = timezone.now().date()
+        price_type = self.order.customer.standard_price_type
+
+        if self.item.goods.standard_price:
+            # Для стандартных цен сначала ищем цену для item
+            price = PriceItemStandard.objects.filter(
+                item=self.item,
+                price_type=price_type,
+                price_list__price_list_date__lte=current_date,
+                deleted=False
+            ).filter(
+                # Обычные цены
+                models.Q(price_list__promotion_price=False) |
+                # Или акционные цены с действующей датой окончания
+                models.Q(price_list__promotion_price=True, price_list__promotion_end_date__gt=current_date)
+            ).order_by('-price_list__price_list_date').first()
+
+            # Если цена для item не найдена, ищем для goods
+            if not price:
+                price = PriceGoodsStandard.objects.filter(
+                    goods=self.item.goods,
+                    price_type=price_type,
+                    price_list__price_list_date__lte=current_date,
+                    deleted=False
+                ).filter(
+                    # Обычные цены
+                    models.Q(price_list__promotion_price=False) |
+                    # Или акционные цены с действующей датой окончания
+                    models.Q(price_list__promotion_price=True, price_list__promotion_end_date__gt=current_date)
+                ).order_by('-price_list__price_list_date').first()
+        else:
+            # Для цен от объема всегда ищем в goods
+            # Сначала получаем максимальный объем
+            max_volume = PriceGoodsVolume.objects.filter(
+                goods=self.item.goods,
+                price_type=price_type,
+                price_list__price_list_date__lte=current_date,
+                deleted=False
+            ).filter(
+                # Обычные цены
+                models.Q(price_list__promotion_price=False) |
+                # Или акционные цены с действующей датой окончания
+                models.Q(price_list__promotion_price=True, price_list__promotion_end_date__gt=current_date)
+            ).order_by('-price_volume__quantity').first()
+
+            if max_volume:
+                # Если количество больше максимального объема, используем максимальный объем
+                quantity = min(self.quantity, max_volume.price_volume.quantity)
+
+                # Ищем цену для нужного объема
+                price = PriceGoodsVolume.objects.filter(
+                    goods=self.item.goods,
+                    price_type=price_type,
+                    price_volume__quantity__gte=quantity,
+                    price_list__price_list_date__lte=current_date,
+                    deleted=False
+                ).filter(
+                    # Обычные цены
+                    models.Q(price_list__promotion_price=False) |
+                    # Или акционные цены с действующей датой окончания
+                    models.Q(price_list__promotion_price=True, price_list__promotion_end_date__gt=current_date)
+                ).order_by('-price_list__price_list_date', 'price_volume__quantity').first()
+            else:
+                price = None
+
+        return price.price if price else None
 
 
 class OrderItemBranding(models.Model):

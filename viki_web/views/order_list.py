@@ -50,7 +50,7 @@ def order_list(request):
         'search': search_query,
 
     }
-    
+
     return render(request, 'order_list.html', context)
 
 
@@ -172,19 +172,20 @@ def order_files(request):
                 'name': 'Счет',
                 'url': order.invoice_file.url
             })
-            
-        if order.order_file:
-            files.append({
-                'name': 'Заказ',
-                'url': order.order_file.url
-            })
-            
+
+
         if order.branding_file:
             files.append({
                 'name': 'Макет',
                 'url': order.branding_file.url
             })
-            
+
+        if order.delivery_file:
+            files.append({
+                'name': 'Макет',
+                'url': order.delivery_file.url
+            })
+
         return JsonResponse({'status': 'success', 'files': files})
         
     except Order.DoesNotExist:
