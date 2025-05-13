@@ -229,7 +229,7 @@ def order_edit(request):
                 'state': order.state,
                 'days_to_deliver': order.days_to_deliver,
                 'delivery_date': delivery_date,
-                'user_responsible_id': order.user_responsible.first_name,
+                'user_responsible': order.user_responsible.first_name,
             }
         case _:
             context = {}
