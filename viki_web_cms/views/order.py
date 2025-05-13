@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import JsonResponse
@@ -195,40 +197,44 @@ def order_edit(request):
             old_price = branding_item.price
             branding_item.price = round(base_price*colors*second_pass_multiplier, 2)
             branding_item.save()
+            branding_text = f"{branding_item.print_type.name} {branding_item.print_place.name}, цветов: {branding_item.colors}"
+            if branding_item.second_pass:
+                branding_text += ', второй проход'
             if branding_item.price != old_price:
                 order.state = new_price_state
                 order.save()
                 order.recalculate_order_partial()
-            branding_text = f"{branding_item.print_type.name} {branding_item.print_place.name}, цветов {branding_item.colors}"
-            if branding_item.second_pass:
-                branding_text += ', второй проход'
             context = {
-                'brandingText': branding_text,
-                'branding_price': branding_item.price,
+                'branding_text': branding_text,
+                'price': branding_item.price,
                 'total_price': branding_item.total_price,
                 'total_amount': order.total_amount,
             }
         case 'editOrder':
             order = Order.objects.get(id=int(element_id))
-            state_id = request.POST.get('state')
+            state_id = request.POST.get('state__id')
             state = OrderState.objects.get(id=int(state_id))
             if state != order.state:
                 order.state = state
-            days_to_deliver = int(request.POST.get('days_to_deliver'))
-            if days_to_deliver and days_to_deliver != order.days_to_deliver:
-                order.days_to_deliver = days_to_deliver
-            delivery_date = request.POST.get('delivery_date')
-            if delivery_date and delivery_date != order.delivery_date:
-                order.delivery_date = delivery_date
-            user_responsible_id = request.POST.get('user_responsible_id')
-            if user_responsible_id and int(user_responsible_id) != order.user_responsible.id:
-                user_responsible = User.objects.get(id=int(user_responsible_id))
-                order.user_responsible = user_responsible
+            if  request.POST.get('days_to_deliver'):
+                days_to_deliver = int(request.POST.get('days_to_deliver'))
+                if days_to_deliver != order.days_to_deliver:
+                    order.days_to_deliver = days_to_deliver
+            if request.POST.get('delivery_date'):
+                delivery_date = datetime.strptime(request.POST.get('delivery_date'), '%Y-%m-%d')
+                if  delivery_date != order.delivery_date:
+                    order.delivery_date = delivery_date
+            if request.POST.get('user_responsible_id'):
+                user_responsible_id = int(request.POST.get('user_responsible_id'))
+                if user_responsible_id != order.user_responsible.id:
+                    user_responsible = User.objects.get(id=user_responsible_id)
+                    order.user_responsible = user_responsible
             order.save()
+            export_date = order.delivery_date.strftime('%d.%m.%y') if order.delivery_date else None
             context = {
-                'state': order.state,
+                'state': order.state.name,
                 'days_to_deliver': order.days_to_deliver,
-                'delivery_date': delivery_date,
+                'delivery_date': export_date,
                 'user_responsible': order.user_responsible.first_name,
             }
         case _:
