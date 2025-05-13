@@ -631,6 +631,7 @@ class Order(models.Model):
         # Пересчитываем все цены в новом заказе
         new_order.recalculate_prices(False)
         new_order.change_state_action(new_order.state)
+        new_order.apply_discounts()
 
         return new_order
 
