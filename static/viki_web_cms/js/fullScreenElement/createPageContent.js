@@ -22,7 +22,7 @@ export async function createPageContent (cssName, columns, headerStyle,
 
     const rows = document.createElement('div');
     rows.classList.add('dictionary-content__rows');
-    await createRows(rows, 0, '', false, createRow, headerStyle, fetchUrl);
+    await createRows(rows, 0, '', true, createRow, headerStyle, fetchUrl);
     container.appendChild(rows);
 
     return container;
