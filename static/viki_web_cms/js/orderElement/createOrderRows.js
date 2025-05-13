@@ -1,8 +1,10 @@
 'use strict';
 
 import {createSaveButton} from "../createStandardElements/createSaveButton.js";
-import {editBranding, editDelivery, editItem, editOrder, repeatOrder} from "./editOrder.js";
+import {editBranding, editDelivery, editItem, editOrder} from "./editOrder.js";
 import {createCancelButton} from "../createStandardElements/createCancelButton.js";
+import {fetchJsonData} from "../fetchJsonData.js";
+import {createRows} from "../fullScreenElement/createRows.js";
 
 /**
  *
@@ -220,4 +222,14 @@ export function createNewCheckBox(checked) {
     newCheckbox.checked = checked || false;
     newCheckbox.disabled = true;
     return newCheckbox
+}
+
+async function repeatOrder(e, orderId){
+    e.preventDefault();
+    const response = await fetchJsonData(`/cms/json/order_duplicate/${orderId}`);
+    if (response.status === 'ok'){
+        const contentRows = document.querySelector('.dictionary-content__rows');
+        contentRows.innerHTML = '';
+        await createRows(contentRows, 0, '', true, createOrderRow, 'order-element__header', '/cms/json/order_list');
+    }
 }

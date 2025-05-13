@@ -348,9 +348,6 @@ function editDeliveryContent(data, modalContent, elementId) {
     return modalContent;
 }
 
-export async function repeatOrder(orderId){
-
-}
 
 
 
