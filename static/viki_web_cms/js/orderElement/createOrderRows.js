@@ -1,7 +1,8 @@
 'use strict';
 
 import {createSaveButton} from "../createStandardElements/createSaveButton.js";
-import {editBranding, editDelivery, editItem, editOrder} from "./editOrder.js";
+import {editBranding, editDelivery, editItem, editOrder, repeatOrder} from "./editOrder.js";
+import {createCancelButton} from "../createStandardElements/createCancelButton.js";
 
 /**
  *
@@ -9,6 +10,7 @@ import {editBranding, editDelivery, editItem, editOrder} from "./editOrder.js";
  * @param {Object} order
  */
 export function createOrderRow(oldRow, order) {
+    const closedOrder = order.state_id === 9 || order.state_id === 10;
     const details = document.createElement('details');
     details.classList.add('order-element');
     const row = document.createElement('summary');
@@ -57,23 +59,33 @@ export function createOrderRow(oldRow, order) {
     row.appendChild(tmpField);
     tmpField = createTextField(order.state_changed_at);
     row.appendChild(tmpField);
-    const button = createSaveButton('Изм')
-    button.dataset.order = order.order_no;
-    button.dataset.id = order.id;
-    button.addEventListener('click', async (e) => {
-        await editOrder(e, row);
-    });
-    row.appendChild(button);
+    if (!closedOrder) {
+        const button = createSaveButton('Изм')
+        button.dataset.order = order.order_no;
+        button.dataset.id = order.id;
+        button.addEventListener('click', async (e) => {
+            await editOrder(e, row);
+        });
+        row.appendChild(button);
+    } else {
+        const button = createCancelButton('Дубль')
+        button.dataset.order = order.order_no;
+        button.dataset.id = order.id;
+        button.addEventListener('click', async (e) => {
+            await repeatOrder(e, order.id);
+        });
+        row.appendChild(button);
+    }
     tmpField = document.createElement('div');
     tmpField.classList.add('order-element__toggle');
     row.appendChild(tmpField);
     order.items.forEach(item => {
-        createItemRow(item, details, row);
+        createItemRow(item, details, row, closedOrder);
     })
-    createDeliveryRow(order, details, row);
+    createDeliveryRow(order, details, row, closedOrder);
 }
 
-function createItemRow(item, details, orderRow) {
+function createItemRow(item, details, orderRow, closedOrder) {
     const itemRow = document.createElement('div')
     itemRow.classList.add('dictionary-content__row', 'order-element__item');
     itemRow.dataset.id = item.id;
@@ -99,22 +111,27 @@ function createItemRow(item, details, orderRow) {
     tmpField.dataset.name = 'total_amount'
     tmpField.classList.add('align-right');
     itemRow.appendChild(tmpField);
-    const button = createSaveButton('Изм');
-    button.dataset.id = item.id;
-    button.dataset.article = item.article;
-    button.addEventListener('click', async (e) => {
-        await editItem(e, itemRow, orderRow);
-    });
-    itemRow.appendChild(button);
+    if (!closedOrder) {
+        const button = createSaveButton('Изм');
+        button.dataset.id = item.id;
+        button.dataset.article = item.article;
+        button.addEventListener('click', async (e) => {
+            await editItem(e, itemRow, orderRow);
+        });
+        itemRow.appendChild(button);
+    } else {
+        tmpField = document.createElement('div');
+        itemRow.appendChild(tmpField);
+    }
     details.appendChild(itemRow);
     if (item.brandings) {
         item.brandings.forEach(branding => {
-            createBranding(branding, item.quantity, details, item.article, orderRow);
+            createBranding(branding, item.quantity, details, item.article, orderRow, closedOrder);
         });
     }
 }
 
-function createBranding(branding, quantity, details, article, orderRow) {
+function createBranding(branding, quantity, details, article, orderRow, closedOrder) {
     const brandingRow = document.createElement('div');
     brandingRow.classList.add('dictionary-content__row', 'order-element__branding');
     let tmpField;
@@ -141,17 +158,22 @@ function createBranding(branding, quantity, details, article, orderRow) {
     tmpField.dataset.name = 'total_price'
     tmpField.classList.add('align-right');
     brandingRow.appendChild(tmpField);
-    const button = createSaveButton('Изм');
-    button.dataset.id = branding.id;
-    button.dataset.article = article;
-    button.addEventListener('click', async (e) => {
-        await editBranding(e, brandingRow, orderRow);
-    });
-    brandingRow.appendChild(button);
+    if (!closedOrder) {
+        const button = createSaveButton('Изм');
+        button.dataset.id = branding.id;
+        button.dataset.article = article;
+        button.addEventListener('click', async (e) => {
+            await editBranding(e, brandingRow, orderRow);
+        });
+        brandingRow.appendChild(button);
+    } else {
+        tmpField = document.createElement('div');
+        brandingRow.appendChild(tmpField);
+    }
     details.appendChild(brandingRow);
 }
 
-function createDeliveryRow(order, details, orderRow) {
+function createDeliveryRow(order, details, orderRow, closedOrder) {
     const deliveryRow = document.createElement('div');
     deliveryRow.classList.add('dictionary-content__row', 'order-element__branding', 'delivery-row');
     let tmpField
@@ -169,13 +191,17 @@ function createDeliveryRow(order, details, orderRow) {
     tmpField.classList.add('align-right');
     tmpField.dataset.name = 'price';
     deliveryRow.appendChild(tmpField);
+    if(!closedOrder){
     const button = createSaveButton('Изм');
     button.dataset.id = order.id;
     button.dataset.order = order.order_no;
     button.addEventListener('click', async (e) => {
         await editDelivery(e, deliveryRow, orderRow);
     });
-    deliveryRow.appendChild(button);
+    deliveryRow.appendChild(button);} else {
+        tmpField = document.createElement('div');
+        deliveryRow.appendChild(tmpField);
+    }
     details.appendChild(deliveryRow);
 }
 
