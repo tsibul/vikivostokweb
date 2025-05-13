@@ -11,7 +11,7 @@ from django.utils import timezone
 from django.conf import settings
 
 from viki_web_cms.models import UserExtension, Customer, Company, SettingsDictionary, OurCompany, CatalogueItem, \
-    PrintType, PrintPlace, DeliveryOption
+    PrintType, PrintPlace, DeliveryOption, PrintGroupToGoods, PrintVolume, PrintPrice
 
 fs_branding = FileSystemStorage(location='viki_web_cms/files/order/branding')
 fs_invoice = FileSystemStorage(location='viki_web_cms/files/order/invoice')
@@ -461,6 +461,14 @@ class Order(models.Model):
             'delivery_date': delivery_date
         }
 
+    def recalculate_order_partial(self):
+        self.total_amount = self.delivery_option.price
+        for item in self.orderitem_set.all():
+            self.total_amount += item.total_price
+            for branding in item.orderitembranding_set.all():
+                self.total_amount += branding.total_price
+        self.save(update_fields=['total_amount'])
+
 
 class OrderItem(models.Model):
     """ order"""
@@ -469,7 +477,7 @@ class OrderItem(models.Model):
     price = models.FloatField()
     quantity = models.IntegerField()
     total_price = models.FloatField()
-    branding_name = models.CharField(max_length=120)
+    branding_name = models.CharField(max_length=120, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Товар в заказе'
@@ -483,6 +491,10 @@ class OrderItem(models.Model):
 
     def __repr__(self):
         return self.item.item_article + ' ' + self.item.name
+
+    def save(self, *args, **kwargs):
+        self.total_price = self.price * self.quantity
+        super().save(*args, **kwargs)
 
     @staticmethod
     def order_default():
@@ -524,6 +536,10 @@ class OrderItemBranding(models.Model):
     def __repr__(self):
         pass_name = ' второй проход' if self.second_pass else None
         return self.print_type.name + ' ' + self.print_place.name + ', цветов' + str(self.colors) + pass_name
+
+    def save(self, *args, **kwargs):
+        self.total_price = self.price * self.order_item.quantity
+        super().save(*args, **kwargs)
 
     @staticmethod
     def order_default():
@@ -591,6 +607,46 @@ class OrderItemBranding(models.Model):
             'available_print_places': available_print_places,
             'available_colors': available_colors
         }
+
+    def get_print_base_price(self):
+        current_date = timezone.now().date()
+        print_group = PrintGroupToGoods.objects.filter(
+            goods=self.order_item.item.goods,
+            print_price_group__print_type=self.print_type,
+            print_place=self.print_place,
+            deleted=False
+        ).first()
+
+        # Если запись с точным соответствием не найдена, ищем запись с пустым полем print_place
+        if not print_group:
+            print_group = PrintGroupToGoods.objects.filter(
+                goods=self.order_item.item.goods,
+                print_price_group__print_type=self.print_type,
+                print_place__isnull=True,
+                deleted=False
+            ).first()
+
+        print_volume_list = PrintVolume.objects.filter(deleted=False).order_by('quantity')
+
+        print_volume = None
+        for volume in print_volume_list:
+            if self.order_item.quantity <= volume.quantity:
+                print_volume = volume
+                break  # нашли подходящий объем, выходим из цикла
+        if print_volume is None:
+            print_volume = print_volume_list.last()
+
+        print_price_group = print_group.print_price_group
+
+        base_price = PrintPrice.objects.filter(
+            print_price_group=print_price_group,
+            print_volume=print_volume,
+            deleted=False,
+            price_list__price_list_date__lte=current_date
+        ).order_by(
+            '-price_list__price_list_date').first()
+        return base_price.price
+
 
 
 class OrderComment(models.Model):
