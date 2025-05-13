@@ -109,7 +109,7 @@ async function createOrderModalWindow(fieldObj, elementId, row, orderRow) {
     const buttonSubmit = form.querySelector('.submit');
     buttonSubmit.type = 'submit'
     form.addEventListener('submit', (e) => {
-        sendOrderForm(e, fieldObj, form, initialData, modalWindow, elementId);
+        sendOrderForm(e, fieldObj, form, initialData, modalWindow, elementId, row, orderRow);
     });
     return modalWindow;
 }
@@ -131,8 +131,19 @@ async function createOrderModalContent(fieldObj, elementId) {
     return fieldObj.content(data, modalContent, elementId);
 }
 
-
-async function sendOrderForm(e, fieldObj, form, initialData, modalWindow, elementId) {
+/**
+ *
+ * @param e
+ * @param {Object} fieldObj
+ * @param {form} form
+ * @param {FormData} initialData
+ * @param {HTMLElement} modalWindow
+ * @param {string} elementId
+ * @param {HTMLElement} row
+ * @param {HTMLElement} orderRow
+ * @returns {Promise<void>}
+ */
+async function sendOrderForm(e, fieldObj, form, initialData, modalWindow, elementId, row, orderRow) {
     e.preventDefault();
     const formData = new FormData(form);
     if (!checkChangeForm(formData, initialData)) {
@@ -146,6 +157,51 @@ async function sendOrderForm(e, fieldObj, form, initialData, modalWindow, elemen
             body: formData
         });
         const data = await response.json();
+        const totalAmount = orderRow.querySelector(`div[data-name="total_amount"]`);
+        switch (fieldObj.type) {
+            case 'editOrder':
+                const date = row.querySelector(`div[data-name="delivery_date"]`);
+                date.textContent = data.delivery_date;
+                const days = row.querySelector(`div[data-name="days_to_deliver"]`);
+                days.textContent = data.days_to_deliver
+                const state = row.querySelector(`div[data-name="state"]`);
+                state.textContent = data.state;
+                const responsible = row.querySelector(`div[data-name="user_responsible"]`);
+                responsible.textContent = data.user_responsible;
+                break;
+            case 'editItem':
+                const brandingItem = row.querySelector(`div[data-name="branding_name"]`);
+                brandingItem.textContent = data.branding_name;
+                if (Object.keys(data).includes('price')) {
+                    const price = row.querySelector(`div[data-name="price"]`);
+                    price.textContent = data.price;
+                    const totalPrice = row.querySelector(`div[data-name="total_price"]`)
+                    totalPrice.textContent = data.total_price;
+                    totalAmount.textContent = data.total_amount;
+                }
+                break;
+            case 'editBranding':
+                const brandingText = row.querySelector(`div[data-name="branding_text"]`);
+                brandingText.textContent = data.branding_text;
+                if (Object.keys(data).includes('price')) {
+                    const price = row.querySelector(`div[data-name="price"]`);
+                    price.textContent = data.price;
+                    const totalPrice = row.querySelector(`div[data-name="total_price"]`)
+                    totalPrice.textContent = data.total_price;
+                    totalAmount.textContent = data.total_amount;
+                }
+                break;
+            case 'editDelivery':
+                const deliveryOption = row.querySelector(`div[data-name="delivery_option"]`);
+                deliveryOption.textContent = `доставка ${data.delivery_option}`;
+                if (Object.keys(data).includes('price')) {
+                    const price = row.querySelector(`div[data-name="price"]`);
+                    price.textContent = data.price;
+                    totalAmount.textContent = data.total_amount;
+                }
+                break;
+        }
+
     }
     closeModal(modalWindow);
 }
