@@ -271,6 +271,7 @@ function editBrandingContent(data, modalContent, elementId) {
     pass.name = 'second_pass'
     pass.classList.add('check')
     pass.id = `pass_${elementId}`;
+    pass.checked = data.second_pass;
     modalContent.appendChild(pass);
     return modalContent;
 }
