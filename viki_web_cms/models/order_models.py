@@ -530,6 +530,43 @@ class Order(models.Model):
 
         return prices_changed
 
+    def apply_discounts(self):
+        """
+        Применяет скидки к заказу на основе типа цены клиента.
+        Пересчитывает цены товаров и общую сумму заказа.
+        """
+        from viki_web_cms.models import CustomerDiscount
+        
+        # Получаем размер скидки из CustomerDiscount
+        discount = CustomerDiscount.objects.filter(
+            price_name=self.customer.standard_price_type
+        ).first()
+        
+        if not discount:
+            return False
+            
+        discount_value = discount.discount
+        
+        # Получаем все товары с standard_price=True
+        items = self.orderitem_set.filter(
+            item__goods__standard_price=True
+        )
+        
+        if not items.exists():
+            return False
+            
+        # Пересчитываем цены для каждого товара
+        for item in items:
+            # Применяем скидку к цене товара
+            new_price = round(item.price * (1 - discount_value / 100), 2)
+            item.price = new_price
+            item.save()  # Это автоматически пересчитает total_price
+            
+        # Пересчитываем общую сумму заказа
+        self.recalculate_order_partial()
+        
+        return True
+
     def order_duplicate(self):
         """
         Создает копию заказа с текущими ценами
