@@ -3,7 +3,7 @@ from datetime import datetime
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.http import JsonResponse
-from django.db.models import Prefetch
+from django.db.models import Prefetch, Q
 
 from viki_web_cms.functions.user_validation import user_check
 from viki_web_cms.models import Order, OrderItem, OrderItemBranding, DeliveryOption, OrderState, PrintType, PrintPlace
@@ -27,7 +27,11 @@ def order_list(request):
         orders = Order.objects.all()
 
     if search_query:
-        orders = orders.filter(order_no__icontains=search_query)
+        orders = orders.filter(
+            Q(order_no__icontains=search_query) |
+            Q(customer__name__icontains=search_query)|
+            Q(user_extension__user__last_name__icontains=search_query)
+        )
 
     # Сортировка по дате и номеру заказа по убыванию
     orders = orders.order_by('-order_date', '-order_no')
