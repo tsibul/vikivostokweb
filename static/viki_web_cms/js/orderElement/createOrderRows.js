@@ -19,7 +19,8 @@ export function createOrderRow(oldRow, order) {
     [...oldRow.attributes].forEach(attr => {
         row.setAttribute(attr.name, attr.value);
     });
-    oldRow.parentNode.replaceChild(details, oldRow);
+    oldRow.classList.remove(...oldRow.classList);
+    oldRow.appendChild(details)
     details.appendChild(row);
     let tmpField;
     tmpField = createTextField(order.order_no);
