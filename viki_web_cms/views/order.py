@@ -89,8 +89,11 @@ def order_list(request):
             'days_to_deliver': order.days_to_deliver,
             'delivery_date': order.delivery_date.strftime('%d.%m.%y') if order.delivery_date else None,
             'branding': order.branding_file.name != '',
+            'branding_file': order.branding_file.name,
             'invoice': order.invoice_file.name != '',
+            'invoice_file': order.invoice_file.name,
             'delivery': order.delivery_file.name != '',
+            'delivery_file': order.delivery_file.name,
             'state_changed_at': order.state_changed_at.strftime('%d.%m.%y') if order.state_changed_at else None,
             'total_amount': order.total_amount,
             'delivery_option': order.delivery_option.name,
@@ -292,30 +295,3 @@ def order_upload_file(request):
             
     return JsonResponse({'status': 'error'})
 
-
-@login_required
-def order_file(request, order_id, file_type):
-    if user_check(request):
-        return JsonResponse({'status': 'error'})
-        
-    try:
-        order = Order.objects.get(id=order_id)
-        
-        if file_type == 'invoice':
-            file = order.invoice_file
-        elif file_type == 'branding':
-            file = order.branding_file
-        elif file_type == 'delivery':
-            file = order.delivery_file
-        else:
-            return JsonResponse({'status': 'error'})
-            
-        if not file:
-            return JsonResponse({'status': 'error'})
-            
-        response = FileResponse(file, content_type='application/pdf')
-        response['Content-Disposition'] = f'inline; filename="{file.name}"'
-        return response
-        
-    except Order.DoesNotExist:
-        return JsonResponse({'status': 'error'})

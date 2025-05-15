@@ -121,12 +121,12 @@ function collectItemsData() {
             const quantity = item.quantity;
             const total = roundToTwoDecimals(price * quantity);
             
-            const itemData = {
+    const itemData = {
                 id: item.id,
-                price: price,
-                quantity: quantity,
-                total: total
-            };
+        price: price,
+        quantity: quantity,
+        total: total
+    };
             
             // Add branding information if available
             if (item.branding && item.branding.length > 0) {
@@ -149,8 +149,8 @@ function collectItemsData() {
             } else {
                 itemData.branding = [];
             }
-            
-            return itemData;
+    
+    return itemData;
         });
     } catch (error) {
         console.error('Error parsing cart data from localStorage:', error);

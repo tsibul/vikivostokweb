@@ -62,39 +62,42 @@ export function createOrderRow(oldRow, order) {
 
     tmpField = document.createElement('div');
     tmpField.classList.add('file-dropdown');
-    tmpBtn = createSaveButton('');
+    tmpBtn = document.createElement('button');
+    tmpBtn.classList.add('btn');
     show = order.branding;
     tmpBtn.insertAdjacentHTML("afterbegin", show ? fullIcon : emptyIcon);
     tmpField.appendChild(tmpBtn);
-    tmpList = createFileList(show, closedOrder, 'макет', order.id);
+    tmpList = createFileList(show, closedOrder, 'макет', order);
     tmpField.appendChild(tmpList);
     row.appendChild(tmpField);
 
 
     tmpField = document.createElement('div');
     tmpField.classList.add('file-dropdown');
-    tmpBtn = createSaveButton('');
+    tmpBtn = document.createElement('button');
+    tmpBtn.classList.add('btn');
     show = order.invoice;
     tmpBtn.insertAdjacentHTML("afterbegin", show ? fullIcon : emptyIcon);
     tmpField.appendChild(tmpBtn);
-    tmpList = createFileList(show, closedOrder, 'счет', order.id);
+    tmpList = createFileList(show, closedOrder, 'счет', order);
     tmpField.appendChild(tmpList);
     row.appendChild(tmpField);
 
     tmpField = document.createElement('div');
     tmpField.classList.add('file-dropdown');
-    tmpBtn = createSaveButton('');
+    tmpBtn = document.createElement('button');
+    tmpBtn.classList.add('btn');
     show = order.delivery;
     tmpBtn.insertAdjacentHTML("afterbegin", show ? fullIcon : emptyIcon);
     tmpField.appendChild(tmpBtn);
-    tmpList = createFileList(show, closedOrder, 'накладную', order.id);
+    tmpList = createFileList(show, closedOrder, 'накладную', order);
     tmpField.appendChild(tmpList);
     row.appendChild(tmpField);
 
     tmpField = createTextField(order.state_changed_at);
     row.appendChild(tmpField);
     if (!closedOrder) {
-        const button = createSaveButton('Изм')
+        const button = createSaveButton('Изм');
         button.dataset.order = order.order_no;
         button.dataset.id = order.id;
         button.addEventListener('click', async (e) => {
@@ -102,7 +105,7 @@ export function createOrderRow(oldRow, order) {
         });
         row.appendChild(button);
     } else {
-        const button = createCancelButton('Дубль')
+        const button = createCancelButton('Дубль');
         button.dataset.order = order.order_no;
         button.dataset.id = order.id;
         button.addEventListener('click', async (e) => {
@@ -248,15 +251,6 @@ function createTextField(text) {
 }
 
 
-export function createNewCheckBox(checked) {
-    const newCheckbox = document.createElement('input');
-    newCheckbox.type = 'checkbox';
-    newCheckbox.classList.add('check', 'user-element__check');
-    newCheckbox.checked = checked || false;
-    newCheckbox.disabled = true;
-    return newCheckbox
-}
-
 async function repeatOrder(e, orderId) {
     e.preventDefault();
     const response = await fetchJsonData(`/cms/json/order_duplicate/${orderId}`);
@@ -272,10 +266,10 @@ async function repeatOrder(e, orderId) {
  * @param {boolean} show
  * @param {boolean} orderClosed
  * @param {string} fileType
- * @param {string} orderId
+ * @param {Object} order
  * @returns {HTMLUListElement}
  */
-function createFileList(show, orderClosed, fileType, orderId) {
+function createFileList(show, orderClosed, fileType, order) {
     let li;
     const ul = document.createElement('ul');
     ul.classList.add('file-dropdown__list');
@@ -286,7 +280,7 @@ function createFileList(show, orderClosed, fileType, orderId) {
         li.style.display = 'none';
     }
     li.addEventListener('click', async (e) => {
-        await uploadOrderFile(e, fileType, orderId);
+        await uploadOrderFile(e, fileType, order);
     });
     ul.appendChild(li);
     li = document.createElement('li');
@@ -296,7 +290,7 @@ function createFileList(show, orderClosed, fileType, orderId) {
         li.style.display = 'none';
     }
     li.addEventListener('click', async (e) => {
-        await showOrderFile(e, fileType, orderId);
+        await showOrderFile(e, fileType, order);
     });
     ul.appendChild(li);
     return ul;
@@ -307,10 +301,10 @@ function createFileList(show, orderClosed, fileType, orderId) {
  *
  * @param {MouseEvent} e
  * @param {string} fileType
- * @param {string} orderId
+ * @param {Object} order
  * @returns {Promise<void>}
  */
-async function uploadOrderFile(e, fileType, orderId) {
+async function uploadOrderFile(e, fileType, order) {
     e.preventDefault();
 
     if (fileType === 'счет') {
@@ -334,7 +328,7 @@ async function uploadOrderFile(e, fileType, orderId) {
         const formData = new FormData();
         formData.append('file', file);
         formData.append('file_type', fileType);
-        formData.append('order_id', orderId);
+        formData.append('order_id', order.id);
 
         try {
             const response = await fetch('/cms/json/order_upload_file', {
@@ -357,23 +351,26 @@ async function uploadOrderFile(e, fileType, orderId) {
     fileInput.click();
 }
 
-async function showOrderFile(e, fileType, orderId) {
+/**
+ *
+ * @param {MouseEvent} e
+ * @param {string} fileType
+ * @param {Object} order
+ * @returns {Promise<void>}
+ */
+async function showOrderFile(e, fileType, order) {
     e.preventDefault();
-
-    let fileTypeParam;
+    let url;
     switch (fileType) {
         case 'счет':
-            fileTypeParam = 'invoice';
+            url = `/static/viki_web_cms/files/order/invoice/${order.invoice_file}`
             break;
         case 'макет':
-            fileTypeParam = 'branding';
+            url = `/static/viki_web_cms/files/order/branding/${order.branding_file}`
             break;
         case 'накладную':
-            fileTypeParam = 'delivery';
+            url = `/static/viki_web_cms/files/order/delivery/${order.delivery_file}`
             break;
-        default:
-            return;
     }
-
-    window.open(`/cms/json/order_file/${orderId}/${fileTypeParam}`, '_blank');
+        window.open(url, '_blank');
 }
