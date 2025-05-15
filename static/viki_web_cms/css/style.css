@@ -877,6 +877,10 @@ body {
   position: relative;
   min-height: 32px;
   transition: min-height 0.4s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  height: 100%;
 }
 .file-dropdown .btn {
   width: 100%;
