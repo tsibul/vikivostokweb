@@ -47,6 +47,9 @@ body {
   border-radius: 12px;
   transition: 0.2s ease color;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .btn__save {
   background-color: #009EA3;
@@ -868,6 +871,40 @@ body {
   padding: 4px 16px 2px 4px;
   gap: 8px;
   background-color: #fff;
+}
+
+.file-dropdown {
+  position: relative;
+  min-height: 32px;
+  transition: min-height 0.4s ease;
+}
+.file-dropdown .btn {
+  width: 100%;
+}
+.file-dropdown:hover {
+  min-height: 50px;
+}
+.file-dropdown:hover .file-dropdown__list {
+  display: block;
+}
+.file-dropdown__list {
+  list-style: none;
+  display: none;
+  width: 120px;
+  margin-top: -8px;
+  z-index: 15;
+  border: 1px solid #0F4880;
+  border-radius: 12px;
+  background-color: #fff;
+}
+.file-dropdown__list_item {
+  font-size: 14px;
+  padding: 6px 8px;
+  background-color: unset;
+  cursor: pointer;
+}
+.file-dropdown__list_item:hover {
+  background-color: rgba(0, 158, 163, 0.1);
 }
 
 .delivery-row {

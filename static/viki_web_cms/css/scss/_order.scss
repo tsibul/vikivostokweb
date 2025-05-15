@@ -13,9 +13,10 @@
   &[open] {
     border: 1px solid rgba($colorNeutral50, 0.4);
 
-    .order-element__header{
+    .order-element__header {
       background-color: #fff;
     }
+
     .order-element__toggle::after {
       transform: rotate(180deg);
     }
@@ -60,6 +61,49 @@
   }
 
 }
+
+.file-dropdown {
+  position: relative;
+  min-height: 32px;
+  transition: min-height 0.4s ease;
+
+  & .btn{
+    width: 100%;
+  }
+
+  &:hover{
+    min-height: 50px;
+  }
+
+  &:hover &__list{
+    display: block;
+  }
+
+  &__list {
+    list-style: none;
+    display: none;
+    width: 120px;
+    margin-top: -8px;
+    //max-height: 300px;
+    //overflow-y: auto;
+    z-index: 15;
+    @include brd-standard;
+    background-color: #fff;
+
+    &_item {
+      font-size: 14px;
+      padding: 6px 8px;
+      background-color: unset;
+      cursor: pointer;
+
+      &:hover {
+        background-color: rgba($colorSecondary, 0.1);
+      }
+    }
+  }
+}
+
+
 
 .delivery-row {
   background-color: $colorSecondary50;
