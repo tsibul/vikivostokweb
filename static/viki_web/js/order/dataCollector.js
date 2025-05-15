@@ -55,7 +55,7 @@ function collectUserData(form) {
         user_extension_id: userExtensionId,
         customer_id: customerId,
         company_id: companyId,
-        company_vat: companyVat
+        // company_vat: companyVat
     };
 }
 

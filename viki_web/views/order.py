@@ -162,7 +162,7 @@ def create_order(request):
         user_extension_id = request.POST.get('user_extension_id')
         customer_id = request.POST.get('customer_id')
         company_id = request.POST.get('company_id')
-        company_vat = request.POST.get('company_vat') == 'true'
+        # company_vat = request.POST.get('company_vat') == 'true'
         customer_comment = request.POST.get('customer_comment', '')
         delivery_option_id = request.POST.get('delivery_option_id', '')
         delivery_option = DeliveryOption.objects.get(id=delivery_option_id)
@@ -215,7 +215,7 @@ def create_order(request):
         total_amount = round(total_amount, 2)
 
         # Determine our company based on total and VAT status
-        if total_amount > 20000 and company_vat:
+        if total_amount > 20000 and company.vat:
             our_company = OurCompany.objects.filter(vat=True, deleted=False).order_by('priority').first()
         else:
             our_company = OurCompany.objects.filter(vat=False, deleted=False).order_by('priority').first()
