@@ -285,12 +285,12 @@ def order_upload_file(request):
             elif file_type == 'накладную':
                 if order.delivery_file:
                     order.delivery_file.delete()
-                filename = f"накладная_заказу_{order.order_no}_от_{order.order_date.strftime('%d.%m.%y')}.pdf"
+                filename = f"накладная_к_заказу_{order.order_no}_от_{order.order_date.strftime('%d.%m.%y')}.pdf"
                 order.delivery_file.save(filename, file)
             elif file_type == 'счет':
                 if order.invoice_file:
                     order.invoice_file.delete()
-                filename = f"счет_заказу_{order.order_no}_от_{order.order_date.strftime('%d.%m.%y')}.pdf"
+                filename = f"счет_к_заказу_{order.order_no}_от_{order.order_date.strftime('%d.%m.%y')}.pdf"
                 order.invoice_file.save(filename, file)
 
                 
