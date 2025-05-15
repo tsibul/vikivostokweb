@@ -275,9 +275,13 @@ def order_upload_file(request):
             order = Order.objects.get(id=order_id)
             
             if file_type == 'макет':
+                if order.branding_file:
+                    order.branding_file.delete()
                 filename = f"макет_к_заказу_{order.order_no}_от_{order.order_date.strftime('%d.%m.%y')}.pdf"
                 order.branding_file.save(filename, file)
             elif file_type == 'накладную':
+                if order.delivery_file:
+                    order.delivery_file.delete()
                 filename = f"накладная_заказу_{order.order_no}_от_{order.order_date.strftime('%d.%m.%y')}.pdf"
                 order.delivery_file.save(filename, file)
                 
