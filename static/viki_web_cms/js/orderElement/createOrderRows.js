@@ -317,6 +317,21 @@ function createFileList(show, orderClosed, fileType, order) {
  */
 async function uploadOrderFile(e, fileType, order) {
     e.preventDefault();
+    let fieldName, fileName;
+    switch (fileType){
+        case 'счет':
+            fieldName = 'invoice_file';
+            fileName = `счет_заказу_${order.order_no}_от_${order.order_date}.pdf`;
+            break;
+        case 'макет':
+            fieldName = 'branding_file';
+            fileName = `макет_к_заказу_${order.order_no}_от_${order.order_date}.pdf`;
+            break;
+        case 'накладную':
+            fieldName = 'delivery_file';
+            fileName = `накладная_к_заказу_${order.order_no}_от_${order.order_date}.pdf`;
+            break;
+    }
 
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
@@ -344,10 +359,11 @@ async function uploadOrderFile(e, fileType, order) {
                 },
                 body: formData
             });
-            const data = await response.json()
-            if (data.status === 'ok') {
+            const result = await response.json()
+            if (result.status === 'ok') {
                 e.target.closest('.file-dropdown').querySelector('button').innerHTML = fullIcon;
                 e.target.nextElementSibling.style.display = 'block';
+                order[fieldName] = fileName;
             }
         } catch (error) {
             console.error('Error:', error);
