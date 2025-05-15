@@ -6,6 +6,10 @@ import {createCancelButton} from "../createStandardElements/createCancelButton.j
 import {fetchJsonData} from "../fetchJsonData.js";
 import {createRows} from "../fullScreenElement/createRows.js";
 
+const emptyIcon = `<i class="fa-regular fa-circle"></i>`;
+const fullIcon = `<i class="fa-solid fa-check"></i>`;
+
+
 /**
  *
  * @param {HTMLElement} oldRow
@@ -22,7 +26,7 @@ export function createOrderRow(oldRow, order) {
     oldRow.classList.remove(...oldRow.classList);
     oldRow.appendChild(details)
     details.appendChild(row);
-    let tmpField;
+    let tmpField, tmpBtn, show, tmpList;
     tmpField = createTextField(order.order_no);
     row.appendChild(tmpField);
     tmpField = createTextField(order.order_date);
@@ -37,8 +41,8 @@ export function createOrderRow(oldRow, order) {
     tmpField.classList.add('align-right')
     row.appendChild(tmpField);
     tmpField = createTextField(order.state);
-    tmpField.dataset.id = order.state_id
-    tmpField.dataset.name = 'state'
+    tmpField.dataset.id = order.state_id;
+    tmpField.dataset.name = 'state';
     row.appendChild(tmpField);
     tmpField = createTextField(order.manager);
     tmpField.dataset.id = order.manager_id;
@@ -46,20 +50,46 @@ export function createOrderRow(oldRow, order) {
     row.appendChild(tmpField);
     tmpField = createTextField(order.responsible);
     tmpField.dataset.id = order.responsible_id
-    tmpField.dataset.name = 'user_responsible'
+    tmpField.dataset.name = 'user_responsible';
     row.appendChild(tmpField);
     tmpField = createTextField(order.days_to_deliver);
-    tmpField.dataset.name = 'days_to_deliver'
+    tmpField.dataset.name = 'days_to_deliver';
     row.appendChild(tmpField);
     tmpField = createTextField(order.delivery_date);
-    tmpField.dataset.name = 'delivery_date'
+    tmpField.dataset.name = 'delivery_date';
     row.appendChild(tmpField);
-    tmpField = createNewCheckBox(order.branding === 'True');
+
+    tmpField = document.createElement('div');
+    tmpField.classList.add('file-dropdown');
+    tmpBtn = createSaveButton('');
+    show = order.branding === 'True';
+    tmpBtn.insertAdjacentHTML("afterbegin", show ? fullIcon : emptyIcon);
+    tmpField.appendChild(tmpBtn);
+    tmpList = createFileList(show, closedOrder, 'branding', order.id);
+    tmpField.appendChild(tmpList);
     row.appendChild(tmpField);
-    tmpField = createNewCheckBox(order.invoice === 'True');
+
+
+    tmpField = document.createElement('div');
+    tmpField.classList.add('file-dropdown');
+    tmpBtn = createSaveButton('');
+    show = order.invoice === 'True';
+    tmpBtn.insertAdjacentHTML("afterbegin", show ? fullIcon : emptyIcon);
+    tmpField.appendChild(tmpBtn);
+    tmpList = createFileList(show, closedOrder, 'invoice', order.id);
+    tmpField.appendChild(tmpList);
     row.appendChild(tmpField);
-    tmpField = createNewCheckBox(order.delivery === 'True')
+
+    tmpField = document.createElement('div');
+    tmpField.classList.add('file-dropdown');
+    tmpBtn = createSaveButton('');
+    show = order.delivery === 'True';
+    tmpBtn.insertAdjacentHTML("afterbegin", show ? fullIcon : emptyIcon);
+    tmpField.appendChild(tmpBtn);
+    tmpList = createFileList(show, closedOrder, 'delivery', order.id);
+    tmpField.appendChild(tmpList);
     row.appendChild(tmpField);
+
     tmpField = createTextField(order.state_changed_at);
     row.appendChild(tmpField);
     if (!closedOrder) {
@@ -194,14 +224,15 @@ function createDeliveryRow(order, details, orderRow, closedOrder) {
     tmpField.classList.add('align-right');
     tmpField.dataset.name = 'price';
     deliveryRow.appendChild(tmpField);
-    if(!closedOrder){
-    const button = createSaveButton('Изм');
-    button.dataset.id = order.id;
-    button.dataset.order = order.order_no;
-    button.addEventListener('click', async (e) => {
-        await editDelivery(e, deliveryRow, orderRow);
-    });
-    deliveryRow.appendChild(button);} else {
+    if (!closedOrder) {
+        const button = createSaveButton('Изм');
+        button.dataset.id = order.id;
+        button.dataset.order = order.order_no;
+        button.addEventListener('click', async (e) => {
+            await editDelivery(e, deliveryRow, orderRow);
+        });
+        deliveryRow.appendChild(button);
+    } else {
         tmpField = document.createElement('div');
         deliveryRow.appendChild(tmpField);
     }
@@ -225,12 +256,61 @@ export function createNewCheckBox(checked) {
     return newCheckbox
 }
 
-async function repeatOrder(e, orderId){
+async function repeatOrder(e, orderId) {
     e.preventDefault();
     const response = await fetchJsonData(`/cms/json/order_duplicate/${orderId}`);
-    if (response.status === 'ok'){
+    if (response.status === 'ok') {
         const contentRows = document.querySelector('.dictionary-content__rows');
         contentRows.innerHTML = '';
         await createRows(contentRows, 0, '', true, createOrderRow, 'order-element__header', '/cms/json/order_list');
     }
+}
+
+/**
+ *
+ * @param {boolean} show
+ * @param {boolean} orderClosed
+ * @param {string} fileType
+ * @param {string} orderId
+ * @returns {HTMLUListElement}
+ */
+function createFileList(show, orderClosed, fileType, orderId) {
+    let li;
+    const ul = document.createElement('ul');
+    ul.classList.add('file-dropdown__list');
+    if (!orderClosed) {
+        li = document.createElement('li');
+        li.classList.add('file-dropdown__list_item');
+        li.textContent = 'Загрузить';
+        li.addEventListener('click', async (e) => {
+            await uploadOrderFile(e, fileType, orderId);
+        })
+        ul.appendChild(li);
+    }
+    if (show){
+        li = document.createElement('li');
+        li.classList.add('file-dropdown__list_item');
+        li.textContent = 'Открыть';
+        li.addEventListener('click', async (e) => {
+            await showOrderFile(e, fileType, orderId);
+        })
+        ul.appendChild(li);
+    }
+    return ul;
+}
+
+
+/**
+ *
+ * @param {onclick} e
+ * @param {string} fileType
+ * @param {string} orderId
+ * @returns {Promise<void>}
+ */
+async function uploadOrderFile (e, fileType, orderId){
+
+}
+
+async function showOrderFile (e, fileType, orderId){
+
 }
