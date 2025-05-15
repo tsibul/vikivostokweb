@@ -88,9 +88,9 @@ def order_list(request):
             'responsible_id': order.user_responsible.id,
             'days_to_deliver': order.days_to_deliver,
             'delivery_date': order.delivery_date.strftime('%d.%m.%y') if order.delivery_date else None,
-            'branding': order.branding_file is not None,
-            'invoice': order.invoice_file is not None,
-            'delivery': order.delivery_file is not None,
+            'branding': order.branding_file.name != '',
+            'invoice': order.invoice_file.name != '',
+            'delivery': order.delivery_file.name != '',
             'state_changed_at': order.state_changed_at.strftime('%d.%m.%y') if order.state_changed_at else None,
             'total_amount': order.total_amount,
             'delivery_option': order.delivery_option.name,
@@ -248,9 +248,42 @@ def order_edit(request):
 
 
 def order_duplicate(request, order_id):
+    if user_check(request):
+        return JsonResponse({'status': 'error'})
     try:
         source_order = Order.objects.get(id=order_id)
         new_order = source_order.order_duplicate()
         return JsonResponse({'status': 'ok'})
     except Order.DoesNotExist:
         return JsonResponse({'status': 'error'})
+
+
+@login_required
+def order_upload_file(request):
+    if user_check(request):
+        return JsonResponse({'status': 'error'})
+        
+    if request.method == 'POST':
+        file = request.FILES.get('file')
+        file_type = request.POST.get('file_type')
+        order_id = request.POST.get('order_id')
+        
+        if not all([file, file_type, order_id]):
+            return JsonResponse({'status': 'error'})
+            
+        try:
+            order = Order.objects.get(id=order_id)
+            
+            if file_type == 'макет':
+                filename = f"макет_к_заказу_{order.order_no}_от_{order.order_date.strftime('%d.%m.%y')}.pdf"
+                order.branding_file.save(filename, file)
+            elif file_type == 'накладную':
+                filename = f"накладная_заказу_{order.order_no}_от_{order.order_date.strftime('%d.%m.%y')}.pdf"
+                order.delivery_file.save(filename, file)
+                
+            return JsonResponse({'status': 'ok'})
+            
+        except Order.DoesNotExist:
+            return JsonResponse({'status': 'error'})
+            
+    return JsonResponse({'status': 'error'})

@@ -5,6 +5,7 @@ import {editBranding, editDelivery, editItem, editOrder} from "./editOrder.js";
 import {createCancelButton} from "../createStandardElements/createCancelButton.js";
 import {fetchJsonData} from "../fetchJsonData.js";
 import {createRows} from "../fullScreenElement/createRows.js";
+import {getCSRFToken} from "../getCSRFToken.js";
 
 const emptyIcon = `<i class="fa-regular fa-circle"></i>`;
 const fullIcon = `<i class="fa-solid fa-check"></i>`;
@@ -62,10 +63,10 @@ export function createOrderRow(oldRow, order) {
     tmpField = document.createElement('div');
     tmpField.classList.add('file-dropdown');
     tmpBtn = createSaveButton('');
-    show = order.branding === 'True';
+    show = order.branding;
     tmpBtn.insertAdjacentHTML("afterbegin", show ? fullIcon : emptyIcon);
     tmpField.appendChild(tmpBtn);
-    tmpList = createFileList(show, closedOrder, 'branding', order.id);
+    tmpList = createFileList(show, closedOrder, 'макет', order.id);
     tmpField.appendChild(tmpList);
     row.appendChild(tmpField);
 
@@ -73,20 +74,20 @@ export function createOrderRow(oldRow, order) {
     tmpField = document.createElement('div');
     tmpField.classList.add('file-dropdown');
     tmpBtn = createSaveButton('');
-    show = order.invoice === 'True';
+    show = order.invoice;
     tmpBtn.insertAdjacentHTML("afterbegin", show ? fullIcon : emptyIcon);
     tmpField.appendChild(tmpBtn);
-    tmpList = createFileList(show, closedOrder, 'invoice', order.id);
+    tmpList = createFileList(show, closedOrder, 'счет', order.id);
     tmpField.appendChild(tmpList);
     row.appendChild(tmpField);
 
     tmpField = document.createElement('div');
     tmpField.classList.add('file-dropdown');
     tmpBtn = createSaveButton('');
-    show = order.delivery === 'True';
+    show = order.delivery;
     tmpBtn.insertAdjacentHTML("afterbegin", show ? fullIcon : emptyIcon);
     tmpField.appendChild(tmpBtn);
-    tmpList = createFileList(show, closedOrder, 'delivery', order.id);
+    tmpList = createFileList(show, closedOrder, 'накладную', order.id);
     tmpField.appendChild(tmpList);
     row.appendChild(tmpField);
 
@@ -281,16 +282,16 @@ function createFileList(show, orderClosed, fileType, orderId) {
     if (!orderClosed) {
         li = document.createElement('li');
         li.classList.add('file-dropdown__list_item');
-        li.textContent = 'Загрузить';
+        li.textContent = `Загрузить ${fileType}`;
         li.addEventListener('click', async (e) => {
             await uploadOrderFile(e, fileType, orderId);
         })
         ul.appendChild(li);
     }
-    if (show){
+    if (show) {
         li = document.createElement('li');
         li.classList.add('file-dropdown__list_item');
-        li.textContent = 'Открыть';
+        li.textContent = `Открыть ${fileType}`;
         li.addEventListener('click', async (e) => {
             await showOrderFile(e, fileType, orderId);
         })
@@ -302,15 +303,57 @@ function createFileList(show, orderClosed, fileType, orderId) {
 
 /**
  *
- * @param {onclick} e
+ * @param {MouseEvent} e
  * @param {string} fileType
  * @param {string} orderId
  * @returns {Promise<void>}
  */
-async function uploadOrderFile (e, fileType, orderId){
+async function uploadOrderFile(e, fileType, orderId) {
+    e.preventDefault();
 
+    if (fileType === 'счет') {
+        // Оставляем место под отдельную логику для invoice
+        return;
+    }
+
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = '.pdf';
+
+    fileInput.addEventListener('change', async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        if (!file.name.toLowerCase().endsWith('.pdf')) {
+            alert('Только PDF файлы разрешены');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('file_type', fileType);
+        formData.append('order_id', orderId);
+
+        try {
+            const response = await fetch('/cms/json/order_upload_file', {
+                method: 'POST',
+                headers: {
+                    "X-CSRFToken": getCSRFToken(),
+                },
+                body: formData
+            });
+            const data = await response.json()
+            if (data.status === 'ok') {
+                e.target.closest('.file-dropdown').querySelector('button').innerHTML = fullIcon;
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    });
+
+    fileInput.click();
 }
 
-async function showOrderFile (e, fileType, orderId){
+async function showOrderFile(e, fileType, orderId) {
 
 }
