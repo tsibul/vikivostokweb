@@ -273,6 +273,17 @@ function createFileList(show, orderClosed, fileType, order) {
     let li;
     const ul = document.createElement('ul');
     ul.classList.add('file-dropdown__list');
+     if (fileType === 'счет' && !orderClosed) {
+        li = document.createElement('li');
+        li.classList.add('file-dropdown__list_item');
+        li.textContent = `Сформировать ${fileType}`;
+        li.addEventListener('click', async (e) => {
+            e.preventDefault();
+            window.open(`/cms/debug/invoice-pdf/${order.id}/`, '_blank');
+        });
+        ul.appendChild(li);
+    }
+
     li = document.createElement('li');
     li.classList.add('file-dropdown__list_item');
     li.textContent = `Загрузить ${fileType}`;
@@ -306,11 +317,6 @@ function createFileList(show, orderClosed, fileType, order) {
  */
 async function uploadOrderFile(e, fileType, order) {
     e.preventDefault();
-
-    if (fileType === 'счет') {
-        // Оставляем место под отдельную логику для invoice
-        return;
-    }
 
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
