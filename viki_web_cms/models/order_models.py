@@ -429,9 +429,27 @@ class Order(models.Model):
         current_state_id = self.state.id
 
         # Get available states
-        available_states = list(OrderState.objects.filter(
+        available_states = OrderState.objects.filter(
             deleted=False
-        ).annotate(
+        )
+
+        # Применяем фильтры
+        if not self.branding_file:
+            available_states = available_states.exclude(
+                branding=True
+            ).exclude(
+                order=4
+            )
+
+        if not self.invoice_file:
+            available_states = available_states.exclude(
+                invoice=True
+            ).exclude(
+                order__in=[7, 8, 9, 10]
+            )
+
+        # Добавляем аннотацию для value
+        available_states = list(available_states.annotate(
             value=F('name')
         ).values('id', 'value').order_by('order'))
 
