@@ -36,4 +36,5 @@ urlpatterns = [
     path('json/order_modal_request', views.order_modal_request),
     path('json/order_edit', views.order_edit),
     path('json/order_duplicate/<int:order_id>', views.order_duplicate),
+    path('json/order_upload_file', views.order_upload_file),
 ]

@@ -894,7 +894,7 @@ body {
 .file-dropdown__list {
   list-style: none;
   display: none;
-  width: 120px;
+  width: 180px;
   margin-top: -8px;
   z-index: 15;
   border: 1px solid #0F4880;
