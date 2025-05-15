@@ -34,7 +34,10 @@ def debug_invoice_pdf(request, order_id):
     items = order.orderitem_set.all()
     
     # Вычисляем НДС (сумма/6)
-    vat_amount = order.total_amount / 6
+    if order.our_company.vat:
+        vat_amount = round(order.total_amount / 6, 2)
+    else:
+        vat_amount = 0
     
     items_count = items.count()
 
