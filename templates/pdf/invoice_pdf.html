@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="{% static 'viki_web_cms/css/pdf/pdf.css' %}">
 </head>
 <body class="pdf">
+<button class="pdf__save-button" onclick="window.print()">Сохранить PDF</button>
 <!-- Банковские реквизиты -->
 <div class="pdf__top-table">
     <div class="pdf__bank">
@@ -97,14 +98,15 @@
         {% endfor %}
     {% endfor %}
     {% if order.delivery_option and order.delivery_option.price > 0 %}
-        <div class="pdf__goods-cell">{{ items|length|add:1 }}</div>
-        <div class="pdf__goods-cell"></div>
-        <div class="pdf__goods-cell">{{ order.delivery_option.name }}</div>
-        <div class="pdf__goods-cell"></div>
-        <div class="pdf__goods-cell pdf__cell--num">1</div>
-        <div class="pdf__goods-cell">шт.</div>
-        <div class="pdf__goods-cell pdf__cell--num">{{ delivery_price_str }}</div>
-        <div class="pdf__goods-cell pdf__cell--num">{{ delivery_price_str }}</div>
+        <div class="pdf-goods__row">
+            <div class="">{{ items|length|add:1 }}</div>
+            <div class="">доставка</div>
+            <div class="">{{ order.delivery_option.name }}</div>
+            <div class=""></div>
+            <div class=" pdf-goods__num">1</div>
+            <div class=" pdf-goods__num">{{ delivery_price_str }}</div>
+            <div class=" pdf-goods__num">{{ delivery_price_str }}</div>
+        </div>
     {% endif %}
 </div>
 <!-- Итоги -->
