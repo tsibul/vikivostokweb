@@ -364,23 +364,24 @@
 
 // Files list
 .files-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+  margin-top: 10px;
+  //list-style: none;
+  //padding: 0;
+  //margin: 0;
 
   li {
     margin-bottom: 10px;
 
     a {
       display: block;
-      padding: 8px 12px;
-      background-color: $colorSecondary50;
+      padding: 8px 0;
+      background-color: #fff;
       border-radius: 4px;
-      text-decoration: none;
-      color: $colorPrimary;
+      //text-decoration: none;
+      //color: $colorPrimary;
 
       &:hover {
-        background-color: lighten($colorSecondary, 40%);
+        background-color: rgba($colorSecondary, 0.3);
       }
     }
   }

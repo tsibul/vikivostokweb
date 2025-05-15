@@ -5006,23 +5006,19 @@ span.text-like {
 }
 
 .files-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+  margin-top: 10px;
 }
 .files-list li {
   margin-bottom: 10px;
 }
 .files-list li a {
   display: block;
-  padding: 8px 12px;
-  background-color: #F2FFFF;
+  padding: 8px 0;
+  background-color: #fff;
   border-radius: 4px;
-  text-decoration: none;
-  color: #0F4880;
 }
 .files-list li a:hover {
-  background-color: #70fbff;
+  background-color: rgba(0, 158, 163, 0.3);
 }
 
 .files-empty {
