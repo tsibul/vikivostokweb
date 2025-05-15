@@ -170,20 +170,19 @@ def order_files(request):
         if order.invoice_file:
             files.append({
                 'name': 'Счет',
-                'url': order.invoice_file.url
+                'url': f'/static/viki_web_cms/files/order/invoice/{order.invoice_file.name}'
             })
-
 
         if order.branding_file:
             files.append({
                 'name': 'Макет',
-                'url': order.branding_file.url
+                'url': f'/static/viki_web_cms/files/order/branding/{order.branding_file.name}'
             })
 
         if order.delivery_file:
             files.append({
-                'name': 'Макет',
-                'url': order.delivery_file.url
+                'name': 'Накладная',
+                'url': f'/static/viki_web_cms/files/order/delivery/{order.delivery_file.name}'
             })
 
         return JsonResponse({'status': 'success', 'files': files})
