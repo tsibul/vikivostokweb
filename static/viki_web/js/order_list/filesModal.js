@@ -24,8 +24,6 @@ export function showOrderFiles(orderId) {
         return;
     }
 
-    modal.classList.add('modal_active');
-
     // Show loading state
     filesList.innerHTML = '<li>Загрузка файлов...</li>';
     filesEmpty.style.display = 'none';
@@ -58,18 +56,12 @@ export function showOrderFiles(orderId) {
 
     // Close handlers
     const closeModal = () => {
-        modal.classList.remove('modal_active');
+        modal.close();
         closeButton.removeEventListener('click', closeModal);
         document.removeEventListener('keydown', handleEscape);
     };
     
     closeButton.addEventListener('click', closeModal);
-    
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            closeModal();
-        }
-    });
     
     const handleEscape = (e) => {
         if (e.key === 'Escape') {
@@ -78,6 +70,9 @@ export function showOrderFiles(orderId) {
     };
     
     document.addEventListener('keydown', handleEscape);
+    
+    // Show modal
+    modal.showModal();
     
     // Initialize drag and drop
     modalDnD(modal);
