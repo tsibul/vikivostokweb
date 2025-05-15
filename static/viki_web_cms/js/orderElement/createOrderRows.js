@@ -279,24 +279,26 @@ function createFileList(show, orderClosed, fileType, orderId) {
     let li;
     const ul = document.createElement('ul');
     ul.classList.add('file-dropdown__list');
-    if (!orderClosed) {
-        li = document.createElement('li');
-        li.classList.add('file-dropdown__list_item');
-        li.textContent = `Загрузить ${fileType}`;
-        li.addEventListener('click', async (e) => {
-            await uploadOrderFile(e, fileType, orderId);
-        })
-        ul.appendChild(li);
+    li = document.createElement('li');
+    li.classList.add('file-dropdown__list_item');
+    li.textContent = `Загрузить ${fileType}`;
+    if (orderClosed) {
+        li.style.display = 'none';
     }
-    if (show) {
-        li = document.createElement('li');
-        li.classList.add('file-dropdown__list_item');
-        li.textContent = `Открыть ${fileType}`;
-        li.addEventListener('click', async (e) => {
-            await showOrderFile(e, fileType, orderId);
-        })
-        ul.appendChild(li);
+    li.addEventListener('click', async (e) => {
+        await uploadOrderFile(e, fileType, orderId);
+    });
+    ul.appendChild(li);
+    li = document.createElement('li');
+    li.classList.add('file-dropdown__list_item');
+    li.textContent = `Открыть ${fileType}`;
+    if (!show) {
+        li.style.display = 'none';
     }
+    li.addEventListener('click', async (e) => {
+        await showOrderFile(e, fileType, orderId);
+    });
+    ul.appendChild(li);
     return ul;
 }
 
@@ -345,6 +347,7 @@ async function uploadOrderFile(e, fileType, orderId) {
             const data = await response.json()
             if (data.status === 'ok') {
                 e.target.closest('.file-dropdown').querySelector('button').innerHTML = fullIcon;
+                e.target.nextElementSibling.style.display = 'block';
             }
         } catch (error) {
             console.error('Error:', error);
@@ -355,5 +358,22 @@ async function uploadOrderFile(e, fileType, orderId) {
 }
 
 async function showOrderFile(e, fileType, orderId) {
+    e.preventDefault();
 
+    let fileTypeParam;
+    switch (fileType) {
+        case 'счет':
+            fileTypeParam = 'invoice';
+            break;
+        case 'макет':
+            fileTypeParam = 'branding';
+            break;
+        case 'накладную':
+            fileTypeParam = 'delivery';
+            break;
+        default:
+            return;
+    }
+
+    window.open(`/cms/json/order_file/${orderId}/${fileTypeParam}`, '_blank');
 }

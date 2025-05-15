@@ -2,7 +2,7 @@ from datetime import datetime
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.http import JsonResponse
+from django.http import JsonResponse, FileResponse
 from django.db.models import Prefetch, Q
 
 from viki_web_cms.functions.user_validation import user_check
@@ -291,3 +291,31 @@ def order_upload_file(request):
             return JsonResponse({'status': 'error'})
             
     return JsonResponse({'status': 'error'})
+
+
+@login_required
+def order_file(request, order_id, file_type):
+    if user_check(request):
+        return JsonResponse({'status': 'error'})
+        
+    try:
+        order = Order.objects.get(id=order_id)
+        
+        if file_type == 'invoice':
+            file = order.invoice_file
+        elif file_type == 'branding':
+            file = order.branding_file
+        elif file_type == 'delivery':
+            file = order.delivery_file
+        else:
+            return JsonResponse({'status': 'error'})
+            
+        if not file:
+            return JsonResponse({'status': 'error'})
+            
+        response = FileResponse(file, content_type='application/pdf')
+        response['Content-Disposition'] = f'inline; filename="{file.name}"'
+        return response
+        
+    except Order.DoesNotExist:
+        return JsonResponse({'status': 'error'})
