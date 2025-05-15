@@ -13,9 +13,9 @@ from django.conf import settings
 from viki_web_cms.models import UserExtension, Customer, Company, SettingsDictionary, OurCompany, CatalogueItem, \
     PrintType, PrintPlace, DeliveryOption, PrintGroupToGoods, PrintVolume, PrintPrice
 
-fs_branding = FileSystemStorage(location='viki_web_cms/files/order/branding')
-fs_invoice = FileSystemStorage(location='viki_web_cms/files/order/invoice')
-fs_delivery = FileSystemStorage(location='viki_web_cms/files/order/delivery')
+fs_branding = FileSystemStorage(location='static/viki_web_cms/files/order/branding')
+fs_invoice = FileSystemStorage(location='static/viki_web_cms/files/order/invoice')
+fs_delivery = FileSystemStorage(location='static/viki_web_cms/files/order/delivery')
 
 
 class OrderState(SettingsDictionary):
