@@ -8,7 +8,7 @@ from viki_web_cms.models import SettingsDictionary, Goods, CatalogueItem, GoodsG
     PrintPriceGroup, PrintVolume
 
 
-# fs_product_group = FileSystemStorage(location='viki_web_cms/files/cover')
+# fs_product_group = FileSystemStorage(location='viki_web_cms/files/cover__')
 class Price(SettingsDictionary):
     """ price list dates"""
     price_list_date = models.DateField(default=timezone.now)
