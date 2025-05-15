@@ -50,6 +50,9 @@ body {
   @include brd-standard;
   transition: 0.2s ease color;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &__save {
     background-color: $colorSecondary;
