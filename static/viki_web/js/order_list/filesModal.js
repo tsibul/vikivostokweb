@@ -39,6 +39,9 @@ export function showOrderFiles(orderId) {
                     a.href = file.url;
                     a.textContent = file.name;
                     a.target = '_blank';
+                    a.addEventListener('click', () => {
+                        modal.close();
+                    });
                     li.appendChild(a);
                     filesList.appendChild(li);
                 });
