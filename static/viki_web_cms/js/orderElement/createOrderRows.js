@@ -279,7 +279,7 @@ function createFileList(show, orderClosed, fileType, order) {
         li.textContent = `Сформировать ${fileType}`;
         li.addEventListener('click', async (e) => {
             e.preventDefault();
-            window.open(`/cms/debug/invoice-pdf/${order.id}/`, '_blank');
+            window.open(`/cms/invoice-pdf/${order.id}/`, '_blank');
         });
         ul.appendChild(li);
     }

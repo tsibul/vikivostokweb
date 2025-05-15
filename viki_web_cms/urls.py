@@ -29,7 +29,7 @@ urlpatterns = [
     path('json/user_extension_item/<int:user_id>', views.user_extension_item),
     path('json/update_user_extension/<int:user_id>', views.update_user_extension),
     path('user_login', views.user_login),
-    path('debug/invoice-pdf/<int:order_id>/', views.debug_invoice_pdf, name='debug_invoice_pdf'),
+    path('invoice-pdf/<int:order_id>/', views.debug_invoice_pdf, name='debug_invoice_pdf'),
     path('json/order_list',views.order_list ),
     path('json/order_modal_request', views.order_modal_request),
     path('json/order_edit', views.order_edit),
