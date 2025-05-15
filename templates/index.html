@@ -12,7 +12,7 @@
                 <div class="category">
                     {% for category in categories %}
                         <a href="products/{{ category.product_group_url }}" class="category__item">
-                            <img src="{{ category.file_url }}" alt="{{ category.cover }}" class="category__img">
+                            <img src="{% static 'viki_web_cms/files/cover/' %}{{ category.cover }}" alt="{{ category.cover }}" class="category__img">
                             <div class="category__label">
                                 <div class="category__label_text">
                                     {{ category.name }}

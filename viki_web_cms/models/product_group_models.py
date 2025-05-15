@@ -3,7 +3,7 @@ from django.db import models
 
 from viki_web_cms.models import SettingsDictionary, LayoutType
 
-fs_product_group = FileSystemStorage(location='viki_web_cms/files/cover')
+fs_product_group = FileSystemStorage(location='static/viki_web_cms/files/cover')
 
 
 class ProductGroup(SettingsDictionary):
