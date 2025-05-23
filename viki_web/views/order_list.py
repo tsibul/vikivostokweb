@@ -40,6 +40,10 @@ def order_list(request):
     
     # Check for price changes
     price_changes_found = check_for_price_changes(active_orders)
+    if price_changes_found:
+        for active_order in active_orders:
+            active_order.recalculate_prices()
+            active_order.apply_discounts()
     
     # Create context
     context = {
