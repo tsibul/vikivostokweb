@@ -38,7 +38,8 @@ def order(request):
     
     # Получаем опции доставки
     delivery_options = DeliveryOption.objects.filter(deleted=False)
-    
+    discount = request.POST.get('discount')
+
     # Default context
     context = {
         'categories': categories,
@@ -48,6 +49,7 @@ def order(request):
         'companies': list(companies),
         'cart_items': [],
         'delivery_options': delivery_options,
+        'discount': discount,
     }
     
     # If user is staff, get customers with the same price_type
