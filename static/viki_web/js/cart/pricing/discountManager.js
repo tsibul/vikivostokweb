@@ -189,6 +189,8 @@ export async function applyDiscountsToItems() {
     
     // Применяем скидки к стандартным товарам
     let discountsApplied = false;
+    const discountInput = document.querySelector(`input[name="discount"]`);
+    discountInput.value = Math.round(discount.discount * 10000) / 10000;
     
     // Apply discount to items with standard price
     cart.forEach(item => {
