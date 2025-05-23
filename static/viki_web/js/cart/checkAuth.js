@@ -74,6 +74,8 @@ export function initAuthCheck() {
             
             // Add cart data from localStorage
             const cartData = localStorage.getItem('cart') || '[]';
+            const discount = document.querySelector(`input[name="discount"]`);
+            form.appendChild(discount)
             const cartInput = document.createElement('input');
             cartInput.type = 'hidden';
             cartInput.name = 'cart_data';
