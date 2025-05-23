@@ -13,7 +13,8 @@
 
                     <!-- Customer Information Section -->
                     <div class="order-customer">
-                        <h2 class="order-section-title" data-id="{{ user_extension.id }}" data-customer-id="{{ customer.id }}">Информация о покупателе</h2>
+                        <h2 class="order-section-title" data-id="{{ user_extension.id }}"
+                            data-customer-id="{{ customer.id }}">Информация о покупателе</h2>
                         <div class="order-customer__info">
                             <div class="order-customer__user">
                                 <div class="order-customer__field">
@@ -38,14 +39,14 @@
                                                 <i class="fa-solid fa-chevron-down"></i>
                                             </div>
                                             <ul class="dropdown-options">
-                                                <li class="dropdown-option" 
-                                                    data-id="{{ customer.id }}" 
+                                                <li class="dropdown-option"
+                                                    data-id="{{ customer.id }}"
                                                     data-name="{{ customer.name }}">
                                                     {{ customer.name }}
                                                 </li>
                                                 {% for cust in available_customers %}
-                                                    <li class="dropdown-option" 
-                                                        data-id="{{ cust.id }}" 
+                                                    <li class="dropdown-option"
+                                                        data-id="{{ cust.id }}"
                                                         data-name="{{ cust.name }}">
                                                         {{ cust.name }}
                                                     </li>
@@ -109,6 +110,7 @@
                     <!-- Cart Items Section -->
                     <div class="order-items">
                         <h2 class="order-section-title">Товары в заказе</h2>
+                        <input type="number" step="0.0001" hidden name="discount" value="{{ discount }}">
 
                         {% if cart_items %}
                             {% for item in cart_items %}
@@ -190,34 +192,34 @@
                                     </div>
                                 </div>
                             {% endfor %}
-{#                        {% else %}#}
-{#                            <div class="order-empty">#}
-{#                                <p>В корзине нет товаров. <a href="{% url 'viki_web:catalogue' %}">Перейти в каталог</a>#}
-{#                                </p>#}
-{#                            </div>#}
+                            {#                        {% else %}#}
+                            {#                            <div class="order-empty">#}
+                            {#                                <p>В корзине нет товаров. <a href="{% url 'viki_web:catalogue' %}">Перейти в каталог</a>#}
+                            {#                                </p>#}
+                            {#                            </div>#}
                         {% endif %}
                     </div>
 
                     <!-- Additional Order Options Section -->
                     <div class="order-additional">
                         <h2 class="order-section-title">Дополнительная информация</h2>
-                        
+
                         <!-- Customer Comment -->
                         <div class="order-additional__comment">
                             <label for="customer_comment" class="order-additional__label">
                                 Поле для ваших комментариев (спецсимволы не допускаются)
                             </label>
-                            <textarea 
-                                name="customer_comment" 
-                                id="customer_comment" 
-                                class="order-additional__textarea"
-                                placeholder="Ваш комментарий к заказу"
+                            <textarea
+                                    name="customer_comment"
+                                    id="customer_comment"
+                                    class="order-additional__textarea"
+                                    placeholder="Ваш комментарий к заказу"
                             ></textarea>
                             <span class="order-additional__help-text">
                                 Вы можете оставить комментарий к заказу (необязательно)
                             </span>
                         </div>
-                        
+
                         <!-- Delivery Options -->
                         <div class="order-additional__delivery">
                             <label class="order-additional__label">Способ доставки</label>
@@ -225,8 +227,10 @@
                                 <div class="delivery-dropdown__selected">
                                     {% if delivery_options %}
                                         <span class="delivery-name">{{ delivery_options.0.name }}</span>
-                                        <input type="hidden" name="delivery_option_id" value="{{ delivery_options.0.id }}">
-                                        <input type="hidden" name="delivery_price" value="{{ delivery_options.0.price }}">
+                                        <input type="hidden" name="delivery_option_id"
+                                               value="{{ delivery_options.0.id }}">
+                                        <input type="hidden" name="delivery_price"
+                                               value="{{ delivery_options.0.price }}">
                                     {% else %}
                                         <span class="delivery-name">Выберите способ доставки</span>
                                         <input type="hidden" name="delivery_option_id" value="">
@@ -286,7 +290,8 @@
 
                         <div class="order-summary__actions">
                             <a href="{% url 'viki_web:cart' %}">
-                                <button type="button" class=" btn btn__cancel">Изменить</button></a>
+                                <button type="button" class=" btn btn__cancel">Изменить</button>
+                            </a>
                             <button type="submit" class="btn btn__save">Заказать</button>
                         </div>
                     </div>
