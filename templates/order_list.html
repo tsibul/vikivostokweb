@@ -47,7 +47,7 @@
                             <summary class="order-list-summary order-list-summary__row">
                                 {#                        <div class="order-summary__row">#}
                                 <div class="order-list-summary__cell">{{ order.order_no }}</div>
-                                <div class="order-list-summary__cell">{{ order.order_date|date:"d.m.Y" }}</div>
+                                <div class="order-list-summary__cell">{{ order.order_date|date:"d.m.y" }}</div>
                                 <div class="order-list-summary__cell">{{ order.company.name }}</div>
                                 <div class="order-list-summary__cell">{{ order.total_amount|floatformat:2 }}</div>
                                 <div class="order-list-summary__cell">
@@ -57,7 +57,7 @@
                                 </div>
                                 <div class="order-list-summary__cell">
                                     {% if order.delivery_date %}
-                                        {{ order.delivery_date }}
+                                        {{ order.delivery_date|date:"d.m.y" }}
                                     {% endif %}
                                 </div>
                                 <div class="square order-state_{{ order.state.order }}"></div>
