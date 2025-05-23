@@ -127,6 +127,7 @@ class Order(models.Model):
     delivery_option = models.ForeignKey(DeliveryOption, on_delete=models.SET_NULL, null=True,
                                         related_name='delivery_option')
     order_short_number = models.IntegerField()
+    discount = models.FloatField(default=1)
 
     class Meta:
         verbose_name = 'Заказ'
