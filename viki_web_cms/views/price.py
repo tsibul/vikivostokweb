@@ -377,27 +377,28 @@ def price_list_save(request):
     if user_check(request):
         return JsonResponse(None, safe=False)
     price_data = json.loads(request.body)
-    if 'price_goods_quantity__price_volume__id' in price_data['goods'][0].keys():
-        price_goods_model = getattr(models, 'PriceGoodsVolume')
-    else:
-        price_goods_model = getattr(models, 'PriceGoodsStandard')
     goods_list = []
     goods_new_list = []
-    for item in price_data['goods']:
-        temp_item = prepare_item_kwargs(item)
-        goods_keys = [key for key in temp_item.keys() if key != "id"]
-        if temp_item['id']:
-            goods = price_goods_model.objects.get(id=item['id'])
-            for key, value in temp_item.items():
-                setattr(goods, key, value)
-            if temp_item['price'] is not None and temp_item['price'] != 0:
-                goods_list.append(goods)
-            else:
-                goods.delete()
-        elif temp_item['price'] is not None and temp_item['price'] != 0:
-            del temp_item['id']
-            goods = price_goods_model(**temp_item)
-            goods_new_list.append(goods)
+    if price_data['goods']:
+        if 'price_goods_quantity__price_volume__id' in price_data['goods'][0].keys():
+            price_goods_model = getattr(models, 'PriceGoodsVolume')
+        else:
+            price_goods_model = getattr(models, 'PriceGoodsStandard')
+        for item in price_data['goods']:
+            temp_item = prepare_item_kwargs(item)
+            goods_keys = [key for key in temp_item.keys() if key != "id"]
+            if temp_item['id']:
+                goods = price_goods_model.objects.get(id=item['id'])
+                for key, value in temp_item.items():
+                    setattr(goods, key, value)
+                if temp_item['price'] is not None and temp_item['price'] != 0:
+                    goods_list.append(goods)
+                else:
+                    goods.delete()
+            elif temp_item['price'] is not None and temp_item['price'] != 0:
+                del temp_item['id']
+                goods = price_goods_model(**temp_item)
+                goods_new_list.append(goods)
     item_list = []
     item_new_list = []
     for item in price_data['item']:
