@@ -56,12 +56,6 @@ class News(SettingsDictionary):
                 'null': False,
             },
             {
-                'field': 'priority',
-                'type': 'number',
-                'label': 'приоритет показа',
-                'null': False,
-            },
-            {
                 'field': 'image',
                 'type': 'file',
                 'label': 'обложка',

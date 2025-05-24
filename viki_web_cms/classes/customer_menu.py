@@ -47,6 +47,9 @@ class CustomerMenu:
                 CustomerSection('Доставка', [
                     CustomerSetting('Опции доставки', 'DeliveryOption', False, False),
                 ]),
+                CustomerSection('Новости', [
+                    CustomerSetting('Новости', 'News', False, False),
+                ]),
             ], default=lambda o: o.__dict__,
                 sort_keys=True)), 'Standard'),
             CustomerMenu('Контакты', str(json.dumps([
