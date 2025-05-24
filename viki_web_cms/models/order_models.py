@@ -510,13 +510,13 @@ class Order(models.Model):
                 discount = self.discount
             else:
                 discount = 1
-            if current_price and current_price * discount != item.price:
-                item.price = current_price * discount
+            if round(current_price * discount, 2) != item.price:
+                item.price = round(current_price * discount, 2)
                 item.save()
                 prices_changed = True
 
         # Пересчет цен брендирования
-        for item in self.orderitem_set.all():
+        # for item in self.orderitem_set.all():
             for branding in item.orderitembranding_set.all():
                 # Получаем базовую цену
                 base_price = branding.get_print_base_price()
