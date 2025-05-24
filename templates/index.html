@@ -60,17 +60,29 @@
                 {#                    <p>Следите за последними новостями нашей компании. Здесь вы найдете информацию о важных событиях, новых коллекциях и специальных предложениях.</p>#}
                 {#                </div>#}
                 <div class="category">
+                    {% for news in latest_news %}
                     <div class="news__item">
+                        {% if news.image %}
                         <div class="news__img_frame">
-                            <img src="{% static 'viki_web/images/pens_cover.JPG' %}" alt="ручки" class="news__img">
+                            <img src="{{ news.file_url }}" alt="{{ news.name }}" class="news__img">
                         </div>
+                        {% endif %}
                         <div class="news__label">
-                            <h4 class="news__title">Шахматы&nbsp;reChess</h4>
-                            <div class="news__text">Инновационный дизайн и высокое качество материалов. Узнайте больше о
-                                нашей новой коллекции.
-                            </div>
+                            <h4 class="news__title">{{ news.name }}</h4>
+                            <time class="news__date">{{ news.date|date:"d.m.Y" }}</time>
+                            <div class="news__text">{{ news.main_text }}</div>
+                            {% if news.second_text %}
+                            <div class="news__text">{{ news.second_text }}</div>
+                            {% endif %}
                         </div>
                     </div>
+                    {% empty %}
+                    <div class="news__item">
+                        <div class="news__label">
+                            <div class="news__text">Новостей пока нет</div>
+                        </div>
+                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </section>

@@ -2,6 +2,7 @@ from django.shortcuts import render
 
 from viki_web.views import find_price_type, goods_price
 from viki_web_cms.models import ProductGroup, Goods, CatalogueItem, GoodsDescription
+from viki_web_cms.models.news_models import News
 
 
 def index(request):
@@ -26,5 +27,13 @@ def index(request):
                 'description': goods_description,
             })
 
-    context = {'categories': categories, 'user': request.user, 'new_items': new_items}
+    # Получаем последние 4 новости
+    latest_news = News.objects.filter(deleted=False).order_by('-date')[:4]
+
+    context = {
+        'categories': categories, 
+        'user': request.user, 
+        'new_items': new_items,
+        'latest_news': latest_news
+    }
     return render(request, 'index.html', context)

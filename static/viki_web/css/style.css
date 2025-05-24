@@ -3468,6 +3468,16 @@ span.text-like {
   padding: 40px 0;
 }
 
+.news__img_frame {
+  padding: 20px 20px 0;
+}
+.news__img_frame .news__img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
 .privacy-page__title {
   font-family: "Montserrat", sans-serif;
   font-size: 28px;
