@@ -22,15 +22,23 @@
   }
 
   &__header-right {
-    padding: 8px 16px;
+    //padding: 8px 16px;
+    //display: flex;
+    //align-items: center;
+    //justify-content: flex-end;
+    //gap: 12px;
+    //background-color: rgba($colorPrimary, 0.03);
+    //border-radius: 8px;
+    //box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    gap: 12px;
-    background-color: rgba($colorPrimary, 0.03);
+    background-color: rgba(255, 255, 255, 0.2);
     border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    
+    padding: 6px 10px;
+    margin-right: 10px;
+
+
     i {
       color: $colorSecondary;
     }
@@ -42,13 +50,26 @@
     border-radius: 6px;
     width: 320px;
     transition: all 0.2s ease;
-    
+
+    &_menu {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: $colorSecondary50;
+      width: 180px;
+
+      &::placeholder {
+        color: rgba(242, 255, 255, 0.7);
+      }
+
+    }
+
     &:focus {
       outline: none;
       border-color: $colorSecondary;
       box-shadow: 0 0 0 3px rgba($colorSecondary, 0.1);
     }
-    
+
     &::placeholder {
       color: rgba($colorNeutral500, 0.5);
     }
@@ -108,11 +129,11 @@
       border-radius: 6px;
       transition: all 0.2s ease;
       background-color: rgba($colorSecondary, 0.05);
-      
+
       &:hover {
         background-color: rgba($colorSecondary, 0.1);
       }
-      
+
       & i {
         color: $colorSecondary;
         font-size: 16px;

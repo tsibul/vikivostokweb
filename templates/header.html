@@ -65,6 +65,15 @@
                 </ul>
             </nav>
             <div class="menu__right">
+                <form class="layout__header-right" action="{% url 'viki_web:catalogue' %}" method="post">
+                    {% csrf_token %}
+                    <i class="fa fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                    <input class="layout__input layout__input_menu" type="text" placeholder="поиск..." name="search">
+                    <button type="submit" class="btn btn__save btn__menu">Поиск</button>
+{#                    <a href="">#}
+{#                        <button class="btn btn__neutral btn__menu">Сбросить</button>#}
+{#                    </a>#}
+                </form>
                 <nav class="cart tooltip">
                     <a href="{% url 'viki_web:cart' %}">
                         <img src="{% static 'viki_web/icons/cart_menu.svg' %}"
@@ -84,10 +93,10 @@
                             {% endif %}
                         </div>
                         <ul class="catalogue__item">
-                            <li><a href="{%  url "viki_web:order_list" %}">Заказы</a></li>
+                            <li><a href="{% url "viki_web:order_list" %}">Заказы</a></li>
                             <li><a href="{% url 'viki_web:cabinet' %}">Настройка</a></li>
                             {% if request.resolver_match.url_name != 'order' and request.resolver_match.url_name != 'order_list' %}
-                            <li class="log-logout">Выйти</li>
+                                <li class="log-logout">Выйти</li>
                             {% endif %}
                         </ul>
                     {% else %}

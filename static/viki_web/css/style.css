@@ -51,6 +51,11 @@ input[type=checkbox] {
   justify-content: center;
   text-align: center;
 }
+.btn__menu {
+  margin-left: 8px;
+  padding: 6px 12px;
+  border-radius: 6px;
+}
 .btn__save {
   background-color: #0F4880;
   border-color: #0F4880;
@@ -2087,14 +2092,12 @@ dialog.company-dialog textarea {
   color: #0F4880;
 }
 .layout__header-right {
-  padding: 8px 16px;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 12px;
-  background-color: rgba(15, 72, 128, 0.03);
+  background-color: rgba(255, 255, 255, 0.2);
   border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  padding: 6px 10px;
+  margin-right: 10px;
 }
 .layout__header-right i {
   color: #009EA3;
@@ -2105,6 +2108,16 @@ dialog.company-dialog textarea {
   border-radius: 6px;
   width: 320px;
   transition: all 0.2s ease;
+}
+.layout__input_menu {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #F2FFFF;
+  width: 180px;
+}
+.layout__input_menu::placeholder {
+  color: rgba(242, 255, 255, 0.7);
 }
 .layout__input:focus {
   outline: none;
