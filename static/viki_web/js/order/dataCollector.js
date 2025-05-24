@@ -14,7 +14,7 @@ export function collectOrderData(form) {
     const userData = collectUserData(form);
     const items = collectItemsData();
     const additionalData = collectAdditionalData(form);
-    
+
     return {
         ...userData,
         ...additionalData,
@@ -30,10 +30,10 @@ export function collectOrderData(form) {
 function collectUserData(form) {
     // Get user_extension_id from order-section-title data attribute
     const userExtensionId = document.querySelector('.order-section-title')?.getAttribute('data-id') || '';
-    
+
     // Get customer_id - different approaches for staff and non-staff users
     let customerId = '';
-    
+
     // First try to get from the customer dropdown input (staff users)
     const customerIdInput = document.querySelector('input[name="customer_id"]');
     if (customerIdInput) {
@@ -46,16 +46,16 @@ function collectUserData(form) {
             customerId = sectionTitle.getAttribute('data-customer-id') || '';
         }
     }
-    
+
     // Get company information
     const companyId = form.querySelector('input[name="company_id"]')?.value || '';
-    const companyVat = form.querySelector('input[name="company_vat"]')?.value || '';
-    
+    const discount = document.querySelector(`input[name="discount"]` || 1).value;
+
     return {
         user_extension_id: userExtensionId,
         customer_id: customerId,
         company_id: companyId,
-        // company_vat: companyVat
+        discount: discount
     };
 }
 
@@ -67,11 +67,11 @@ function collectUserData(form) {
 function collectAdditionalData(form) {
     // Get customer comment
     const customerComment = form.querySelector('textarea[name="customer_comment"]')?.value || '';
-    
+
     // Get delivery option
     const deliveryOptionId = form.querySelector('input[name="delivery_option_id"]')?.value || '';
     const deliveryPrice = parseFloat(form.querySelector('input[name="delivery_price"]')?.value || '0');
-    
+
     return {
         customer_comment: customerComment,
         delivery_option_id: deliveryOptionId,
@@ -89,14 +89,14 @@ function roundToTwoDecimals(value) {
     // Math.ceil is used for positive numbers where fractional part is exactly 0.5
     // This ensures 2.5 rounds to 3, not 2
     const valueWithTwoDecimals = Math.round(value * 100) / 100;
-    
+
     // Check if we have exactly 0.5 in the hundredths place
     const fractionalPart = Math.abs(valueWithTwoDecimals * 100 - Math.floor(valueWithTwoDecimals * 100));
     if (fractionalPart === 0.5) {
         // If it's exactly 0.5 in the hundredths, round up
         return Math.ceil(value * 100) / 100;
     }
-    
+
     return valueWithTwoDecimals;
 }
 
@@ -110,24 +110,24 @@ function collectItemsData() {
     if (!cartData) {
         return [];
     }
-    
+
     try {
         const cartItems = JSON.parse(cartData);
-        
+
         // Transform cart items to the format needed for the order
         return cartItems.map(item => {
             // Extract base item data
             const price = roundToTwoDecimals(item.discountPrice || item.price);
             const quantity = item.quantity;
             const total = roundToTwoDecimals(price * quantity);
-            
-    const itemData = {
+
+            const itemData = {
                 id: item.id,
-        price: price,
-        quantity: quantity,
-        total: total
-    };
-            
+                price: price,
+                quantity: quantity,
+                total: total
+            };
+
             // Add branding information if available
             if (item.branding && item.branding.length > 0) {
                 itemData.branding = item.branding.map(brandingItem => {
@@ -136,7 +136,7 @@ function collectItemsData() {
                     const secondPassMultiplier = brandingItem.secondPass ? 1.3 : 1;
                     const calculatedPrice = roundToTwoDecimals(brandingItem.price * brandingItem.colors * secondPassMultiplier);
                     const totalBrandingPrice = roundToTwoDecimals(calculatedPrice * quantity);
-                    
+
                     return {
                         type_id: brandingItem.type_id,
                         location_id: brandingItem.location_id,
@@ -149,8 +149,8 @@ function collectItemsData() {
             } else {
                 itemData.branding = [];
             }
-    
-    return itemData;
+
+            return itemData;
         });
     } catch (error) {
         console.error('Error parsing cart data from localStorage:', error);
