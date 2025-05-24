@@ -7,6 +7,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.core.mail import send_mail
 from django.conf import settings
+from django_ratelimit.decorators import ratelimit
 
 
 def about(request):
@@ -74,6 +75,7 @@ def sitemap(request):
     return render(request, 'sitemap.html')
 
 
+@ratelimit(key='ip', rate='3/h', method='POST', block=False)
 def contacts(request):
     """
     Renders the contacts page and handles contact form submissions.
@@ -84,9 +86,13 @@ def contacts(request):
     Returns:
         Rendered contacts page or JSON response for AJAX form submissions
     """
+
     context = {}
     
     if request.method == 'POST':
+        if getattr(request, 'limited', False):
+            return JsonResponse({"status": "error", "message": "Слишком много запросов. Попробуйте позже."},
+                                status=429)
         # Extract form data
         name = request.POST.get('name', '')
         email = request.POST.get('email', '')
