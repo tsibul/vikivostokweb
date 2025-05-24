@@ -164,7 +164,7 @@ def create_order(request):
         user_extension_id = request.POST.get('user_extension_id')
         customer_id = request.POST.get('customer_id')
         company_id = request.POST.get('company_id')
-        # company_vat = request.POST.get('company_vat') == 'true'
+        discount = float(request.POST.get('discount'))
         customer_comment = request.POST.get('customer_comment', '')
         delivery_option_id = request.POST.get('delivery_option_id', '')
         delivery_option = DeliveryOption.objects.get(id=delivery_option_id)
@@ -248,6 +248,7 @@ def create_order(request):
             delivery_option = delivery_option,
             user_edited = request.user,
             user_responsible=manager,
+            discount=discount,
         )
 
         # new_order.save()
