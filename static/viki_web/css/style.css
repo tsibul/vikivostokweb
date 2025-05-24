@@ -3421,6 +3421,14 @@ span.text-like {
 .news-page__item:last-child {
   border-bottom: none;
 }
+.news-page__image {
+  width: 100%;
+  max-width: 800px;
+  height: auto;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
 .news-page__item-title {
   font-family: "Montserrat", sans-serif;
   font-size: 22px;
@@ -3447,6 +3455,15 @@ span.text-like {
 }
 .news-page__content p {
   margin-bottom: 16px;
+}
+.news-page__empty {
+  font-family: "Montserrat", sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #4A4A4A;
+  text-align: center;
+  color: rgba(0, 158, 163, 0.75);
+  padding: 40px 0;
 }
 
 .privacy-page__title {

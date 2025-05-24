@@ -12,3 +12,4 @@ from viki_web.views.about import *
 from viki_web.views.quote import *
 from viki_web.views.order import *
 from viki_web.views.order_list import *
+from viki_web.views.news import *

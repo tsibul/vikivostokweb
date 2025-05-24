@@ -140,6 +140,15 @@
       border-bottom: none;
     }
   }
+
+  &__image {
+    width: 100%;
+    max-width: 800px;
+    height: auto;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
   
   &__item-title {
     @include typo-h3;
@@ -161,6 +170,13 @@
     p {
       margin-bottom: 16px;
     }
+  }
+
+  &__empty {
+    @include typo-p;
+    text-align: center;
+    color: rgba($colorSecondary, 0.75);
+    padding: 40px 0;
   }
 }
 
