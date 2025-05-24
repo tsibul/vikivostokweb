@@ -118,7 +118,7 @@ function goodsRowBuild(rowData, headerData, allItems, rowGrid) {
                 'name': rest.join(' '),
                 'price': "[]"
             }
-            goodsRow.insertAdjacentElement('afterend', itemRowBuild(newItemData, headerData));
+            goodsRow.insertAdjacentElement('afterend', itemRowBuild(newItemData, headerData, rowGrid));
         }
     });
     goodsRow.appendChild(itemBtn);
