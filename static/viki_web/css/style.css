@@ -3423,11 +3423,13 @@ span.text-like {
 }
 .news-page__image {
   width: 100%;
-  max-width: 800px;
+  max-width: 640px;
+  max-height: 640px;
   height: auto;
   margin-bottom: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  object-fit: contain;
 }
 .news-page__item-title {
   font-family: "Montserrat", sans-serif;
