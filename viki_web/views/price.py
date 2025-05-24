@@ -74,11 +74,14 @@ def price(request):
                         Q(item=catalogue_item) &
                         Q(price_type=price_typ) &
                         (Q(price_list__price_list_date__lte=current_date) &
-                         Q(price_list__promotion_price=False) |
+                         (Q(price_list__promotion_price=False) |
                          Q(price_list__promotion_price=True) &
                          Q(price_list__promotion_end_date__gte=current_date)
-                         )).order_by('-price_list__price_list_date').first()
-                    prices.insert(0, standard_price.price)
+                         ))).order_by('-price_list__price_list_date').first()
+                    if standard_price:
+                        prices.insert(0, standard_price.price)
+                    else:
+                        prices.insert(0, 'N/a')
                     if standard_price and standard_price.price_list.promotion_price:
                         has_promotion = True
                 price_item['price'] = prices
