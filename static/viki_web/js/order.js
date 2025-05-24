@@ -5,7 +5,7 @@
 
 'use strict';
 
-import { initOrderFormHandler } from './order/formHandler.js';
+// import { initOrderFormHandler } from './order/formHandler.js';
 import { collectOrderData } from './order/dataCollector.js';
 import { validateOrderForm } from './order/validation.js';
 import { showErrorNotification } from './cart/addToCart/notification.js';
@@ -389,7 +389,8 @@ function submitOrderToServer(orderData, form) {
     formData.append('customer_id', orderData.customer_id);
     formData.append('company_id', orderData.company_id);
     formData.append('company_vat', orderData.company_vat);
-    
+    formData.append('discount', orderData.discount);
+
     // Add additional data
     formData.append('customer_comment', orderData.customer_comment);
     formData.append('delivery_option_id', orderData.delivery_option_id);
