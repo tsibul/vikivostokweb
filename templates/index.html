@@ -61,7 +61,7 @@
                 {#                </div>#}
                 <div class="category">
                     {% for news in latest_news %}
-                    <div class="news__item">
+                    <a href="{% url 'viki_web:news' %}" class="news__item">
                         {% if news.image %}
                         <div class="news__img_frame">
                             <img src="{{ news.file_url }}" alt="{{ news.name }}" class="news__img">
@@ -75,7 +75,7 @@
                             <div class="news__text">{{ news.second_text }}</div>
                             {% endif %}
                         </div>
-                    </div>
+                    </a>
                     {% empty %}
                     <div class="news__item">
                         <div class="news__label">

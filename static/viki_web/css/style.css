@@ -598,16 +598,16 @@ input[type=checkbox] {
   object-position: center;
   transition: transform 0.5s ease;
   display: block;
+  border-radius: 8px;
 }
 .news__img_frame {
-  overflow: hidden;
   width: 100%;
   height: 220px;
-  border-radius: 12px 12px 0 0;
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: #fff;
+  padding: 20px 20px 0;
 }
 .news__label {
   padding: 20px;
@@ -3466,16 +3466,6 @@ span.text-like {
   text-align: center;
   color: rgba(0, 158, 163, 0.75);
   padding: 40px 0;
-}
-
-.news__img_frame {
-  padding: 20px 20px 0;
-}
-.news__img_frame .news__img {
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .privacy-page__title {
