@@ -39,18 +39,19 @@ def order_list(request):
     completed_page = paginator.get_page(page_number)
     
     # Check for price changes
-    price_changes_found = check_for_price_changes(active_orders)
-    if price_changes_found:
-        for active_order in active_orders:
+    # price_changes_found = check_for_price_changes(active_orders)
+    # if price_changes_found:
+    for active_order in active_orders:
+        if Order.has_price_changes(active_order):
             active_order.recalculate_prices()
-            active_order.apply_discounts()
+            # active_order.apply_discounts()
     
     # Create context
     context = {
         'active_orders': active_orders,
         'completed_orders': completed_page,
         'search_query': search_query,
-        'price_changes_found': price_changes_found,
+        # 'price_changes_found': price_changes_found,
         'search': search_query,
 
     }
