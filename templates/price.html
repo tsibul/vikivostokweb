@@ -10,10 +10,10 @@
                 {% csrf_token %}
                 <i class="fa fa-solid fa-magnifying-glass" aria-hidden="true"></i>
                 <input class="layout__input" type="text" placeholder="Поиск по товарам..." name="search">
-                <button type="submit" class="btn btn__save">Поиск</button>
-                <a href="{% url 'viki_web:price' %}"><button type="button" class="btn btn__cancel">Сбросить</button></a>
+                <button type="submit" class="btn btn__save btn__menu ">Поиск</button>
+                <a href="{% url 'viki_web:price' %}"><button type="button" class="btn btn__menu btn__cancel">Сбросить</button></a>
                 <a href="{% url 'viki_web:export_price_csv' %}">
-                    <button class="btn btn__save">Выгрузить прайс-лист (CSV)</button>
+                    <button class="btn btn__save btn__menu ">Выгрузить прайс-лист (CSV)</button>
                 </a>
             </form>
         </div>

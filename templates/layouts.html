@@ -10,8 +10,8 @@
                     {% csrf_token %}
                     <i class="fa fa-solid fa-magnifying-glass" aria-hidden="true"></i>
                     <input class="layout__input" type="text" placeholder="Поиск шаблона..." name="search">
-                    <button type="submit" class="btn btn__save">Поиск</button>
-                    <a href="{% url 'viki_web:layout' %}"><button type="button" class="btn btn__cancel">Сбросить</button></a>
+                    <button type="submit" class="btn btn__save btn__menu">Поиск</button>
+                    <a href="{% url 'viki_web:layout' %}"><button type="button" class="btn btn__cancel btn__menu">Сбросить</button></a>
                 </form>
             </div>
             <div class="layout-content">
