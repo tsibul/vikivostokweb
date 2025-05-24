@@ -18,3 +18,4 @@ from viki_web_cms.models.packing_models import *
 from viki_web_cms.models.customer_models import *
 from viki_web_cms.models.user_models import *
 from viki_web_cms.models.order_models import *
+from viki_web_cms.models.news_models import *
