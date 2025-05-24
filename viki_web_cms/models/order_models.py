@@ -387,7 +387,8 @@ class Order(models.Model):
                 deleted=False,
                 promotion_price=True,
                 price_list_date__gt=order.order_date,
-                price_list_date__lte=current_date
+                price_list_date__lte=current_date,
+                promotion_end_date__gt=current_date,
             ).exists()
 
             # Проверка окончания действия промо-цен, которые действовали на дату заказа
@@ -505,8 +506,12 @@ class Order(models.Model):
             current_price = item.get_current_price()
 
             # Если цена изменилась
-            if current_price and current_price != item.price:
-                item.price = current_price
+            if item.item.goods.standard_price:
+                discount = self.discount
+            else:
+                discount = 1
+            if current_price and current_price * discount != item.price:
+                item.price = current_price * discount
                 item.save()
                 prices_changed = True
 
