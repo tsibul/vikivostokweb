@@ -24,7 +24,7 @@ def generate_temp_password(length=12):
     return ''.join(random.choices(string.ascii_letters + string.digits, k=length))
 
 
-@ratelimit(key='ip', rate='3/m', method='POST', block=False)
+@ratelimit(key='ip', rate='3/h', method='POST', block=False)
 def send_temp_password(request):
     """
     send temporary password by email
@@ -118,12 +118,16 @@ def log_out(request):
     return JsonResponse({"status": "error"}, status=405)
 
 
+@ratelimit(key='ip', rate='3/h', method='POST', block=False)
 def log_in(request):
     """
     log in
     :param request:
     :return:
     """
+    if getattr(request, 'limited', False):
+        return JsonResponse({"status": "error", "message": "Слишком много запросов. Попробуйте позже."},
+                            status=429)
     if request.method == "POST":
         email = request.POST['email']
         if not User.objects.filter(email=email).exists():

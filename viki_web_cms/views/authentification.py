@@ -2,7 +2,7 @@ import json
 
 from django.contrib.auth import authenticate, login
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+from django_ratelimit.decorators import ratelimit
 
 
 # @csrf_exempt
@@ -19,7 +19,11 @@ def userdata(request):
 
 
 # @csrf_exempt
+@ratelimit(key='ip', rate='3/h', method='POST', block=False)
 def user_login(request):
+    if getattr(request, 'limited', False):
+        return JsonResponse({"status": "error", "message": "Слишком много запросов. Попробуйте позже."},
+                            status=429)
     user = None
     post_data = json.loads(request.body)
     if len(post_data.values()):
