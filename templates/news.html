@@ -2,29 +2,30 @@
 {% load static %}
 
 {% block content %}
-<main class="news-page">
-    <div class="container">
-        <h1 class="section-title">Новости компании</h1>
-        
-        <div class="news-page__list">
-            {% for news in news_list %}
-            <article class="news-page__item">
-                <h2 class="news-page__item-title">{{ news.name }}</h2>
-                <time class="news-page__date">{{ news.date|date:"d.m.Y" }}</time>
-                {% if news.image %}
-                <img src="{{ news.file_url }}" alt="{{ news.name|truncatechars:50 }}" class="news-page__image">
-                {% endif %}
-                <div class="news-page__content">
-                    <p>{{ news.main_text }}</p>
-                    {% if news.second_text %}
-                    <p>{{ news.second_text }}</p>
-                    {% endif %}
-                </div>
-            </article>
-            {% empty %}
-            <p class="news-page__empty">Новостей пока нет</p>
-            {% endfor %}
+    <main class="news-page">
+        <div class="container">
+            <h1 class="section-title">Новости компании</h1>
+
+            <div class="news-page__list">
+                {% for news in news_list %}
+                    <article class="news-page__item">
+                        <h2 class="news-page__item-title">{{ news.name }}</h2>
+                        <time class="news-page__date">{{ news.date|date:"d.m.Y" }}</time>
+                        {% if news.image %}
+                            <img src="{{ news.file_url }}" alt="{{ news.name|truncatechars:50 }}"
+                                 class="news-page__image">
+                        {% endif %}
+                        <div class="news-page__content">
+                            <p>{{ news.main_text }}</p>
+                            {% if news.second_text %}
+                                <p>{{ news.second_text }}</p>
+                            {% endif %}
+                        </div>
+                    </article>
+                {% empty %}
+                    <p class="news-page__empty">Новостей пока нет</p>
+                {% endfor %}
+            </div>
         </div>
-    </div>
-</main>
+    </main>
 {% endblock %} 
