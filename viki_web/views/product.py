@@ -2,8 +2,10 @@ import datetime
 import json
 import random
 
-from django.db.models import Q
+from django.db import models
+from django.db.models import Q, CharField, OuterRef, Subquery
 from django.shortcuts import render
+from django.db.models.functions import Concat, Cast
 
 from viki_web_cms.models import ProductGroup, Goods, CatalogueItem, ColorGroup, FilterToGoodsGroup, GoodsGroup, \
     PrintType, GoodsDescription, ArticleDescription, CatalogueItemColor, PrintOpportunity, GoodsLayout, GoodsDimensions, \
@@ -245,16 +247,43 @@ def price_min_max(price_min, price_max, price):
 def create_article_set(goods_item):
     article_set = None
     if goods_item.multicolor:
-        main_colors = Color.objects.filter(
-            color_scheme=goods_item.color_scheme,
+        colors_subquery = CatalogueItem.objects.filter(
+            id=OuterRef('id')
+        ).values('id').annotate(
+            colors=models.Func(
+                models.Value('hex'),
+                models.F('catalogueitemcolor__color__hex'),
+                models.Value('name'),
+                models.F('catalogueitemcolor__color__name'),
+                models.Value('position'),
+                models.F('catalogueitemcolor__color_position'),
+                models.Value('code'),
+                models.F('catalogueitemcolor__color__code'),
+                function='JSON_OBJECT',
+                template='JSON_ARRAYAGG(JSON_OBJECT(%(expressions)s))',
+                output_field=models.JSONField()
+            )
+        ).values('colors')
+
+        catalogue_items = CatalogueItem.objects.filter(
             deleted=False,
-            standard=True
+            goods=goods_item,
+        ).annotate(
+            colors=Subquery(colors_subquery),
+            option=models.Func(
+                models.Value('option'),
+                models.F('goods_option__name'),
+                models.Value('article'),
+                models.F('goods_option__option_article'),
+                function='JSON_OBJECT',
+                output_field=models.JSONField()
+            )
         ).values(
-            'hex',
-            'name',
-            'code',
+            'id',
+            'colors',
+            'option'
         )
-        article_description = list(ArticleDescription.objects.filter(
+        description = list(ArticleDescription.objects.filter(
             deleted=False,
             goods=goods_item,
         ).order_by(
@@ -262,29 +291,56 @@ def create_article_set(goods_item):
             'position',
             'parts_description__name',
         ))
-        article_length = len(article_description)
         if goods_item.goods_option_group:
-            options = list(GoodsOption.objects.filter(
-                option_group=goods_item.goods_option_group,
-                deleted=False
-            ).values(
-                'name',
-                'option_article'
-            ))
-            article_description.append({'option': list(options)})
-        if goods_item.additional_material:
-            additional_colors = Color.objects.filter(
-                color_scheme=goods_item.additional_color_scheme,
-                deleted=False
-            ).values(
-                'hex',
-                'name',
-                'code',
-            )
-            article_description[article_length - 1]['color'] = list(additional_colors)
-            article_length = article_length - 1
-        while article_length > 0:
-            article_description[article_length - 1]['color'] = list(main_colors)
-            article_length = article_length - 1
-        article_set = str(json.dumps(article_description))
+            description.append({
+                'parts_description__name': goods_item.goods_option_group.name,
+                'position': len(description) + 1,
+            })
+        # main_colors = Color.objects.filter(
+        #     color_scheme=goods_item.color_scheme,
+        #     deleted=False,
+        #     standard=True
+        # ).values(
+        #     'hex',
+        #     'name',
+        #     'code',
+        # )
+        # article_description = list(ArticleDescription.objects.filter(
+        #     deleted=False,
+        #     goods=goods_item,
+        # ).order_by(
+        #     'position').values(
+        #     'position',
+        #     'parts_description__name',
+        # ))
+        # article_length = len(article_description)
+        # if goods_item.goods_option_group:
+        #     options = list(GoodsOption.objects.filter(
+        #         option_group=goods_item.goods_option_group,
+        #         deleted=False
+        #     ).values(
+        #         'name',
+        #         'option_article'
+        #     ))
+        #     article_description.append({'option': list(options)})
+        # if goods_item.additional_material:
+        #     additional_colors = Color.objects.filter(
+        #         color_scheme=goods_item.additional_color_scheme,
+        #         deleted=False
+        #     ).values(
+        #         'hex',
+        #         'name',
+        #         'code',
+        #     )
+        #     article_description[article_length - 1]['color'] = list(additional_colors)
+        #     article_length = article_length - 1
+        # while article_length > 0:
+        #     article_description[article_length - 1]['color'] = list(main_colors)
+        #     article_length = article_length - 1
+        article_set = str(json.dumps(
+            {
+                'description': description,
+                'catalogue_items': list(catalogue_items),
+            }
+        ))
     return article_set
