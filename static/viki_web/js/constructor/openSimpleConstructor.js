@@ -37,7 +37,7 @@ export function openSimpleConstructor(e) {
     let position = 1;
     optionSection.classList.add('simple-constructor__color');
     createColorBlock(colorsLeft(itemSet, 1), optionSection, itemSet, position, positionQuantity,
-        ifOption, sectionTitle, descriptionSet, currentFrame)
+        ifOption, sectionTitle, descriptionSet, goodsItem)
     document.body.appendChild(modal);
     modal.showModal();
 
