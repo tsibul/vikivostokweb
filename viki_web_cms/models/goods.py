@@ -1,12 +1,7 @@
-# from django.core.files.storage import FileSystemStorage
 from django.db import models
-from django.http import JsonResponse
 from transliterate import translit
 
 from viki_web_cms.models import SettingsDictionary, ColorScheme, ProductGroup
-
-
-# fs_goods = FileSystemStorage(location='viki_web_cms/files/goods')
 
 
 class GoodsGroup(SettingsDictionary):
@@ -84,7 +79,6 @@ class Goods(SettingsDictionary):
         if slug_old and slug_old.id != self.id:
             return {'errors': ['name']}
         super(Goods, self).save(*args, **kwargs)
-
 
     @staticmethod
     def order_default():
