@@ -4,6 +4,7 @@ from collections import defaultdict
 from django.conf import settings
 from django.http import JsonResponse
 
+from viki_web_cms.functions.user_validation import superuser_check
 from viki_web_cms.models import Order, News, CatalogueItemPhoto, CatalogueItem, OurCompany, PrintLayout
 
 
@@ -50,6 +51,9 @@ def get_unused_files(request):
     """
     Возвращает словарь неиспользуемых файлов, сгруппированных по моделям
     """
+    if superuser_check(request):
+        return JsonResponse({'status': 'error', 'message': 'недостаточно прав'}, safe=False)
+
     model_files = model_files_structure()
     unused_files = []
 
@@ -105,6 +109,8 @@ def delete_file(request):
     """
     Удаляет файл по полному пути
     """
+    if superuser_check(request):
+        return JsonResponse({'status': 'error', 'message': 'недостаточно прав'}, safe=False)
     file_path = request.POST.get('file_path')
     try:
         if os.path.exists(file_path):
@@ -122,6 +128,8 @@ def delete_unused_files(request):
     Returns:
         dict: статистика удаления по моделям
     """
+    if superuser_check(request):
+        return JsonResponse({'status': 'error', 'message': 'недостаточно прав'}, safe=False)
     model_name = request.POST.get('model_name')
     unused = get_unused_files()
     stats = defaultdict(int)
