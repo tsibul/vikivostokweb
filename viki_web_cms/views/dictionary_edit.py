@@ -1,3 +1,5 @@
+import os
+
 from django.http import JsonResponse
 
 from viki_web_cms import models
@@ -43,7 +45,18 @@ def edit_dictionary(request, class_name, element_id):
             if field['type'] == 'boolean':
                 post_data[current_field] = current_field in post_data
             elif field['type'] == 'file':
-                post_data[current_field] = request.FILES.get(current_field)
+                new_file = request.FILES.get(current_field)
+                if not new_file:
+                    post_data.pop(current_field, None)
+                else:
+                    if element_id != 0:
+                        old_element = dict_model.objects.get(pk=element_id)
+                        old_file = getattr(old_element, current_field, None)
+                        if old_file:
+                            if os.path.isfile(old_file.path):
+                                os.remove(old_file.path)
+                            old_file.delete(save=False)
+                    post_data[current_field] = new_file
             elif field['type'] in ['number', 'float', 'precise']:
                 if current_field in post_data == '':
                     post_data[current_field] = 0
