@@ -109,9 +109,9 @@ class MainMenu:
                 sort_keys=True)), 'PriceList'),
             MainMenu('Файлы', str(json.dumps([
                 MenuSection('Файлы', [
-                    CMSSetting('Неиспользуемые файлы', 'Price', False, False),
+                    CMSSetting('Неиспользуемые файлы', 'Files', False, False),
                 ]),
             ], default=lambda o: o.__dict__,
-                sort_keys=True)), 'PriceList'),
+                sort_keys=True)), 'Files'),
         ]
         return menu_list
