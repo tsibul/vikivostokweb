@@ -1,3 +1,4 @@
+import json
 import os
 
 from collections import defaultdict
@@ -80,7 +81,7 @@ def get_unused_files(request):
         return JsonResponse({'status': 'error', 'message': 'недостаточно прав'}, safe=False)
 
     model_files = model_files_structure()
-    unused_files = {"models": {}}
+    unused_files = [] #{"models": {}}
 
     for model_name, config in model_files.items():
         model_class = config['model']
@@ -111,12 +112,13 @@ def get_unused_files(request):
                 model_unused_files.extend(check_directory(full_path, db_files, model_name, config['fields'][0]))
 
         if model_unused_files:
-            unused_files["models"][model_name] = {
+            unused_files.append({
                 "name": model_name,
                 "files": model_unused_files
-            }
+            })
+    context = {'dataList': unused_files}
 
-    return JsonResponse(unused_files, safe=False)
+    return JsonResponse(context)
 
 
 def check_directory(full_path, used_files, model_name, field):
