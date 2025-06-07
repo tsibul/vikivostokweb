@@ -16,7 +16,7 @@ export async function createFilesElement(className) {
         {title: 'справочник'},
         {title: 'файл'},
         {title: 'путь'},
-        {title: ''},
+        {title: 'файлов'},
         {title: ''},
     ];
     return await createPageContent('files-content', columns, headerStyle,

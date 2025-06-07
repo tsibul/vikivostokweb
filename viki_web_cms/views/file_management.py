@@ -113,8 +113,9 @@ def get_unused_files(request):
 
         if model_unused_files:
             unused_files.append({
-                "name": model_name,
-                "files": model_unused_files
+                'name': model_name,
+                'length': len(model_unused_files),
+                'files': model_unused_files
             })
     context = {'dataList': unused_files}
 

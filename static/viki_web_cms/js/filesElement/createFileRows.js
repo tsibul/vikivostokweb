@@ -29,7 +29,7 @@ export function createFileRow(oldRow, className) {
     row.appendChild(tmpField);
     tmpField = createTextField('');
     row.appendChild(tmpField);
-    tmpField = createTextField('');
+    tmpField = createTextField(className.length);
     row.appendChild(tmpField);
 
     const button = createCancelButton('Удалить все файлы');
