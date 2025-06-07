@@ -12,7 +12,7 @@ def user_check(request):
     return False
 
 
-def super_user_check(request):
+def superuser_check(request):
     user = request.user
     if not user.is_authenticated:
         return True
