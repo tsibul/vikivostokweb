@@ -131,8 +131,8 @@ def check_directory(full_path, used_files, model_name, field):
         for root, _, files in os.walk(full_path):
             for filename in files:
                 file_path = os.path.join(root, filename)
-                rel_path = os.path.join(os.path.basename(full_path), filename)
-                if rel_path not in used_files:
+                # rel_path = os.path.join(os.path.basename(full_path), filename)
+                if filename not in used_files:
                     result.append({
                         "model": model_name,
                         "field": field,
