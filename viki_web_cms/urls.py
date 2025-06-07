@@ -35,4 +35,7 @@ urlpatterns = [
     path('json/order_edit', views.order_edit),
     path('json/order_duplicate/<int:order_id>', views.order_duplicate),
     path('json/order_upload_file', views.order_upload_file),
+    path('json/unused_files', views.get_unused_files),
+    path('json/delete_unused_files', views.delete_unused_files),
+    path('json/delete_file', views.delete_file),
 ]
