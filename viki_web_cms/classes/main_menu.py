@@ -107,20 +107,11 @@ class MainMenu:
                 ]),
             ], default=lambda o: o.__dict__,
                 sort_keys=True)), 'PriceList'),
-            #     MainMenu('Менеджеры', str(json.dumps([
-        #         MenuSection('Менеджеры', [
-        #         ]),
-        #     ], default=lambda o: o.__dict__,
-        #         sort_keys=True))),
-        #     MainMenu('Клиенты', str(json.dumps([
-        #         MenuSection('Клиенты', [
-        #         ]),
-        #     ], default=lambda o: o.__dict__,
-        #         sort_keys=True))),
-        #     MainMenu('Заказы', str(json.dumps([
-        #         MenuSection('Заказы', [
-        #         ]),
-        #     ], default=lambda o: o.__dict__,
-        #         sort_keys=True))),
+            MainMenu('Файлы', str(json.dumps([
+                MenuSection('Файлы', [
+                    CMSSetting('Неиспользуемые файлы', 'Price', False, False),
+                ]),
+            ], default=lambda o: o.__dict__,
+                sort_keys=True)), 'PriceList'),
         ]
         return menu_list
