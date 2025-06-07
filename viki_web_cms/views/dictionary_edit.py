@@ -6,6 +6,7 @@ from viki_web_cms import models
 from viki_web_cms.functions.field_validation import goods_validation, dictionary_fields_validation, color_validation
 from viki_web_cms.functions.reformat_field_dictionary import reformat_field_dictionary
 from viki_web_cms.functions.user_validation import user_check
+from viki_web_cms.functions.webp_convertor import webp_convertor
 from viki_web_cms.views import add_annotations_for_properties
 
 
@@ -56,6 +57,8 @@ def edit_dictionary(request, class_name, element_id):
                             if os.path.isfile(old_file.path):
                                 os.remove(old_file.path)
                             old_file.delete(save=False)
+                    if new_file.content_type.startswith('image/'):
+                        new_file = webp_convertor(new_file)
                     post_data[current_field] = new_file
             elif field['type'] in ['number', 'float', 'precise']:
                 if current_field in post_data == '':
