@@ -1,0 +1,26 @@
+@import "vars";
+@import "mixins";
+
+.files-element {
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+
+  &__header {
+    display: grid;
+    grid-template-columns: 1fr 2fr 4fr 120px 120px 10px;
+    padding: 4px 16px 2px 4px;
+    gap: 8px;
+
+  }
+
+    &__item {
+    display: grid;
+    grid-template-columns: 1fr 2fr 4fr 120px 120px 10px;
+    padding: 4px 16px 2px 4px;
+    gap: 8px;
+    background-color: #fff;
+  }
+
+}
