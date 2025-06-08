@@ -61,8 +61,8 @@ class Company(SettingsDictionary):
     """ company """
     legal = models.BooleanField(default=True)
     inn = models.CharField(max_length=12, null=False, blank=False)
-    kpp = models.CharField(max_length=9)
-    ogrn = models.CharField(max_length=13)
+    kpp = models.CharField(max_length=9, null=True, blank=True)
+    ogrn = models.CharField(max_length=13, null=True, blank=True)
     region = models.CharField(max_length=2)
     address = models.CharField(max_length=255, null=False, blank=False)
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)
