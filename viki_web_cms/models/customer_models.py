@@ -62,7 +62,7 @@ class Company(SettingsDictionary):
     legal = models.BooleanField(default=True)
     inn = models.CharField(max_length=12, null=False, blank=False)
     kpp = models.CharField(max_length=9, null=True, blank=True)
-    ogrn = models.CharField(max_length=13, null=True, blank=True)
+    ogrn = models.CharField(max_length=15, null=True, blank=True)
     region = models.CharField(max_length=2)
     address = models.CharField(max_length=255, null=False, blank=False)
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)
@@ -87,10 +87,14 @@ class Company(SettingsDictionary):
                 self.customer = Customer.objects.create(
                     name=short_name,
                     standard_price_type=price_type)
-            self.kpp = company_data['data']['kpp']
+            if 'kpp' in company_data['data'].keys():
+                self.kpp = company_data['data']['kpp']
             self.ogrn = company_data['data']['ogrn']
             self.address = company_data['data']['address']['unrestricted_value']
-            self.region = self.kpp[0:2]
+            if self.kpp:
+                self.region = self.kpp[0:2]
+            else:
+                self.region = self.inn[0:2]
             super(Company, self).save(*args, **kwargs)
             return self
 
