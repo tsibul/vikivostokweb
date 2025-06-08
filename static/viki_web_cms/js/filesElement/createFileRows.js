@@ -2,8 +2,6 @@
 
 import {createSaveButton} from "../createStandardElements/createSaveButton.js";
 import {createCancelButton} from "../createStandardElements/createCancelButton.js";
-import {fetchJsonData} from "../fetchJsonData.js";
-import {createRows} from "../fullScreenElement/createRows.js";
 import {getCSRFToken} from "../getCSRFToken.js";
 
 
@@ -68,19 +66,54 @@ function createSingleFileRow(item, details) {
     itemRow.appendChild(btnSave);
     const btnCancel = createCancelButton('Удалить');
     btnCancel.dataset.path = item.path;
-    // button.addEventListener('click', async (e) => {
-    //     await editItem(e, itemRow, orderRow);
-    // });
+    btnCancel.addEventListener('click', async (e) => {
+        await deleteFile(e);
+    });
     itemRow.appendChild(btnCancel);
     details.appendChild(itemRow);
 }
 
 
+/**
+ *
+ * @param text
+ * @returns {HTMLDivElement}
+ */
 function createTextField(text) {
     const cell = document.createElement('div');
     cell.classList.add('dictionary-content__row_item', 'user-element__cell');
     cell.textContent = text || '';
     return cell;
+}
+
+
+/**
+ *
+ * @param {MouseEvent} e
+ * @returns {Promise<void>}
+ */
+async function deleteFile(e){
+    const path = e.target.dataset.path;
+    const row = e.target.closest('.files-element__item');
+    const formData = new FormData;
+    formData.append('file_path', path);
+    const response = await fetch('/cms/json/delete_file',{
+            method: "POST",
+            headers: {
+                "X-CSRFToken": getCSRFToken(),
+            },
+            body: formData
+        });
+    const data = await response.json()
+    if (data.status === 'success'){
+        const details = e.target.closest('details');
+        row.remove();
+        const contentRows = details.querySelectorAll('.files-element__item');
+        if (![...contentRows].length){
+            details.remove();
+        }
+    }
+
 }
 
 
