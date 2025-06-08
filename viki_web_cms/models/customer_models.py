@@ -11,7 +11,7 @@ class Customer(SettingsDictionary):
     e_mail_alias = models.CharField(max_length=255, null=True, blank=True)
     standard_price_type = models.ForeignKey(StandardPriceType, on_delete=models.SET_NULL, null=True, blank=True)
     new = models.BooleanField(default=True)
-    vat = models.BooleanField(default=False)
+    # vat = models.BooleanField(default=False)
     manager = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
     class Meta(SettingsDictionary.Meta):
@@ -41,11 +41,11 @@ class Customer(SettingsDictionary):
                 'type': 'boolean',
                 'label': 'новый',
             },
-            {
-                'field': 'vat',
-                'type': 'boolean',
-                'label': 'с НДС',
-            },
+            # {
+            #     'field': 'vat',
+            #     'type': 'boolean',
+            #     'label': 'с НДС',
+            # },
             {
                 'field': 'manager',
                 'type': 'foreign',
@@ -67,7 +67,6 @@ class Company(SettingsDictionary):
     address = models.CharField(max_length=255, null=False, blank=False)
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)
     vat = models.BooleanField(default=False)
-
 
     class Meta(SettingsDictionary.Meta):
         verbose_name = 'Клиент (группа)'
@@ -93,7 +92,7 @@ class Company(SettingsDictionary):
             self.address = company_data['data']['address']['unrestricted_value']
             self.region = self.kpp[0:2]
             super(Company, self).save(*args, **kwargs)
-
+            return self
 
     @staticmethod
     def dictionary_fields():
@@ -158,6 +157,7 @@ class Company(SettingsDictionary):
             },
         ]
 
+
 class BankAccount(SettingsDictionary):
     """ company account """
     account_no = models.CharField(max_length=20, null=False, blank=False)
@@ -165,7 +165,6 @@ class BankAccount(SettingsDictionary):
     corr_account = models.CharField(max_length=20, null=False, blank=False)
     city = models.CharField(max_length=140, null=False, blank=False)
     company = models.ForeignKey(Company, on_delete=models.SET_NULL, null=True, blank=True)
-
 
     class Meta(SettingsDictionary.Meta):
         verbose_name = 'Банковский счет'
@@ -177,12 +176,11 @@ class BankAccount(SettingsDictionary):
         validation_result = bic_validation(self.bic)
         if not validation_result:
             return {'errors': ['bic'], 'status': 'error', 'message': 'Неверный формат БИК или банк не найден'}
-            
+
         self.name = validation_result['name']
         self.corr_account = validation_result['corr_account']
         self.city = validation_result['city']
         super(BankAccount, self).save(*args, **kwargs)
-
 
     @staticmethod
     def dictionary_fields():
@@ -230,4 +228,3 @@ class BankAccount(SettingsDictionary):
                 'null': False,
             },
         ]
-
