@@ -75,6 +75,9 @@ class Company(SettingsDictionary):
         db_table = 'company'
 
     def save(self, *args, **kwargs):
+        if self.name and self.address:
+            super(Company, self).save(*args, **kwargs)
+            return self
         result = dadata_parse_inn(self.inn)
         if result['errors']:
             return result
@@ -139,7 +142,7 @@ class Company(SettingsDictionary):
                 'field': 'region',
                 'type': 'string',
                 'label': 'регион',
-                'null': True,
+                'null': False,
             },
             {
                 'field': 'customer',
