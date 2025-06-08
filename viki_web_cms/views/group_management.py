@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from django.db.models import F, Subquery, OuterRef, CharField, Func, Value
+from django.db.models import F, Subquery, OuterRef, CharField, Func, Value, Q
 from django.db.models.functions import Concat, Cast, Replace
 
 from viki_web_cms.models.customer_models import Customer, Company
@@ -12,6 +12,21 @@ def get_customer_list(request):
     """
     if user_check(request):
         return JsonResponse(None, safe=False)
+    search_query = request.GET.get('search', '')
+    new_only = request.GET.get('new', '') == '1'
+    last_record = int(request.GET.get('last_record', 0))
+
+    if new_only:
+        customer_objects = Customer.objects.filter(new=True, deleted=False)
+    else:
+        customer_objects = Customer.objects.filter(deleted=False)
+
+    if search_query:
+        customer_objects = customer_objects.filter(
+            Q(name__icontains=search_query) |
+            Q(e_mail_alias__icontains=search_query)
+        )
+
 
     companies = Company.objects.filter(
         customer=OuterRef('id'),
@@ -35,9 +50,7 @@ def get_customer_list(request):
         )
     ).values('company_list')
 
-    customers = Customer.objects.filter(
-            deleted=False
-        ).annotate(
+    customers = customer_objects.annotate(
             alias=F('e_mail_alias'),
             priceType=F('standard_price_type__name'),
             managerName=Concat(
@@ -57,7 +70,7 @@ def get_customer_list(request):
             'priceType',
             'managerName',
             'companySet'
-        )
+        )[last_record: last_record+20]
 
     context = {
         'status': 'success',
