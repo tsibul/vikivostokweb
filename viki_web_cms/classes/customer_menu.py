@@ -66,7 +66,7 @@ class CustomerMenu:
                 sort_keys=True)), 'Order'),
             CustomerMenu('Состав групп', str(json.dumps([
                 CustomerSection('Состав групп', [
-                    CustomerSetting('Состав групп', 'CustomerGroup', False, True),
+                    CustomerSetting('Состав групп', 'CustomerGroup', False, True, False),
                 ]),
             ], default=lambda o: o.__dict__,
                 sort_keys=True)), 'CustomerGroup'),
