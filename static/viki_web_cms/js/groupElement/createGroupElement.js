@@ -11,19 +11,19 @@ import {createGroupRow} from "./createGroupRows.js";
  */
 export async function createGroupElement(className) {
     const headerStyle = 'group-element__header';
-    setupHeaderHandlers(createGroupRow, headerStyle, '/cms/json/unused_files');
+    setupHeaderHandlers(createGroupRow, headerStyle, '/cms/json/customer_list');
     const columns = [
         {title: 'название'},
         {title: 'почта'},
         {title: 'новый'},
         {title: 'тип цены'},
         {title: 'менеджер'},
+        {title: 'кол-во'},
         {title: ''},
         {title: ''},
     ];
-    document.querySelector('.dictionary-frame__header_right').innerHTML = '';
     return await createPageContent('group-content', columns, headerStyle,
-        createGroupRow, '/cms/json/unused_files');
+        createGroupRow, '/cms/json/customer_list');
 }
 
 

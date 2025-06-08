@@ -9,11 +9,11 @@ import {closeModal} from "../modalFunction/closeModal.js";
 /**
  *
  * @param {HTMLElement} oldRow
- * @param {Object} className
+ * @param {Object} customer
  */
-export function createGroupRow(oldRow, className) {
+export function createGroupRow(oldRow, customer) {
     const details = document.createElement('details');
-    details.classList.add('files-element');
+    details.classList.add('group-element');
     const row = document.createElement('summary');
     [...oldRow.attributes].forEach(attr => {
         row.setAttribute(attr.name, attr.value);
@@ -21,64 +21,69 @@ export function createGroupRow(oldRow, className) {
     oldRow.classList.remove(...oldRow.classList);
     oldRow.appendChild(details)
     details.appendChild(row);
+    const companies = JSON.parse(customer.companySet);
     let tmpField;
-    tmpField = createTextField(className.name);
+    tmpField = createTextField(customer.name);
     row.appendChild(tmpField);
-    tmpField = createTextField('');
+    tmpField = createTextField(customer.alias);
     row.appendChild(tmpField);
-    tmpField = createTextField('');
+    tmpField = createTextField(customer.new ? 'да' : 'нет');
     row.appendChild(tmpField);
-    tmpField = createTextField(className.length);
+    tmpField = createTextField(customer.priceType);
+    row.appendChild(tmpField);
+    tmpField = createTextField(customer.managerName);
+    row.appendChild(tmpField);
+    tmpField = createTextField(companies.length);
     row.appendChild(tmpField);
 
-    const button = createCancelButton('Удалить все файлы');
-    button.dataset.class = className.name;
-    button.addEventListener('click', deleteCategory);
+    const button = createSaveButton('Добавить юр.лицо');
+    button.dataset.id = customer.id;
+    // button.addEventListener('click', deleteCategory);
     row.appendChild(button);
     tmpField = document.createElement('div');
     tmpField.classList.add('order-element__toggle');
     row.appendChild(tmpField);
-    className.files.forEach(file => {
-        createSingleFileRow(file, details);
+    companies.forEach(company => {
+        createCompanyRow(company, details);
     })
 }
 
 /**
  *
- * @param item
- * @param details
+ * @param {Object} item
+ * @param {HTMLElement} details
  */
-function createSingleFileRow(item, details) {
+function createCompanyRow(item, details) {
     const itemRow = document.createElement('div')
-    itemRow.classList.add('dictionary-content__row', 'files-element__item');
-    itemRow.dataset.path = item.path;
+    itemRow.classList.add('dictionary-content__row', 'group-element__item');
+    itemRow.dataset.id = item.id;
     let tmpField;
     tmpField = createTextField('');
     itemRow.appendChild(tmpField);
-    tmpField = createTextField(item.filename);
+    tmpField = createTextField(item.inn);
     itemRow.appendChild(tmpField);
-    tmpField = createTextField(item.path);
+    tmpField = createTextField('');
+    itemRow.appendChild(tmpField);
+    tmpField = createTextField(item.name);
+    itemRow.appendChild(tmpField);
+    tmpField = createTextField(item.vat ? 'с НДС' : 'без НДС');
     itemRow.appendChild(tmpField);
 
-    const btnSave = createSaveButton('Скачать');
-    btnSave.dataset.path = item.path;
-    btnSave.addEventListener('click', async (e) => {
-        await showFile(e);
-    });
-    itemRow.appendChild(btnSave);
     const btnCancel = createCancelButton('Удалить');
-    btnCancel.dataset.path = item.path;
-    btnCancel.addEventListener('click', async (e) => {
-        await deleteFile(e);
-    });
+    btnCancel.dataset.id = item.id;
+    // btnCancel.addEventListener('click', async (e) => {
+    //     await deleteFile(e);
+    // });
     itemRow.appendChild(btnCancel);
+    tmpField = createTextField('');
+    itemRow.appendChild(tmpField);
     details.appendChild(itemRow);
 }
 
 
 /**
  *
- * @param text
+ * @param {string} text
  * @returns {HTMLDivElement}
  */
 function createTextField(text) {
