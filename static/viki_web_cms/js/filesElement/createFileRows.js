@@ -60,9 +60,9 @@ function createSingleFileRow(item, details) {
 
     const btnSave = createSaveButton('Скачать');
     btnSave.dataset.path = item.path;
-    // button.addEventListener('click', async (e) => {
-    //     await editItem(e, itemRow, orderRow);
-    // });
+    btnSave.addEventListener('click', async (e) => {
+        await showFile(e);
+    });
     itemRow.appendChild(btnSave);
     const btnCancel = createCancelButton('Удалить');
     btnCancel.dataset.path = item.path;
@@ -92,28 +92,34 @@ function createTextField(text) {
  * @param {MouseEvent} e
  * @returns {Promise<void>}
  */
-async function deleteFile(e){
+async function deleteFile(e) {
     const path = e.target.dataset.path;
     const row = e.target.closest('.files-element__item');
     const formData = new FormData;
     formData.append('file_path', path);
-    const response = await fetch('/cms/json/delete_file',{
-            method: "POST",
-            headers: {
-                "X-CSRFToken": getCSRFToken(),
-            },
-            body: formData
-        });
+    const response = await fetch('/cms/json/delete_file', {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": getCSRFToken(),
+        },
+        body: formData
+    });
     const data = await response.json()
-    if (data.status === 'success'){
+    if (data.status === 'success') {
         const details = e.target.closest('details');
         row.remove();
         const contentRows = details.querySelectorAll('.files-element__item');
-        if (![...contentRows].length){
+        if (![...contentRows].length) {
             details.remove();
         }
     }
 
+}
+
+function showFile(e) {
+    e.preventDefault();
+    const url = '/' + e.target.dataset.path;
+    window.open(url, '_blank');
 }
 
 
