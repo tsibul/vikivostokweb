@@ -1,7 +1,5 @@
-import json
 import os
 
-from collections import defaultdict
 from django.conf import settings
 from django.http import JsonResponse
 
@@ -10,6 +8,11 @@ from viki_web_cms.models import Order, News, CatalogueItemPhoto, CatalogueItem, 
 
 
 def model_files_structure():
+    """
+    Returns configuration of file fields for each model.
+
+    :return dict: Model configurations with their file fields and directories
+    """
     return {
         'CatalogueItem': {
             'model': CatalogueItem,
@@ -50,44 +53,30 @@ def model_files_structure():
 
 def get_unused_files(request):
     """
-    Возвращает словарь неиспользуемых файлов, сгруппированных по моделям
-    Returns:
-        {
-            "models": {
-                "News": {
-                    "name": "News",
-                    "files": [
-                        {
-                            "field": "image",
-                            "path": "/path/to/file.jpg",
-                            "filename": "file.jpg"
-                        }
-                    ]
-                },
-                "Order": {
-                    "name": "Order",
-                    "files": [
-                        {
-                            "field": "branding_file",
-                            "path": "/path/to/brand.pdf",
-                            "filename": "brand.pdf"
-                        }
-                    ]
-                }
-            }
-        }
+    Returns a dictionary of unused files grouped by models.
+
+    :param HttpRequest request: Request with user permissions
+    :return JsonResponse: {{
+        "dataList": [
+            {{
+                "name": str,      # Model name
+                "length": int,    # Number of unused files
+                "files": list     # List of file info dicts
+            }}
+        ]
+    }}
     """
     if user_check(request):
-        return JsonResponse({'status': 'error', 'message': 'недостаточно прав'}, safe=False)
+        return JsonResponse({'status': 'error', 'message': 'insufficient permissions'}, safe=False)
 
     model_files = model_files_structure()
-    unused_files = [] #{"models": {}}
+    unused_files = []
 
     for model_name, config in model_files.items():
         model_class = config['model']
         model_unused_files = []
 
-        # Для моделей с несколькими директориями (как Order)
+        # For models with multiple directories (like Order)
         if 'directories' in config:
             for field_name, dir_path in config['directories'].items():
                 db_files = set(
@@ -98,7 +87,7 @@ def get_unused_files(request):
                 if os.path.exists(full_path):
                     model_unused_files.extend(check_directory(full_path, db_files, model_name, field_name))
 
-        # Для моделей с одной директорией
+        # For models with single directory
         else:
             db_files = set()
             for field_name in config['fields']:
@@ -122,21 +111,31 @@ def get_unused_files(request):
     return JsonResponse(context)
 
 
-def check_directory(full_path, used_files, model_name, field):
+def check_directory(full_path, db_files, model_name, field):
     """
-    Проверяет директорию на неиспользуемые файлы
+    Checks for unused files in a directory by comparing filesystem with database records.
+
+    :param LiteralString full_path: Absolute path to check
+    :param set db_files: Set of filenames from database
+    :param str model_name: Model name
+    :param str field: Field name
+    :return list: List of dicts {model, field, path, filename} for unused files
     """
     result = []
     if os.path.exists(full_path):
         for root, _, files in os.walk(full_path):
             for filename in files:
-                file_path = os.path.join(root, filename)
-                # rel_path = os.path.join(os.path.basename(full_path), filename)
-                if filename not in used_files:
+                if filename not in db_files:
+                    # Get path from structure and add filename
+                    config = model_files_structure()[model_name]
+                    if 'directories' in config:
+                        rel_path = f"{config['directories'][field]}/{filename}"
+                    else:
+                        rel_path = f"{config['directory']}/{filename}"
                     result.append({
                         "model": model_name,
                         "field": field,
-                        "path": file_path,
+                        "path": rel_path,
                         "filename": filename
                     })
     return result
@@ -144,27 +143,55 @@ def check_directory(full_path, used_files, model_name, field):
 
 def delete_file(request):
     """
-    Удаляет файл по полному пути
+    Deletes a file by its relative path from static directory.
+
+    :param HttpRequest request: Contains file_path to delete
+    :return JsonResponse: {status: str, message?: str}
     """
     if superuser_check(request):
-        return JsonResponse({'status': 'error', 'message': 'недостаточно прав'}, safe=False)
-    file_path = request.POST.get('file_path')
+        return JsonResponse({'status': 'error', 'message': 'insufficient permissions'}, safe=False)
+    
+    rel_path = request.POST.get('file_path')
+    if not rel_path:
+        return JsonResponse({'status': 'error', 'message': 'file path not specified'}, safe=False)
+    
+    # Use BASE_DIR since rel_path already contains static/
+    abs_path = os.path.join(settings.BASE_DIR, rel_path)
     try:
-        if os.path.exists(file_path):
-            os.remove(file_path)
+        if os.path.exists(abs_path):
+            os.remove(abs_path)
             return JsonResponse({'status': 'success'}, safe=False)
-        return JsonResponse({'status': 'error'}, safe=False)
+        return JsonResponse({'status': 'error', 'message': 'file not found'}, safe=False)
     except (OSError, PermissionError) as e:
-        return JsonResponse({'status': 'error'}, safe=False)
+        return JsonResponse({'status': 'error', 'message': str(e)}, safe=False)
 
 
 def process_model_files(model_name, config, deleted, errors):
     """
-    Обрабатывает файлы для конкретной модели
+    Process files for a model config, delete unused ones.
+
+    :param str model_name: Model to process
+    :param dict config: Model config from model_files_structure()
+    :param list deleted: List to store deleted files info
+    :param list errors: List to store errors
+    :return tuple: (deleted: list, errors: list)
     """
+    def files_deleted(unused_files, deleted_files, errors_deleting):
+        for file_info in unused_files:
+            try:
+                # Use BASE_DIR since path already contains static/
+                abs_path = os.path.join(settings.BASE_DIR, file_info['path'])
+                os.remove(abs_path)
+                deleted_files.append(file_info)
+            except (OSError, PermissionError) as e:
+                file_info['error'] = str(e)
+                errors_deleting.append(file_info)
+        return deleted_files, errors_deleting
+
     model_class = config['model']
+
     if 'directories' in config:
-        # Для моделей с несколькими директориями (Order)
+        # For models with multiple directories (like Order)
         for field_name, dir_path in config['directories'].items():
             db_files = set(
                 model_class.objects.exclude(**{field_name: ''})
@@ -172,15 +199,9 @@ def process_model_files(model_name, config, deleted, errors):
             )
             full_path = os.path.join(settings.BASE_DIR, dir_path)
             unused = check_directory(full_path, db_files, model_name, field_name)
-            for file_info in unused:
-                try:
-                    os.remove(file_info['path'])
-                    deleted.append(file_info)
-                except (OSError, PermissionError) as e:
-                    file_info['error'] = str(e)
-                    errors.append(file_info)
+            files_deleted(unused, deleted, errors)
     else:
-        # Для моделей с одной директорией
+        # For models with single directory
         db_files = set()
         for field_name in config['fields']:
             db_files.update(
@@ -189,35 +210,28 @@ def process_model_files(model_name, config, deleted, errors):
             )
         full_path = os.path.join(settings.BASE_DIR, config['directory'])
         unused = check_directory(full_path, db_files, model_name, config['fields'][0])
-        for file_info in unused:
-            try:
-                os.remove(file_info['path'])
-                deleted.append(file_info)
-            except (OSError, PermissionError) as e:
-                file_info['error'] = str(e)
-                errors.append(file_info)
+        files_deleted(unused, deleted, errors)
+    return deleted, errors
 
 
 def delete_unused_files(request):
     """
-    Удаляет неиспользуемые файлы для конкретной модели или всех моделей
+    Delete unused files for specific model or all models.
+
+    :param HttpRequest request: Contains optional model_name
+    :return JsonResponse: {status: str, deleted: list, errors: list}
     """
     if superuser_check(request):
-        return JsonResponse({'status': 'error', 'message': 'недостаточно прав'}, safe=False)
+        return JsonResponse({'status': 'error', 'message': 'insufficient permissions'}, safe=False)
 
     model_name = request.POST.get('model_name')
     deleted = []
     errors = []
 
-    if model_name:
-        config = model_files_structure().get(model_name)
-        if not config:
-            return JsonResponse({'status': 'error', 'message': 'модель не найдена'}, safe=False)
-        process_model_files(model_name, config, deleted, errors)
-    else:
-        # Если модель не указана - обрабатываем все модели
-        for model_name, config in model_files_structure().items():
-            process_model_files(model_name, config, deleted, errors)
+    config = model_files_structure().get(model_name)
+    if not config:
+        return JsonResponse({'status': 'error', 'message': 'model not found'}, safe=False)
+    process_model_files(model_name, config, deleted, errors)
 
     return JsonResponse({
         'status': 'success' if deleted else 'error',
