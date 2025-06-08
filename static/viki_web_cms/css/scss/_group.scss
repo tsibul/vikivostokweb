@@ -1,0 +1,33 @@
+@import "vars";
+@import "mixins";
+
+.group-element {
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+
+  &__header {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr) 20px 1fr 1fr 120px 120px 10px;
+    padding: 4px 16px 2px 4px;
+    gap: 8px;
+
+  }
+
+  &__item {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr) 120px 120px 10px;
+    padding: 4px 16px 2px 4px;
+    gap: 8px;
+    background-color: #fff;
+  }
+
+  &__row{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    width: 100%;
+  }
+
+}
