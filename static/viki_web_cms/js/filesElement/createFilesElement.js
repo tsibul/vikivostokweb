@@ -19,6 +19,7 @@ export async function createFilesElement(className) {
         {title: 'файлов'},
         {title: ''},
     ];
+    document.querySelector('.dictionary-frame__header_right').innerHTML = '';
     return await createPageContent('files-content', columns, headerStyle,
         createFileRow, '/cms/json/unused_files');
 }
