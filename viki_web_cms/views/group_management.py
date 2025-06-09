@@ -24,12 +24,11 @@ def get_customer_list(request):
     if search_query:
         customer_objects = customer_objects.filter(
             Q(name__icontains=search_query) |
-            Q(e_mail_alias__icontains=search_query)|
-            Q(standard_price_type__name__icontains=search_query)|
-            Q(company__name__icontains=search_query)|
+            Q(e_mail_alias__icontains=search_query) |
+            Q(standard_price_type__name__icontains=search_query) |
+            Q(company__name__icontains=search_query) |
             Q(company__inn__icontains=search_query)
         ).distinct()
-
 
     companies = Company.objects.filter(
         customer=OuterRef('id'),
@@ -54,26 +53,26 @@ def get_customer_list(request):
     ).values('company_list')
 
     customers = customer_objects.annotate(
-            alias=F('e_mail_alias'),
-            priceType=F('standard_price_type__name'),
-            managerName=Concat(
-                F('manager__first_name'),
-                Value(' '),
-                F('manager__last_name')
-            ),
-            companySet=Subquery(
-                companies,
-                output_field=CharField()
-            )
-        ).values(
-            'id',
-            'name',
-            'new',
-            'alias',
-            'priceType',
-            'managerName',
-            'companySet'
-        )[last_record: last_record+20]
+        alias=F('e_mail_alias'),
+        priceType=F('standard_price_type__name'),
+        managerName=Concat(
+            F('manager__first_name'),
+            Value(' '),
+            F('manager__last_name')
+        ),
+        companySet=Subquery(
+            companies,
+            output_field=CharField()
+        )
+    ).values(
+        'id',
+        'name',
+        'new',
+        'alias',
+        'priceType',
+        'managerName',
+        'companySet'
+    )[last_record: last_record + 20]
 
     context = {
         'status': 'success',
@@ -81,3 +80,25 @@ def get_customer_list(request):
     }
 
     return JsonResponse(context, safe=False)
+
+
+def company_list(request):
+    """
+    Returns a list of companies with their associated customers
+    :param request:
+    :return:
+    """
+    customer_id = request.POST.get('customer_id')
+    companies = (Company.objects.filter(
+        deleted=False
+    ).exclude(
+        customer__id=customer_id
+    ).order_by(
+        *Company.order_default()
+    ).values(
+        'id',
+        'inn',
+        'name',
+        'customer__name'
+    ))
+    return JsonResponse(list(companies), safe=False)
