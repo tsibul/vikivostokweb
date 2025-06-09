@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 
+from viki_web.functions.mail_alias import mail_alias
 from viki_web_cms.functions.dadata_parse_inn import dadata_parse_inn
 from viki_web_cms.models import SettingsDictionary, StandardPriceType
 from viki_web.functions.field_validation import bic_validation
@@ -57,6 +58,35 @@ class Customer(SettingsDictionary):
         ]
 
 
+class UserExtension(models.Model):
+    """ user phone """
+    phone = models.CharField(max_length=18)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, null=True, blank=True)
+    alias = models.CharField(max_length=140)
+    new = models.BooleanField(default=True)
+    manager_letter = models.CharField(max_length=1, null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        self.alias = mail_alias(self.user.email)
+        if not self.customer:
+            customer = Customer.objects.filter(e_mail_alias=self.alias).first()
+            if customer:
+                self.customer = customer
+        super(UserExtension, self).save(*args, **kwargs)
+
+    class Meta:
+        verbose_name = 'Доп. информация о пользователе'
+        verbose_name_plural = 'Доп. информация о пользователе'
+        db_table_comment = 'UserExtension'
+        db_table = 'user_extension'
+        ordering = ['user__last_name']
+
+    @staticmethod
+    def order_default():
+        return ['user__last_name']
+
+
 class Company(SettingsDictionary):
     """ company """
     legal = models.BooleanField(default=True)
@@ -75,9 +105,13 @@ class Company(SettingsDictionary):
         db_table = 'company'
 
     def save(self, *args, **kwargs):
-        def empty_customer(customer):
-            if Company.objects.filter(customer=customer).count() == 0:
-                customer.delete()
+        def empty_customer(old_customer, new_customer):
+            if Company.objects.filter(customer=old_customer).count() == 0:
+                users = UserExtension.objects.filter(customer=old_customer)
+                for user in users:
+                    user.customer=new_customer
+                    user.save()
+                old_customer.delete()
 
         customer_prev = self.customer
         price_type = StandardPriceType.objects.all().order_by('priority')[0]
@@ -88,7 +122,7 @@ class Company(SettingsDictionary):
                     standard_price_type=price_type
                 )
             super(Company, self).save(*args, **kwargs)
-            empty_customer(customer_prev)
+            empty_customer(customer_prev, self.customer)
             return self
         result = dadata_parse_inn(self.inn)
         if result['errors']:
@@ -110,7 +144,7 @@ class Company(SettingsDictionary):
             else:
                 self.region = self.inn[0:2]
             super(Company, self).save(*args, **kwargs)
-            empty_customer(customer_prev)
+            empty_customer(customer_prev, self.customer)
             return self
 
     @staticmethod

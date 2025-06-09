@@ -1,8 +1,8 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q, F
 from django.http import JsonResponse
-from viki_web_cms.models.user_models import UserExtension
-from viki_web_cms.models.customer_models import Customer
+# from viki_web_cms.models.user_models import UserExtension
+from viki_web_cms.models.customer_models import Customer, UserExtension
 from viki_web_cms.functions.user_validation import user_check
 
 
