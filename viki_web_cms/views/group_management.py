@@ -24,8 +24,11 @@ def get_customer_list(request):
     if search_query:
         customer_objects = customer_objects.filter(
             Q(name__icontains=search_query) |
-            Q(e_mail_alias__icontains=search_query)
-        )
+            Q(e_mail_alias__icontains=search_query)|
+            Q(standard_price_type__name__icontains=search_query)|
+            Q(company__name__icontains=search_query)|
+            Q(company__inn__icontains=search_query)
+        ).distinct()
 
 
     companies = Company.objects.filter(
