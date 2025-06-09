@@ -69,14 +69,26 @@ class Company(SettingsDictionary):
     vat = models.BooleanField(default=False)
 
     class Meta(SettingsDictionary.Meta):
-        verbose_name = 'Клиент (группа)'
-        verbose_name_plural = 'Клиенты'
+        verbose_name = 'Компания'
+        verbose_name_plural = 'Юридические лица'
         db_table_comment = 'Company'
         db_table = 'company'
 
     def save(self, *args, **kwargs):
-        if self.name and self.address:
+        def empty_customer(customer):
+            if Company.objects.filter(customer=customer).count() == 0:
+                customer.delete()
+
+        customer_prev = self.customer
+        price_type = StandardPriceType.objects.all().order_by('priority')[0]
+        if self.name and self.address and self.inn:
+            if not self.customer:
+                self.customer = Customer.objects.create(
+                    name=self.name[3:],
+                    standard_price_type=price_type
+                )
             super(Company, self).save(*args, **kwargs)
+            empty_customer(customer_prev)
             return self
         result = dadata_parse_inn(self.inn)
         if result['errors']:
@@ -86,7 +98,6 @@ class Company(SettingsDictionary):
             self.name = company_data['value']
             if not self.customer_id:
                 short_name = company_data['data']['name']['full']
-                price_type = StandardPriceType.objects.all().order_by('priority')[0]
                 self.customer = Customer.objects.create(
                     name=short_name,
                     standard_price_type=price_type)
@@ -99,6 +110,7 @@ class Company(SettingsDictionary):
             else:
                 self.region = self.inn[0:2]
             super(Company, self).save(*args, **kwargs)
+            empty_customer(customer_prev)
             return self
 
     @staticmethod
