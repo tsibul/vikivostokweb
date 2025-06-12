@@ -15,7 +15,7 @@ export async function createFullScreenContent(content, menuCode, pageName) {
     content.appendChild(header);
     const pageContent = await cmsPages[pageName](className);
     content.appendChild(pageContent);
-    if (pageName === "UserExtension" || pageName === 'Order') {
+    if (pageName === "UserExtension" || pageName === 'Order' || pageName === 'CustomerGroup') {
        const newOnly = document.querySelector(`div.dictionary-frame__header [type="checkbox"]`);
        newOnly.checked = true;
     }
