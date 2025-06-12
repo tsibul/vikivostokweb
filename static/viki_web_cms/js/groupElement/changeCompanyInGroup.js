@@ -8,17 +8,6 @@ import {createCancelButton} from "../createStandardElements/createCancelButton.j
 import {closeModal} from "../modalFunction/closeModal.js";
 
 export async function chooseCompanyToAdd(customerId) {
-    // const companyList = await response.json();
-    // const formData = new FormData;
-    // formData.append('customer_id', customerId);
-    // const response = await fetch('/cms/json/company_list', {
-    //     method: "POST",
-    //     headers: {
-    //         "X-CSRFToken": getCSRFToken(),
-    //     },
-    //     body: formData
-    // });
-    // if (companyList) {
     const dialog = document.createElement('dialog');
     document.body.appendChild(dialog);
     dialog.classList.add('files-element__modal');
@@ -35,17 +24,17 @@ export async function chooseCompanyToAdd(customerId) {
     btnBlock.appendChild(btnCancel);
     const button = createSaveButton('Добавить');
     button.dataset.id = customerId;
-    // button.addEventListener('click', async () => {
-    //     await chooseCompanyToAdd(customer.id)
-    // });
+    button.addEventListener('click', async () => {
+        const companyId = dropdown.querySelector(`input[hidden]`).value;
+        await addCompanyToGroup(companyId, customerId)
+    });
     btnBlock.appendChild(button);
     dialog.appendChild(btnBlock);
     dialog.showModal()
 
-
-    // }
 }
 
 export function addCompanyToGroup(companyId, customerId) {
+    console.log(companyId, customerId);
 
 }
