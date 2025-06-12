@@ -20,7 +20,8 @@ import {newFilter} from "../newFilter.js";
  * @param deletedNeeded if deleted checkbox needed
  * @returns {HTMLDivElement}
  */
-export function createHeader(dictionaryClass, dictionaryName, fileUpload, itemNew, deletedNeeded = true) {
+export function createHeader(dictionaryClass, dictionaryName, fileUpload,
+                             itemNew, deletedNeeded = true) {
     const frameHeader = document.createElement('div');
     frameHeader.classList.add('dictionary-frame__header');
     const headerLeft = document.createElement('div');
