@@ -4,6 +4,7 @@ import {createSaveButton} from "../createStandardElements/createSaveButton.js";
 import {createCancelButton} from "../createStandardElements/createCancelButton.js";
 import {getCSRFToken} from "../getCSRFToken.js";
 import {closeModal} from "../modalFunction/closeModal.js";
+import {chooseCompanyToAdd} from "./changeCompanyInGroup.js";
 
 
 /**
@@ -38,7 +39,9 @@ export function createGroupRow(oldRow, customer) {
 
     const button = createSaveButton('Добавить юр.лицо');
     button.dataset.id = customer.id;
-    // button.addEventListener('click', deleteCategory);
+    button.addEventListener('click', async () => {
+        await chooseCompanyToAdd(customer.id)
+    });
     row.appendChild(button);
     tmpField = document.createElement('div');
     tmpField.classList.add('order-element__toggle');

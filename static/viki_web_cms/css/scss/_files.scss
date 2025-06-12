@@ -35,7 +35,7 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
 
-  &__row{
+  &__row {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -43,8 +43,32 @@
     width: 100%;
   }
 
-  &__strong{
+  &__strong {
     font-weight: 600;
   }
+
+  &__btn-block {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    width: 100%;
+  }
+
+  &__modal {
+    top: 20%;
+    left: 30%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    //gap: 8px;
+    padding: 16px 8px;
+    width: 560px;
+    height: 420px;
+    border: none;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
 
 }

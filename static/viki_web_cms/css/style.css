@@ -958,6 +958,26 @@ body {
 .files-element__strong {
   font-weight: 600;
 }
+.files-element__btn-block {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  width: 100%;
+}
+.files-element__modal {
+  top: 20%;
+  left: 30%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px 8px;
+  width: 560px;
+  height: 420px;
+  border: none;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
 
 .group-element {
   border-radius: 6px;
