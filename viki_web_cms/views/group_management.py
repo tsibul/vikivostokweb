@@ -81,24 +81,3 @@ def get_customer_list(request):
 
     return JsonResponse(context, safe=False)
 
-
-def company_list(request):
-    """
-    Returns a list of companies with their associated customers
-    :param request:
-    :return:
-    """
-    customer_id = request.POST.get('customer_id')
-    companies = (Company.objects.filter(
-        deleted=False
-    ).exclude(
-        customer__id=customer_id
-    ).order_by(
-        *Company.order_default()
-    ).values(
-        'id',
-        'inn',
-        'name',
-        'customer__name'
-    ))
-    return JsonResponse(list(companies), safe=False)
