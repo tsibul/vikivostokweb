@@ -81,3 +81,20 @@ def get_customer_list(request):
 
     return JsonResponse(context, safe=False)
 
+def company_change_customer(request):
+    if user_check(request):
+        return JsonResponse(None, safe=False)
+    customer_id = int(request.POST.get('customer_id', ''))
+    customer = Customer.objects.get(id=customer_id)
+    company_id = int(request.POST.get('company_id', ''))
+    company = Company.objects.get(id=company_id)
+    if customer == company.customer:
+        return JsonResponse({'changed': False}, safe=False)
+    company.customer = customer
+    old_customer_id = company.save()
+    context = {
+        'changed': True,
+        'newCustomerId': customer_id,
+        'companyId': company_id,
+        'oldCustomerId': old_customer_id}
+    return JsonResponse(context, safe=False)

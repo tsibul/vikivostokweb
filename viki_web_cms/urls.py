@@ -39,4 +39,5 @@ urlpatterns = [
     path('json/delete_unused_files', views.delete_unused_files),
     path('json/delete_file', views.delete_file),
     path('json/customer_list', views.get_customer_list),
+    path('json/company_change_customer', views.company_change_customer),
 ]

@@ -12,7 +12,6 @@ class Customer(SettingsDictionary):
     e_mail_alias = models.CharField(max_length=255, null=True, blank=True)
     standard_price_type = models.ForeignKey(StandardPriceType, on_delete=models.SET_NULL, null=True, blank=True)
     new = models.BooleanField(default=True)
-    # vat = models.BooleanField(default=False)
     manager = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
     class Meta(SettingsDictionary.Meta):
@@ -42,11 +41,7 @@ class Customer(SettingsDictionary):
                 'type': 'boolean',
                 'label': 'новый',
             },
-            # {
-            #     'field': 'vat',
-            #     'type': 'boolean',
-            #     'label': 'с НДС',
-            # },
+
             {
                 'field': 'manager',
                 'type': 'foreign',
@@ -111,9 +106,15 @@ class Company(SettingsDictionary):
                 for user in users:
                     user.customer=new_customer
                     user.save()
+                old_customer_id = old_customer.id
                 old_customer.delete()
+                return old_customer_id
+            return None
 
-        customer_prev = self.customer
+        if self.id:
+            customer_prev = Company.objects.get(id=self.id).customer
+        else:
+            customer_prev = self.customer
         price_type = StandardPriceType.objects.all().order_by('priority')[0]
         if self.name and self.address and self.inn:
             if not self.customer:
@@ -122,8 +123,9 @@ class Company(SettingsDictionary):
                     standard_price_type=price_type
                 )
             super(Company, self).save(*args, **kwargs)
-            empty_customer(customer_prev, self.customer)
-            return self
+            old_customer_id =  empty_customer(customer_prev, self.customer)
+            return old_customer_id
+
         result = dadata_parse_inn(self.inn)
         if result['errors']:
             return result
@@ -144,7 +146,7 @@ class Company(SettingsDictionary):
             else:
                 self.region = self.inn[0:2]
             super(Company, self).save(*args, **kwargs)
-            empty_customer(customer_prev, self.customer)
+            # empty_customer(customer_prev, self.customer)
             return self
 
     @staticmethod
