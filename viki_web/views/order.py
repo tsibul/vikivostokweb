@@ -217,11 +217,12 @@ def create_order(request):
         total_amount = round(total_amount, 2)
 
         # Determine our company based on total and VAT status
-        if total_amount > 20000 and company.vat:
-            our_company = OurCompany.objects.filter(vat=True, deleted=False).order_by('priority').first()
-        else:
-            our_company = OurCompany.objects.filter(vat=False, deleted=False).order_by('priority').first()
-        
+        # if total_amount > 20000 and company.vat:
+        #     our_company = OurCompany.objects.filter(vat=True, deleted=False).order_by('priority').first()
+        # else:
+        #     our_company = OurCompany.objects.filter(vat=False, deleted=False).order_by('priority').first()
+        our_company = OurCompany.objects.filter(vat=False, deleted=False).order_by('priority').first()
+
         if not our_company:
             return JsonResponse({
                 'status': 'error',

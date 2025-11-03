@@ -57,10 +57,10 @@ export async function addCompanyToGroup(companyId, customerId) {
         const companyRow = document.querySelector(`div.group-element__item[data-id="${data.companyId}"]`);
         const newCompanyRow = companyRow.cloneNode(true);
         companyRow.remove();
-        const customerSummary = document.querySelector(`summary[data-id="${data.newCustomerId}"]`)
+        const customerSummary = document.querySelector(`summary[data-id="${data.newCustomerId}"]`);
         const customerDetails = customerSummary.closest('details');
         customerDetails.appendChild(newCompanyRow);
-        const summaryItems = customerSummary.querySelectorAll('div.dictionary-content__row')]
+        const summaryItems = customerSummary.querySelectorAll('div.dictionary-content__row');
         if (data.oldCustomerId) {
             const oldCustomerDetails = document.querySelector(`summary[data-id="${data.oldCustomerId}"]`)
                 .closest('details');
