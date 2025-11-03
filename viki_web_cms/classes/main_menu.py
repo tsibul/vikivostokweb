@@ -80,6 +80,9 @@ class MainMenu:
                     CMSSetting('Фильтры товаров', 'FilterToGoods', False, False ),
                     CMSSetting('Фильтры групп товаров', 'FilterToGoodsGroup', False, False ),
                 ]),
+                # MenuSection('СЕО', [
+                #     CMSSetting('СЕО', 'SEO', False, False),
+                # ]),
                 MenuSection('Упаковка', [
                     CMSSetting('Гофрокороб', 'Box', False, False),
                     CMSSetting('Упаковка товара', 'Packing', False, False ),
@@ -95,6 +98,12 @@ class MainMenu:
                 ]),
             ], default=lambda o: o.__dict__,
                 sort_keys=True)), 'Goods'),
+            MainMenu('СЕО', str(json.dumps([
+                MenuSection('СЕО', [
+                    CMSSetting('SEO', 'SEO', False, False),
+                ]),
+            ], default=lambda o: o.__dict__,
+                sort_keys=True)), 'SEO'),
             MainMenu('Каталог', str(json.dumps([
                 MenuSection('Каталог', [
                     CMSSetting('Каталог', 'Catalogue', True, True),
