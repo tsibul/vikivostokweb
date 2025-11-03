@@ -11,6 +11,15 @@
 
     {#    <script src="{% static 'production/js/dist/login.bundle.js' %}" defer type="module"></script>#}
     <script src="{% static 'viki_web/js/login.js' %}" defer type="module"></script>
+    <script src="{% static 'viki_web/js/aboutMenu.js' %}" defer type="module"></script>
+    <!-- Modern browsers -->
+    <script src="{% static 'viki_web/js/addToCart.js' %}" defer type="module"></script>
+    <!-- Legacy browsers fallback -->
+    <script src="{% static 'viki_web/js/addToCartFallback.js' %}" defer nomodule></script>
+    <!-- Cart badge initialization -->
+    <script src="{% static 'viki_web/js/cart/badge/cartBadge.js' %}" defer type="module"></script>
+    <!-- Cookie consent banner -->
+    <script src="{% static 'viki_web/js/cookieBanner.js' %}" defer type="module"></script>
     <script src="https://kit.fontawesome.com/e2a5b405b2.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{% static 'viki_web/css/style.css' %}">
 
@@ -27,34 +36,78 @@
                         <a href="/">
                             <img src="{% static 'viki_web/icons/logo.svg' %}" alt="ВикиВосток" class="menu__logo">
                         </a></li>
-                    <li class="menu__item catalogue">
-                        <div>Каталог</div>
-                        <ul class="catalogue__item">
-                           {% for category in categories %}
-                                <li>
-                                <a href="products/{{ category.product_group_url }}">{{ category.name }}</a>
-                                </li>
-                           {% endfor %}
+                    <li class="menu__item">
+                        <a href="{% url 'viki_web:catalogue' %}">Каталог</a>
+                    </li>
+                    <li class="menu__item">
+                        <a href="{% url 'viki_web:price' %}">Прайс</a>
+                    </li>
+                    <li class="menu__item">
+                        <a href="{% url 'viki_web:layout' %}">Шаблоны</a>
+                    </li>
+                    <li class="menu__item about-menu catalogue">
+                        <div>О компании</div>
+                        <ul class="catalogue__item about-menu__dropdown">
+                            <li><a href="{% url 'viki_web:about' %}">О компании</a></li>
+                            <li><a href="{% url 'viki_web:news' %}">Новости</a></li>
+                            <li><a href="{% url 'viki_web:legal' %}">Юридическая информация</a></li>
+                            <li><a href="{% url 'viki_web:privacy' %}">Политика конфиденциальности</a></li>
                         </ul>
                     </li>
                     <li class="menu__item">
-                        <div>Прайс</div>
+                        <a href="{% url 'viki_web:contacts' %}">Контакты</a>
                     </li>
-                    <li class="menu__item">
-                        <div>Шаблоны</div>
-                    </li>
-                    <li class="menu__item">
-                        <div>О компании</div>
-                    </li>
-                    <li class="menu__item">
-                        <div>Контакты</div>
-                    </li>
+                    {% if request.user.is_staff %}
+                        <li class="menu__item">
+                            <a href="{% url 'viki_web_cms:main' %}">CMS</a>
+                        </li>
+                    {% endif %}
                 </ul>
             </nav>
-            <nav class="menu__right">
-                <i class="fa-regular fa-user"></i>
-                <div>Личный&nbsp;Кабинет</div>
-            </nav>
+            <div class="menu__right">
+                <form class="layout__header-right" action="{% url 'viki_web:catalogue' %}" method="post">
+                    {% csrf_token %}
+                    <i class="fa fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                    <input class="layout__input layout__input_menu" type="text" placeholder="поиск..." name="search">
+                    <button type="submit" class="btn btn__save btn__menu">Поиск</button>
+{#                    <a href="">#}
+{#                        <button class="btn btn__neutral btn__menu">Сбросить</button>#}
+{#                    </a>#}
+                </form>
+                <nav class="cart tooltip">
+                    <a href="{% url 'viki_web:cart' %}">
+                        <img src="{% static 'viki_web/icons/cart_menu.svg' %}"
+                             alt="cart" class="">
+                        <div class="tooltip-text">корзина</div>
+                        <span class="cart-badge"></span>
+                    </a>
+                </nav>
+                <nav class="menu__cabinet catalogue">
+                    <i class="fa-regular fa-user"></i>
+                    {% if user.is_authenticated %}
+                        <div>
+                            {% if user.first_name or user.last_name %}
+                                {{ user.first_name }} {{ user.last_name }}
+                            {% else %}
+                                {{ user.email }}
+                            {% endif %}
+                        </div>
+                        <ul class="catalogue__item">
+                            <li><a href="{% url "viki_web:order_list" %}">Заказы</a></li>
+                            <li><a href="{% url 'viki_web:cabinet' %}">Настройка</a></li>
+                            {% if request.resolver_match.url_name != 'order' and request.resolver_match.url_name != 'order_list' %}
+                                <li class="log-logout">Выйти</li>
+                            {% endif %}
+                        </ul>
+                    {% else %}
+                        <div>Личный&nbsp;Кабинет</div>
+                        <ul class="catalogue__item">
+                            <li class="log-login">Войти</li>
+                            <li class="log-register">Зарегистрироваться</li>
+                        </ul>
+                    {% endif %}
+                </nav>
+            </div>
         </div>
     </div>
 </menu>
@@ -75,7 +128,171 @@
         </div>
     </div>
 </header>
+<dialog class="login log-login">
+    <div class="login__body">
+        <div class="login__title">
+            <div>Войти</div>
+            <div>&times;</div>
+        </div>
+        <form class="login__content">
+            <div class="login__inputs">
+                <label for="login-mail" class="login__label">E-mail</label>
+                <input type="email"
+                       id="login-mail"
+                       class="login__input"
+                       name="email"
+                       required>
+                <label for="login-password" class="login__label">пароль</label>
+                <input type="password"
+                       id="login-password"
+                       class="login__input"
+                       name="password"
+                       required>
+            </div>
+            <div class="alert"></div>
+            <button type="button" class="btn login__btn login__btn_forget">
+                Восстановление пароля
+            </button>
+            <div class="login__btn-block">
+                <button type="reset" class="btn btn__cancel login__btn">Закрыть</button>
+                <button type="submit" class="btn btn__save login__btn">Войти</button>
+            </div>
+        </form>
+    </div>
+</dialog>
+<dialog class="login log-logout">
+    <div class="login__body">
+        <div class="login__title">
+            <div>Выйти</div>
+            <div>&times;</div>
+        </div>
+        <form class="login__content">
+            <div class="login__text">вы уверены, что хотите выйти?</div>
+            <div class="login__btn-block">
+                <button type="reset" class="btn btn__cancel login__btn">Закрыть</button>
+                <button type="button" class="btn btn__save login__btn">Выйти</button>
+            </div>
+        </form>
+    </div>
+</dialog>
+<dialog class="login log-register">
+    <div class="login__body">
+        <div class="login__title">
+            <div></div>
+            <div>&times;</div>
+        </div>
+        <form class="login__content">
+            <div class="login__inputs">
+                <label for="register-mail" class="login__label">E-mail</label>
+                <input type="email"
+                       id="register-mail"
+                       class="login__input"
+                       name="email"
+                       required>
+                <input type="text" hidden name="user-type" class="user-type">
+            </div>
+            <div class="alert"></div>
+            <div class="login__btn-block">
+                <button type="reset" class="btn btn__cancel login__btn">Закрыть</button>
+                <button type="submit" class="btn btn__save login__btn"></button>
+            </div>
+        </form>
+    </div>
+</dialog>
+<dialog class="login log-temporary">
+    <div class="login__body">
+        <div class="login__title">
+            <div>Введите пароль из почты</div>
+            <div>&times;</div>
+        </div>
+        <form class="login__content">
+            <div class="login__inputs">
+                <label for="temp-mail" class="login__label">E-mail</label>
+                <input type="email"
+                       id="temp-mail"
+                       class="login__input"
+                       name="email"
+                       required>
+                <label for="temp-password" class="login__label">пароль</label>
+                <input type="password"
+                       id="temp-password"
+                       class="login__input"
+                       name="password"
+                       required>
+                <input type="text" hidden name="user-type" class="user-type">
+            </div>
+            <div class="alert"></div>
+            <div class="login__btn-block">
+                <button type="reset" class="btn btn__cancel login__btn">Закрыть</button>
+                <button type="submit" class="btn btn__save login__btn">Войти</button>
+            </div>
+        </form>
+    </div>
+</dialog>
 {% block content %}
 {% endblock %}
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer__container">
+            <div class="footer__column">
+                <div class="footer__title">О компании</div>
+                <div class="footer__text">ООО «Вики Восток Сувенир»</div>
+                <div class="footer__text">ИНН: 50 01 021 228</div>
+                <div class="footer__text">ОГРН: 1155001000549</div>
+            </div>
+            <div class="footer__column">
+                <div class="footer__title">Контакты</div>
+                <div class="footer__text">Тел.: 8-926-602-64-41</div>
+                <div class="footer__text">E-mail: office@vikivostok.ru</div>
+                <div class="footer__social">
+                    <a href="https://api.whatsapp.com/send/?phone=79266026441" class="footer__social-link">
+                        <i class="fab fa-whatsapp fa-lg"></i>
+                    </a>
+                    <a href="#" class="footer__social-link">
+                        <i class="fab fa-telegram fa-lg"></i>
+                    </a>
+                    <a href="#" class="footer__social-link">
+                        <i class="fab fa-vk fa-lg"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="footer__column">
+                <div class="footer__title">Категории товаров</div>
+                <a href="{% url 'viki_web:catalogue' %}" class="footer__link">Все товары</a>
+                {% for group in footer_product_groups %}
+                    <a href="{% url 'viki_web:products' group.product_group_url %}"
+                       class="footer__link">{{ group.name }}</a>
+                {% endfor %}
+                <a href="{% url 'viki_web:sitemap' %}" class="footer__link">Все категории</a>
+            </div>
+            <div class="footer__column">
+                <div class="footer__title">Навигация</div>
+                <a href="{% url 'viki_web:main' %}" class="footer__link">Главная</a>
+                <a href="{% url 'viki_web:catalogue' %}" class="footer__link">Каталог</a>
+                <a href="{% url 'viki_web:price' %}" class="footer__link">Прайс-лист</a>
+                <a href="{% url 'viki_web:layout' %}" class="footer__link">Шаблоны</a>
+                <a href="{% url 'viki_web:cart' %}" class="footer__link">Корзина</a>
+                <a href="{% url 'viki_web:cabinet' %}" class="footer__link">Личный кабинет</a>
+
+                <div class="footer__title footer__title_small">О компании</div>
+                <a href="{% url 'viki_web:about' %}" class="footer__link">О компании</a>
+                <a href="{% url 'viki_web:news' %}" class="footer__link">Новости</a>
+                <a href="{% url 'viki_web:legal' %}" class="footer__link">Юридическая информация</a>
+                <a href="{% url 'viki_web:privacy' %}" class="footer__link">Политика конфиденциальности</a>
+                <a href="{% url 'viki_web:contacts' %}" class="footer__link">Контакты</a>
+                <a href="{% url 'viki_web:sitemap' %}" class="footer__link">Карта сайта</a>
+            </div>
+        </div>
+        <div class="footer__copyright">
+            © {% now "Y" %} Вики Восток — Все права защищены
+        </div>
+    </div>
+</footer>
+
+<!-- Cookie Banner -->
+{% include 'cookie_banner.html' %}
+
 </body>
 </html>

@@ -20,13 +20,15 @@ config_dict = dict(config.items('LOG_PAS'))
 user = config_dict['user']
 pasw = config_dict['pass']
 sec_key = config_dict['sec_key']
+e_mail = config_dict['e_mail']
+e_mail_pass = config_dict['e_mail_pass']
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Получаем ключи reCAPTCHA из конфигурационного файла, если они есть
+# Используем тестовые ключи Google для локальной разработки
+recaptcha_site_key = config_dict.get('recaptcha_site_key', '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI')
+recaptcha_secret_key = config_dict.get('recaptcha_secret_key', '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe')
+
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = sec_key
@@ -36,9 +38,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'localhost:8989' ]
 
-
-# Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -46,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sitemaps',
     'viki_web.apps.VikiWebConfig',
     'viki_web_cms.apps.VikiWebCmsConfig',
 ]
@@ -74,16 +74,13 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'viki_web.context_processors.common_data',
             ],
         },
     },
 ]
 
 WSGI_APPLICATION = 'vikivostokweb.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
     'default': {
@@ -93,10 +90,6 @@ DATABASES = {
         'PASSWORD': pasw,
     }
 }
-
-
-# Password validation
-# https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -113,10 +106,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
-# Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
@@ -125,17 +114,62 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
-
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
     # Дополнительные каталоги, если требуется
     # os.path.join(BASE_DIR, 'дополнительный_каталог'),
 ]
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'mail.vikivostok.ru'
+EMAIL_PORT = 1234
+EMAIL_USE_TLS = False
+EMAIL_HOST_USER = e_mail
+EMAIL_HOST_PASSWORD = e_mail_pass
+DEFAULT_FROM_EMAIL = 'no-reply@vikivostok.ru'
+
+# Настройки для reCAPTCHA
+RECAPTCHA_SITE_KEY = recaptcha_site_key
+RECAPTCHA_SECRET_KEY = recaptcha_secret_key
+
+# Email для получения сообщений с контактной формы
+CONTACT_EMAIL = 'office@vikivostok.ru'
+
+# Celery Configuration
+CELERY_ENABLED = True
+CELERY_BROKER_URL = 'redis://localhost:6379/0'  # Используем Redis как брокер сообщений
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'  # Хранилище результатов
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'  # Убедитесь, что это соответствует TIME_ZONE в настройках Django
+CELERY_WORKER_POOL = 'solo'
+
+# Настройки логирования для order_processing
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'WARNING',  # Повышаем уровень до WARNING, чтобы уменьшить количество сообщений
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+    },
+    'loggers': {
+        'order_processing': {
+            'handlers': ['console'],
+            'level': 'WARNING',  # Только предупреждения и ошибки
+            'propagate': True,
+        },
+    },
+}

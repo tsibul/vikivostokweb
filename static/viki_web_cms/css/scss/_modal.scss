@@ -37,6 +37,7 @@
     grid-auto-flow: row;
     gap: 12px;
     height: 100%;
+    align-items: center;
 
     &_item {
       display: flex;
@@ -58,6 +59,13 @@
       padding: 8px;
     }
 
+    &_textarea {
+      @include brd-standard;
+      min-height: 66px;
+      padding: 8px;
+      resize: vertical;
+    }
+
     &_date {
       @include brd-standard;
       padding: 8px;
@@ -66,7 +74,8 @@
     &_checkbox {
       accent-color: $colorSecondary;
       cursor: pointer;
-      transform: scale(0.7);
+      height: 16px;
+      //transform: scale(0.7);
     }
 
     &_file-frame {

@@ -5,3 +5,8 @@ from viki_web_cms.views.dictionary_edit import *
 from viki_web_cms.views.catalogue import *
 from viki_web_cms.views.catalogue_csv import *
 from viki_web_cms.views.price import *
+from viki_web_cms.views.user_extension import *
+from viki_web_cms.views.pdf_view import *
+from viki_web_cms.views.order import *
+from viki_web_cms.views.file_management import *
+from viki_web_cms.views.group_management import *

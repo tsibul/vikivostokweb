@@ -6,53 +6,92 @@
     <script src="{% static 'viki_web/js/index.js' %}" defer type="module"></script>
 
     <main>
-        <div class="container">
-            <h2>Продукция</h2>
-            <section class="category">
-                {% for category in categories %}
-                    <a href="products/{{ category.product_group_url }}">
-                        <div class="news__item">
-                            <img src="{{ category.file_url }}" alt="{{ category.cover }}"
-                                 class="news__img">
+        <section class="content-section">
+            <div class="container">
+                <h2 class="section-title">Продукция</h2>
+                <div class="category">
+                    {% for category in categories %}
+                        <a href="products/{{ category.product_group_url }}" class="category__item">
+                            <img src="{% static 'viki_web_cms/files/cover/' %}{{ category.cover }}" alt="{{ category.cover }}" class="category__img">
+                            <div class="category__label">
+                                <div class="category__label_text">
+                                    {{ category.name }}
+                                    {% if category.second_name %}
+                                        <div>{{ category.second_name }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="container">
+                <h2 class="section-title">Новинки</h2>
+                <div class="section-description">
+                    {#                    <p>Представляем вашему вниманию последние новинки нашего каталога. Мы постоянно обновляем ассортимент, чтобы предложить вам самые современные и качественные товары.</p>#}
+                    {#                    <p>Каждая новинка проходит тщательный контроль качества и соответствует всем стандартам. Ознакомьтесь с нашими новыми поступлениями и выберите то, что подходит именно вам.</p>#}
+                </div>
+                <div class="category">
+                    {% for item in new_items %}
+                        <a href="{% url 'viki_web:product_detail' item.slug %}" class="news__item">
+                            <div class="news__img_frame">
+                                <img src="{% static 'viki_web_cms/files/item_photo/' %}{{ item.image }}"
+                                     alt="{{ item.name }}" class="news__img">
+                            </div>
                             <div class="news__label">
-                                <h4 class="news__title">{{ category.name }}</h4>
-                                <h4 class="news__price">{{ category.second_name }}</h4>
+                                <h4 class="news__title">{{ item.name }}</h4>
+                                <div class="news__text">{{ item.description }}</div>
+                                <p class="news__price">Цена{% if item.price_volume %} от{% endif %}
+                                    :&nbsp;{{ item.price }}</p>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+
+        <section class="content-section">
+            <div class="container">
+                <h2 class="section-title">Новости</h2>
+                {#                <div class="section-description">#}
+                {#                    <p>Следите за последними новостями нашей компании. Здесь вы найдете информацию о важных событиях, новых коллекциях и специальных предложениях.</p>#}
+                {#                </div>#}
+                <div class="category">
+                    {% for news in latest_news %}
+                        <a href="{% url 'viki_web:news' %}" class="news__item">
+                            {% if news.image %}
+                                <div class="news__img_frame">
+                                    <img src="{{ news.file_url }}" alt="{{ news.name }}" class="news__img">
+                                </div>
+                            {% endif %}
+                            <div class="news__label">
+                                <h4 class="news__title">{{ news.name }}</h4>
+                                <time class="news__date">{{ news.date|date:"d.m.Y" }}</time>
+                                <div class="news__text">{{ news.main_text }}</div>
+                                {% if news.second_text %}
+                                    <div class="news__text">{{ news.second_text }}</div>
+                                {% endif %}
+                            </div>
+                        </a>
+                    {% empty %}
+                        <div class="news__item">
+                            <div class="news__label">
+                                <div class="news__text">Новостей пока нет</div>
                             </div>
                         </div>
-                    </a>
-                {% endfor %}
-
-            </section>
-        </div>
-        <div class="container">
-            <h2>Новинки</h2>
-            <section class="category">
-                <div class="news__item">
-                    <img src="{% static 'viki_web/images/recess_bw.jpg' %}" alt="reChess" class="news__img">
-                    <div class="news__label">
-                        <h4 class="news__title">Шахматы&nbsp;reChess</h4>
-                        <h4 class="news__price">6&nbsp;000&nbsp;р.</h4>
-                        <div class="news__text"></div>
-                    </div>
+                    {% endfor %}
                 </div>
-                <div class="news__item">
-                    <img src="{% static 'viki_web/images/horeca_cover.jpg' %}" alt="reChess" class="news__img">
-                    <div class="news__label">
-                        <h4 class="news__title">Хэнгер 210*110 мм</h4>
-                        <h4 class="news__price">94&nbsp;р.</h4>
-                        <div class="news__text"></div>
-                    </div>
-                </div>
-            </section>
-        </div>
+            </div>
+        </section>
         <div class="container">
-            <h2>Новости</h2>
-            <section class="category">
-                <div class="news__item">
-                    <img src="{% static 'viki_web/images/pens_cover.JPG' %}" alt="ручки" class="news__img">
-                    <div class="news__label">
-                        <h4 class="news_title">Шахматы&nbsp;reChess</h4>
-                        <div class="news__text"></div>
+            <section class="cart-page__recently-viewed">
+                <h3 class="section-title">Вы смотрели</h3>
+                <div class="recently-viewed">
+                    <div class="recently-viewed__items">
+                        <!-- Items will be populated dynamically from localStorage -->
                     </div>
                 </div>
             </section>

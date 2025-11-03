@@ -1,0 +1,132 @@
+{% extends 'header.html' %}
+{% load static %}
+{% block content %}
+    <script src="{% static 'viki_web/js/cart.js' %}" defer type="module"></script>
+
+    <main>
+        <div class="container">
+            <div class="cart-title">
+                <h1 class="section-title">Корзина</h1>
+
+                <!-- Кнопка очистки корзины -->
+                <div class="cart-clear-container">
+                    <button class="btn btn__cancel cart-clear-btn">
+                        <i class="fa-solid fa-trash"></i> Очистить корзину
+                    </button>
+                </div>
+            </div>
+
+            <div class="cart-page">
+                <input type="number" step="0.0001" hidden name="discount" value="1">
+                <!-- Cart items -->
+                <div class="cart-page__items">
+                    <!-- Items will be populated dynamically from localStorage -->
+                </div>
+
+                <!-- Cart summary -->
+                <div class="cart-summary">
+                    <div class="cart-summary__info">
+                        <div class="cart-summary__items">Товаров в корзине:
+                            <span class="cart-summary__items-input text-like" data-value="0"
+                                  style="min-width: 30px; display: inline-block;">0</span>
+                        </div>
+                        <div class="cart-summary__subtotal">Стоимость товаров:
+                            <div class="price-container" style="display: inline-flex;">
+                                <span class="cart-summary__subtotal-input text-like" data-value="0.00"
+                                      style="min-width: 100px; display: inline-block;">0,00</span>
+                                <span class="currency">руб.</span>
+                            </div>
+                        </div>
+                        <div class="cart-summary__branding-total">Стоимость нанесения:
+                            <div class="price-container strong">
+                                <span class="cart-summary__branding-total-input text-like" data-value="0.00"
+                                      style="min-width: 100px; display: inline-block;">0,00</span>
+                                <span class="currency">руб.</span>
+                            </div>
+                        </div>
+                        <div class="cart-summary__total">Итого:
+                            <div class="price-container" style="display: inline-flex;">
+                                <span class="cart-summary__total-input text-like" data-value="0.00"
+                                      style="min-width: 100px; display: inline-block;">0,00</span>
+                                <span class="currency">руб.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cart-summary__actions">
+                        <a href="{% url "viki_web:catalogue" %}">
+                            <button class="btn btn__cancel cart-summary__continue">Продолжить покупки</button>
+                        </a>
+                        <button class="btn btn__neutral cart-summary__apply-discounts" disabled>Применить скидки
+                        </button>
+                        <button class="btn btn__neutral cart-summary__quote">Сформировать КП</button>
+                        <button class="btn btn__save cart-summary__checkout">Оформить заказ</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty cart message -->
+            <div class="cart-empty">
+                <div class="cart-empty__icon">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                </div>
+                <h2 class="cart-empty__title">Ваша корзина пуста</h2>
+                <p class="cart-empty__text">Добавьте товары в корзину, чтобы оформить заказ</p>
+                <a href="/" class="btn btn__save cart-empty__button">Перейти к каталогу</a>
+            </div>
+
+            <!-- Секция "Вы смотрели" -->
+            <section class="cart-page__recently-viewed">
+                <h3 class="section-title">Вы смотрели</h3>
+                <div class="recently-viewed">
+                    <div class="recently-viewed__items">
+                        <!-- Items will be populated dynamically from localStorage -->
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Диалог аутентификации для оформления заказа -->
+    <dialog class="login log-checkout-auth">
+        <div class="login__body">
+            <div class="login__title">
+                <div>Для оформления заказа</div>
+                <div>&times;</div>
+            </div>
+            <div class="login__content">
+                <div class="login__text">
+                    Для оформления заказа необходимо войти в систему или зарегистрироваться.
+                </div>
+                <div class="login__btn-block">
+                    <button type="button" class="btn btn__cancel login__btn">Закрыть</button>
+                    <button type="button" class="btn btn__secondary login__btn checkout-login-btn">Войти</button>
+                    <button type="button" class="btn btn__save login__btn checkout-register-btn">Зарегистрироваться
+                    </button>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Диалог подтверждения очистки корзины -->
+    <dialog class="confirm-dialog cart-clear-confirm">
+        <div class="confirm-dialog__body">
+            <div class="confirm-dialog__title">
+                <div>Очистка корзины</div>
+                <div class="confirm-dialog__close">&times;</div>
+            </div>
+            <div class="confirm-dialog__content">
+                <div class="confirm-dialog__icon">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <div class="confirm-dialog__text">
+                    Вы уверены, что хотите очистить корзину полностью?<br>
+                    Это действие нельзя отменить.
+                </div>
+                <div class="confirm-dialog__btn-block">
+                    <button type="button" class="btn btn__cancel confirm-dialog__cancel-btn">Отмена</button>
+                    <button type="button" class="btn btn__save confirm-dialog__confirm-btn">Очистить</button>
+                </div>
+            </div>
+        </div>
+    </dialog>
+{% endblock %}

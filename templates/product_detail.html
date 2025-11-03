@@ -1,0 +1,245 @@
+{% extends 'product_header.html' %}
+{% load static %}
+{% block content %}
+    <script src="{% static 'viki_web/js/product_detail.js' %}" defer type="module"></script>
+    <main>
+        <div class="container">
+            <div class="detail-page">
+                <section class="detail-page__section">
+                    <div class="detail-page__content" data-id="{{ goods.goods_item.id }}" data-data="{{ data }}">
+                        {% if goods.goods_item.new %}
+                            <div class="product-new-badge">НОВИНКА</div>
+                        {% endif %}
+                        <div class="detail-page__gallery">
+                            <button class="detail-page__nav-button detail-page__nav-button--prev tooltip">
+                                <i class="fa-solid fa-chevron-left"></i>
+                                <div class="tooltip-text tooltip-prev">предыдущий</div>
+                            </button>
+                            <button class="detail-page__nav-button detail-page__nav-button--next tooltip">
+                                <i class="fa-solid fa-chevron-right"></i>
+                                <div class="tooltip-text tooltip-next">следующий</div>
+                            </button>
+                            <div class="detail-page__main-image">
+                                {% for item in goods.item_list %}
+                                    <img src="{% static 'viki_web_cms/files/item_photo/' %}{{ item.item.image }}"
+                                         alt="Основное изображение"
+                                         loading="lazy"
+                                         class="{% if item.item.id != goods.id_random %}item-hidden item-opaque{% endif %}"
+                                         data-id="{{ item.item.id }}"
+                                         data-color="{{ item.item.main_color.id }}"
+                                         data-article="{{ item.item.item_article }}"
+                                         data-price="{{ item.price }}"
+                                         data-goods-price="{{ goods.price }}"
+                                         data-color-description="{{ item.color_description }}"
+                                    >
+                                {% endfor %}
+                            </div>
+                            <div class="detail-page__thumbnails">
+                                {% for item in goods.item_list %}
+                                    {% for photo in item.additional_photo %}
+                                        <div class="detail-page__thumbnail
+                                         {% if item.item.id != goods.id_random %}item-hidden item-opaque{% endif %}"
+                                             data-id="{{ item.item.id }}"
+                                        >
+                                            <img src="
+                                                    {% static 'viki_web_cms/files/item_add_photo/' %}{{ photo.add_photo }}"
+                                                 alt="Дополнительное изображение"
+                                                 loading="lazy">
+                                        </div>
+                                    {% endfor %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="detail-page__info">
+                            <h1 class="">{{ goods.goods_item.name }}</h1>
+                            <div class="detail-page__article">
+                                <h3>Артикул: {{ goods.random_item.item.item_article }}</h3>
+                                <h3 class="strong">Цена{% if goods.price_volume %} от{% endif %}:
+                                    {% if goods.random_item.price %}{{ goods.random_item.price }}{% else %}
+                                        {{ goods.price }}{% endif %} руб.</h3>
+                                {% if goods.promotion_price or goods.random_item.promotion_price %}
+                                    <div class="product-promotion-badge">Акция</div>
+                                {% endif %}
+                                <div class="detail-page__color-description">{{ goods.random_item.color_description|safe }}</div>
+                            </div>
+                            <div class="detail-page__description">
+                                <h3>Описание товара</h3>
+                                <div>{{ goods.goods_description|safe }}</div>
+                            </div>
+                            <div class="detail-page__color-picker">
+                                <div class="filter__content_data_color">
+                                    {% for color in goods.colors %}
+                                        <input type="radio"
+                                               id="item-color-{{ item.item.id }}_{{ color.main_color__hex|slice:"1:" }}"
+                                               name="color-picker"
+                                               class="standard-color-radio"
+                                               data-id="{{ color.id }}"
+                                               value="{{ color.id }}"
+                                                {% if  item.item.id == color.id %} checked {% endif %}
+                                               hidden>
+                                        <label for="item-color-{{ item.item.id }}_{{ color.main_color__hex|slice:"1:" }}"
+                                               class="color-label"
+                                               data-item-id="{{ color.id }}"
+                                               data-hex="{{ color.main_color__hex|slice:"1:" }}"
+                                               {% if goods.goods_item.multicolor %}hidden{% endif %}
+                                        >
+                                            <div class="square tooltip"
+                                                 style="background-color: {{ color.main_color__hex }};">
+                                                <div class="tooltip-text">{{ color.main_color__name }}</div>
+                                            </div>
+                                            <div class="color-label__check"
+                                                 data-id="{{ color.id }}"
+                                                    {% if goods.id_random == color.id %}
+                                                 style="display:block;"  {% endif %}
+                                            ></div>
+                                        </label>
+                                    {% endfor %}
+                                    {% if goods.goods_item.multicolor %}
+                                        <button class="btn btn__cancel btn-multicolor">варианты сочетаний элементов
+                                            - {{ goods.item_list|length }}</button>
+                                        {% for color in goods.colors %}
+                                            <input type="checkbox"
+                                                   id="item-color-{{ item.item.id }}_{{ color.main_color__hex|slice:"1:" }}"
+                                                   name="{{ color.name }}"
+                                                   class="product-header__filter-content_checkbox-hidden"
+                                                   data-id="{{ item.item.id }}"
+                                                    {% if  item.item.id == color.id %} checked {% endif %}
+                                                   hidden>
+                                            <label hidden
+                                                   for="item-color-{{ item.item.id }}_{{ color.main_color__hex|slice:"1:" }}"
+                                                   class="color-label"
+                                                   data-item-id="{{ color.id }}"
+                                                   data-hex="{{ color.main_color__hex|slice:"1:" }}"
+                                            >
+                                                <div class="square tooltip"
+                                                     style="background-color: {{ color.main_color__hex }};">
+                                                    <div class="tooltip-text">{{ color.main_color__name }}</div>
+                                                </div>
+                                                <div class="color-label__check"
+                                                        {% if item.item.id == color.id %}
+                                                     style="display:block;"  {% endif %}
+                                                ></div>
+                                            </label>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <button class="btn btn__save btn-sqr add-to-cart">
+                                <div>В корзину&nbsp;</div>
+                                <img src="{% static 'viki_web/icons/cart.svg' %}" alt="cart">
+                            </button>
+                            <div class="detail-page__tabs">
+                                <div class="detail-page__tab">
+                                    <h3>Техническая информация</h3>
+                                    <div class="product-hor__tab tab detail-show">
+                                        <div>
+                                            размеры: {{ goods.dimensions }},&nbsp;&nbsp;вес: {{ goods.goods_item.weight }}г
+                                        </div>
+                                        <div>
+                                            <div>шаблоны:</div>
+                                            {% for layout in goods.print_layout %}
+                                                <a href="{% static 'viki_web_cms/files/layout' %}
+                                                       {{ layout.layout.layout.file.name }}"
+                                                   target="_blank">
+                                                    <p>{{ layout.name }}</p>
+                                                    <i class="fa-regular fa-folder"></i>
+                                                </a>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="detail-page__tab">
+                                    <h3>Печать</h3>
+                                    <div class="product-hor__tab tab detail-show"
+                                         data-id="print-{{ item.item.id }}">
+                                        <div class="product-hor__tab-print_data">
+                                            <div>тип</div>
+                                            <div>место</div>
+                                            <div>кол-во мест нанесения</div>
+                                            <div>кол-во цветов</div>
+                                            <div>размер</div>
+                                        </div>
+                                        {% for print in goods.print_data %}
+                                            <div class="product-hor__tab-print_data">
+                                                <div>{{ print.print_type }}</div>
+                                                <div>{{ print.print_place }}</div>
+                                                <div>{{ print.place_quantity }}</div>
+                                                <div>{{ print.color_quantity }}</div>
+                                                <div>{{ print.dimensions }}</div>
+                                            </div>{% endfor %}
+                                    </div>
+                                </div>
+                                <div class="detail-page__tab">
+                                    <h3>Упаковка</h3>
+                                    <div class="product-hor__tab tab detail-show">
+                                        <div class="product-hor__tab-pack">
+                                            <div>упаковка</div>
+                                            <div>штук в упаковке</div>
+                                            <div>вес, кг</div>
+                                            <div>объем, м3</div>
+                                        </div>
+                                        {% for pack in goods.packing %}
+                                            <div class="product-hor__tab-pack">
+                                                <div>{{ pack.box__name }}</div>
+                                                <div>{{ pack.quantity_in }}</div>
+                                                <div>{{ pack.box_weight }}</div>
+                                                <div>{{ pack.box__volume }}</div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="detail-page__related">
+                    <h3 class="section-title">Похожие товары</h3>
+                    <div class="detail-page__related_list">
+                        {% for similar in similar_goods %}
+                            <a href="{% url 'viki_web:product_detail' similar.slug %}"
+                               class="detail-page__related_item">
+                                <img src="{% static 'viki_web_cms/files/item_photo/' %}{{ similar.image }}"
+                                     alt="Похожий товар">
+                                <div class="detail-page__related_info">
+                                    <h4>{{ similar.name }}</h4>
+                                    <p class="strong">Цена: {{ similar.price }}руб.</p>
+                                </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <section class="detail-page__related">
+                    <h3 class="section-title">Сопутствующие товары</h3>
+                    <div class="detail-page__related_list">
+                        {% for similar in related_goods %}
+                            <a href="{% url 'viki_web:product_detail' similar.slug %}"
+                               class="detail-page__related_item">
+                                <img src="{% static 'viki_web_cms/files/item_photo/' %}{{ similar.image }}"
+                                     alt="Сопутствующий товар">
+                                <div class="detail-page__related_info">
+                                    <h4>{{ similar.name }}</h4>
+                                    <p class="strong">Цена{% if similar.price_volume %} от{% endif %}
+                                        : {{ similar.price }}руб.</p>
+                                </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <section class="cart-page__recently-viewed">
+
+                    <h3 class="section-title">Вы смотрели</h3>
+                    <div class="recently-viewed">
+                        <div class="recently-viewed__items">
+                            <!-- Items will be populated dynamically from localStorage -->
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </main>
+{% endblock %} 

@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Module for creating the main catalogue element
+ * @module catalogueElement/createCatalogueElement
+ */
+
 'use strict'
 
 import {createSaveButton} from "../createStandardElements/createSaveButton.js";
@@ -7,6 +12,11 @@ import {createCatalogueRow} from "./createCatalogueRow.js";
 import {createNeutralButton} from "../createStandardElements/createNeutralButton.js";
 import {uploadFilesCatalogue} from "./uploadCatalogueModal.js";
 
+/**
+ * Creates the main catalogue element with title, content and controls
+ * @param {string} className - CSS class name for the catalogue element
+ * @returns {Promise<HTMLDivElement>} Complete catalogue element
+ */
 export async function createCatalogueElement(className) {
     const headerRight = document.querySelector('.dictionary-frame__header_right');
     const uploadButton = createNeutralButton('Загрузить несколько фото');
@@ -41,7 +51,7 @@ export async function createCatalogueElement(className) {
     catalogue.appendChild(catalogueTitle);
     const catalogueContent = document.createElement('div');
     catalogueContent.classList.add('catalogue__content');
-    await createCatalogueContent(catalogueContent, 0, 0, 'None', 0);
+    await createCatalogueContent(catalogueContent, 0, 0,0, 'None', 0);
     catalogue.appendChild(catalogueContent);
     return catalogue;
 }

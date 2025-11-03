@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Main entry point for CMS application
+ * @module main
+ */
+
 'use strict';
 import {createContentLeft} from './leftMenu/createContentLeft.js';
 import {createFullScreenContent} from "./fullScreenElement/createFullScreenContent.js";
@@ -7,12 +12,29 @@ import {createPriceElement} from "./priceElement/createPriceElement.js";
 import {fetchJsonData} from "./fetchJsonData.js";
 import {checkUserData} from "./authentification/checkUserData.js";
 import {login} from "./authentification/login.js";
+import {createUserElement} from "./userElement/createUserElement.js";
+import {createOrderElement} from "./orderElement/createOrderElement.js";
+import {createGroupElement} from "./groupElement/createGroupElement.js";
+import {createFilesElement} from "./filesElement/createFilesElement.js";
 
+/**
+ * Base URL for JSON data
+ * @type {string}
+ */
 export const jsonUrl = './json/'
+
+/**
+ * Mapping of page types to their content creation functions
+ * @type {Object<string, Function>}
+ */
 export const cmsPages = {
     'Goods': createGoodsElement,
     'Catalogue': createCatalogueElement,
     'PriceList': createPriceElement,
+    'UserExtension': createUserElement,
+    'Order': createOrderElement,
+    'CustomerGroup': createGroupElement,
+    'Files': createFilesElement,
 }
 
 const checkUserUrl = jsonUrl + 'userdata';

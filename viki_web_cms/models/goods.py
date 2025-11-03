@@ -1,10 +1,7 @@
-# from django.core.files.storage import FileSystemStorage
 from django.db import models
+from transliterate import translit
 
 from viki_web_cms.models import SettingsDictionary, ColorScheme, ProductGroup
-
-
-# fs_goods = FileSystemStorage(location='viki_web_cms/files/goods')
 
 
 class GoodsGroup(SettingsDictionary):
@@ -63,10 +60,11 @@ class Goods(SettingsDictionary):
     details_number = models.IntegerField(default=1)
     multicolor = models.BooleanField(default=False)
     standard_price = models.BooleanField(default=True)
-    # print_layout = models.FileField(upload_to=fs_goods, storage=fs_goods, blank=True, null=True)
     goods_option_group = models.ForeignKey(GoodsOptionGroup, on_delete=models.SET_NULL, null=True)
     dealer_price = models.BooleanField(default=True)
     weight = models.FloatField(null=True, blank=True)
+    new = models.BooleanField(default=False)
+    slug = models.SlugField(unique=True, null=False, blank=False)
 
     class Meta(SettingsDictionary.Meta):
         verbose_name = 'Товар'
@@ -75,9 +73,12 @@ class Goods(SettingsDictionary):
         db_table = 'goods'
         ordering = ['article', 'name']
 
-    # @property
-    # def cover_url(self):
-    #     return f"/static/viki_web_cms/files/goods/{self.print_layout.name}" if self.print_layout else None
+    def save(self, *args, **kwargs):
+        self.slug = translit(self.name.lower(), 'ru', reversed=True).replace(' ', '-')
+        slug_old = Goods.objects.filter(slug=self.slug, deleted=False).first()
+        if slug_old and slug_old.id != self.id:
+            return {'errors': ['name']}
+        super(Goods, self).save(*args, **kwargs)
 
     @staticmethod
     def order_default():
@@ -85,13 +86,19 @@ class Goods(SettingsDictionary):
 
     @staticmethod
     def dictionary_fields():
-        return [{
-            'field': 'article',
-            'type': 'string',
-            'label': 'артикул',
-            'null': False,
-        },
+        return [
+            {
+                'field': 'article',
+                'type': 'string',
+                'label': 'артикул',
+                'null': False,
+            },
         ] + SettingsDictionary.dictionary_fields() + [
+            {
+                'field': 'new',
+                'type': 'boolean',
+                'label': 'новый',
+            },
             {
                 'field': 'additional_material',
                 'type': 'boolean',
@@ -161,6 +168,7 @@ class Goods(SettingsDictionary):
             },
         ]
 
+
 class GoodsOption(SettingsDictionary):
     """ goods options"""
     option_article = models.CharField(max_length=120)
@@ -194,4 +202,107 @@ class GoodsOption(SettingsDictionary):
                 'null': True,
             },
 
+        ]
+
+
+class GoodsSimilar(SettingsDictionary):
+    """ similar goods """
+    main_goods = models.ForeignKey(Goods, on_delete=models.CASCADE, related_name='main_similar')
+    similar_goods = models.ForeignKey(Goods, on_delete=models.CASCADE, related_name='similar')
+
+    class Meta(SettingsDictionary.Meta):
+        verbose_name = 'Похожий товар'
+        verbose_name_plural = 'Похожие товары'
+        db_table_comment = 'Similar goods'
+        db_table = 'similar_goods'
+        ordering = ['main_goods__article', 'main_goods__name']
+
+    def save(self, *args, **kwargs):
+        self.name = self.main_goods.article + '_' + self.similar_goods.article
+        super(GoodsSimilar, self).save(*args, **kwargs)
+
+    @staticmethod
+    def order_default():
+        return ['main_goods__article', 'main_goods__name']
+
+    @staticmethod
+    def dictionary_fields():
+        return [
+            {
+                'field': 'name',
+                'type': 'string',
+                'label': 'название',
+                'null': True,
+            },
+            {
+                'field': 'deleted',
+                'type': 'boolean',
+                'label': 'удалено',
+            },
+            {
+                'field': 'main_goods',
+                'type': 'foreign',
+                'label': 'основной товар',
+                'foreignClass': 'Goods',
+                'null': False,
+            },
+            {
+                'field': 'similar_goods',
+                'type': 'foreign',
+                'label': 'похожий товар',
+                'foreignClass': 'Goods',
+                'null': False,
+            },
+
+        ]
+
+
+class GoodsRelated(SettingsDictionary):
+    """ related goods """
+    main_goods = models.ForeignKey(Goods, on_delete=models.CASCADE, related_name='main_related')
+    related_goods = models.ForeignKey(Goods, on_delete=models.CASCADE, related_name='related')
+
+    class Meta(SettingsDictionary.Meta):
+        verbose_name = 'Сопутствующий товар'
+        verbose_name_plural = 'Сопутствующие товары'
+        db_table_comment = 'Related goods'
+        db_table = 'related_goods'
+        ordering = ['main_goods__article', 'main_goods__name']
+
+    def save(self, *args, **kwargs):
+        self.name = self.main_goods.article + '_' + self.related_goods.article
+        super(GoodsRelated, self).save(*args, **kwargs)
+
+    @staticmethod
+    def order_default():
+        return ['main_goods__article', 'main_goods__name']
+
+    @staticmethod
+    def dictionary_fields():
+        return [
+            {
+                'field': 'name',
+                'type': 'string',
+                'label': 'название',
+                'null': True,
+            },
+            {
+                'field': 'deleted',
+                'type': 'boolean',
+                'label': 'удалено',
+            },
+            {
+                'field': 'main_goods',
+                'type': 'foreign',
+                'label': 'основной товар',
+                'foreignClass': 'Goods',
+                'null': False,
+            },
+            {
+                'field': 'related_goods',
+                'type': 'foreign',
+                'label': 'сопутствующий товар',
+                'foreignClass': 'Goods',
+                'null': False,
+            },
         ]

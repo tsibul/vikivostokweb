@@ -10,18 +10,19 @@
   &__left {
     display: flex;
     flex-direction: column;
-    width: 16%;
+    width: 14vw;
     @include brd-standard;
     padding: 20px;
     gap: 20px;
-    max-height: fit-content;
+    max-height: calc(100% - 78px);
     position: fixed;
+    overflow: auto;
   }
 
   &__right {
     display: flex;
     flex-direction: column;
-    margin-left: calc(16% + 14px);
+    margin-left: calc(14vw + 14px);
     width: 100%;
   }
 }

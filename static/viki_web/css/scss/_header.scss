@@ -6,9 +6,10 @@
   width: 100%;
   background-color: $colorSecondary;
   position: sticky;
-  margin-top: 150px;
+  margin-top: 180px;
   top: 0;
   z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 
   &__line {
     display: flex;
@@ -21,51 +22,149 @@
     display: flex;
     align-items: center;
     gap: 30px;
-    list-style: none;
   }
 
   &__item {
     cursor: pointer;
-    //transition: 0.4s ease transform;
+    padding: 16px 0;
+    position: relative;
 
-    & div, img {
+    a, div {
       display: inline-block;
+      position: relative;
+      transition: all 0.2s ease;
+      color: $colorSecondary50;
+      
+      &::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: -3px;
+        left: 0;
+        background-color: $colorSecondary50;
+        transition: width 0.3s ease;
+      }
     }
 
-    :hover {
-      transform: scale(1.2);
-      font-weight: 600;
+    &:hover {
+      a, div {
+        &::after {
+          width: 100%;
+        }
+      }
     }
   }
 
   &__logo {
     height: 40px;
+    transition: transform 0.2s ease;
+    
+    &:hover {
+      transform: scale(1.05);
+    }
   }
 
   &__right {
     display: flex;
     align-items: center;
-    gap: 12px;
-    cursor: pointer;
+    gap: 30px;
+  }
 
-    &:hover {
-      transform: scale(1.1);
+  &__cabinet {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    padding: 16px 0;
+    position: relative;
+
+    i {
+      color: $colorSecondary50;
     }
 
-    &:hover div {
-      font-weight: 600;
+    div {
+      color: $colorSecondary50;
+      position: relative;
+      
+      &::after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 2px;
+        bottom: -3px;
+        left: 0;
+        background-color: $colorSecondary50;
+        transition: width 0.3s ease;
+      }
+    }
+
+    &:hover {
+      div::after {
+        width: 100%;
+      }
+    }
+  }
+}
+
+.cart {
+  display: flex;
+  align-items: center;
+  
+  a {
+    display: flex;
+    align-items: center;
+    position: relative;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -3px;
+      left: 0;
+      background-color: $colorSecondary50;
+      transition: width 0.3s ease;
+    }
+    
+    img {
+      filter: brightness(0) invert(1);
+    }
+
+    .cart-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background-color: $colorPrimary;
+      color: $colorSecondary50;
+      border-radius: 50%;
+      padding: 2px 6px;
+      font-size: 12px;
+      min-width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      display: none;
+    }
+  }
+
+  &:hover {
+    a::after {
+      width: 100%;
     }
   }
 }
 
 .header {
   background-color: $colorPrimary;
+  margin-bottom: 30px;
 
   &__line {
-    height: 240px;
+    height: 270px;
     display: flex;
     justify-content: space-between;
-    margin: -210px 0 30px 0;
+    margin: -240px 0 0 0;
   }
 
   &__left {
@@ -81,14 +180,32 @@
     align-items: center;
     gap: 8px;
     text-decoration: none;
+    margin-top: 15px;
+    margin-bottom: 60px;
+    padding: 6px 12px;
+    background-color: rgba($colorSecondary, 0.2);
+    border-radius: 20px;
+    transition: background-color 0.2s ease;
+    width: fit-content;
+    
+    &:hover {
+      background-color: rgba($colorSecondary, 0.3);
+    }
 
     &_item {
       color: $colorSecondary50;
     }
   }
 
-  &__right img {
-    height: 100%;
+  &__right {
+    img {
+      height: 100%;
+      transition: opacity 0.2s ease;
+      
+      &:hover {
+        opacity: 0.95;
+      }
+    }
   }
 }
 
@@ -98,26 +215,20 @@
   &__item {
     display: none;
     position: absolute;
-    top: 22px;
-    left: -16px;
+    top: 44px;
+    left: -8px;
     @include brd-standard;
     background-color: $colorSecondary50;
     width: 220px;
     padding: 8px 0;
-    //transform: scale(0.5);
-    //transition: transform 1s ease;
-
+    z-index: 9;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 
     & li {
       padding: 8px;
-      list-style: none;
-
-      & a {
-        color: $colorPrimary;
-      }
+      transition: background-color 0.2s ease;
 
       &:hover {
-        transform: scale(1.01);
         background-color: rgba($colorSecondary, 0.1);
       }
     }
@@ -125,7 +236,18 @@
 
   &:hover &__item {
     display: block;
-    transform: scale(1);
+    animation: fadeIn 0.2s ease-out;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 

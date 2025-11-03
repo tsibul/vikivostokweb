@@ -6,6 +6,7 @@ import {createModalContent} from "./createModalContent.js";
 import {jsonUrl} from "../../main.js";
 import {closeModal} from "../../modalFunction/closeModal.js";
 import {createRow} from "../showDictionary/createDictionaryRows.js";
+import {getCSRFToken} from "../../getCSRFToken.js";
 
 /**
  * create modal window foe add/edit class element
@@ -59,6 +60,9 @@ async function sendForm(event, form, className, initialData) {
         const fetchPath = jsonUrl + 'edit_dictionary/' + className + '/' + elementId;
         await fetch(fetchPath, {
             method: 'POST',
+            headers: {
+                "X-CSRFToken": getCSRFToken(),
+            },
             body: formData,
         })
             .then(response => response.json())
@@ -108,7 +112,7 @@ async function sendForm(event, form, className, initialData) {
  * @param initialData
  * @returns {boolean}
  */
-function checkChangeForm(formData, initialData) {
+export function checkChangeForm(formData, initialData) {
     const valuesInitial = Array.from(initialData.values());
     const valuesCurrent = Array.from(formData.values());
     valuesInitial.sort();

@@ -1,0 +1,155 @@
+@import "vars";
+@import "mixins";
+
+.layout {
+  width: 100%;
+  @include brd-standard;
+  margin-bottom: 16px;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    //padding: 15px 0;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba($colorSecondary, 0.1);
+  }
+
+  &__header-left {
+    font-size: 28px;
+    color: $colorPrimary;
+  }
+
+  &__header-right {
+    //padding: 8px 16px;
+    //display: flex;
+    //align-items: center;
+    //justify-content: flex-end;
+    //gap: 12px;
+    //background-color: rgba($colorPrimary, 0.03);
+    //border-radius: 8px;
+    //box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+
+    display: flex;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    padding: 6px 10px;
+    margin-right: 10px;
+
+
+    i {
+      color: $colorSecondary;
+    }
+  }
+
+  &__input {
+    padding: 8px 12px;
+    border: 1px solid rgba($colorSecondary, 0.2);
+    border-radius: 6px;
+    width: 320px;
+    transition: all 0.2s ease;
+
+    &_menu {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: $colorSecondary50;
+      width: 180px;
+
+      &::placeholder {
+        color: rgba(242, 255, 255, 0.7);
+      }
+
+    }
+
+    &:focus {
+      outline: none;
+      border-color: $colorSecondary;
+      box-shadow: 0 0 0 3px rgba($colorSecondary, 0.1);
+    }
+
+    &::placeholder {
+      color: rgba($colorNeutral500, 0.5);
+    }
+  }
+}
+
+.layout-content {
+  max-height: calc(100vh - 190px);
+  overflow: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  padding: 12px;
+  background-color: #fff;
+
+  &__header {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+
+  &__title {
+    &_item {
+      font-weight: 500;
+      color: $colorNeutral700;
+    }
+  }
+
+  &__rows {
+    margin-top: 8px;
+  }
+
+  &__row {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid rgba($colorNeutral500, 0.05);
+
+    &:hover {
+      background-color: rgba($colorPrimary, 0.03);
+    }
+
+    &_item {
+      color: $colorNeutral600;
+    }
+
+    &_file {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      color: $colorSecondary;
+      padding: 4px 10px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+      background-color: rgba($colorSecondary, 0.05);
+
+      &:hover {
+        background-color: rgba($colorSecondary, 0.1);
+      }
+
+      & i {
+        color: $colorSecondary;
+        font-size: 16px;
+      }
+    }
+  }
+}
+
+.hr {
+  background-color: rgba($colorNeutral500, 0.1);
+  height: 1px;
+  border: none;
+  margin: 6px 0;
+}
+
+.strong {
+  font-weight: 600;
+  color: $colorPrimary;
+}

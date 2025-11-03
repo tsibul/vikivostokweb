@@ -3,13 +3,14 @@ from django.db import models
 
 from viki_web_cms.models import SettingsDictionary, LayoutType
 
-fs_product_group = FileSystemStorage(location='viki_web_cms/files/cover')
+fs_product_group = FileSystemStorage(location='static/viki_web_cms/files/cover')
 
 
 class ProductGroup(SettingsDictionary):
     """ navigation sections"""
     second_name = models.CharField(max_length=120, blank=True, null=True)
-    cover = models.FileField(upload_to=fs_product_group, storage=fs_product_group, blank=True, null=True)
+    short_name = models.CharField(max_length=120, blank=True, null=True)
+    cover = models.FileField(storage=fs_product_group, blank=True, null=True)
     product_group_url = models.CharField(max_length=60)
     layout = models.ForeignKey(LayoutType, blank=True, null=True, on_delete=models.SET_NULL)
     priority = models.IntegerField(blank=True, null=True)
@@ -45,6 +46,12 @@ class ProductGroup(SettingsDictionary):
                 'null': True,
             },
             {
+                'field': 'short_name',
+                'type': 'string',
+                'label': 'имя в меню',
+                'null': True,
+            },
+            {
                 'field': 'product_group_url',
                 'type': 'string',
                 'label': 'адрес страницы',
@@ -65,6 +72,14 @@ class ProductGroup(SettingsDictionary):
             },
             {
                 'field': 'cover',
+                'type': 'file',
+                'label': 'обложка',
+                'url': '/static/viki_web_cms/files/cover/',
+                'null': False,
+            },
+            {
+                'field': 'cover_photo',
+                'property_off' : 'cover',
                 'type': 'image',
                 'label': 'обложка',
                 'url': '/static/viki_web_cms/files/cover/',

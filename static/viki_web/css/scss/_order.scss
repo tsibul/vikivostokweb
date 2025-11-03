@@ -1,0 +1,524 @@
+@import "vars";
+@import "mixins";
+
+// Order page styles
+
+
+.order-page {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  //padding: 20px 0;
+}
+
+.order-form {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  width: 100%;
+}
+
+.order-section-title {
+  font-size: 22px;
+  color: $colorPrimary;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+// Customer information section
+.order-customer {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  &__user {
+    display: grid;
+    align-items: center;
+    grid-template-columns: repeat(3, 1fr) 1.5fr;
+    gap: 15px;
+  }
+
+  &__field {
+    display: flex;
+    align-items: baseline;
+    min-width: 250px;
+    margin-right: 20px;
+  }
+
+  &__label {
+    font-weight: 600;
+    color: $colorPrimary;
+    margin-right: 10px;
+    //min-width: 100px;
+  }
+
+  &__company-selection {
+    margin-top: 10px;
+  }
+
+  &__company-details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba($colorPrimary, 0.1);
+  }
+}
+
+// Custom dropdown styles
+.order-dropdown {
+  position: relative;
+  width: 50%;
+
+  &__selected {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background-color: #fff;
+    border: 1px solid $colorPrimary;
+    border-radius: 6px;
+    cursor: pointer;
+
+    i {
+      color: $colorPrimary;
+      font-size: 14px;
+    }
+  }
+
+  &__options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 0;
+    overflow: hidden;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid transparent;
+    border-radius: 0 0 6px 6px;
+    //margin-top: -1px;
+    z-index: 10;
+    transition: max-height 0.3s ease, border-color 0.3s ease;
+
+    &.active {
+      max-height: 200px;
+      overflow-y: auto;
+    }
+  }
+
+  &__option {
+    padding: 8px 12px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: rgba($colorSecondary, 0.2);
+    }
+  }
+}
+
+.customer-dropdown, .company-dropdown {
+  position: relative;
+  width: 100%;
+  cursor: pointer;
+
+  .dropdown-selected {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background-color: #fff;
+    border: 1px solid $colorPrimary;
+    border-radius: 6px;
+    cursor: pointer;
+
+    i {
+      color: $colorPrimary;
+      font-size: 14px;
+    }
+  }
+
+  .dropdown-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 0;
+    overflow: hidden;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid transparent;
+    border-radius: 0 0 6px 6px;
+    z-index: 10;
+    transition: max-height 0.3s ease, border-color 0.3s ease;
+
+    &.active {
+      max-height: 200px;
+      overflow-y: auto;
+      border-color: $colorPrimary;
+    }
+  }
+
+  .dropdown-option {
+    padding: 8px 12px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: rgba($colorSecondary, 0.2);
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+.customer-dropdown {
+  width: 100%;
+}
+
+// Order items section
+.order-items {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.order-item {
+  display: flex;
+  padding: 15px 0;
+  border-bottom: 1px solid rgba($colorPrimary, 0.1);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &__image {
+    width: 120px;
+    height: 120px;
+    margin-right: 20px;
+    flex-shrink: 0;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+  }
+
+  &__details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__row {
+    display: grid;
+    grid-template-columns: 2fr 3fr;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  &__name {
+    font-size: 18px;
+    color: $colorPrimary;
+    font-weight: 600;
+    margin: 0;
+  }
+
+  &__code {
+    font-size: 14px;
+  }
+
+  &__pricing {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1.5fr;
+    gap: 30px;
+  }
+
+  &__price, &__quantity, &__total {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+  }
+
+  &__branding {
+    font-size: 14px;
+  }
+
+  &__branding-details {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+  }
+
+  &__branding-price {
+    font-size: 14px
+  }
+
+}
+
+// Order additional options section
+.order-additional {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  &__comment {
+    margin-bottom: 20px;
+  }
+
+  &__label {
+    display: block;
+    font-weight: 600;
+    color: $colorPrimary;
+    margin-bottom: 10px;
+  }
+
+  &__textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 10px;
+    border: 1px solid $colorPrimary;
+    border-radius: 6px;
+    resize: vertical;
+    font-family: inherit;
+    font-size: 14px;
+
+    &.invalid {
+      border-color: red;
+      background-color: rgba(255, 0, 0, 0.05);
+    }
+  }
+
+  &__help-text {
+    display: block;
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+  }
+
+  &__delivery {
+    margin-top: 20px;
+  }
+}
+
+// Delivery options dropdown
+.delivery-dropdown {
+  position: relative;
+  width: 100%;
+
+  &__selected {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background-color: #fff;
+    border: 1px solid $colorPrimary;
+    border-radius: 6px;
+    cursor: pointer;
+
+    i {
+      color: $colorPrimary;
+      font-size: 14px;
+    }
+  }
+
+  &__options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 0;
+    overflow: hidden;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid transparent;
+    border-radius: 0 0 6px 6px;
+    z-index: 10;
+    transition: max-height 0.3s ease, border-color 0.3s ease;
+
+    &.active {
+      max-height: 200px;
+      overflow-y: auto;
+      border-color: $colorPrimary;
+    }
+  }
+
+  &__option {
+    padding: 8px 12px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+
+    .option-name {
+      font-weight: normal;
+    }
+
+    .option-price {
+      color: $colorPrimary;
+    }
+
+    &:hover {
+      background-color: rgba($colorSecondary, 0.2);
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+
+// Order summary section
+.order-summary {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: this 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+  &__totals {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__row {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid rgba($colorPrimary, 0.1);
+    }
+  }
+
+  &__grand-total {
+    font-weight: 700;
+    font-size: 18px;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 2px solid rgba($colorPrimary, 0.2);
+  }
+
+  &__label {
+    color: $colorPrimary;
+  }
+
+  &__value {
+    //color: $colorNeutral500;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 20px;
+
+    .btn {
+      min-width: 120px;
+    }
+  }
+}
+
+// Company warning dialog
+.company-warning-dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+
+  &__content {
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 30px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  &__title {
+    color: $colorPrimary;
+    font-size: 20px;
+    margin-top: 0;
+    margin-bottom: 15px;
+  }
+
+  &__message {
+    margin-bottom: 25px;
+    line-height: 1.5;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+
+    .btn {
+      min-width: 120px;
+    }
+  }
+}
+
+
+// Responsive styles
+@media (max-width: 768px) {
+  .order-customer__field {
+    min-width: 200px;
+  }
+
+  .order-dropdown {
+    width: 100%;
+  }
+
+  .order-item {
+    flex-direction: column;
+
+    &__image {
+      width: 100%;
+      height: 200px;
+      margin-right: 0;
+      margin-bottom: 15px;
+    }
+  }
+
+  .order-summary__actions {
+    flex-direction: column;
+
+    .btn {
+      width: 100%;
+    }
+  }
+
+  .company-warning-dialog__actions {
+    flex-direction: column;
+
+    .btn {
+      width: 100%;
+    }
+  }
+  
+  .order-additional__textarea {
+    min-height: 80px;
+  }
+}
+

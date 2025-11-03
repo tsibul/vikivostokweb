@@ -1,9 +1,39 @@
 from django.shortcuts import render
 
-from viki_web_cms.models import ProductGroup
+from viki_web.views import find_price_type, goods_price
+from viki_web_cms.models import ProductGroup, Goods, CatalogueItem, GoodsDescription
+from viki_web_cms.models.news_models import News
 
 
 def index(request):
-    categories = ProductGroup.objects.all()
-    context = {'categories': categories}
+    categories = ProductGroup.objects.filter(deleted=False)
+    new_items_request = Goods.objects.filter(deleted=False, new=True)
+    new_items = []
+    for item in new_items_request:
+        price_type = find_price_type(request)
+        price, price_volume, promotion_price = goods_price(item, price_type)
+        catalogue_item = CatalogueItem.objects.filter(goods=item, deleted=False).order_by('?').first()
+        description = GoodsDescription.objects.filter(
+            goods=item, deleted=False).first()
+        goods_description = description.description if description else ''
+        if catalogue_item:
+            new_items.append({
+                'price': price,
+                'image': catalogue_item.image,
+                'name': item.name,
+                'slug': item.slug,
+                'price_volume': price_volume,
+                'promotion_price': promotion_price,
+                'description': goods_description,
+            })
+
+    # Получаем последние 4 новости
+    latest_news = News.objects.filter(deleted=False).order_by('-date')[:4]
+
+    context = {
+        'categories': categories, 
+        'user': request.user, 
+        'new_items': new_items,
+        'latest_news': latest_news
+    }
     return render(request, 'index.html', context)

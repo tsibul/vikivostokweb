@@ -1,9 +1,20 @@
+/**
+ * @fileoverview Module for handling volume-based price list functionality
+ * @module priceElement/volumePrice
+ */
+
 'use strict'
 
 import {jsonUrl} from "../main.js";
 import {fetchJsonData} from "../fetchJsonData.js";
 import {priceHeaderBuild} from "./standardPrice.js";
 
+/**
+ * Creates price content element for volume-based price list
+ * @param {string} priceDate - Price list date identifier
+ * @param {string} [searchString] - Optional search string for filtering
+ * @returns {Promise<{form: HTMLDivElement, header: HTMLElement}>} Object containing form and header elements
+ */
 export async function volumePrice(priceDate, searchString) {
     const priceForm = document.createElement('div');
     priceForm.classList.add('price-content');
@@ -16,6 +27,14 @@ export async function volumePrice(priceDate, searchString) {
     return {'form': priceForm, 'header': priceHeader};
 }
 
+/**
+ * Builds form content for volume-based price list
+ * @param {Object} priceData - Price data containing goods and volumes
+ * @param {HTMLDivElement} priceForm - Form element to populate
+ * @param {Array<Object>} header - Array of price type data
+ * @param {Array<Object>} volumes - Array of volume data
+ * @param {string} rowGrid - CSS grid template columns definition
+ */
 function volumePriceFormBuild(priceData, priceForm, header, volumes, rowGrid) {
     volumes.forEach(volume => {
         const tableHeader = document.createElement('div');
@@ -29,6 +48,14 @@ function volumePriceFormBuild(priceData, priceForm, header, volumes, rowGrid) {
 
 }
 
+/**
+ * Creates table content for a specific volume
+ * @param {Object} priceData - Price data containing goods
+ * @param {Array<Object>} header - Array of price type data
+ * @param {Object} volume - Volume data
+ * @param {string} rowGrid - CSS grid template columns definition
+ * @returns {HTMLDivElement} Table content element
+ */
 function createTableContent(priceData, header, volume, rowGrid) {
     const tableContent = document.createElement('div');
     priceData.goods.forEach((g) => {
@@ -37,7 +64,14 @@ function createTableContent(priceData, header, volume, rowGrid) {
     return tableContent;
 }
 
-
+/**
+ * Creates row for volume-based price list
+ * @param {Object} g - Goods data
+ * @param {Array<Object>} header - Array of price type data
+ * @param {Object} volume - Volume data
+ * @param {string} rowGrid - CSS grid template columns definition
+ * @returns {HTMLDivElement} Row element
+ */
 function createVolumeRow(g, header, volume, rowGrid) {
     const volumeRow = document.createElement('div');
     volumeRow.classList.add('price-row');

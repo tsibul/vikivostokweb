@@ -1,0 +1,183 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
+@page {
+  size: A4 portrait;
+  //margin: 12mm;
+}
+
+@media print {
+  html, body {
+    width: 210mm;
+    height: 297mm;
+    margin: 0;
+    padding: 0;
+  }
+  .pdf {
+    margin: 0;
+    width: 100%;
+    min-height: 100%;
+    box-sizing: border-box;
+  }
+  .pdf__save-button {
+    display: none;
+  }
+}
+
+.pdf {
+  font-family: 'Montserrat', sans-serif;
+  width: 210mm;
+  box-sizing: border-box;
+  margin: 10mm;
+
+  &__save-button {
+    position: fixed;
+    top: 10mm;
+    left: 230mm;
+    padding: 10px 20px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    
+    &:hover {
+      background: #0056b3;
+    }
+  }
+
+  &__top-table {
+    border: 1px solid;
+    //padding: 2px;
+  }
+
+  &__bank {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    min-height: 80px;
+
+    &_company {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+
+    &_inn {
+      display: grid;
+      grid-template-columns: 9fr 10fr;
+    }
+
+    &_cell {
+      padding: 2px;
+    }
+
+    &_name {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+
+    &_details {
+      border-left: 1px solid;
+      display: grid;
+      grid-template-columns: 1fr 2.5fr;
+    }
+
+
+  }
+
+  &__header {
+    display: inline-block;
+    font-size: 24px;
+    font-weight: 600;
+    margin: 1.5rem 0;
+  }
+
+  &__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem
+  }
+
+
+  &__total {
+    text-align: right;
+    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-bottom: 0.25rem;
+  }
+
+
+  &__sign-block {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 4rem;
+    margin-top: 2rem;
+  }
+
+  &__sign{
+    width: 68%;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__sign-cell {
+    text-align: center;
+  }
+}
+
+.pdf-goods {
+  margin-top: 1rem;
+  border: 1px solid;
+  border-bottom: transparent;
+  font-size: 14px;
+
+  &__num{
+    text-align: right;
+    white-space: nowrap;
+
+  }
+
+  &__row {
+    display: grid;
+    grid-template-columns: 20px 0.5fr 1.5fr  0.6fr 80px 60px 100px;
+    gap: 8px;
+    padding: 6px 4px;
+    border-bottom: 1px solid;
+    &_title{
+      font-weight: 600;
+      padding: 10px 4px;
+    }
+  }
+}
+
+.pdf-delivery{
+  border: 1px solid;
+  padding: 8px 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 14px;
+  &__row {
+    display: grid;
+    grid-template-columns: 4fr 1fr;
+  }
+
+  &__title{
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    margin-top: 0.5rem;
+  }
+
+}
+
+.border-bottom {
+  border-bottom: 1px solid;
+}
+
+.border-right {
+  border-right: 1px solid;
+}
+

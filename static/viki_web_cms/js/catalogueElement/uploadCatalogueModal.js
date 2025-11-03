@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Module for creating upload modal dialogs for catalogue
+ * @module catalogueElement/uploadCatalogueModal
+ */
+
 'use strict'
 
 import {closeModal} from "../modalFunction/closeModal.js";
@@ -8,7 +13,7 @@ import {createForeignField} from "../dictionaryElement/createInput/createForeign
 import {csvUploadCatalogueSave, filesUploadCatalogueSave} from "./uploadCatalogueSave.js";
 
 /**
- *upload catalogue with csv file
+ * Creates modal dialog for CSV file upload
  */
 export function uploadCsvCatalogue() {
     const modalObject = uploadCatalogueModal('Загрузить csv файл');
@@ -18,7 +23,7 @@ export function uploadCsvCatalogue() {
 }
 
 /**
- * upload catalogue with multiple photos goods preliminary selected
+ * Creates modal dialog for multiple photo upload with goods selection
  * @returns {Promise<void>}
  */
 export async function uploadFilesCatalogue() {
@@ -40,9 +45,9 @@ export async function uploadFilesCatalogue() {
 }
 
 /**
- * prepare dialog form for upload
- * @param text header text
- * @returns {{form: HTMLFormElement, fileInput: HTMLInputElement, buttonSubmit: Element}}
+ * Creates and configures upload modal dialog
+ * @param {string} text - Header text for the modal dialog
+ * @returns {{form: HTMLFormElement, fileInput: HTMLInputElement, buttonSubmit: Element}} Modal dialog elements
  */
 function uploadCatalogueModal(text) {
     const service = document.querySelector('.service')

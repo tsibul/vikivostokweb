@@ -4,8 +4,14 @@
     <div class="container">
         <header class="product-header">
             <div class="product-header__title">
-                <h1>{{ product_group.name }}</h1>
-                <h3>{{ product_group.second_name }}</h3>
+                <h1 class="section-title">{{ product_group.name }}</h1>
+                <h3 class="product-header__subtitle">
+                    {% if search %}
+                        (поиск "{{ search }}")
+                    {% else %}
+                        {{ product_group.second_name }}
+                    {% endif %}
+                </h3>
             </div>
         </header>
     </div>
@@ -22,40 +28,42 @@
                              data-article-set="{{ goods.article_set }}"
                             {% endif %}
                     >
+                        {% if goods.goods_item.new %}
+                            <div class="product-new-badge">НОВИНКА</div>
+                        {% endif %}
                         <h3>{{ goods.goods_item.name }}</h3>
-                        {% for item in goods.item_list %}
-                            <div class="product-sqr__frame product-frame
+                        <div class="product-sqr__frame product-frame">
+                            {% for item in goods.item_list %}
+                                <div class="product-hor__image-frame product-sqr__image-frame
                                 {% if goods.id_random != item.item.id %} item-hidden item-opaque{% endif %}"
-                                 data-id="{{ item.item.id }}"
-                                 data-goods="{{ goods.goods_item.id }}"
-                                 data-article="{{ item.item.item_article }}"
-                                 data-price="{% if item.price %}
+                                     data-id="{{ item.item.id }}"
+                                     data-goods="{{ goods.goods_item.id }}"
+                                     data-article="{{ item.item.item_article }}"
+                                     data-description="{{ item.color_description }}"
+                                     data-price="{% if item.price %}
                                                {{ item.price }}
                                              {% else %}
                                                {{ goods.price }}
                                              {% endif %}"
-                            >
-                                <div>
+                                >
                                     <img class="product-sqr__img"
                                          src="/static/viki_web_cms/files/item_photo/{{ item.item.image }}"
                                          alt="{{ item.item.image_article }}"
                                          loading="lazy">
-                                    <div class="chevron-sqr-next chev-next"
-                                         data-id="{{ item.item.id }}"
-                                         data-list="{{ goods.item_id }}"
-                                         data-list-initial="{{ goods.item_id }}"
-                                    >
-                                        <div>следующий</div>
-                                        <i class="fa-solid fa-angles-right"></i>
-                                    </div>
                                 </div>
+                            {% endfor %}
+                            <div class="chevron-sqr-next chev-next"
+                                 data-list="{{ goods.item_id }}"
+                                 data-list-initial="{{ goods.item_id }}"
+                            >
+                                <div>следующий</div>
+                                <i class="fa-solid fa-angles-right"></i>
+                            </div>
+                            <div></div>
+                            <div>
                                 <div class="product-sqr__info">
                                     <div class="product-sqr__tab-btn-block tab-btn-block">
                                         <button class="product-sqr__tab-btn tab-btn tab-active"
-                                                type="button" data-id="main-{{ item.item.id }}">
-                                            основное
-                                        </button>
-                                        <button class="product-sqr__tab-btn tab-btn"
                                                 type="button" data-id="description-{{ item.item.id }}">
                                             описание
                                         </button>
@@ -73,23 +81,7 @@
                                         </button>
                                     </div>
                                     <div class="product-sqr__tab-content tab-content">
-                                        <div class="product-sqr__tab  tab tab-show"
-                                             data-id="main-{{ item.item.id }}">
-                                            <div class="product-sqr__tab_text">
-                                                {{ item.color_description }}
-                                            </div>
-                                            <div class="product-sqr__tab-main_title">
-                                                <h4>Артикул: {{ item.item.item_article }}</h4>
-                                                <h4 class="strong">Цена:
-                                                    {% if item.price %}
-                                                        {{ item.price }}
-                                                    {% else %}
-                                                        {{ goods.price }}
-                                                    {% endif %}
-                                                </h4>
-                                            </div>
-                                        </div>
-                                        <div class="product-sqr__tab tab"
+                                        <div class="product-sqr__tab tab tab-show"
                                              data-id="description-{{ item.item.id }}">
                                             <article class="product-sqr__tab_text">
                                                 {{ goods.goods_description }}
@@ -168,79 +160,132 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="filter__content_data_color color-padding">
-                                    {% if goods.goods_item.multicolor %}
-                                        <button class="btn btn__cancel btn-multicolor">варианты сочетаний элементов
-                                            - {{ goods.item_list|length }}</button>
-                                        {% for color in goods.colors %}
-                                            <input type="checkbox"
-                                                   id="item-color-{{ item.item.id }}_{{ color.main_color__hex|slice:"1:" }}"
-                                                   name="{{ color.name }}"
-                                                   class="product-header__filter-content_checkbox-hidden"
-                                                   data-id="{{ item.item.id }}"
-                                                    {% if  item.item.id == color.id %} checked {% endif %}
-                                                   hidden>
-                                            <label hidden
-                                                   for="item-color-{{ item.item.id }}_{{ color.main_color__hex|slice:"1:" }}"
-                                                   class="color-label"
-                                                   data-item-id="{{ color.id }}"
-                                                   data-hex="{{ color.main_color__hex|slice:"1:" }}"
-                                            >
-                                                <div class="square tooltip"
-                                                     style="background-color: {{ color.main_color__hex }};">
-                                                    <div class="tooltip-text">{{ color.main_color__name }}</div>
-                                                </div>
-                                                <div class="color-label__check"
-                                                        {% if item.item.id == color.id %}
-                                                     style="display:block;"  {% endif %}
-                                                ></div>
-                                            </label>
-                                        {% endfor %}
-                                    {% else %}
-                                        {% for color in goods.colors %}
-                                            <input type="checkbox"
-                                                   id="item-color-{{ item.item.id }}_{{ color.main_color__hex|slice:"1:" }}"
-                                                   name="{{ color.name }}"
-                                                   class="product-header__filter-content_checkbox-hidden"
-                                                   data-id="{{ item.item.id }}"
-                                                    {% if  item.item.id == color.id %} checked {% endif %}
-                                                   hidden>
-                                            <label for="item-color-{{ item.item.id }}_{{ color.main_color__hex|slice:"1:" }}"
-                                                   class="color-label"
-                                                   data-item-id="{{ color.id }}"
-                                                   data-hex="{{ color.main_color__hex|slice:"1:" }}"
-                                            >
-                                                <div class="square tooltip"
-                                                     style="background-color: {{ color.main_color__hex }};">
-                                                    <div class="tooltip-text">{{ color.main_color__name }}</div>
-                                                </div>
-                                                <div class="color-label__check"
-                                                        {% if item.item.id == color.id %}
-                                                     style="display:block;"  {% endif %}
-                                                ></div>
-                                            </label>
-                                        {% endfor %}
-                                    {% endif %}
-
+                                <div class="product-sqr__tab_text  product-hor__color-description product-hor__color-description_big">
+                                    {{ goods.random_item.color_description }}
                                 </div>
-                                <div class="btn-sqr__block">
-                                    <div></div>
-                                    <button class="btn btn__save btn-sqr">
-                                        <div>
-                                            В корзину&nbsp;
-                                        </div>
-                                        <img src="{% static 'viki_web/icons/cart.svg' %}"
-                                             alt="cart" class="">
-                                    </button>
-                                </div>
-
                             </div>
-                        {% endfor %}
+                        </div>
+                        <div>
+                            <div class="product-hor__tab-main_title">
+                                <h4>Артикул:
+                                    <strong class="strong article">
+                                        {{ goods.random_item.item.item_article }}
+                                    </strong>
+                                </h4>
+                                <h4>Цена{% if goods.price_volume %} от{% endif %}:
+                                    <span class="strong price">
+                                    {% if goods.random_item.price %}
+                                        {{ goods.random_item.price }}
+                                    {% else %}
+                                        {{ goods.price }}
+                                    {% endif %}
+                                </span>
+                                </h4>
+                                {% if goods.promotion_price or goods.random_item.promotion_price %}
+                                    <div class="product-promotion-badge">Акция</div>
+                                {% endif %}
+                            </div>
+                            <div class="filter__content_data_color color-padding">
+                                {% for color in goods.colors %}
+                                    <input type="radio"
+                                           id="item-color-{{ color.id }}_{{ color.main_color__hex|slice:"1:" }}"
+                                           name="color-picker"
+                                           class="product-header__filter-content_checkbox-hidden"
+                                           data-id="{{ color.id }}"
+                                            {% if  goods.id_random == color.id %} checked {% endif %}
+                                           hidden>
+                                    <label for="item-color-{{ color.id }}_{{ color.main_color__hex|slice:"1:" }}"
+                                           class="color-label"
+                                           data-id="{{ color.id }}"
+                                           data-hex="{{ color.main_color__hex|slice:"1:" }}"
+                                            {% if  goods.goods_item.multicolor %} hidden {% endif %}>
+                                        <div class="square tooltip"
+                                             data-id="{{ color.id }}"
+                                             style="background-color: {{ color.main_color__hex }}">
+                                            <div class="tooltip-text">{{ color.main_color__name }}</div>
+                                        </div>
+                                        <div class="color-label__check"
+                                             data-id="{{ color.id }}"
+                                                {% if goods.id_random == color.id %}
+                                             style="display:block;"  {% endif %}
+                                        ></div>
+                                    </label>
+                                {% endfor %}
+                                {% if goods.goods_item.multicolor %}
+                                    <button class="btn btn__cancel btn-multicolor">варианты сочетаний элементов
+                                        - {{ goods.item_list|length }}</button>
+                                    {% for color in goods.colors %}
+                                        <input type="checkbox"
+                                               id="item-color-{{ item.item.id }}_{{ color.main_color__hex|slice:"1:" }}"
+                                               name="{{ color.name }}"
+                                               class="product-header__filter-content_checkbox-hidden"
+                                               data-id="{{ item.item.id }}"
+                                                {% if  item.item.id == color.id %} checked {% endif %}
+                                               hidden>
+                                        <label hidden
+                                               for="item-color-{{ item.item.id }}_{{ color.main_color__hex|slice:"1:" }}"
+                                               class="color-label"
+                                               data-item-id="{{ color.id }}"
+                                               data-hex="{{ color.main_color__hex|slice:"1:" }}"
+                                        >
+                                            <div class="square tooltip"
+                                                 style="background-color: {{ color.main_color__hex }}">
+                                                <div class="tooltip-text">{{ color.main_color__name }}</div>
+                                            </div>
+                                            <div class="color-label__check"
+                                                    {% if item.item.id == color.id %}
+                                                 style="display:block;"  {% endif %}
+                                            ></div>
+                                        </label>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                            <div class="product-hor__btn-block">
+                                <button class="btn btn__save btn-hor add-to-cart">
+                                    <div>
+                                        В корзину&nbsp;
+                                    </div>
+                                    <img src="{% static 'viki_web/icons/cart.svg' %}"
+                                         alt="cart" class="">
+                                </button>
+                                <a href="{% url 'viki_web:product_detail' goods.goods_item.slug %}" class="btn-hor">
+                                    <button
+                                            class="btn btn__cancel btn-hor">
+                                        <div>
+                                            Подробнее&nbsp;
+                                        </div>
+                                        <i class="fa-solid fa-arrow-right"></i>
+                                    </button>
+                                </a>
+                            </div>
                     </section>
                 {% endfor %}
             </div>
         </div>
     </main>
+    <br>
+    <section>
+        <div class="container">
+            <h4 class="section-title">Еще категории</h4>
+            <div class="goods-group">
+                {% for group in goods_groups %}
+                    <a class="goods-group__item"
+                       href="{% url 'viki_web:goods_group' group.goods_group_url %}">{{ group.name }}</a>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    <div class="container">
+    <section class="cart-page__recently-viewed">
+
+        <h3 class="section-title">Вы смотрели</h3>
+        <div class="recently-viewed">
+            <div class="recently-viewed__items">
+                <!-- Items will be populated dynamically from localStorage -->
+            </div>
+        </div>
+    </section>
+    </div>
 
 
 {% endblock %}

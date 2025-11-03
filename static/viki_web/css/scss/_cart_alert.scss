@@ -1,0 +1,181 @@
+@import "vars";
+@import "mixins";
+
+/* Модальное окно для добавления в корзину */
+.add-to-cart-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+  
+  &.active {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  &__content {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 480px;
+    padding: 24px;
+  }
+  
+  &__header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    
+    i {
+      color: $colorPrimary;
+      font-size: 24px;
+      margin-right: 12px;
+    }
+    
+    h3 {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0;
+    }
+  }
+  
+  &__message {
+    margin-bottom: 24px;
+    color: $colorPrimary;
+    font-size: 16px;
+    line-height: 1.5;
+    
+    strong {
+      font-weight: 600;
+    }
+  }
+  
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    
+    button {
+      min-width: 120px;
+    }
+  }
+}
+
+/* Уведомление об успешном действии */
+.success-notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #fff;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  border-left: 4px solid $colorPrimary;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 360px;
+  padding: 16px;
+  z-index: 1000;
+  opacity: 0;
+  transform: translateX(30px);
+  visibility: hidden;
+  transition: all 0.3s ease;
+  
+  &.active {
+    opacity: 1;
+    transform: translateX(0);
+    visibility: visible;
+  }
+  
+  &__icon {
+    font-size: 24px;
+    color: $colorPrimary;
+    margin-right: 16px;
+  }
+  
+  &__content {
+    flex: 1;
+  }
+  
+  &__title {
+    font-size: 16px;
+    font-weight: 600;
+    color: $colorPrimary;
+    margin: 0 0 4px;
+  }
+  
+  &__message {
+    font-size: 14px;
+    color: $colorPrimary;
+    margin: 0;
+  }
+  
+  &__close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: $colorNeutral500;
+    font-size: 16px;
+    padding: 0;
+    margin-left: 8px;
+    transition: color 0.2s ease;
+    
+    &:hover {
+      color: $colorPrimary;
+    }
+  }
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 576px) {
+  .add-to-cart-modal {
+    &__content {
+      max-width: 320px;
+      padding: 20px;
+    }
+    
+    &__header {
+      h3 {
+        font-size: 18px;
+      }
+    }
+    
+    &__message {
+      font-size: 14px;
+    }
+    
+    &__actions {
+      button {
+        min-width: 100px;
+      }
+    }
+  }
+  
+  .success-notification {
+    width: calc(100% - 40px);
+    max-width: 320px;
+    padding: 12px;
+    
+    &__icon {
+      font-size: 20px;
+    }
+    
+    &__title {
+      font-size: 15px;
+    }
+    
+    &__message {
+      font-size: 13px;
+    }
+  }
+}

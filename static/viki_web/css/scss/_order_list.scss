@@ -1,0 +1,501 @@
+@import 'vars';
+
+// Order sections
+.order-section {
+  margin-bottom: 35px;
+
+  &__title {
+    margin-bottom: 12px;
+    font-size: 18px;
+    color: $colorPrimary;
+  }
+}
+
+// Order list
+.order-list {
+
+  &__dropdown {
+    top: 32px;
+    left: -2px;
+
+    & li {
+      text-align: start;
+    }
+  }
+
+  &__item {
+    //display: contents; // Important to maintain the grid layout
+
+    &[open] {
+      .order-list-summary__toggle::after {
+        transform: rotate(180deg);
+      }
+    }
+
+    &__cell {
+      padding: 8px;
+      border-bottom: 1px solid $colorNeutral50;
+      font-size: 14px;
+    }
+
+  }
+
+  &__empty {
+    padding: 8px;
+    text-align: center;
+    //background-color: $colorSecondary50;
+    font-size: 14px;
+  }
+
+}
+
+
+// Order summary (visible part of the order)
+.order-list-summary {
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  border-radius: 6px;
+
+  //list-style: none; // Remove default list style
+
+  &__row {
+    display: grid;
+    grid-template-columns: 150px 80px 2fr 0.7fr 0.2fr 80px 0.1fr  0.8fr 0.8fr  0.6fr 0.1fr;
+    align-items: center;
+    //border-bottom: 1px solid $colorNeutral50;
+    gap: 16px;
+    padding: 8px;
+    font-size: 14px;
+
+    &_closed {
+      display: grid;
+      grid-template-columns: 150px 80px 2fr 0.7fr  0.1fr 0.5fr 80px 0.8fr 0.6fr 0.6fr 0.1fr;
+      align-items: center;
+      border-bottom: 1px solid $colorNeutral50;
+      gap: 16px;
+      padding: 8px;
+      font-size: 14px;
+    }
+
+
+    &:hover {
+    }
+  }
+
+  &__cell {
+    padding: 8px 0;
+  }
+
+  // Add custom toggle indicator in the last cell
+  &__toggle {
+    position: relative;
+
+    &::after {
+      content: "⯆";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      transition: transform 0.3s;
+    }
+  }
+}
+
+// Details content container
+.order-details {
+  grid-column: 1 / -1; // Span all columns
+  padding: 15px;
+  background-color: $colorSecondary50;
+  border-bottom: 1px solid $colorNeutral50;
+
+  &__content {
+    margin-bottom: 10px;
+    font-size: 14px;
+  }
+}
+
+// Order states
+.order-state {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+
+  // создан
+  &_1 {
+    background-color: rgba($colorSecondary, 0.4);
+  }
+
+  // запрошен макет
+  &_2, &_3, &_5 {
+    background-color: rgba(red, 0.8);
+  }
+
+  // макет подтвержден
+  &_4, &_6  {
+    background-color: rgba($colorSecondary, 0.6);
+  }
+
+  // подтвержден
+  &_7 {
+    background-color: $colorSecondary;
+  }
+
+  // в работе
+  &_8 {
+    background-color: rgba($colorPrimary, 0.4);
+  }
+
+  // готов
+  &_9 {
+    background-color: rgba($colorPrimary, 0.6);
+  }
+
+  // доставлен
+  &_10 {
+    background-color: $colorPrimary;
+  }
+
+  // отменен
+  &_11 {
+    background-color: red;
+  }
+}
+
+// Order buttons
+.order-button {
+  background: none;
+  border: 1px solid $colorNeutral50;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 13px;
+
+  &_approve {
+    background-color: $colorSecondary;
+    color: white;
+    border-color: $colorSecondary;
+  }
+
+  &_decline {
+    background-color: $colorPrimary;
+    color: white;
+    border-color: $colorPrimary;
+  }
+}
+
+// Order items
+.order-list-items {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+  border-radius: 6px;
+  //margin-bottom: 20px;
+
+  &__title {
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: $colorPrimary;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 0.8fr 2.5fr 0.8fr 0.8fr 0.6fr 0.8fr;
+    width: 100%;
+    gap: 5px;
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  &__header {
+    display: contents;
+    position: sticky;
+    top: 0;
+    background-color: $colorSecondary50;
+
+    & * {
+      font-weight: bold;
+
+    }
+
+  }
+
+  &__row {
+    display: contents;
+  }
+
+  &__cell {
+    padding: 8px;
+    //border-bottom: 1px solid $colorNeutral50;
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    //.order-items__header & {
+    //  font-weight: bold;
+    //  z-index: 1;
+    //}
+  }
+}
+
+// Order branding
+.order-branding {
+  grid-column: 1 / -1;
+  margin-top: -8px;
+  background-color: $colorSecondary50;
+  //margin: 5px 0 15px 20px;
+
+  &__header {
+    margin-bottom: 5px;
+  }
+
+  &__title {
+    font-weight: bold;
+    font-style: italic;
+    font-size: 13px;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: 0.8fr 2.5fr 0.8fr 0.8fr 0.6fr 0.8fr;
+    gap: 5px;
+  }
+
+  &__row {
+    display: contents;
+
+    &_header {
+      font-weight: bold;
+    }
+  }
+
+  &__cell {
+    padding: 2px 8px;
+    //border-bottom: 1px solid $colorNeutral50;
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+
+    .order-branding__row_header & {
+      background-color: $colorSecondary50;
+    }
+  }
+}
+
+.price-cell {
+  text-align: end;
+}
+
+// Delivery details
+.order-delivery {
+  margin-bottom: 20px;
+
+  &__row {
+    display: flex;
+    padding: 8px;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+  }
+
+}
+
+// Comment section
+.order-comment {
+  &__title {
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: $colorPrimary;
+  }
+
+  &__text {
+    padding: 10px;
+    background-color: white;
+    border: 1px solid $colorNeutral50;
+    border-radius: 4px;
+  }
+}
+
+// Modal windows
+.order-list-modal {
+
+  &__close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    //color: white;
+    padding: 0;
+    line-height: 1;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s;
+  }
+
+  &__textarea {
+    padding: 8px;
+    margin-top: 16px;
+    min-width: 440px;
+    border-radius: 6px;
+
+    &:focus {
+      border: 1px solid $colorSecondary;
+    }
+  }
+
+  &__btn-block {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: 16px;
+    margin: 12px 0;
+
+    & * {
+      width: 100%;
+    }
+  }
+}
+
+// Files list
+.files-list {
+  margin-top: 10px;
+  //list-style: none;
+  //padding: 0;
+  //margin: 0;
+
+  li {
+    margin-bottom: 10px;
+
+    a {
+      display: block;
+      padding: 8px 0;
+      background-color: #fff;
+      border-radius: 4px;
+      //text-decoration: none;
+      //color: $colorPrimary;
+
+      &:hover {
+        background-color: rgba($colorSecondary, 0.3);
+      }
+    }
+  }
+}
+
+.files-empty {
+  text-align: center;
+  color: $colorNeutral500;
+}
+
+// Comment form
+.oder-list-comment-form {
+  &__field {
+    margin-bottom: 15px;
+  }
+
+  &__label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+
+  &__textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid $colorNeutral50;
+    border-radius: 4px;
+  }
+
+  &__actions {
+    text-align: right;
+  }
+}
+
+// Cancel modal
+.order-list-cancel-modal {
+  &__text {
+    margin-bottom: 20px;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+}
+
+// Pagination
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+
+  &__link {
+    display: inline-block;
+    padding: 8px 12px;
+    margin: 0 4px;
+    border: 1px solid $colorNeutral50;
+    border-radius: 4px;
+    text-decoration: none;
+    color: $colorPrimary;
+
+    &_current {
+      background-color: $colorPrimary;
+      color: white;
+      border-color: $colorPrimary;
+    }
+
+    &:hover:not(&_current) {
+      background-color: $colorSecondary50;
+    }
+  }
+}
+
+// Адаптивность для мобильных устройств
+@media (max-width: 768px) {
+  .order-list {
+    display: block;
+
+    &__header {
+      display: none;
+    }
+  }
+
+  .order-list-item {
+    display: block;
+    margin-bottom: 15px;
+    border: 1px solid $colorNeutral50;
+    border-radius: 4px;
+  }
+
+  .order-list-summary {
+    display: block;
+
+    &__row {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    &__cell {
+      width: 50%;
+      position: relative;
+      padding-left: 45%;
+
+      &:before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        font-weight: bold;
+      }
+    }
+  }
+
+  .order-details {
+    display: block;
+  }
+}

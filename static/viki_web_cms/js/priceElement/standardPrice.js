@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Module for handling standard price list functionality
+ * @module priceElement/standardPrice
+ */
+
 'use strict'
 
 import {jsonUrl} from "../main.js";
@@ -7,12 +12,13 @@ import {createSaveButton} from "../createStandardElements/createSaveButton.js";
 import {createNeutralButton} from "../createStandardElements/createNeutralButton.js";
 import {createCancelButton} from "../createStandardElements/createCancelButton.js";
 import {savePriceList} from "./savePriceList.js";
+import {getCSRFToken} from "../getCSRFToken.js";
 
 /**
- * create price-content element for standard price
- * @param priceDate price list date
- * @param searchString search string (optional)
- * @returns {Promise<{form: HTMLDivElement, header: HTMLElement}>}
+ * Creates price content element for standard price list
+ * @param {string} priceDate - Price list date identifier
+ * @param {string} [searchString] - Optional search string for filtering
+ * @returns {Promise<{form: HTMLDivElement, header: HTMLElement}>} Object containing form and header elements
  */
 export async function standardPrice(priceDate, searchString) {
     const priceForm = document.createElement('div');
@@ -27,10 +33,10 @@ export async function standardPrice(priceDate, searchString) {
 }
 
 /**
- * build header for standard prices
- * @param headerData
- * @param rowGrid
- * @returns {Promise<HTMLElement>}
+ * Builds header section for standard prices
+ * @param {Array<Object>} headerData - Array of price type data
+ * @param {string} rowGrid - CSS grid template columns definition
+ * @returns {Promise<HTMLElement>} Header element
  */
 export async function priceHeaderBuild(headerData, rowGrid) {
     const priceHeader = document.createElement('header');
@@ -60,12 +66,12 @@ export async function priceHeaderBuild(headerData, rowGrid) {
 }
 
 /**
- * build content for priceForm
- * @param data
- * @param priceForm
- * @param headerData
- * @param allItems
- * @param rowGrid
+ * Builds content section for price form
+ * @param {Object} data - Price data containing goods and items
+ * @param {HTMLDivElement} priceForm - Form element to populate
+ * @param {Array<Object>} headerData - Array of price type data
+ * @param {Array<Object>} allItems - Array of all available items
+ * @param {string} rowGrid - CSS grid template columns definition
  */
 function priceFormBuild(data, priceForm, headerData, allItems, rowGrid) {
     let goodsRow, itemRow, items;
@@ -78,17 +84,15 @@ function priceFormBuild(data, priceForm, headerData, allItems, rowGrid) {
             priceForm.appendChild(itemRow);
         });
     });
-
-
 }
 
 /**
- * build row for goods
- * @param rowData
- * @param headerData
- * @param allItems
- * @param rowGrid
- * @returns {HTMLDivElement}
+ * Builds row for goods in price list
+ * @param {Object} rowData - Goods data
+ * @param {Array<Object>} headerData - Array of price type data
+ * @param {Array<Object>} allItems - Array of all available items
+ * @param {string} rowGrid - CSS grid template columns definition
+ * @returns {HTMLDivElement} Goods row element
  */
 function goodsRowBuild(rowData, headerData, allItems, rowGrid) {
     const goodsRow = rowBuild(rowData, headerData, 'goods', 'goods', rowGrid);
@@ -114,7 +118,7 @@ function goodsRowBuild(rowData, headerData, allItems, rowGrid) {
                 'name': rest.join(' '),
                 'price': "[]"
             }
-            goodsRow.insertAdjacentElement('afterend', itemRowBuild(newItemData, headerData));
+            goodsRow.insertAdjacentElement('afterend', itemRowBuild(newItemData, headerData, rowGrid));
         }
     });
     goodsRow.appendChild(itemBtn);
@@ -122,11 +126,11 @@ function goodsRowBuild(rowData, headerData, allItems, rowGrid) {
 }
 
 /**
- * build row for CatalogueItem
- * @param rowData
- * @param headerData
- * @param rowGrid
- * @returns {HTMLDivElement}
+ * Builds row for catalogue item in price list
+ * @param {Object} rowData - Item data
+ * @param {Array<Object>} headerData - Array of price type data
+ * @param {string} rowGrid - CSS grid template columns definition
+ * @returns {HTMLDivElement} Item row element
  */
 function itemRowBuild(rowData, headerData, rowGrid) {
     const itemRow = rowBuild(rowData, headerData, 'item', 'catalogue_item', rowGrid);
@@ -136,7 +140,11 @@ function itemRowBuild(rowData, headerData, rowGrid) {
     itemBtn.addEventListener('click', async (e) => {
         e.preventDefault();
         const rowId = itemRow.querySelector('input[name="id"]').value;
-        fetch(jsonUrl + 'delete_item_price_row/' + rowId)
+        fetch(jsonUrl + 'delete_item_price_row/' + rowId, {
+            headers: {
+                "X-CSRFToken": getCSRFToken(),
+            }
+        })
             .then(res => res.json())
             .then(data => {
                 if (data) itemRow.remove();
@@ -146,15 +154,14 @@ function itemRowBuild(rowData, headerData, rowGrid) {
     return itemRow;
 }
 
-
 /**
- * build row according rowType
- * @param rowData
- * @param headerData
- * @param rowType
- * @param typeClass
- * @param rowGrid
- * @returns {HTMLDivElement}
+ * Builds generic row for price list
+ * @param {Object} rowData - Row data
+ * @param {Array<Object>} headerData - Array of price type data
+ * @param {string} rowType - Type of row ('goods' or 'item')
+ * @param {string} typeClass - CSS class for the row
+ * @param {string} rowGrid - CSS grid template columns definition
+ * @returns {HTMLDivElement} Row element
  */
 function rowBuild(rowData, headerData, rowType, typeClass, rowGrid) {
     const goodsRow = document.createElement('div');

@@ -1,11 +1,16 @@
+/**
+ * @fileoverview Module for creating input elements for catalogue items
+ * @module catalogueElement/createCatalogueItem
+ */
+
 'use strict'
 
 /**
- * create inputs for catalogue (all 'id' hidden)
- * @param itemType
- * @param itemName
- * @param itemValue
- * @returns {HTMLInputElement}
+ * Creates input elements for catalogue items with appropriate type and styling
+ * @param {string} itemType - Type of input ('text', 'number', 'checkbox', 'precise', 'float')
+ * @param {string} itemName - Name attribute for the input
+ * @param {string|number|boolean} itemValue - Initial value for the input
+ * @returns {HTMLInputElement} Configured input element
  */
 export function createCatalogueItem(itemType, itemName, itemValue) {
     const item = document.createElement('input');

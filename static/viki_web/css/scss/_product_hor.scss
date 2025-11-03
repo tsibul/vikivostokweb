@@ -6,31 +6,49 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
+  //gap: 16px;
 }
 
 
 .product-hor {
+  position: relative;
   @include brd-standard;
+  border-color: transparent;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
   width: 620px;
   min-height: 448px;
-  padding: 32px;
+  padding: 32px 24px 16px 24px;
   margin: 8px 0;
-  position: relative;
   background-color: #fff;
 
   &__frame {
-    position: absolute;
-    top: 42px;
-    left: 30px;
+    position: relative;
+    padding-top: 100px;
     width: 568px;
-    min-height: 394px;
     z-index: 3;
-    transition: all 0.4s ease;
     opacity: 1;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+  }
+
+  &__color-description {
+    display: inline-block;
+    min-height: 40px;
+    margin-bottom: 16px;
+
+    &_big {
+      min-height: 58px;
+    }
+
+  }
+
+  &__image-frame {
+    position: absolute;
+    top: 16px;
+    left: 0;
+    transition: all 0.4s ease;
   }
 
   &__img {
@@ -52,21 +70,23 @@
     padding: 8px 8px 4px 8px;
     border: 1px solid;
     border-radius: 8px 8px 0 0;
-    border-color: rgba($colorSecondary, 0.2) rgba($colorSecondary, 0.1) transparent rgba($colorSecondary, 0.2);
+    border-color: rgba($colorNeutral500, 0.08) rgba($colorNeutral500, 0.08) transparent rgba($colorNeutral500, 0.08);
     z-index: 1;
-    box-shadow: 4px -4px 2px 1px rgba($colorSecondary, 0.2);
+      //box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.08);
+
+    box-shadow: 2px -2px 2px 1px rgba($colorNeutral500, 0.08);
     cursor: pointer;
     overflow: hidden;
-    background-color: $colorSecondary50;
+    background-color:  rgba($colorNeutral500, 0.08);
   }
 
   &__tab-content {
     position: relative;
-    border: 1px solid rgba($colorSecondary, 0.2);
+    border: 1px solid rgba($colorNeutral500, 0.08);
     border-radius: 0 12px 12px 12px;
     height: 100px;
     margin: -1px 0 10px 0;
-    box-shadow: 4px -4px 8px 4px rgba($colorSecondary, 0.2);
+    box-shadow: 2px -2px 8px 4px rgba($colorNeutral500, 0.08);
     overflow: auto;
     z-index: 2;
   }
@@ -92,6 +112,7 @@
 
   &__tab-main {
     &_title {
+      position: relative;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -111,6 +132,11 @@
     }
   }
 
+  &__btn-block {
+    display: flex;
+    gap: 16px;
+  }
+
   &__tab-pack {
     padding: 2px 10px;
     display: grid;
@@ -125,6 +151,9 @@
 }
 
 .chevron-next {
+  position: absolute;
+  top: -1.5rem;
+  right: 0;
   background-color: transparent;
   display: flex;
   align-items: center;
@@ -150,10 +179,6 @@
 
 .tab-show {
   display: flex;
-  //flex-direction: column;
-  //justify-content: space-between;
-  //height: 100%;
-  //padding: 12px 10px;
 }
 
 .item-hidden {
@@ -167,15 +192,13 @@
 }
 
 .btn-hor {
-  width: 160px;
-  padding: 8px;
+  width: 100%;
   justify-content: center;
-  gap: 16px
 }
 
 .btn-multicolor {
   width: 100%;
-  margin: 0 auto;
+  margin: 8px auto 16px auto;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -187,5 +210,8 @@
 }
 
 .color-padding {
-  padding: 0 12px;
+  padding: 0;
+  min-height: 66px;
+  margin: 8px 0 0 0;
+  gap: 8px;
 }

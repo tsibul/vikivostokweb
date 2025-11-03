@@ -1,35 +1,27 @@
+/**
+ * @fileoverview Module for applying constructor changes to the product
+ * @module constructor/applyConstructor
+ */
+
 'use strict'
 
-export function applyConstructor(modal, goodsItem, currentFrame) {
-    // e.preventDefault()
-    const form = modal.querySelector('form');
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData.entries());
-    const detailsNumber = parseInt(goodsItem.dataset.articleLength);
-    const articleLength = Object.keys(data).includes('option')
-        ? Object.keys(data).length - 1 : Object.keys(data).length;
-    if (articleLength === detailsNumber) {
-        let article = goodsItem.dataset.goodsArticle;
-        for (let i = 1; i <= articleLength; i++) {
-            article = article + '.' + data[i];
-        }
-        if (data['option']) {
-            article = article + '.' + data['option'];
-        }
-        const newItem = goodsItem.querySelector(`div.product-frame[data-article="${article}"]`);
-        if (newItem) {
-            currentFrame.classList.add('item-hidden', 'item-opaque');
-            newItem.classList.remove('item-hidden', 'item-opaque');
-            modal.remove()
-        } else {
-            modal.querySelector('.simple-constructor__alert')
-                .textContent = 'Для заказа этого товара обратитесь к менеджеру. Цена: '
-                + currentFrame.dataset.price;
-        }
-    } else {
-        modal.querySelector('.simple-constructor__alert')
-            .textContent = 'Отметьте все элементы';
-    }
+import {changeFrameItem} from "../product/changeFrameItem.js";
+import {closeConstructor} from "./closeConstructor.js";
 
-    console.log();
+
+/**
+ * Applies selected constructor options to the product
+ * @param {HTMLElement} modal - Constructor dialog element
+ * @param {number} itemId - Product container element
+ * @param {HTMLElement} currentFrame - Current product frame element
+ */
+export function applyConstructor(modal, itemId, currentFrame) {
+    const imageItems = currentFrame
+        .querySelectorAll(`div.product-hor__image-frame`);
+    const currentItem = [...imageItems].find(elem => !elem.classList.contains('item-hidden'));
+
+    const colorLabel = currentFrame.closest('.product')
+        .querySelector(`label.color-label[data-id="${itemId}"]`);
+    changeFrameItem(colorLabel, currentItem, itemId.toString())
+    closeConstructor(modal);
 }

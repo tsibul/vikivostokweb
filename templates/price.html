@@ -1,0 +1,132 @@
+{% extends 'header.html' %}
+{% load static %}
+{% block content %}
+    <script src="{% static 'viki_web/js/layout.js' %}" defer type="module"></script>
+    <script src="{% static 'viki_web/js/price.js' %}" defer></script>
+    <div class="container">
+        <div class="layout__header">
+            <h1 class="section-title">Прайс-лист</h1>
+            <form class="layout__header-right" action="{% url 'viki_web:price' %}" method="post">
+                {% csrf_token %}
+                <i class="fa fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                <input class="layout__input" type="text" placeholder="Поиск по товарам..." name="search">
+                <button type="submit" class="btn btn__save btn__menu ">Поиск</button>
+                <a href="{% url 'viki_web:price' %}"><button type="button" class="btn btn__menu btn__cancel">Сбросить</button></a>
+                <a href="{% url 'viki_web:export_price_csv' %}">
+                    <button class="btn btn__save btn__menu ">Выгрузить прайс-лист (CSV)</button>
+                </a>
+            </form>
+        </div>
+        
+        <section class="price-content">
+            <h2 class="price-content__title">Стандартные цены</h2>
+            <div class="price-content__row">
+                <div class="layout-content__title_item">Артикул</div>
+                <div class="layout-content__title_item">Группа</div>
+                <div class="layout-content__title_item">Название</div>
+                {% if price_length > 1 %}
+                    <div class="layout-content__title_item price-content__item">Стандартная цена</div>
+                {% else %}
+                    <div></div>
+                {% endif %}
+                <div class="layout-content__title_item price-content__item">Ваша цена</div>
+            </div>
+            <div class="price-content__rows">
+                {% for record in standard_prices %}
+                    <div class="price-content__row">
+                        <div class="layout-content__row_item">{{ record.article }}</div>
+                        <div class="layout-content__row_item">{{ record.group }}</div>
+                        <div class="layout-content__row_item">{{ record.goods }}</div>
+                        {% if price_length == 1 %}
+                            <div></div>
+                        {% endif %}
+                        {% for price in record.price %}
+                            <div class="price-content__item">
+                                {{ price }}
+                                {% if record.promotion %}
+                                    <div class="product-promotion-badge price-badge">АКЦИЯ</div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+        
+        <section class="price-content">
+            <h2 class="price-content__title">Цены от количества</h2>
+            {% for volume in volume_prices %}
+                <div class="price-content__section">
+                    <h3 class="price-content__section-title">{{ volume.quantity }}</h3>
+                    <div class="price-content__row">
+                        <div class="layout-content__title_item">Артикул</div>
+                        <div class="layout-content__title_item">Группа</div>
+                        <div class="layout-content__title_item">Название</div>
+                        {% if price_length > 1 %}
+                            <div class="layout-content__title_item price-content__item">Стандартная цена</div>
+                        {% else %}
+                            <div></div>
+                        {% endif %}
+                        <div class="layout-content__title_item price-content__item">Ваша цена</div>
+                    </div>
+                    <div class="price-content__rows">
+                        {% for record in volume.goods %}
+                            <div class="price-content__row">
+                                <div class="layout-content__row_item">{{ record.article }}</div>
+                                <div class="layout-content__row_item">{{ record.group }}</div>
+                                <div class="layout-content__row_item">{{ record.goods }}</div>
+                                {% if price_length == 1 %}
+                                    <div></div>
+                                {% endif %}
+                                {% for price in record.price %}
+                                    <div class="price-content__item">
+                                        {{ price }}
+                                        {% if record.promotion %}
+                                            <div class="product-promotion-badge price-badge">АКЦИЯ</div>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </section>
+        
+        <section class="price-content">
+            <h2 class="price-content__title">Брендирование</h2>
+            {% for print in print_price %}
+                <div class="price-content__section">
+                    <div class="print-price__row"
+                    style="grid-template-columns: 1.5fr repeat({{ print.print_volume_length }}, 1fr)">
+                        <div class="print-price__header">{{ print.name }}</div>
+                        {% for quantity in print.print_volume_data %}
+                            <div class="print-price__value">до&nbsp;{{ quantity.quantity }}шт</div>
+                        {% endfor %}
+                    </div>
+                    <hr class="hr">
+                    <div class="layout-content__rows">
+                        {% for record in print.print_groups %}
+                            <div class="price-content__row"
+                            style="grid-template-columns: 1.5fr repeat({{ print.print_volume_length }}, 1fr)">
+                                <div class="layout-content__row_item">{{ record.print_price_group__name }}</div>
+                                {% for price in record.prices %}
+                                    <div class="price-content__item">
+                                        {{ price.price }}
+{#                                        {% if price.promotion %}#}
+{#                                            <div class="product-promotion-badge">АКЦИЯ</div>#}
+{#                                        {% endif %}#}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </section>
+        
+        <div class="price-content" style="text-align: center; padding: 10px; font-style: italic; color: gray;">
+            *Данный прайс-лист не является публичной офертой
+        </div>
+    </div>
+{% endblock %}

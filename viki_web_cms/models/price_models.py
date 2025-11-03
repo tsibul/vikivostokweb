@@ -1,14 +1,12 @@
-# from django.core.files.storage import FileSystemStorage
 import datetime
 
 from django.db import models
 from django.utils import timezone
 
-from viki_web_cms.models import SettingsDictionary, Goods, CatalogueItem, GoodsGroup, StandardPriceType, PrintPlace, \
+from viki_web_cms.models import SettingsDictionary, Goods, CatalogueItem, StandardPriceType, PrintPlace, \
     PrintPriceGroup, PrintVolume
 
 
-# fs_product_group = FileSystemStorage(location='viki_web_cms/files/cover')
 class Price(SettingsDictionary):
     """ price list dates"""
     price_list_date = models.DateField(default=timezone.now)

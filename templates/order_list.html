@@ -1,0 +1,302 @@
+{% extends 'header.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="">
+        <div class="container">
+            <div class="layout__header">
+                <h1 class="section-title">Мои заказы</h1>
+                <form class="layout__header-right" action="{% url 'viki_web:order_list' %}" method="post">
+                    {% csrf_token %}
+                    <i class="fa fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+                    <input class="layout__input"
+                           type="text"
+                           placeholder="Поиск по номеру..."
+                           name="search"
+                            {% if search %} value="{{ search }}" {% endif %}
+                    >
+                    <button type="submit" class="btn btn__save">Поиск</button>
+                    <button type="button" class="btn btn__cancel">Сбросить</button>
+                </form>
+            </div>
+
+            {% csrf_token %}
+
+            <!-- Текущие заказы -->
+            <section class="order-section">
+                <h2 class="order-section__title">Текущие заказы</h2>
+                <div>
+                    <div class="order-list-summary__row">
+                        <div class="order-list__cell">Номер</div>
+                        <div class="order-list__cell">Дата</div>
+                        <div class="order-list__cell">Компания</div>
+                        <div class="order-list__cell">Сумма</div>
+                        <div class="order-list__cell">Дней</div>
+                        <div class="order-list__cell">Готовность</div>
+                        <div></div>
+                        <div class="order-list__cell">Статус</div>
+                        <div class="order-list__cell">Менеджер</div>
+                        <div class="order-list__cell"></div>
+                        <div class="order-list__cell"></div>
+                        <div class="order-list__cell"></div>
+                        <div class="order-list__cell"></div>
+                    </div>
+
+                    {% for order in active_orders %}
+                        <details class="order-list__item" data-order-id="{{ order.id }}">
+                            <summary class="order-list-summary order-list-summary__row">
+                                {#                        <div class="order-summary__row">#}
+                                <div class="order-list-summary__cell">{{ order.order_no }}</div>
+                                <div class="order-list-summary__cell">{{ order.order_date|date:"d.m.y" }}</div>
+                                <div class="order-list-summary__cell">{{ order.company.name }}</div>
+                                <div class="order-list-summary__cell">{{ order.total_amount|floatformat:2 }}</div>
+                                <div class="order-list-summary__cell">
+                                    {% if order.days_to_deliver %}
+                                        {{ order.days_to_deliver }}
+                                    {% endif %}
+                                </div>
+                                <div class="order-list-summary__cell">
+                                    {% if order.delivery_date %}
+                                        {{ order.delivery_date|date:"d.m.y" }}
+                                    {% endif %}
+                                </div>
+                                <div class="square order-state_{{ order.state.order }}"></div>
+                                <div class=" tooltip order-list-summary__cell">
+                                    {{ order.state.name }}
+                                    {% if order.state.order == 3 or order.state.order == 5 %}
+                                        <p class="tooltip-text">требует дополнительного подтверждения</p>
+                                    {% endif %}
+                                </div>
+
+                                <div class="order-list-summary__cell tooltip">
+                                    {{ order.user_responsible.first_name }} {{ order.user_responsible.last_name }}
+                                    <div class="tooltip-text">
+                                        <p>{{ order.user_responsible.userextension.phone }}</p>
+                                        <p>{{ order.user_responsible.email }}</p>
+                                    </div>
+                                </div>
+
+                                <button class="btn btn__neutral catalogue"
+                                        data-action=""
+                                        data-order-id="{{ order.id }}"
+                                >
+                                    Действия
+                                    <ul class="catalogue__item order-list__dropdown">
+                                        {% if order.order_file or order.branding_file or order.invoice_file %}
+                                            <li data-action="show-files" data-order-id="{{ order.id }}">Скачать файлы
+                                            </li>
+                                        {% endif %}
+                                        <li data-action="show-comments" data-order-id="{{ order.id }}">Отправить
+                                            сообщение
+                                        </li>
+                                        {% if order.state.order == 3 %}
+                                            <li data-action="approve-branding" data-order-id="{{ order.id }}">
+                                                Подтвердить макет
+                                            </li>
+                                            {#                                            <li data-action="show-branding-comments" data-order-id="{{ order.id }}">Отправить комментарии по макету</li>#}
+                                        {% endif %}
+                                        {% if order.state.order == 5 %}
+                                            <li data-action="approve-price" data-order-id="{{ order.id }}">Подтвердить
+                                                новую цену
+                                            </li>
+                                        {% endif %}
+                                        {% if order.state.order < 8 %}
+                                            <li data-action="cancel-order" data-order-id="{{ order.id }}">Отменить
+                                                заказ
+                                            </li>
+                                        {% endif %}
+                                    </ul>
+
+                                </button>
+
+                                <div class="order-list-summary__cell order-list-summary__toggle"></div>
+                                {#                        </div>#}
+                            </summary>
+
+                            <!-- Включаем шаблон деталей заказа -->
+                            {% include "order_details.html" with order=order %}
+                        </details>
+                    {% empty %}
+                        <div class="order-list__empty">
+                            <p>У вас нет текущих заказов</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <!-- Завершенные заказы -->
+            <section class="order-section">
+                <h2 class="order-section__title">Завершенные заказы</h2>
+                <div class="order-list">
+                    <div class="order-list-summary__row_closed">
+                        <div class="order-list__cell">Номер</div>
+                        <div class="order-list__cell">Дата</div>
+                        <div class="order-list__cell">Компания</div>
+                        <div class="order-list__cell">Сумма</div>
+                        <div class="order-list__cell"></div>
+                        <div class="order-list__cell">Статус</div>
+                        <div class="order-list__cell"></div>
+                        <div class="order-list__cell">Менеджер</div>
+                        <div class="order-list__cell">Файлы</div>
+                        <div class="order-list__cell"></div>
+                        <div class="order-list__cell"></div>
+                    </div>
+
+                    {% for order in completed_orders %}
+                        <details class="order-list__item" data-order-id="{{ order.id }}">
+                            <summary class="order-list-summary order-list-summary__row_closed">
+                                <div class="order-list-summary__cell">{{ order.order_no }}</div>
+                                <div class="order-list-summary__cell">{{ order.order_date|date:"d.m.Y" }}</div>
+                                <div class="order-list-summary__cell">{{ order.company.name }}</div>
+                                <div class="order-list-summary__cell">{{ order.total_amount|floatformat:2 }} руб.</div>
+                                <div class="square order-state_{{ order.state.order }}"></div>
+
+                                <div class="order-list-summary__cell">
+                                    {{ order.state.name }}
+                                </div>
+
+                                <div class="order-list-summary__cell">
+                                    {{ order.state_changed_at| date:"d.m.y" }}
+                                </div>
+
+                                <div class="order-list-summary__cell tooltip">
+                                    {{ order.user_responsible.first_name }} {{ order.user_responsible.last_name }}
+                                    <div class="tooltip-text">
+                                        <p>{{ order.user_responsible.userextension.phone }}</p>
+                                        <p>{{ order.user_responsible.email }}</p>
+                                    </div>
+                                </div>
+
+                                <button class="btn btn__save
+                                        {% if not order.order_file and not order.branding_file and not order.invoice_file %}
+                                        btn__disabled
+                                        {% endif %}"
+                                        data-order-id="{{ order.id }}"
+                                        {% if not order.order_file and not order.branding_file and not order.invoice_file %}
+                                        disabled
+                                        {% endif %}
+                                >
+                                    Файлы
+                                </button>
+
+                                <button class="btn btn__neutral"
+                                        data-order-id="{{ order.id }}">
+                                    Повторить
+                                </button>
+
+                                <div class="order-list-summary__cell order-list-summary__toggle"></div>
+                            </summary>
+
+                            <!-- Включаем шаблон деталей заказа -->
+                            {% include "order_details.html" with order=order %}
+                        </details>
+                    {% empty %}
+                        <div class="order-list__empty">
+                            <p>У вас нет завершенных заказов</p>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Пагинация -->
+                {% if completed_orders.has_other_pages %}
+                    <div class="pagination">
+                        {% if completed_orders.has_previous %}
+                            <a href="?page=
+
+
+
+
+
+
+
+                                    {{ completed_orders.previous_page_number }}{% if search_query %}&order_no={{ search_query }}{% endif %}"
+                               class="pagination__link">&laquo;</a>
+                        {% endif %}
+
+                        {% for i in completed_orders.paginator.page_range %}
+                            {% if completed_orders.number == i %}
+                                <span class="pagination__link pagination__link_current">{{ i }}</span>
+                            {% else %}
+                                <a href="?page={{ i }}{% if search_query %}&order_no={{ search_query }}{% endif %}"
+                                   class="pagination__link">{{ i }}</a>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if completed_orders.has_next %}
+                            <a href="?page=
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                    {{ completed_orders.next_page_number }}{% if search_query %}&order_no={{ search_query }}{% endif %}"
+                               class="pagination__link">&raquo;</a>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </section>
+        </div>
+    </div>
+
+    <!-- Files Modal -->
+    <dialog class="login" id="filesModal">
+        <div class="login__body">
+            <div class="login__title">
+                <div class="">Файлы заказа</div>
+                <button class="order-list-modal__close" type="button">&times;</button>
+            </div>
+            <div class="login__content">
+                <ul class="files-list" id="filesList"></ul>
+                <p class="files-empty" id="filesEmpty" style="display: none;">Нет доступных файлов</p>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- Comments Modal -->
+    <dialog class="login" id="commentsModal">
+        <div class="login__body">
+            <div class="login__title">
+                <div class="">Комментарий к заказу</div>
+                <button class="order-list-modal__close" type="button">&times;</button>
+            </div>
+            <form class="login__content">
+                <input type="hidden" id="commentOrderId" name="order_id">
+                <textarea class="order-list-modal__textarea" id="commentText" name="comment" rows="6"></textarea>
+                <div class="order-list-modal__btn-block">
+                    <button type="reset" class="btn btn__cancel">Закрыть</button>
+                    <button type="submit" class="btn btn__save">Отправить</button>
+                </div>
+            </form>
+        </div>
+    </dialog>
+
+    <!-- Cancel Modal -->
+    <dialog class="login" id="cancelModal">
+        <div class="login__body">
+            <div class="login__title">
+                <div class="">Отмена заказа</div>
+                <button class="order-list-modal__close" type="button">&times;</button>
+            </div>
+            <div class="login__content">
+                <div class="login__text">
+                    Вы уверены, что хотите отменить заказ?
+                </div>
+                <div class="order-list-modal__btn-block">
+                    <button type="button" class="btn btn__cancel" id="closeCancelModal">Закрыть</button>
+                    <button type="button" class="btn btn__save" id="confirmCancel">Отменить заказ</button>
+                </div>
+            </div>
+        </div>
+    </dialog>
+
+    <script src="{% static 'viki_web/js/order_list.js' %}" type="module"></script>
+{% endblock %}

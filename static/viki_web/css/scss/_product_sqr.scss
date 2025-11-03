@@ -3,36 +3,46 @@
 
 .product-sqr {
   @include brd-standard;
-  width: 620px;
-  height: 470px;
-  padding: 32px;
+  border-color: transparent;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  max-width: 646px;
+  //height: 470px;
+  padding: 24px;
   margin: 8px 0;
   position: relative;
   background-color: #fff;
 
   &__frame {
-    position: absolute;
-    top: 54px;
-    left: 10px;
-    height: 410px;
+    position: relative;
+    margin-top: 8px;
     z-index: 3;
     transition: all 0.4s ease;
     opacity: 1;
     display: grid;
-    grid-template-columns: 260px 320px;
+    grid-template-columns: 268px 320px;
     gap: 10px;
   }
 
+  &__image-frame {
+    height: 280px;
+    width: 280px;
+  }
+
   &__img {
-    height: 279px;
+    //height: 279px;
     @include brd-standard;
     border-color: transparent;
-    overflow: hidden;
+    //overflow: hidden;
     cursor: pointer;
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
   }
 
   &__info {
     display: flex;
+    height: 240px;
+    margin-bottom: 8px;
   }
 
   &__tab-btn-block {
@@ -43,23 +53,22 @@
   }
 
   &__tab-btn {
-    border-color: rgba($colorSecondary, 0.2) transparent rgba($colorSecondary, 0.1) rgba($colorSecondary, 0.2);
     padding: 8px 8px 4px 8px;
     border: 1px solid;
+    border-color: rgba($colorNeutral500, 0.08) transparent rgba($colorNeutral500, 0.08) rgba($colorNeutral500, 0.08);
     border-radius: 8px 0 0 8px;
-    border-color: rgba(0, 158, 163, 0.2) transparent rgba(0, 158, 163, 0.1) rgba(0, 158, 163, 0.2);
     z-index: 1;
-    box-shadow: -2px 4px 4px 1px rgba(0, 158, 163, 0.2);
+    box-shadow: -2px 4px 4px 1px rgba($colorNeutral500, 0.08);
     cursor: pointer;
-    background-color: #F2FFFF;
+    background-color: rgba($colorNeutral500, 0.08);
   }
 
   &__tab-content {
     position: relative;
-    border: 1px solid rgba(0, 158, 163, 0.2);
+    border: 1px solid rgba($colorNeutral500, 0.08);
     border-radius: 0 12px 12px 12px;
     margin: 0 0 0 -2px;
-    box-shadow: -2px 4px 4px 2px rgba(0, 158, 163, 0.2);
+    box-shadow: -2px 4px 4px 2px rgba($colorNeutral500, 0.08);
     z-index: 2;
     width: 100%;
     //overflow: auto;
@@ -128,19 +137,23 @@
 }
 
 .btn-sqr {
-  //width: 160px;
+  width: 100%;
   padding: 8px;
   justify-content: center;
   gap: 8px;
-  align-self: end;
-  &__block{
-    display: grid;
-    grid-template-columns: 1fr 2fr;
+
+  &__block {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
     padding-bottom: 16px;
+    width: 67%;
+    margin-left: 33%;
   }
 }
 
 .chevron-sqr-next {
+  position: absolute;
   width: 260px;
   background-color: transparent;
   display: flex;
@@ -154,5 +167,42 @@
     font-weight: bold;
     transform: scale(1.05);
   }
+}
+
+.goods-group {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+
+  &__item {
+    @include brd-standard;
+    border-color: transparent;
+    background-color: #fff;
+    display: inline-block;
+    width: 100%;
+    padding: 24px;
+    text-align: center;
+    transition: transform 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+}
+
+.product-new-badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background-color: $colorSecondary;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 5px 10px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  z-index: 5;
 }
 

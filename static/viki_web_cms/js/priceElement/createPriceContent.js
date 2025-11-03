@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Module for creating price content based on price type
+ * @module priceElement/createPriceContent
+ */
+
 'use strict';
 
 import {searchStringNormalizer} from "../dictionaryElement/searchStringNormalizer.js";
@@ -6,11 +11,11 @@ import {volumePrice} from "./volumePrice.js";
 import {printingPrice} from "./printingPrice.js";
 
 /**
- * chose content according to priceList type
- * @param priceDate
- * @param priceType
- * @param searchString
- * @returns {Promise<HTMLFormElement>}
+ * Creates price content based on the specified price type
+ * @param {string} priceDate - Price list date identifier
+ * @param {string} priceType - Type of price list (1: standard, 2: volume, 3: printing)
+ * @param {string} searchString - Search string for filtering content
+ * @returns {Promise<{form: HTMLFormElement, header: HTMLElement}>} Object containing form and header elements
  */
 export async function createPriceContent(priceDate, priceType, searchString) {
     switch (priceType) {

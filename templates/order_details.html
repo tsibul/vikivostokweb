@@ -1,0 +1,67 @@
+<div class="order-details__content">
+    <!-- Товары заказа -->
+    <div class="order-list-items">
+        {#        <h3 class="order-list-items__title">Товары в заказе</h3>#}
+        <div class="order-list-items__grid">
+            <div class="order-list-items__header">
+                <div class="order-list-items__cell">Артикул</div>
+                <div class="order-list-items__cell">Наименование</div>
+                <div class="order-list-items__cell">Нанесение</div>
+                <div class="order-list-items__cell price-cell">Цена</div>
+                <div class="order-list-items__cell price-cell">Количество</div>
+                <div class="order-list-items__cell price-cell">Сумма</div>
+            </div>
+
+            {% for item in order.orderitem_set.all %}
+                <div class="order-list-items__row">
+                    <div class="order-list-items__cell">{{ item.item.item_article }}</div>
+                    <div class="order-list-items__cell">{{ item.item.name }}</div>
+                    <div class="order-list-items__cell">
+                        {% if item.branding_name %}{{ item.branding_name }}{% endif %}</div>
+                    <div class="order-list-items__cell price-cell">{{ item.price|floatformat:2 }}</div>
+                    <div class="order-list-items__cell price-cell">{{ item.quantity }}</div>
+                    <div class="order-list-items__cell price-cell">{{ item.total_price|floatformat:2 }}</div>
+                </div>
+
+                <!-- Брендирование -->
+                {% if item.orderitembranding_set.exists %}
+                    <div class="order-branding">
+                        <div class="order-branding__grid">
+                            {% for branding in item.orderitembranding_set.all %}
+                                <div class="order-branding__row">
+                                    <div></div>
+                                    <div class="order-branding__cell">{{ branding.print_type.name }}&nbsp;
+                                        {{ branding.print_place.name }},&nbsp;цветов:&nbsp;{{ branding.colors }}
+                                        {% if branding.second_pass %}&nbsp;второй проход{% endif %}
+                                    </div>
+                                    <div></div>
+                                    <div class="order-branding__cell price-cell">{{ branding.price|floatformat:2 }}</div>
+                                    <div></div>
+                                    <div class="order-branding__cell price-cell">{{ branding.total_price|floatformat:2 }}</div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="order-delivery">
+            <div class="order-delivery__info">
+                <div class="order-delivery__row">
+                    <div class="">Доставка:
+                        {% if order.delivery_option %}{{ order.delivery_option.name }}{% else %}Не
+                            указано{% endif %}
+                    </div>
+                    <div>{{ order.delivery_option.price| floatformat:2 }}</div>
+                </div>
+            </div>
+        </div>
+
+
+        {% if order.customer_comment %}
+            <div class="order-comment">
+                <h3 class="order-comment__title">Комментарий к заказу</h3>
+                <div class="order-comment__text">{{ order.customer_comment }}</div>
+            </div>
+        {% endif %}
+    </div>

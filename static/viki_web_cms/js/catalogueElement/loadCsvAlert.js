@@ -1,7 +1,17 @@
+/**
+ * @fileoverview Module for displaying CSV upload results
+ * @module catalogueElement/loadCsvAlert
+ */
+
 'use strict'
 
 import {createSaveButton} from "../createStandardElements/createSaveButton.js";
 
+/**
+ * Creates and displays alert dialog with CSV upload results
+ * @param {Object} rowData - Upload results data containing errors, duplicates and successful records
+ * @returns {HTMLDialogElement} Alert dialog element
+ */
 export function loadCsvAlert(rowData) {
     const alert = document.createElement('dialog')
     alert.classList.add('alert');
@@ -47,12 +57,22 @@ export function loadCsvAlert(rowData) {
     return alert;
 }
 
+/**
+ * Creates container for alert details section
+ * @returns {HTMLDivElement} Details container element
+ */
 function alertDetails() {
     const details = document.createElement('details');
     details.classList.add('alert__details');
     return details;
 }
 
+/**
+ * Creates summary section for alert
+ * @param {string} text - Section title
+ * @param {number} number - Number of records in section
+ * @returns {HTMLDivElement} Summary element
+ */
 function alertSummary(text, number) {
     const summary = document.createElement('summary');
     summary.classList.add('alert__summary');
@@ -60,6 +80,11 @@ function alertSummary(text, number) {
     return summary;
 }
 
+/**
+ * Creates element for individual record in alert
+ * @param {Object} item - Record data
+ * @returns {HTMLDivElement} Record element
+ */
 function alertElement(item){
     const element = document.createElement('div');
     element.classList.add('alert__element');

@@ -1,12 +1,18 @@
+/**
+ * @fileoverview Module for saving catalogue item data
+ * @module catalogueElement/saveCatalogueItem
+ */
+
 'use strict'
 
 import {jsonUrl} from "../main.js";
 import {fetchJsonData} from "../fetchJsonData.js";
+import {getCSRFToken} from "../getCSRFToken.js";
 
 /**
- *
- * @param e
- * @param btn
+ * Saves catalogue item data to the server
+ * @param {Event} e - Event object from the form submission
+ * @param {HTMLButtonElement} btn - Save button element
  * @returns {Promise<void>}
  */
 export async function saveCatalogueItem(e, btn) {
@@ -35,12 +41,15 @@ export async function saveCatalogueItem(e, btn) {
         const saveUrl = jsonUrl + 'save_catalogue_item/' + rowId;
         await fetch(saveUrl, {
             method: 'POST',
+            headers: {
+                "X-CSRFToken": getCSRFToken(),
+            },
             body: formData,
         })
             .then(response => response.json())
             .then(rowData => {
                 if (rowId === '0')
-                form.querySelector('input[name="id"]').value = rowData.id;
+                    form.querySelector('input[name="id"]').value = rowData.id;
                 const btnCancel = form.querySelector('.btn__cancel');
                 btnCancel.disabled = true;
                 btnCancel.classList.add('btn__disabled');

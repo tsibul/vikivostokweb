@@ -1,9 +1,20 @@
+/**
+ * @fileoverview Module for saving printing price list changes
+ * @module priceElement/savePrintingPriceList
+ */
+
 'use strict'
 
 import {jsonUrl} from "../main.js";
 import {reloadPriceList} from "./reloadPriceList.js";
+import {getCSRFToken} from "../getCSRFToken.js";
 
-export async function savePrintingPriceList(e){
+/**
+ * Saves changes to printing price list
+ * @param {Event} e - Event object from the save action
+ * @returns {Promise<void>}
+ */
+export async function savePrintingPriceList(e) {
     const content = document.querySelector('.content');
     const priceDateId = content
         .querySelector('.dictionary-frame__header_left')
@@ -29,14 +40,15 @@ export async function savePrintingPriceList(e){
     fetch(saveUrl, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            "X-CSRFToken": getCSRFToken(),
         },
         body: JSON.stringify(priceListData),
     })
-    .then(res => res.json())
-    .then(data => {
-        const err = data.error;
-        if (!err) reloadPriceList()
-    });
+        .then(res => res.json())
+        .then(data => {
+            const err = data.error;
+            if (!err) reloadPriceList()
+        });
 
 }

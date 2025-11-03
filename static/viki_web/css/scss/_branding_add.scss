@@ -1,0 +1,74 @@
+.branding-modal {
+  display: block;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+
+  &__content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    width: 80%;
+    max-width: 600px;
+    border-radius: 8px;
+    position: relative;
+  }
+
+  &__title {
+    margin: 0 0 1rem 0;
+    color: #1e3a8a;
+  }
+
+  &__close {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #1e3a8a;
+  }
+
+  &__form-group {
+    margin-bottom: 15px;
+  }
+
+  &__label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+
+  &__trigger {
+    height: 40px;
+  }
+
+  &__checkbox-group {
+    margin-bottom: 20px;
+    display: flex;
+    gap: 16px;
+  }
+
+  &__buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  & li {
+    padding: 12px 8px;
+  }
+
+  & .viki-dropdown__menu {
+    top: calc(100%);
+  }
+
+
+
+}

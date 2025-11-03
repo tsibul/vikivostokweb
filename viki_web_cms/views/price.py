@@ -5,14 +5,14 @@ from viki_web_cms import models
 from django.db.models import F, Q, OuterRef, CharField, Value, Func, Subquery
 from django.db.models.functions import Concat, Cast
 from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
+# from django.views.decorators.csrf import csrf_exempt
 
 from viki_web_cms.functions.user_validation import user_check
 from viki_web_cms.models import Price, StandardPriceType, Goods, PriceGoodsStandard, CatalogueItem, PriceItemStandard, \
     CustomerDiscount, PriceGoodsVolume, PriceGoodsQuantity, PrintPriceGroup, PrintType, PrintVolume, PrintPrice
 
 
-@csrf_exempt
+# @csrf_exempt
 def save_new_price_date(request):
     """
 
@@ -219,7 +219,7 @@ def item_query(search_string):
     return items
 
 
-@csrf_exempt
+# @csrf_exempt
 def delete_item_price_row(request, row_id):
     """
 
@@ -367,7 +367,7 @@ def printing_price_data(request, str_price_date):
     return JsonResponse({'priceData': price_data, }, safe=False)
 
 
-@csrf_exempt
+# @csrf_exempt
 def price_list_save(request):
     """
 
@@ -377,27 +377,28 @@ def price_list_save(request):
     if user_check(request):
         return JsonResponse(None, safe=False)
     price_data = json.loads(request.body)
-    if 'price_goods_quantity__price_volume__id' in price_data['goods'][0].keys():
-        price_goods_model = getattr(models, 'PriceGoodsVolume')
-    else:
-        price_goods_model = getattr(models, 'PriceGoodsStandard')
     goods_list = []
     goods_new_list = []
-    for item in price_data['goods']:
-        temp_item = prepare_item_kwargs(item)
-        goods_keys = [key for key in temp_item.keys() if key != "id"]
-        if temp_item['id']:
-            goods = price_goods_model.objects.get(id=item['id'])
-            for key, value in temp_item.items():
-                setattr(goods, key, value)
-            if temp_item['price'] is not None and temp_item['price'] != 0:
-                goods_list.append(goods)
-            else:
-                goods.delete()
-        elif temp_item['price'] is not None and temp_item['price'] != 0:
-            del temp_item['id']
-            goods = price_goods_model(**temp_item)
-            goods_new_list.append(goods)
+    if price_data['goods']:
+        if 'price_goods_quantity__price_volume__id' in price_data['goods'][0].keys():
+            price_goods_model = getattr(models, 'PriceGoodsVolume')
+        else:
+            price_goods_model = getattr(models, 'PriceGoodsStandard')
+        for item in price_data['goods']:
+            temp_item = prepare_item_kwargs(item)
+            goods_keys = [key for key in temp_item.keys() if key != "id"]
+            if temp_item['id']:
+                goods = price_goods_model.objects.get(id=item['id'])
+                for key, value in temp_item.items():
+                    setattr(goods, key, value)
+                if temp_item['price'] is not None and temp_item['price'] != 0:
+                    goods_list.append(goods)
+                else:
+                    goods.delete()
+            elif temp_item['price'] is not None and temp_item['price'] != 0:
+                del temp_item['id']
+                goods = price_goods_model(**temp_item)
+                goods_new_list.append(goods)
     item_list = []
     item_new_list = []
     for item in price_data['item']:
@@ -447,7 +448,7 @@ def prepare_item_kwargs(item):
     return temp_item
 
 
-@csrf_exempt
+# @csrf_exempt
 def printing_price_list_save(request):
     """
 

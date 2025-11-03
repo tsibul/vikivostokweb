@@ -164,7 +164,7 @@ class PrintOpportunity(SettingsDictionary):
         verbose_name_plural = 'Возможности печати'
         db_table_comment = 'Print opportunity'
         db_table = 'print_opportunity'
-        ordering = ['print_data__print_type', 'print_data__print_place']
+        ordering = ['goods', 'print_data__print_type', 'print_data__print_place']
 
     def __str__(self):
         return self.goods.name + ' ' + str(self.print_data)
@@ -179,7 +179,7 @@ class PrintOpportunity(SettingsDictionary):
 
     @staticmethod
     def order_default():
-        return ['print_data__print_type', 'print_data__print_place']
+        return ['goods', 'print_data__print_type', 'print_data__print_place']
 
     @staticmethod
     def dictionary_fields():

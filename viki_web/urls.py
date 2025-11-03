@@ -1,9 +1,46 @@
 from django.urls import path
 from . import views
+from .views import quote
 
 app_name = 'viki_web'
 urlpatterns = [
     path('', views.index, name='main'),
     path('products/<str:product_group_url>', views.product, name='products'),
-    path('products/<str:product_group_url>/<str:filter_type>', views.product_filter, name='product_filter'),
+    path('filter/<str:filter_type>', views.product_filter, name='product_filter'),
+    path('goods_group/<str:url>', views.goods_group_page, name='goods_group'),
+    path('send-password/', views.send_temp_password, name='send_temp_password'),
+    path('log-temp/', views.login_with_temp_password, name='login-temp'),
+    path('change-password/', views.change_password, name='change_password'),
+    path('log-out/', views.log_out, name='log-out'),
+    path('log-in/', views.log_in, name='log-in'),
+    path('cabinet/', views.cabinet, name='cabinet'),
+    path('cabinet_data/', views.cabinet_data, name='cabinet_data'),
+
+    path('cabinet/save/<str:form_type>', views.cabinet_save, name='cabinet_save'),
+    path('save_new_company/', views.save_new_company, name='save_new_company'),
+    path('check_company/', views.company_create, name='check_company'),
+    path('check_bank/', views.check_bank, name='check_bank'),
+    path('save_bank_account/', views.save_bank_account, name='save_bank_account'),
+    path('product/<str:product_name>', views.product_detail, name='product_detail'),
+    path('products/', views.catalogue_search, name='catalogue'),
+    path('shablon', views.layout, name='layout' ),
+    path('price', views.price, name='price'),
+    path('export-price-csv', views.export_price_csv, name='export_price_csv'),
+    path('cart', views.cart, name='cart'),
+    path('order/', views.order, name='order'),
+    path('order_list/', views.order_list, name='order_list'),
+    path('order_action/', views.order_action, name='order_action'),
+    path('order_files/', views.order_files, name='order_files'),
+    path('create_order/', views.create_order, name='create_order'),
+    path('quote/', quote.quote_view, name='quote'),
+    path('quote/goods-info/', quote.get_goods_info, name='quote_goods_info'),
+    path('api/print-opportunities/<int:goods_id>', views.get_print_opportunities, name='print_opportunities'),
+    path('api/volume-discounts/', views.get_volume_discounts, name='volume_discounts'),
+    path('about', views.about, name='about'),
+    path('news', views.news, name='news'),
+    path('privacy', views.privacy, name='privacy'),
+    path('legal', views.legal, name='legal'),
+    path('contacts', views.contacts, name='contacts'),
+    path('sitemap', views.sitemap, name='sitemap'),
+    path('api/get-item-price/<int:item_id>/', views.get_item_price, name='get_item_price'),
 ]

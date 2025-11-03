@@ -1,0 +1,302 @@
+{% extends 'header.html' %}
+{% load static %}
+{% block content %}
+    <script src="{% static 'viki_web/js/order.js' %}" defer type="module"></script>
+
+    <main>
+        <div class="container">
+            <h1 class="section-title">Оформление заказа</h1>
+
+            <div class="order-page">
+                <form class="order-form" method="POST" action="{% url 'viki_web:order' %}">
+                    {% csrf_token %}
+
+                    <!-- Customer Information Section -->
+                    <div class="order-customer">
+                        <h2 class="order-section-title" data-id="{{ user_extension.id }}"
+                            data-customer-id="{{ customer.id }}">Информация о покупателе</h2>
+                        <div class="order-customer__info">
+                            <div class="order-customer__user">
+                                <div class="order-customer__field">
+                                    <span class="order-customer__label">Имя:</span>
+                                    <span>{{ user.first_name }} {{ user.last_name }}</span>
+                                </div>
+                                <div class="order-customer__field">
+                                    <span class="order-customer__label">Email:</span>
+                                    <span>{{ user.email }}</span>
+                                </div>
+                                <div class="order-customer__field">
+                                    <span class="order-customer__label">Телефон:</span>
+                                    <span>{{ user_extension.phone }}</span>
+                                </div>
+                                <div class="order-customer__field">
+                                    <span class="order-customer__label">Клиент:</span>
+                                    {% if user.is_staff and available_customers %}
+                                        <div class="customer-dropdown">
+                                            <div class="dropdown-selected">
+                                                <span class="customer-name">{{ customer.name }}</span>
+                                                <input type="hidden" name="customer_id" value="{{ customer.id }}">
+                                                <i class="fa-solid fa-chevron-down"></i>
+                                            </div>
+                                            <ul class="dropdown-options">
+                                                <li class="dropdown-option"
+                                                    data-id="{{ customer.id }}"
+                                                    data-name="{{ customer.name }}">
+                                                    {{ customer.name }}
+                                                </li>
+                                                {% for cust in available_customers %}
+                                                    <li class="dropdown-option"
+                                                        data-id="{{ cust.id }}"
+                                                        data-name="{{ cust.name }}">
+                                                        {{ cust.name }}
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    {% else %}
+                                        <span>{{ customer.name }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Company Selection Dropdown -->
+                            <div class="order-customer__company-selection">
+                                <div class="order-customer__field">
+                                    <span class="order-customer__label">Компания:</span>
+                                    <div class="company-dropdown">
+                                        <div class="dropdown-selected">
+                                            {% if companies %}
+                                                <span class="company-name">{{ companies.0.name }}</span>
+                                                <input type="hidden" name="company_id" value="{{ companies.0.id }}">
+                                                <input type="hidden" name="company_vat" value="{{ companies.0.vat }}">
+                                            {% endif %}
+                                            <i class="fa-solid fa-chevron-down"></i>
+                                        </div>
+                                        <ul class="dropdown-options">
+                                            {% for company in companies %}
+                                                <li class="dropdown-option"
+                                                    data-id="{{ company.id }}"
+                                                    data-name="{{ company.name }}"
+                                                    data-inn="{{ company.inn }}"
+                                                    data-kpp="{{ company.kpp }}"
+                                                    data-address="{{ company.address }}"
+                                                    data-vat="{{ company.vat }}">
+                                                    {{ company.name }}
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Company Details Display -->
+                            <div class="order-customer__company-details">
+                                {% if companies %}
+                                    <div class="order-customer__field">
+                                        <span class="order-customer__label">ИНН/КПП:</span>
+                                        <span class="company-inn-kpp">
+                                        {{ companies.0.inn }}{% if companies.0.kpp %}/{{ companies.0.kpp }}{% endif %}
+                                    </span>
+                                    </div>
+                                    <div class="order-customer__field">
+                                        <span class="order-customer__label">Адрес:</span>
+                                        <span class="company-address">{{ companies.0.address }}</span>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cart Items Section -->
+                    <div class="order-items">
+                        <h2 class="order-section-title">Товары в заказе</h2>
+                        <input type="number" step="0.0001" hidden name="discount" value="{{ discount }}">
+
+                        {% if cart_items %}
+                            {% for item in cart_items %}
+                                <div class="order-item">
+                                    <div class="order-item__image">
+                                        <img src="{{ item.image }}" alt="{{ item.article }}">
+                                    </div>
+                                    <div class="order-item__details">
+                                        <div class="order-item__row">
+                                            <h3 class="order-item__name">{{ item.name }}</h3>
+                                        </div>
+                                        <div class="order-item__row">
+                                            <div class="order-item__code">
+                                                <div>Артикул:&nbsp;{{ item.article }}</div>
+                                                <div>{{ item.description|truncatechars:100 }}</div>
+                                            </div>
+                                            <div class="order-item__row order-item__pricing">
+                                                <div class="order-item__price"
+                                                     data-item="{{ item.id }}"
+                                                     data-price="{{ item.discountPrice }}"
+                                                >
+                                                    <span>Цена:</span>
+                                                    <span>{{ item.discountPrice }} руб.</span>
+                                                </div>
+                                                <div class="order-item__price"
+                                                     data-item="{{ item.id }}"
+                                                     data-quantity="{{ item.quantity }}"
+                                                >
+                                                    <span>Количество:</span>
+                                                    <span>{{ item.quantity }}</span>
+                                                </div>
+                                                <div class="order-item__price"
+                                                     data-item="{{ item.id }}"
+                                                     data-total="{{ item.total }}"
+                                                >
+                                                    <span>Сумма:</span>
+                                                    <span>{{ item.total }} руб.</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% if item.branding %}
+                                            {% for branding in item.branding %}
+                                                <div class="order-item__row">
+                                                    <div class="order-item__branding"
+                                                         data-item="{{ item.id }}"
+                                                         data-type="{{ branding.type_id }}"
+                                                         data-location="{{ branding.location_id }}"
+                                                         data-colors="{{ branding.colors }}"
+                                                         data-second-pass="{{ branding.secondPass }}"
+                                                    >
+                                                        <span class="order-item__value">{{ branding.type }}</span>
+                                                        <span class="order-item__value"> {{ branding.location }},</span>
+                                                        <span class="order-item__value"> цветов:</span>
+                                                        <span class="order-item__value"> {{ branding.colors }}</span>
+                                                        {% if branding.secondPass %}
+                                                            <span class="order-item__value">, второй проход</span>
+                                                        {% endif %}
+                                                    </div>
+                                                    <div class="order-item__branding-price order-item__pricing">
+                                                        <div class="order-item__price"
+                                                             data-item="{{ item.id }}i"
+                                                             data-price="{{ branding.price }}"
+                                                        >
+                                                            <span>Цена:</span>
+                                                            <span>{{ branding.price }} руб.</span>
+                                                        </div>
+                                                        <div></div>
+                                                        <div class="order-item__price"
+                                                             data-item="{{ item.id }}"
+                                                             data-total="{{ branding.total }}"
+                                                        >
+                                                            <span>Сумма:</span>
+                                                            <span>{{ branding.total }} руб.</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            {#                        {% else %}#}
+                            {#                            <div class="order-empty">#}
+                            {#                                <p>В корзине нет товаров. <a href="{% url 'viki_web:catalogue' %}">Перейти в каталог</a>#}
+                            {#                                </p>#}
+                            {#                            </div>#}
+                        {% endif %}
+                    </div>
+
+                    <!-- Additional Order Options Section -->
+                    <div class="order-additional">
+                        <h2 class="order-section-title">Дополнительная информация</h2>
+
+                        <!-- Customer Comment -->
+                        <div class="order-additional__comment">
+                            <label for="customer_comment" class="order-additional__label">
+                                Поле для ваших комментариев (спецсимволы не допускаются)
+                            </label>
+                            <textarea
+                                    name="customer_comment"
+                                    id="customer_comment"
+                                    class="order-additional__textarea"
+                                    placeholder="Ваш комментарий к заказу"
+                            ></textarea>
+                            <span class="order-additional__help-text">
+                                Вы можете оставить комментарий к заказу (необязательно)
+                            </span>
+                        </div>
+
+                        <!-- Delivery Options -->
+                        <div class="order-additional__delivery">
+                            <label class="order-additional__label">Способ доставки</label>
+                            <div class="delivery-dropdown">
+                                <div class="delivery-dropdown__selected">
+                                    {% if delivery_options %}
+                                        <span class="delivery-name">{{ delivery_options.0.name }}</span>
+                                        <input type="hidden" name="delivery_option_id"
+                                               value="{{ delivery_options.0.id }}">
+                                        <input type="hidden" name="delivery_price"
+                                               value="{{ delivery_options.0.price }}">
+                                    {% else %}
+                                        <span class="delivery-name">Выберите способ доставки</span>
+                                        <input type="hidden" name="delivery_option_id" value="">
+                                        <input type="hidden" name="delivery_price" value="0">
+                                    {% endif %}
+                                    <i class="fa-solid fa-chevron-down"></i>
+                                </div>
+                                <ul class="delivery-dropdown__options">
+                                    {% for option in delivery_options %}
+                                        <li class="delivery-dropdown__option"
+                                            data-id="{{ option.id }}"
+                                            data-name="{{ option.name }}"
+                                            data-price="{{ option.price }}">
+                                            <span class="option-name">{{ option.name }}</span>
+                                            <span class="option-price">{{ option.price }} руб.</span>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order Summary Section -->
+                    <div class="order-summary">
+                        <h2 class="order-section-title">Итого</h2>
+
+                        <div class="order-summary__totals">
+                            <div class="order-summary__row">
+                                <span class="order-summary__label">Товаров:</span>
+                                <span class="order-summary__value">{{ cart_items|length }}</span>
+                            </div>
+                            <div class="order-summary__row">
+                                <span class="order-summary__label">Стоимость товаров:</span>
+                                <span class="order-summary__value">
+                                    <span class="goods-total">0</span> руб.
+                                </span>
+                            </div>
+                            <div class="order-summary__row">
+                                <span class="order-summary__label">Стоимость нанесения:</span>
+                                <span class="order-summary__value">
+                                    <span class="branding-total">0</span> руб.
+                                </span>
+                            </div>
+                            <div class="order-summary__row delivery-cost-row" style="display: none;">
+                                <span class="order-summary__label">Стоимость доставки:</span>
+                                <span class="order-summary__value">
+                                    <span class="delivery-total">0</span> руб.
+                                </span>
+                            </div>
+                            <div class="order-summary__row order-summary__grand-total">
+                                <span class="order-summary__label">Итого:</span>
+                                <span class="order-summary__value">
+                                    <span class="order-total">0</span> руб.
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="order-summary__actions">
+                            <a href="{% url 'viki_web:cart' %}">
+                                <button type="button" class=" btn btn__cancel">Изменить</button>
+                            </a>
+                            <button type="submit" class="btn btn__save">Заказать</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+{% endblock %} 

@@ -1,0 +1,54 @@
+.sitemap {
+    padding: 40px 0;
+
+    &__title {
+        @include typo-h1;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+
+    &__section {
+        margin-bottom: 40px;
+    }
+
+    &__subtitle {
+        @include typo-h2;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid $colorPrimary;
+    }
+
+    &__list {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+
+        @media (max-width: 992px) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        @media (max-width: 576px) {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    &__item {
+        padding: 5px 0;
+    }
+
+    &__link {
+        @include typo-p;
+        color: $colorPrimary;
+        transition: opacity 0.2s;
+
+        &:hover {
+            opacity: 0.8;
+        }
+
+        &:before {
+            content: "•";
+            margin-right: 8px;
+            color: $colorSecondary;
+        }
+    }
+} 

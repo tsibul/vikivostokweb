@@ -1,5 +1,9 @@
-'use strict';
+/**
+ * @fileoverview Module for handling user authentication
+ * @module authentification/login
+ */
 
+'use strict';
 
 import {createModalHeader} from "../dictionaryElement/createInput/createModalHeader.js";
 import {modalDnD} from "../modalFunction/modalDnD.js";
@@ -7,7 +11,12 @@ import {createCancelButton} from "../createStandardElements/createCancelButton.j
 import {createSaveButton} from "../createStandardElements/createSaveButton.js";
 import {closeModal} from "../modalFunction/closeModal.js";
 import {checkUserData} from "./checkUserData.js";
+import {getCSRFToken} from "../getCSRFToken.js";
 
+/**
+ * Creates and displays login modal window
+ * @returns {Promise<void>}
+ */
 export async function login() {
     const loginWindow = document.createElement('dialog');
     loginWindow.classList.add('login-cms');
@@ -44,10 +53,21 @@ export async function login() {
 
 }
 
+/**
+ * Sends login request to server
+ * @param {Event} e - Event object from the login button click
+ * @param {string} log - Username
+ * @param {string} pass - Password
+ * @param {HTMLDialogElement} modal - Login modal window
+ * @returns {Promise<void>}
+ */
 async function sendLogin(e, log, pass, modal) {
     e.preventDefault();
     await fetch('./user_login', {
         method: 'POST',
+        headers: {
+            "X-CSRFToken": getCSRFToken(),
+        },
         body: JSON.stringify({
             'username': log,
             'password': pass,

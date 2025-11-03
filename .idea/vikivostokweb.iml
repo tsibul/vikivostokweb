@@ -15,6 +15,11 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/.venv" />
+      <excludeFolder url="file://$MODULE_DIR$/static/viki_web_cms/files/item_add_photo" />
+      <excludeFolder url="file://$MODULE_DIR$/static/viki_web_cms/files/layout" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea/dataSources" />
+      <excludeFolder url="file://$MODULE_DIR$/static/viki_web_cms/files/cover" />
+      <excludeFolder url="file://$MODULE_DIR$/static/viki_web_cms/files/order" />
     </content>
     <orderEntry type="jdk" jdkName="Python 3.11 (vikivostokweb)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />

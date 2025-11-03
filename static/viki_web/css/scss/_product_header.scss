@@ -1,68 +1,137 @@
 @import "vars";
 @import "mixins";
 
+// Основной верхний хедер
 .menu-product {
   height: 60px;
   width: 100%;
   background-color: $colorSecondary;
   position: fixed;
   z-index: 10;
-}
-
-.main-btn {
-  text-align: center;
-  padding: 8px 0;
-  @include brd-standard;
-  background-color: $colorSecondary;
-  border-color: $colorPrimary;
-  //box-shadow: 4px 4px 4px 2px $colorSecondary;
-  transition: transorm 0.6s;
-  transform: scale(1);
-
-  &:hover {
-    box-shadow: none;
-    transform: scale(0.95);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  
+  .menu__line {
+    height: 100%;
+    display: flex;
+    align-items: center;
   }
-}
-
-.submenu-group {
-  margin: 12px 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, 206px);
-  gap: 12px;
-
-  &__logo {
-    height: 16px;
-  }
-
-  &__item {
-    text-align: center;
-    color: $colorPrimary;
-    padding: 8px 0;
-    @include brd-standard;
-    border-color: $colorPrimary;
-    transform: scale(0.95);
-
-    &_inactive {
-      box-shadow: 4px 4px 4px 2px $colorSecondary;
-      transition: transorm 0.6s;
-      transform: scale(1);
-
+  
+  .menu__left {
+    display: flex;
+    gap: 20px;
+    
+    .menu__item a {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: $colorSecondary50;
+      font-weight: normal;
+      transition: all 0.2s ease;
+      
       &:hover {
-        box-shadow: none;
-        transform: scale(0.95);
+        transform: translateY(-2px);
+      }
+      
+      i {
+        font-size: 18px;
+        color: $colorSecondary50;
+      }
+    }
+  }
+  
+  .menu__right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    
+    .layout__header-right {
+      display: flex;
+      align-items: center;
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      padding: 6px 10px;
+      margin-right: 10px;
+      
+      i {
+        color: $colorSecondary50;
+        margin-right: 8px;
+      }
+      
+      .layout__input {
+        background: transparent;
+        border: none;
+        outline: none;
+        color: $colorSecondary50;
+        width: 180px;
+        &::placeholder {
+          color: rgba(242, 255, 255, 0.7);
+        }
+      }
+      
+      button {
+        margin-left: 8px;
+        padding: 6px 12px;
+        border-radius: 6px;
       }
     }
   }
 }
 
+// Меню категорий
+.menu-items {
+  width: 100%;
+  background-color: $colorPrimary;
+  top: 60px;
+  position: fixed;
+  z-index: 7;
+  height: 80px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.06);
+
+  .menu__line {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__items {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 90%;
+    margin-left: -16px;
+  }
+
+  &__item {
+    position: relative;
+
+    a {
+      display: inline-block;
+      padding: 8px 16px;
+      text-wrap: nowrap;
+      color: $colorSecondary50;
+      font-weight: normal;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+      
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        transform: translateY(-2px);
+      }
+    }
+  }
+}
+
+// Фильтры - оригинальные стили
 .filter {
   z-index: 5;
   position: fixed;
-  top: 66px;
-  right: calc((100% - 1300px) / 2);
+  top: 80px;
+  right: calc((100% - 1280px) / 2);
   transition: max-height 0.6s ease;
-  max-height: 30px;
+  max-height: 40px;
   height: 100%;
   overflow: hidden;
 
@@ -73,7 +142,6 @@
   }
 
   &__summary {
-    //padding: 8px 0;
     cursor: pointer;
     display: flex;
     justify-content: end;
@@ -86,8 +154,16 @@
       align-items: center;
       @include brd-standard;
       border-color: transparent;
-      padding:  4px 24px 4px 10px;
-      background-color: rgba($colorSecondary, 0.5)
+      padding: 8px 24px 8px 10px;
+      background-color: rgba($colorSecondary, 1);
+
+      h4 {
+        color: $colorSecondary50;
+      }
+
+      i {
+        color: $colorSecondary50;
+      }
     }
   }
 
@@ -129,7 +205,6 @@
         width: 20px;
       }
     }
-
   }
 
   &__btn-block {
@@ -137,6 +212,7 @@
     justify-content: end;
     gap: 8px;
   }
+
   &__price-range {
     padding: 6px;
     display: flex;
@@ -146,23 +222,26 @@
   }
 }
 
-.input-range{
+.input-range {
   color: $colorPrimary;
   accent-color: $colorPrimary;
   width: 70%;
-    &__value {
-      font-size: 18px;
-      //font-weight: 600;
-    }
+
+  &__value {
+    font-size: 18px;
+  }
 }
 
 .product-header {
   width: 100%;
-  padding-top: 66px;
+  padding-top: 186px;
   display: flex;
   justify-content: space-between;
-}
 
+  &__subtitle{
+    margin: -0.5rem 0 1.5rem 0;
+  }
+}
 
 .color-label {
   position: relative;
@@ -182,7 +261,7 @@
   }
 }
 
-.filter-badge{
+.filter-badge {
   position: absolute;
   font-size: 13px;
   right: 0;
@@ -193,4 +272,18 @@
   border-radius: 8px;
   display: none;
   color: $colorSecondary50;
+}
+
+.catalogue-product {
+  position: relative;
+
+  &__item {
+    display: none;
+    background-color: $colorSecondary50;
+  }
+
+  &:hover &__item {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+  }
 }

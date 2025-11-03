@@ -12,15 +12,17 @@ import {openEditModal} from "../createInput/openEditModal.js";
  * @param dictionaryClass
  * query
  * @param deleted if not show deleted
+ * @param newItem if new items only
  * @param lastRecord last record number
  * @param searchString search string
  * @param rowGrid row grid style (string)
  * @returns {Promise<HTMLDivElement>}
  */
-export async function createDictionaryRows(dictionaryClass, deleted, lastRecord, searchString, rowGrid) {
+export async function createDictionaryRows(dictionaryClass, deleted, newItem, lastRecord, searchString, rowGrid) {
     const dictionaryRows = document.createElement('div');
     dictionaryRows.classList.add('dictionary-content__rows');
-    const url = jsonUrl + 'field_values/' + dictionaryClass + '/' + deleted + '/' + lastRecord + '/' + searchString;
+    const url = jsonUrl + 'field_values/' + dictionaryClass + '/' + deleted + '/' + newItem +
+        '/' + lastRecord + '/' + searchString;
     const dictionaryValues = await fetchJsonData(url);
     let counter = 0;
     dictionaryValues.values.forEach(value => {
@@ -33,7 +35,7 @@ export async function createDictionaryRows(dictionaryClass, deleted, lastRecord,
             row.dataset.lastRecord = lastRecord + 20;
             row.addEventListener('mouseover', (e) =>
                 addNext20Records(e.target, dictionaryClass,
-                    deleted, searchString, lastRecord + 20));
+                    deleted, newItem, searchString, lastRecord + 20));
         }
     })
     return dictionaryRows;

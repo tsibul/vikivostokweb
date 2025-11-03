@@ -1,0 +1,305 @@
+{% extends 'header.html' %}
+{% load static %}
+{% block content %}
+    <script src="{% static 'viki_web/js/cabinet.js' %}" defer type="module"></script>
+    <div class="container">
+        <h1 class="section-title">Личный кабинет</h1>
+        <section>
+            <form class="personal-data">
+                <div class="personal-data__inputs">
+                    <h3 class="section-title">Личные данные</h3>
+                    <div class="personal-data__block">
+                        <label for="email" class="personal-data__label">E-mail</label>
+                        <input type="text"
+                               id="email"
+                               class="personal-data__input"
+                               data-name="email"
+                               disabled>
+                    </div>
+                    <div class="personal-data__block">
+                        <label for="first_name" class="personal-data__label">Имя</label>
+                        <input type="text" id="first_name"
+                               class="personal-data__input input-disabled"
+                               name="first_name"
+                               data-name="first_name">
+                    </div>
+                    <div class="personal-data__block">
+                        <label for="last_name" class="personal-data__label">Фамилия</label>
+                        <input type="text" id="last_name"
+                               class="personal-data__input input-disabled"
+                               name="last_name"
+                               data-name="last_name">
+                    </div>
+                    <div class="personal-data__block">
+                        <label for="phone" class="personal-data__label">Телефон</label>
+                        <input type="text" id="phone"
+                               class="personal-data__input input-disabled"
+                               name="phone"
+                               data-name="phone">
+                    </div>
+                    <div class="personal-data__block">
+                        <label for="customer" class="personal-data__label">Компания</label>
+                        <input type="text" id="customer"
+                               class="personal-data__input"
+                               data-name="customer"
+                               disabled>
+                    </div>
+                    {#                     дополнительное поле#}
+                    {% if user.is_staff %}
+                        <div class="personal-data__block">
+                            <label for="manager_letter" class="personal-data__label">Код менеджера</label>
+                            <input type="text" id="manager_letter"
+                                   class="personal-data__input input-disabled"
+                                   data-name="manager_letter"
+                                   name="manager_letter">
+                        </div>
+                    {% endif %}
+                    <div class="personal-data__block price-block">
+                        <label for="price" class="personal-data__label">Прайс-лист</label>
+                        <input type="text" id="price"
+                               class="personal-data__input price-input"
+                               data-name="price"
+                               disabled>
+                        <input type="hidden" id="price_id"
+                               name="price_id"
+                               data-name="price_id">
+
+                        <!-- Кастомный выпадающий список вместо select -->
+                        <div id="price_dropdown" class="viki-dropdown personal-data__dropdown item-hidden">
+                            <div class="viki-dropdown__trigger">
+                                <span class="viki-dropdown__trigger-text">Выберите прайс-лист</span>
+                                <span class="viki-dropdown__trigger-icon">▼</span>
+                            </div>
+                            <ul class="viki-dropdown__menu">
+                                <!-- Элементы будут добавлены через JavaScript -->
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="personal-data__inputs">
+                    <div class="personal-data__change">
+                        <button class="btn btn__neutral personal-btn" type="button">Изменить</button>
+                    </div>
+                    <div class="personal-data__save item-hidden">
+                        <button class="btn btn__save personal-btn" type="button">Сохранить</button>
+                        <button class="btn btn__cancel personal-btn" type="button">Отменить</button>
+                        <div class="alert"></div>
+                    </div>
+                </div>
+            </form>
+        </section>
+        <section class="legal-data">
+            <div class="legal-data__title">
+                <h3 class="section-title">Реквизиты</h3>
+                <div></div>
+                <button class="btn btn__cancel legal-btn" type="button" id="new-company">Добавить</button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Модальные окна -->
+    <dialog class="company-dialog" id="company-dialog">
+        <div class="login__title">
+            <p>Проверить ИНН</p>
+            <p></p>
+        </div>
+        <form class="company-dialog__line">
+            <div class="company-dialog__block">
+                <label for="company-dialog-inn" class="company-dialog__label">
+                    Введите ИНН
+                </label>
+                <input type="text"
+                       id="company-dialog-inn"
+                       class="company-dialog__input company-dialog__input_frame"
+                       name="inn">
+            </div>
+            <div class="company-dialog__btn-block">
+                <button class="btn btn__cancel" type="reset">Закрыть</button>
+                <button class="btn btn__save" type="submit">Проверить</button>
+            </div>
+        </form>
+        <div class="alert company-alert"></div>
+    </dialog>
+
+    <dialog class="company-dialog" id="company-dialog-save">
+        <div class="login__title">
+            <p>Сохранить компанию</p>
+            <p></p>
+        </div>
+        <form>
+            <input type="hidden" name="short_name">
+            <div class="company-dialog__block">
+                <label for="company-dialog-save-name" class="company-dialog__label">
+                    Название
+                </label>
+                <input type="text"
+                       id="company-dialog-save-name"
+                       class="company-dialog__text"
+                       name="name"
+                       readonly
+                >
+            </div>
+            <div class="company-dialog__line">
+                <div class="company-dialog__block">
+                    <label for="company-dialog-save-inn" class="company-dialog__label">
+                        ИНН
+                    </label>
+                    <input type="text"
+                           id="company-dialog-save-inn"
+                           class="company-dialog__input"
+                           name="inn"
+                           readonly
+                    >
+                </div>
+                <div class="company-dialog__block">
+                    <label for="company-dialog-save-kpp" class="company-dialog__label">
+                        КПП
+                    </label>
+                    <input type="text"
+                           id="company-dialog-save-kpp"
+                           class="company-dialog__input"
+                           name="kpp"
+                           readonly
+                    >
+                </div>
+                <div class="company-dialog__block">
+                    <label for="company-dialog-save-ogrn" class="company-dialog__label">
+                        ОГРН
+                    </label>
+                    <input type="text"
+                           id="company-dialog-save-ogrn"
+                           class="company-dialog__input"
+                           name="ogrn"
+                           readonly
+                    >
+                </div>
+                <div class="company-dialog__block">
+                    <input type="checkbox"
+                           id="company-dialog-save-vat"
+                           class="company-dialog__checkbox"
+                           name="vat">
+                    <label for="company-dialog-save-vat" class="company-dialog__label">
+                        с НДС
+                    </label>
+                </div>
+            </div>
+            <div class="company-dialog__block address-block">
+                <label for="company-dialog-save-address" class="company-dialog__label">
+                    Адрес
+                </label>
+                <textarea
+                        id="company-dialog-save-address"
+                        class="company-dialog__text multiline"
+                        name="address"
+                        readonly></textarea>
+            </div>
+            <div class="company-dialog__btn-block">
+                <button class="btn btn__cancel legal-btn" type="reset">Закрыть</button>
+                <button class="btn btn__save legal-btn" type="submit">Подтвердить</button>
+            </div>
+        </form>
+    </dialog>
+
+    <dialog class="company-dialog" id="bank-dialog">
+        <div class="login__title">
+            <p>Проверить реквизиты</p>
+            <p></p>
+        </div>
+        <form class="company-dialog__line">
+            <div class="company-dialog__block">
+                <label for="bank-dialog-account" class="company-dialog__label">
+                    Расчетный счет
+                </label>
+                <input type="text"
+                       id="bank-dialog-account"
+                       class="company-dialog__input company-dialog__input_frame company-dialog__input_long"
+                       name="account_no">
+            </div>
+            <div class="company-dialog__block">
+                <label for="bank-dialog-bic" class="company-dialog__label">
+                    БИК
+                </label>
+                <input type="text"
+                       id="bank-dialog-bic"
+                       class="company-dialog__input company-dialog__input_frame"
+                       name="bic">
+            </div>
+            <div class="company-dialog__btn-block">
+                <button class="btn btn__cancel" type="reset">Закрыть</button>
+                <button class="btn btn__save" type="submit">Проверить</button>
+            </div>
+        </form>
+        <div class="alert company-alert"></div>
+    </dialog>
+
+    <dialog class="company-dialog" id="bank-dialog-save">
+        <div class="login__title">
+            <p>Сохранить реквизиты</p>
+            <p></p>
+        </div>
+        <form>
+            <input type="hidden" name="company_id">
+            <div class="company-dialog__block">
+                <label for="bank-dialog-save-name" class="company-dialog__label">
+                    Название банка
+                </label>
+                <input type="text"
+                       id="bank-dialog-save-name"
+                       class="company-dialog__text"
+                       name="name"
+                       readonly>
+            </div>
+            <div class="company-dialog__line">
+                <div class="company-dialog__block">
+                    <label for="bank-dialog-save-bic" class="company-dialog__label">
+                        БИК
+                    </label>
+                    <input type="text"
+                           id="bank-dialog-save-bic"
+                           class="company-dialog__input"
+                           name="bic"
+                           readonly>
+                </div>
+                <div class="company-dialog__block">
+                    <label for="bank-dialog-save-city" class="company-dialog__label">
+                        Город
+                    </label>
+                    <input type="text"
+                           id="bank-dialog-save-city"
+                           class="company-dialog__input"
+                           name="city"
+                           readonly>
+                </div>
+            </div>
+            <div class="company-dialog__line">
+                <div class="company-dialog__block">
+                    <label for="bank-dialog-save-account" class="company-dialog__label">
+                        Расчетный счет
+                    </label>
+                    <input type="text"
+                           id="bank-dialog-save-account"
+                           class="company-dialog__input company-dialog__input_long"
+                           name="account_no"
+                           readonly>
+                </div>
+            </div>
+            <div class="company-dialog__line">
+                <div class="company-dialog__block">
+                    <label for="bank-dialog-save-corr" class="company-dialog__label">
+                        Корр. счет
+                    </label>
+                    <input type="text"
+                           id="bank-dialog-save-corr"
+                           class="company-dialog__input company-dialog__input_long"
+                           name="corr_account"
+                           readonly>
+                </div>
+            </div>
+            <div class="company-dialog__btn-block">
+                <button class="btn btn__cancel legal-btn" type="reset">Закрыть</button>
+                <button class="btn btn__save legal-btn" type="submit">Подтвердить</button>
+            </div>
+        </form>
+        <div class="alert company-alert"></div>
+    </dialog>
+{% endblock %}

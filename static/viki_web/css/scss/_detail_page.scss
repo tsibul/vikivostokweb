@@ -1,0 +1,245 @@
+@import "vars";
+@import "mixins";
+
+.detail-page {
+  //margin-top: 140px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 170px 0 2rem 0;
+  background-color: $colorSecondary50;
+
+  &__section {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  &__content {
+    display: grid;
+    grid-template-columns: 3fr 5fr;
+    gap: 2rem;
+  }
+
+  &__gallery {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    position: relative;
+  }
+
+  &__main-image {
+    //position: relative;
+    overflow: hidden;
+    @include brd-standard;
+    border-color: transparent;
+    aspect-ratio: 1;
+    width: 100%;
+    max-width: 460px;
+    background-color: #fff;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      @include brd-standard;
+      border-color: transparent;
+      opacity: 1;
+      transition: all 0.4s ease;
+    }
+  }
+
+  &__color-description {
+    min-height: 40px;
+  }
+
+
+  &__nav-button {
+    position: absolute;
+    top: 15px;
+    width: 40px;
+    height: 40px;
+    background-color: transparent;
+    color: $colorPrimary;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+    transition: background-color 0.2s ease, color 0.2s ease;
+
+    &:hover {
+      background-color: $colorSecondary50;
+    }
+
+    &--prev {
+      left: 15px;
+    }
+
+    &--next {
+      right: 15px;
+    }
+  }
+
+  &__thumbnails {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  &__thumbnail {
+    position: relative;
+    overflow: hidden;
+    @include brd-standard;
+    border-color: transparent;
+    height: 100px;
+    width: 100px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      z-index: 6;
+      transform: scale(3);
+      border-width: 3px;
+    }
+
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      @include brd-standard;
+      //border-width: 0.3px;
+
+    }
+
+    &:hover img {
+      border-color: rgba($colorPrimary, 0.1);
+    }
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  &__article {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  &__description {
+    //color: $colorPrimary;
+    line-height: 1.6;
+    //margin: 0;
+  }
+
+  &__tabs {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  &__tab {
+    article {
+      //color: $colorPrimary;
+      line-height: 1.6;
+    }
+  }
+
+  &__print-data,
+  &__pack-data {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid $colorPrimary;
+  }
+
+  @media (max-width: 768px) {
+    &__content {
+      grid-template-columns: 1fr;
+    }
+
+    &__print-data,
+    &__pack-data {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  &__related {
+    margin-top: 2rem;
+    width: 100%;
+
+    &_list {
+      margin-top: 1rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1.5rem;
+      width: 100%;
+    }
+
+    &_item {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      padding: 1rem;
+      @include brd-standard;
+      border-color: transparent;
+      text-decoration: none;
+      transition: transform 0.3s ease;
+      background-color: #fff;
+      box-shadow: 0 4px 20px rgba(15, 72, 128, 0.1);
+
+      &:hover {
+        transform: scale(1.05);
+        //border: 1px $colorSecondary solid;
+      }
+
+      & img {
+        width: 100%;
+        aspect-ratio: 1;
+        object-fit: contain;
+        //@include brd-standard;
+        //background-color: $colorSecondary50;
+      }
+    }
+
+    &_info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      text-align: center;
+    }
+  }
+}
+
+.tooltip-prev {
+  top: -12px;
+  left: 16px;
+  border-color: transparent;
+  background-color: transparent;
+}
+
+.tooltip-next {
+  top: -12px;
+  left: -66px;
+  border-color: transparent;
+  background-color: transparent;
+}
+
+.detail-show {
+  display: flex;
+  padding: 8px 0 16px 0;
+
+  & * {
+    grid-template-columns: 3fr repeat(4, 1fr);
+    gap: 1rem;
+    font-size: 15px;
+    padding: 2px 0;
+    //text-align: end;
+  }
+}

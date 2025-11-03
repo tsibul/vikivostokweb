@@ -1,11 +1,16 @@
+/**
+ * @fileoverview Module for handling color data in catalogue items
+ * @module catalogueElement/createColors
+ */
+
 'use strict'
 
 import {createCatalogueItem} from "./createCatalogueItem.js";
 
 /**
- * create inputs to save additional colors for item
- * @param item
- * @param colors
+ * Creates and manages color data for catalogue items
+ * @param {Array<Object>} item - Array of color data objects
+ * @param {HTMLInputElement} colors - Input element to store color data
  */
 export function createColors(item, colors) {
     // item.forEach(color => {

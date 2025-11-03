@@ -1,3 +1,8 @@
+/**
+ * @fileoverview Module for handling cancellation of catalogue item edits
+ * @module catalogueElement/cancelEdit
+ */
+
 'use strict'
 
 import {jsonUrl} from "../main.js";
@@ -5,8 +10,8 @@ import {fetchJsonData} from "../fetchJsonData.js";
 import {createCatalogueRow} from "./createCatalogueRow.js";
 
 /**
- * remove new row, return previous data to edited row
- * @param e
+ * Cancels editing of a catalogue item, either removing a new row or restoring previous data
+ * @param {Event} e - Event object from the cancel button click
  * @returns {Promise<void>}
  */
 export async function cancelEdit(e){

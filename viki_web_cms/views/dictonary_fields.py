@@ -23,9 +23,10 @@ def field_names(request, class_name):
     return JsonResponse(dict_fields, safe=False)
 
 
-def field_values(request, class_name, deleted, first_record, search_string):
+def field_values(request, class_name, deleted, new_item, first_record, search_string):
     """
     return dictionary fields with parameters (field_params) and values (values) for requested class
+    :param new_item:
     :param request:
     :param class_name: requested class
     :param deleted: filter if deleted True
@@ -40,9 +41,14 @@ def field_values(request, class_name, deleted, first_record, search_string):
     fields_out = ['id']
     fields_search = []
     for field in field_list:
-        current_field = field['field'] + '__name' if field['type'] == 'foreign' else field['field']
+        if field['type'] == 'foreign' and field['foreignClass'] == 'User':
+            current_field = field['field'] + '__username'
+        elif field['type'] == 'foreign':
+            current_field = field['field'] + '__name'
+        else:
+            current_field = field['field']
         fields_out.append(current_field)
-        if field['type'] not in {'boolean', 'image'}:
+        if field['type'] not in {'boolean', 'image'}: #or ('foreignClass' in field and field['foreignClass'] != 'User')
             fields_search.append(current_field + '__icontains')
     order = dict_model.order_default()
     if search_string == 'None':
@@ -62,6 +68,7 @@ def field_values(request, class_name, deleted, first_record, search_string):
         else:
             field_values_request = dict_model.objects.filter(query).order_by(*order)[
                                    first_record: first_record + 20]
+    field_values_request = add_annotations_for_properties(field_values_request, field_list)
     field_params = reformat_field_dictionary(class_name)
     values = list(field_values_request.values(*fields_out))
     context = {'field_params': field_params, 'values': values}
@@ -112,8 +119,24 @@ def dropdown_list(request, class_name):
             option_list = (dict_model.objects.filter(~Q(name='cms_staff'))
                        .annotate(value=F('name'))
                        .values('id', 'value'))
+        case 'User':
+            option_list = (dict_model.objects.filter(is_staff=True)
+                           .annotate(value=Concat(F('first_name'), Value(' '), F('last_name')))
+                           .values('id', 'value'))
         case _:
             option_list = (dict_model.objects.filter(deleted=False)
                            .annotate(value=F('name'))
                            .values('id', 'value'))
     return JsonResponse(list(option_list), safe=False)
+
+
+def add_annotations_for_properties(queryset, field_list):
+    annotations = {}
+
+    for field in field_list:
+        if 'property_off' in field :
+            annotations[field['field']] = F(field['property_off'])
+    if annotations:
+        queryset = queryset.annotate(**annotations)
+
+    return queryset
