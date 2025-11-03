@@ -11,6 +11,27 @@ from viki_web.views.product import goods_data, create_print_data, goods_price, c
     item_price
 
 
+def get_default_seo_for_goods(goods):
+    """Генерирует дефолтные SEO-данные для товара без привязанного SEO"""
+    title = f'{goods.name} - купить в Вики Восток'
+    description = goods.name
+    if len(description) > 157:
+        description = description[:157] + '...'
+    
+    return {
+        'title': title,
+        'description': description,
+        'keywords': '',
+        'text': '',
+        'og_title': goods.name,
+        'og_description': goods.name,
+        'og_image': None,
+        'canonical_url': '',
+        'noindex': False,
+        'nofollow': False,
+    }
+
+
 def product_detail(request, product_name):
     product_groups = ProductGroup.objects.filter(deleted=False)
 
@@ -64,6 +85,44 @@ def product_detail(request, product_name):
         'multicolor': goods.multicolor
     }
 
+    # Получаем SEO данные
+    seo_obj = goods.seo  # ForeignKey, может быть None
+    
+    if seo_obj:
+        # Если есть привязанный SEO объект
+        og_image_url = ''
+        if seo_obj.og_image:
+            og_image_url = request.build_absolute_uri(seo_obj.og_image.url)
+        elif random_item:
+            og_image_url = request.build_absolute_uri(f'/static/viki_web_cms/files/item_photo/{random_item["item"].image}')
+        
+        seo_data = {
+            'title': seo_obj.title or f'{goods.name} - купить в Вики Восток',
+            'description': seo_obj.description or goods.name,
+            'keywords': seo_obj.keywords or '',
+            'text': seo_obj.text or '',
+            'og_title': seo_obj.og_title or seo_obj.title or goods.name,
+            'og_description': seo_obj.og_description or seo_obj.description or goods.name,
+            'og_image': og_image_url,
+            'url': request.build_absolute_uri(),
+            'canonical_url': seo_obj.canonical_url or request.build_absolute_uri(),
+            'noindex': seo_obj.noindex,
+            'nofollow': seo_obj.nofollow,
+        }
+    else:
+        # Если SEO не привязан - используем дефолтные значения
+        default_seo = get_default_seo_for_goods(goods)
+        og_image_url = ''
+        if random_item:
+            og_image_url = request.build_absolute_uri(f'/static/viki_web_cms/files/item_photo/{random_item["item"].image}')
+        
+        seo_data = {
+            **default_seo,
+            'og_image': og_image_url,
+            'url': request.build_absolute_uri(),
+            'canonical_url': request.build_absolute_uri(),
+        }
+
     context = {
         'data': json.dumps(goods_dict),
         'product_group': product_group,
@@ -87,6 +146,7 @@ def product_detail(request, product_name):
         },
         'similar_goods': similar_goods,
         'related_goods': related_goods,
+        'seo': seo_data,
     }
     return render(request, 'product_detail.html', context)
 
