@@ -1,12 +1,41 @@
 <!DOCTYPE html>
 {% load static %}
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <title>Вики Восток</title>
+    <title>{% block title %}Вики Восток - Сувенирная продукция с нанесением логотипа{% endblock %}</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description"
+          content="{% block meta_description %}Вики Восток - производство и продажа сувенирной продукции с нанесением логотипа. Широкий ассортимент товаров для брендирования.{% endblock %}">
+    <meta name="keywords"
+          content="{% block meta_keywords %}сувенирная продукция, брендирование, нанесение логотипа, корпоративные подарки{% endblock %}">
+    <meta name="author" content="Вики Восток">
+    <link rel="canonical" href="{% block canonical %}{{ request.build_absolute_uri }}{% endblock %}">
+
+
+    {% block meta_robots %}{% endblock %}
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:title" content="{% block og_title %}Вики Восток - Сувенирная продукция{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Производство и продажа сувенирной продукции с нанесением логотипа{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'viki_web/images/factory.jpg' %}{% endblock %}">
+    <meta property="og:site_name" content="Вики Восток">
+    <meta property="og:locale" content="ru_RU">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="{{ request.build_absolute_uri }}">
+    <meta name="twitter:title" content="{% block twitter_title %}Вики Восток - Сувенирная продукция{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}Производство и продажа сувенирной продукции{% endblock %}">
+    <meta name="twitter:image" content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'viki_web/images/factory.jpg' %}{% endblock %}">
+
+
     <link rel="icon" type="image/x-icon" href="{% static 'viki_web/icons/logo.svg' %}">
 
     {#    <script src="{% static 'production/js/dist/login.bundle.js' %}" defer type="module"></script>#}
@@ -24,6 +53,25 @@
     <link rel="stylesheet" href="{% static 'viki_web/css/style.css' %}">
 
     <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet'>
+
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript" >
+       (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+       m[i].l=1*new Date();
+       for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+       k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+       (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+       ym(XXXXXXXXX, "init", {
+            clickmap:true,
+            trackLinks:true,
+            accurateTrackBounce:true,
+            webvisor:true,
+            ecommerce:"dataLayer"
+       });
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/XXXXXXXXX" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
 
 </head>
 <body>
@@ -70,9 +118,9 @@
                     <i class="fa fa-solid fa-magnifying-glass" aria-hidden="true"></i>
                     <input class="layout__input layout__input_menu" type="text" placeholder="поиск..." name="search">
                     <button type="submit" class="btn btn__save btn__menu">Поиск</button>
-{#                    <a href="">#}
-{#                        <button class="btn btn__neutral btn__menu">Сбросить</button>#}
-{#                    </a>#}
+                    {#                    <a href="">#}
+                    {#                        <button class="btn btn__neutral btn__menu">Сбросить</button>#}
+                    {#                    </a>#}
                 </form>
                 <nav class="cart tooltip">
                     <a href="{% url 'viki_web:cart' %}">
@@ -234,6 +282,33 @@
 
 <!-- Footer -->
 <footer class="footer">
+       <!-- Organization Schema -->
+        <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "name": "ООО Вики Восток Сувенир",
+          "legalName": "ООО Вики Восток Сувенир",
+          "url": "{{ request.scheme }}://{{ request.get_host }}",
+          "logo": "{{ request.scheme }}://{{ request.get_host }}{% static 'viki_web/icons/logo.svg' %}",
+          "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+7-926-602-64-41",
+            "contactType": "customer service",
+            "email": "office@vikivostok.ru",
+            "areaServed": "RU",
+            "availableLanguage": "Russian"
+          },
+          "sameAs": [
+            "https://api.whatsapp.com/send/?phone=79266026441"
+          ],
+          "address": {
+            "@type": "PostalAddress",
+            "addressCountry": "RU"
+          }
+        }
+        </script>
+
     <div class="container">
         <div class="footer__container">
             <div class="footer__column">
