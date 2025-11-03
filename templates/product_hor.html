@@ -286,16 +286,6 @@
         </div>
     </main>
     
-    {% if seo and seo.text %}
-    <section class="seo-content">
-        <div class="container">
-            <div class="seo-content__text">
-                {{ seo.text|safe }}
-            </div>
-        </div>
-    </section>
-    {% endif %}
-    
     <section>
         <div class="container">
             <div class="goods-group">
@@ -306,5 +296,15 @@
             </div>
         </div>
     </section>
+    
+    {% if seo and seo.text %}
+    <section class="seo-content">
+        <div class="container">
+            <div class="seo-content__text">
+                {{ seo.text|safe }}
+            </div>
+        </div>
+    </section>
+    {% endif %}
 
 {% endblock %}
