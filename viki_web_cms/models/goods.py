@@ -65,6 +65,7 @@ class Goods(SettingsDictionary):
     weight = models.FloatField(null=True, blank=True)
     new = models.BooleanField(default=False)
     slug = models.SlugField(unique=True, null=False, blank=False)
+    seo = models.ForeignKey('SEO', on_delete=models.SET_NULL, null=True, blank=True, related_name='goods')
 
     class Meta(SettingsDictionary.Meta):
         verbose_name = 'Товар'
@@ -164,6 +165,13 @@ class Goods(SettingsDictionary):
                 'field': 'weight',
                 'type': 'float',
                 'label': 'вес, г',
+                'null': True,
+            },
+            {
+                'field': 'seo',
+                'type': 'foreign',
+                'label': 'SEO',
+                'foreignClass': 'SEO',
                 'null': True,
             },
         ]
