@@ -16,6 +16,7 @@ import {createUserElement} from "./userElement/createUserElement.js";
 import {createOrderElement} from "./orderElement/createOrderElement.js";
 import {createGroupElement} from "./groupElement/createGroupElement.js";
 import {createFilesElement} from "./filesElement/createFilesElement.js";
+import {createSEOElement} from "./SEOElement/createSEOElement.js";
 
 /**
  * Base URL for JSON data
@@ -35,6 +36,7 @@ export const cmsPages = {
     'Order': createOrderElement,
     'CustomerGroup': createGroupElement,
     'Files': createFilesElement,
+    'SEO': createSEOElement,
 }
 
 const checkUserUrl = jsonUrl + 'userdata';

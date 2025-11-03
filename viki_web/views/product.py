@@ -13,6 +13,27 @@ from viki_web_cms.models import ProductGroup, Goods, CatalogueItem, ColorGroup, 
     PriceGoodsVolume, PriceGoodsQuantity
 
 
+def get_default_seo_for_product_group(product_group):
+    """Генерирует дефолтные SEO-данные для группы товаров без привязанного SEO"""
+    title = f'{product_group.name} - Вики Восток'
+    description = f'{product_group.name} - каталог сувенирной продукции с возможностью брендирования'
+    if product_group.second_name:
+        description = product_group.second_name
+    
+    return {
+        'title': title,
+        'description': description,
+        'keywords': f'{product_group.name}, сувениры, брендирование',
+        'text': '',
+        'og_title': title,
+        'og_description': description,
+        'og_image': None,
+        'canonical_url': '',
+        'noindex': False,
+        'nofollow': False,
+    }
+
+
 def product(request, product_group_url):
     product_groups = ProductGroup.objects.filter(deleted=False)
     product_group = product_groups.filter(product_group_url=product_group_url).first()
@@ -70,6 +91,43 @@ def product_context(request, goods, product_groups, product_group):
     # if not product_group:
     #     product_group = {'name': 'Каталог', 'product_group_url': 'catalogue'}
     goods_list.sort(key=lambda x: x['price'])
+    
+    # Получаем SEO данные для группы товаров
+    seo_obj = product_group.seo if product_group else None
+    
+    if seo_obj:
+        # Если есть привязанный SEO объект
+        og_image_url = ''
+        if seo_obj.og_image:
+            og_image_url = request.build_absolute_uri(seo_obj.og_image.url)
+        elif product_group.cover:
+            og_image_url = request.build_absolute_uri(f'/static/viki_web_cms/files/cover/{product_group.cover.name}')
+        
+        seo_data = {
+            'title': seo_obj.title or f'{product_group.name} - Вики Восток',
+            'description': seo_obj.description or product_group.second_name or f'{product_group.name} - каталог сувенирной продукции',
+            'keywords': seo_obj.keywords or f'{product_group.name}, сувениры, брендирование',
+            'text': seo_obj.text or '',
+            'og_title': seo_obj.og_title or seo_obj.title or product_group.name,
+            'og_description': seo_obj.og_description or seo_obj.description or product_group.second_name or product_group.name,
+            'og_image': og_image_url,
+            'canonical_url': seo_obj.canonical_url or request.build_absolute_uri(),
+            'noindex': seo_obj.noindex,
+            'nofollow': seo_obj.nofollow,
+        }
+    else:
+        # Если SEO не привязан - используем дефолтные значения
+        default_seo = get_default_seo_for_product_group(product_group)
+        og_image_url = ''
+        if product_group.cover:
+            og_image_url = request.build_absolute_uri(f'/static/viki_web_cms/files/cover/{product_group.cover.name}')
+        
+        seo_data = {
+            **default_seo,
+            'og_image': og_image_url,
+            'canonical_url': request.build_absolute_uri(),
+        }
+    
     context = {
         'product_groups': product_groups,
         'product_group': product_group,
@@ -81,6 +139,7 @@ def product_context(request, goods, product_groups, product_group):
         'price_min': price_min,
         'price_max': price_max,
         'user': request.user,
+        'seo': seo_data,
     }
     return context
 

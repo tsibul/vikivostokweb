@@ -1,0 +1,102 @@
+# Docker Compose для локальной разработки
+version: '3.8'
+
+services:
+  # База данных MariaDB
+  db:
+    image: mariadb:11
+    container_name: vikivostok_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: vikivostok_web
+      MYSQL_USER: vikivostok
+      MYSQL_PASSWORD: dev_password
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis для Celery
+  redis:
+    image: redis:7-alpine
+    container_name: vikivostok_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Django приложение
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: vikivostok_web
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+      - static_volume:/app/staticfiles
+      - media_volume:/app/media
+    ports:
+      - "8000:8000"
+    environment:
+      - DJANGO_ENV=development
+      - DB_NAME=vikivostok_web
+      - DB_USER=vikivostok
+      - DB_PASSWORD=dev_password
+      - DB_HOST=db
+      - DB_PORT=3306
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # Celery Worker
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: vikivostok_celery
+    command: celery -A vikivostokweb worker -l info
+    volumes:
+      - .:/app
+    environment:
+      - DJANGO_ENV=development
+      - DB_NAME=vikivostok_web
+      - DB_USER=vikivostok
+      - DB_PASSWORD=dev_password
+      - DB_HOST=db
+      - DB_PORT=3306
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
+      - web
+    restart: unless-stopped
+
+volumes:
+  mariadb_data:
+  redis_data:
+  static_volume:
+  media_volume:
+

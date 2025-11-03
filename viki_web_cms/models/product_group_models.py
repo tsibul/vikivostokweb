@@ -14,6 +14,7 @@ class ProductGroup(SettingsDictionary):
     product_group_url = models.CharField(max_length=60)
     layout = models.ForeignKey(LayoutType, blank=True, null=True, on_delete=models.SET_NULL)
     priority = models.IntegerField(blank=True, null=True)
+    seo = models.ForeignKey('SEO', on_delete=models.SET_NULL, null=True, blank=True, related_name='product_groups')
 
     class Meta(SettingsDictionary.Meta):
         verbose_name = 'Раздел каталога'
@@ -69,6 +70,13 @@ class ProductGroup(SettingsDictionary):
                 'type': 'number',
                 'label': 'приоритет показа',
                 'null': False,
+            },
+            {
+                'field': 'seo',
+                'type': 'foreign',
+                'label': 'SEO',
+                'foreignClass': 'SEO',
+                'null': True,
             },
             {
                 'field': 'cover',

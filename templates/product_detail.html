@@ -1,7 +1,89 @@
 {% extends 'product_header.html' %}
 {% load static %}
+
+{% block title %}{{ seo.title }}{% endblock %}
+{% block meta_description %}{{ seo.description }}{% endblock %}
+{% block meta_keywords %}{{ seo.keywords }}{% endblock %}
+{% block canonical %}{{ seo.canonical_url }}{% endblock %}
+
+{% block meta_robots %}
+    {% if seo.noindex or seo.nofollow %}
+        <meta name="robots"
+              content="{% if seo.noindex %}noindex{% endif %}{% if seo.noindex and seo.nofollow %},{% endif %}{% if seo.nofollow %}nofollow{% endif %}">
+    {% endif %}
+{% endblock %}
+
+{% block og_type %}product{% endblock %}
+{% block og_title %}{{ seo.og_title }}{% endblock %}
+{% block og_description %}{{ seo.og_description }}{% endblock %}
+{% block og_image %}{{ seo.og_image }}{% endblock %}
+
 {% block content %}
     <script src="{% static 'viki_web/js/product_detail.js' %}" defer type="module"></script>
+
+    <!-- Schema.org Product Markup -->
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org/",
+          "@type": "Product",
+          "name": "{{ goods.goods_item.name }}",
+      "image": [
+        "{{ seo.og_image }}"
+        {% for item in goods.item_list %}
+            ,"{{ request.scheme }}://
+            {{ request.get_host }}{% static 'viki_web_cms/files/item_photo/' %}{{ item.item.image }}"
+        {% endfor %}
+        ],
+        "description": "{{ seo.description|striptags }}",
+      "sku": "{{ goods.goods_item.article }}",
+      "brand": {
+        "@type": "Brand",
+        "name": "Вики Восток"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "{{ seo.url }}",
+        "priceCurrency": "RUB",
+        "price": "{{ goods.price }}",
+        "availability": "https://schema.org/InStock",
+        "seller": {
+          "@type": "Organization",
+          "name": "ООО Вики Восток Сувенир"
+        }
+      }
+        {% if goods.goods_item.weight %}
+            ,"weight": {
+              "@type": "QuantitativeValue",
+              "value": "{{ goods.goods_item.weight }}",
+        "unitCode": "GRM"
+      }
+        {% endif %}
+        }
+    </script>
+
+    <!-- Breadcrumb Schema -->
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [{
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Главная",
+            "item": "{{ request.scheme }}://{{ request.get_host }}/"
+      },{
+        "@type": "ListItem",
+        "position": 2,
+        "name": "{{ product_group.name }}",
+        "item": "{{ request.scheme }}://{{ request.get_host }}/products/{{ product_group.product_group_url }}"
+      },{
+        "@type": "ListItem",
+        "position": 3,
+        "name": "{{ goods.goods_item.name }}"
+      }]
+    }
+    </script>
+
     <main>
         <div class="container">
             <div class="detail-page">
@@ -42,6 +124,10 @@
                                              data-id="{{ item.item.id }}"
                                         >
                                             <img src="
+
+
+
+
                                                     {% static 'viki_web_cms/files/item_add_photo/' %}{{ photo.add_photo }}"
                                                  alt="Дополнительное изображение"
                                                  loading="lazy">
@@ -242,4 +328,14 @@
             </div>
         </div>
     </main>
+    
+    {% if seo.text %}
+    <section class="seo-content">
+        <div class="container">
+            <div class="seo-content__text">
+                {{ seo.text|safe }}
+            </div>
+        </div>
+    </section>
+    {% endif %}
 {% endblock %} 

@@ -1,0 +1,10 @@
+# Зависимости для production
+-r base.txt
+
+# Production server
+gunicorn~=21.2.0  # WSGI HTTP Server
+whitenoise~=6.6.0  # Для обслуживания статических файлов
+
+# Monitoring & Error tracking (опционально)
+# sentry-sdk~=1.40.0
+

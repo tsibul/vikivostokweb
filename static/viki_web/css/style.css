@@ -179,6 +179,31 @@ input[type=checkbox] {
   vertical-align: middle;
 }
 
+/* ... existing styles ... */
+/* SEO Content */
+.seo-content {
+  margin: 2rem 0;
+  padding: 2rem;
+  background: #f9f9f9;
+  border-radius: 8px;
+}
+.seo-content__text {
+  line-height: 1.6;
+  color: #333;
+}
+.seo-content__text h2, .seo-content__text h3 {
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  color: #222;
+}
+.seo-content__text p {
+  margin-bottom: 1rem;
+}
+.seo-content__text ul, .seo-content__text ol {
+  margin-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
 /* Custom Dropdown Component */
 .viki-dropdown {
   position: relative;

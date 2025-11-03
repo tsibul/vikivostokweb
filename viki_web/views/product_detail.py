@@ -11,6 +11,53 @@ from viki_web.views.product import goods_data, create_print_data, goods_price, c
     item_price
 
 
+def get_default_seo_for_goods(goods):
+    """Генерирует дефолтные SEO-данные для товара без привязанного SEO"""
+    
+    # Определяем тип товара по группе для SEO
+    product_type = ''
+    keywords = ''
+    if goods.product_group:
+        group_name = goods.product_group.name.lower()
+        if 'ручк' in group_name:
+            product_type = 'ручка с логотипом'
+            keywords = 'ручка с логотипом, ручка с нанесением, брендированная ручка'
+        elif 'блокнот' in group_name or 'ежедневник' in group_name:
+            product_type = 'блокнот с логотипом'
+            keywords = 'блокнот с логотипом, блокнот с нанесением, фирменный блокнот'
+        elif 'кружк' in group_name or 'стакан' in group_name:
+            product_type = 'кружка с логотипом'
+            keywords = 'кружка с логотипом, стакан с нанесением, брендированная посуда'
+        elif 'монетниц' in group_name or 'pos' in group_name.lower():
+            product_type = 'монетница с логотипом'
+            keywords = 'монетница с логотипом, POS материалы'
+        elif 'брелок' in group_name or 'брелк' in group_name or 'бирк' in group_name:
+            product_type = 'брелок с логотипом'
+            keywords = 'брелок с логотипом, бирка с нанесением'
+        else:
+            product_type = 'с логотипом'
+            keywords = f'{goods.product_group.name}, сувениры с логотипом'
+    
+    title = f'{goods.name} {product_type} - купить в Вики Восток'
+    description = f'{goods.name} {product_type} на заказ. Качественное нанесение логотипа от производителя Вики Восток.'
+    
+    if len(description) > 157:
+        description = description[:157] + '...'
+    
+    return {
+        'title': title,
+        'description': description,
+        'keywords': keywords,
+        'text': '',
+        'og_title': f'{goods.name} {product_type}',
+        'og_description': f'{goods.name} {product_type} на заказ',
+        'og_image': None,
+        'canonical_url': '',
+        'noindex': False,
+        'nofollow': False,
+    }
+
+
 def product_detail(request, product_name):
     product_groups = ProductGroup.objects.filter(deleted=False)
 
@@ -64,6 +111,50 @@ def product_detail(request, product_name):
         'multicolor': goods.multicolor
     }
 
+    # Получаем SEO данные
+    seo_obj = goods.seo  # ForeignKey, может быть None
+    
+    # Fallback для текста - берем из группы товаров
+    seo_text_fallback = ''
+    if product_group.seo and product_group.seo.text:
+        seo_text_fallback = product_group.seo.text
+    
+    if seo_obj:
+        # Если есть привязанный SEO объект
+        og_image_url = ''
+        if seo_obj.og_image:
+            og_image_url = request.build_absolute_uri(seo_obj.og_image.url)
+        elif random_item:
+            og_image_url = request.build_absolute_uri(f'/static/viki_web_cms/files/item_photo/{random_item["item"].image}')
+        
+        seo_data = {
+            'title': seo_obj.title or f'{goods.name} - купить в Вики Восток',
+            'description': seo_obj.description or goods.name,
+            'keywords': seo_obj.keywords or '',
+            'text': seo_obj.text or seo_text_fallback,  # Fallback к тексту группы
+            'og_title': seo_obj.og_title or seo_obj.title or goods.name,
+            'og_description': seo_obj.og_description or seo_obj.description or goods.name,
+            'og_image': og_image_url,
+            'url': request.build_absolute_uri(),
+            'canonical_url': seo_obj.canonical_url or request.build_absolute_uri(),
+            'noindex': seo_obj.noindex,
+            'nofollow': seo_obj.nofollow,
+        }
+    else:
+        # Если SEO не привязан - используем дефолтные значения
+        default_seo = get_default_seo_for_goods(goods)
+        og_image_url = ''
+        if random_item:
+            og_image_url = request.build_absolute_uri(f'/static/viki_web_cms/files/item_photo/{random_item["item"].image}')
+        
+        seo_data = {
+            **default_seo,
+            'text': seo_text_fallback,  # Используем текст из группы
+            'og_image': og_image_url,
+            'url': request.build_absolute_uri(),
+            'canonical_url': request.build_absolute_uri(),
+        }
+
     context = {
         'data': json.dumps(goods_dict),
         'product_group': product_group,
@@ -87,6 +178,7 @@ def product_detail(request, product_name):
         },
         'similar_goods': similar_goods,
         'related_goods': related_goods,
+        'seo': seo_data,
     }
     return render(request, 'product_detail.html', context)
 
