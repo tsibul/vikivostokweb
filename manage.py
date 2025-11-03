@@ -6,7 +6,18 @@ import sys
 
 def main():
     """Run administrative tasks."""
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'vikivostokweb.settings')
+    # Автоматическое определение окружения:
+    # - Если есть переменная DJANGO_ENV=production -> production
+    # - Иначе -> development (по умолчанию)
+    
+    env = os.environ.get('DJANGO_ENV', 'development')
+    
+    if env == 'production':
+        settings_module = 'vikivostokweb.settings.production'
+    else:
+        settings_module = 'vikivostokweb.settings.development'
+    
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', settings_module)
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
