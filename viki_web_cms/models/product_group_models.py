@@ -72,6 +72,13 @@ class ProductGroup(SettingsDictionary):
                 'null': False,
             },
             {
+                'field': 'seo',
+                'type': 'foreign',
+                'label': 'SEO',
+                'foreignClass': 'SEO',
+                'null': True,
+            },
+            {
                 'field': 'cover',
                 'type': 'file',
                 'label': 'обложка',
@@ -84,13 +91,6 @@ class ProductGroup(SettingsDictionary):
                 'type': 'image',
                 'label': 'обложка',
                 'url': '/static/viki_web_cms/files/cover/',
-                'null': True,
-            },
-            {
-                'field': 'seo',
-                'type': 'foreign',
-                'label': 'SEO',
-                'foreignClass': 'SEO',
                 'null': True,
             },
         ]
