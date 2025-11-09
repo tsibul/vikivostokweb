@@ -63,3 +63,5 @@ static/viki_web_cms/css/style.css.map
 # Logs
 logs/
 *.log
+/goods+product_group.sql
+/seo_data.sql
