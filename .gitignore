@@ -52,7 +52,9 @@ package-lock.json
 
 # Собранные файлы (генерируются webpack/sass)
 static/viki_web/distribute/
+static/viki_web/distribute/*.bundle.js
 static/viki_web_cms/distribute/
+static/viki_web_cms/distribute/*.bundle.js
 static/viki_web/css/style.css
 static/viki_web/css/style.css.map
 static/viki_web_cms/css/style.css
